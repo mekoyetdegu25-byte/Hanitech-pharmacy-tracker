@@ -23,10 +23,11 @@
   header .h-title { font-size: 16px; font-weight: 700; }
   .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
 
-  .tabs { display: flex; background: transparent; position: sticky; top: 60px; z-index: 99; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: center; }
+  /* 🆕 Tabs - Horizontal Scrollable */
+  .tabs { display: flex; background: transparent; position: sticky; top: 60px; z-index: 99; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
   .tabs::-webkit-scrollbar { display: none; }
   .tabs input[type="radio"] { display: none; }
-  .tabs label { flex: 1; max-width: 150px; text-align: center; padding: 12px 8px; font-size: 12.5px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent; min-width: 80px;}
+  .tabs label { flex: 0 0 auto; min-width: 85px; text-align: center; padding: 12px 8px; font-size: 12.5px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
   .tabs label i { font-size: 22px; font-style: normal; line-height: 1; margin-bottom: 2px;}
   
   #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"] { color: #2c5282; background: #ebf4ff; border-color: #90cdf4; box-shadow: 0 4px 12px rgba(44,82,130,0.15);}
@@ -89,12 +90,6 @@
   .cat-header .cat-name { font-size: 14px; font-weight: 800; color: #1a365d; }
   .cat-body { display: none; padding: 8px 6px 6px 6px; background: #fff; border: 1px solid #90cdf4; border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
   .cat-body.open { display: block; }
-  .sub-header { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: #f7fafc; border-radius: 8px; margin: 6px 4px; cursor: pointer; }
-  .sub-header .sub-left { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #4a5568; }
-  .sub-header .sub-arrow { font-size: 10px; font-weight: 900; color: #4a5568; transition: transform 0.2s; display: inline-block; }
-  .sub-header.open .sub-arrow { transform: rotate(90deg); }
-  .sub-body { display: none; padding: 2px 0 4px 0; }
-  .sub-body.open { display: block; }
 </style>
 </head>
 <body>
@@ -295,11 +290,22 @@
               <div class="value" id="dailyNetProfit">0.00 <small>ብር</small></div>
             </div>
             <div class="divider" style="height:1px; background:#edf2f7; margin:12px 0;"></div>
-            <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛒 የቀኑ ሽያጮች</h3>
-            <div id="dailySalesList"></div>
-            <div class="divider" style="height:1px; background:#edf2f7; margin:12px 0;"></div>
-            <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">📉 ያልተሸጡ መድሃኒቶች</h3>
-            <div id="dailyUnsoldList"></div>
+            
+            <!-- 🆕 Collapsible የቀኑ ሽያጮች -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የቀኑ ሽያጮች</span></div>
+              </div>
+              <div class="section-body" id="bodyDailySales"><div id="dailySalesList"></div></div>
+            </div>
+
+            <!-- 🆕 Collapsible ያልተሸጡ መድሃኒቶች -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrDailyUnsold" onclick="toggleSection('hdrDailyUnsold','bodyDailyUnsold')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ መድሃኒቶች</span></div>
+              </div>
+              <div class="section-body" id="bodyDailyUnsold"><div id="dailyUnsoldList"></div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -326,11 +332,22 @@
               <div class="value" id="monthlyNetProfit">0.00 <small>ብር</small></div>
             </div>
             <div class="divider" style="height:1px; background:#edf2f7; margin:12px 0;"></div>
-            <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛒 የወሩ ሽያጮች</h3>
-            <div id="monthlySalesList"></div>
-            <div class="divider" style="height:1px; background:#edf2f7; margin:12px 0;"></div>
-            <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">📉 ያልተሸጡ መድሃኒቶች</h3>
-            <div id="monthlyUnsoldList"></div>
+
+            <!-- 🆕 Collapsible የወሩ ሽያጮች -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የወሩ ሽያጮች</span></div>
+              </div>
+              <div class="section-body" id="bodyMonthlySales"><div id="monthlySalesList"></div></div>
+            </div>
+
+            <!-- 🆕 Collapsible ያልተሸጡ መድሃኒቶች -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrMonthlyUnsold" onclick="toggleSection('hdrMonthlyUnsold','bodyMonthlyUnsold')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ መድሃኒቶች</span></div>
+              </div>
+              <div class="section-body" id="bodyMonthlyUnsold"><div id="monthlyUnsoldList"></div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -420,7 +437,7 @@
   let allExpCategories = [];
   let allSales = [];
   let allExpenses = [];
-  let cart = []; // 🆕 የተመረጡ ሽያጮች
+  let cart = []; 
   let currentUserPharmacyId = null;
 
   window.toggleSection = function(h, b) { 
@@ -626,7 +643,6 @@
       return;
     }
 
-    // Group by category
     const grouped = {};
     filtered.forEach(m => {
       if(!grouped[m.category]) grouped[m.category] = [];
@@ -656,7 +672,7 @@
     
     renderCart();
     document.getElementById('searchSellInput').value = '';
-    renderSellProducts(); // Reset qty input
+    renderSellProducts();
   };
 
   function renderCart() {
@@ -874,7 +890,6 @@
         if(d.exists()) document.getElementById('settingPharmacyName').value = d.data().name || '';
       });
     }
-    // Quick Sale categories (using main categories for now)
     const qc = document.getElementById('quickCat');
     qc.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
     allCategories.forEach(c => { qc.innerHTML += `<option value="${c}">${c}</option>`; });
@@ -932,7 +947,6 @@
     }
   }
 
-  // Set default dates
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('sellDate').value = today;
   document.getElementById('expDate').value = today;
