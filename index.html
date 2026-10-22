@@ -6,12 +6,35 @@
 <title>Hanitech Pharmacy Tracker</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background: #f0f4f8; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
-  
+  body { background: #f0f4f8; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; transition: background 0.3s, color 0.3s; }
+  body.dark { background: #1a202c; color: #e2e8f0; }
+  body.dark .section-collapsible, body.dark .login-box { background: #2d3748; color: #e2e8f0; }
+  body.dark label { color: #a0aec0; }
+  body.dark input, body.dark select { background: #4a5568; border-color: #4a5568; color: #e2e8f0; }
+  body.dark input:focus, body.dark select:focus { border-color: #63b3ed; }
+  body.dark .section-header .sec-title { color: #63b3ed; }
+  body.dark .cat-header { background: linear-gradient(135deg, #2c5282, #2a4365); border-color: #2c5282; }
+  body.dark .cat-body { background: #2d3748; border-color: #2c5282; }
+  body.dark .list-item { background: #4a5568; border-color: #4a5568; }
+  body.dark .list-item .name { color: #e2e8f0; }
+  body.dark .list-item .meta { color: #a0aec0; }
+  body.dark .list-item .qty-input { background: #2d3748; color: #63b3ed; border-color: #718096; }
+  body.dark .info-banner { background: #2c5282; border-color: #3182ce; color: #bee3f8; }
+  body.dark .summary-box { background: linear-gradient(135deg, #2a4365, #1a365d); }
+  body.dark .summary-box.green { background: linear-gradient(135deg, #22543d, #1c4532); }
+  body.dark .summary-box.red { background: linear-gradient(135deg, #742a2a, #63171b); }
+  body.dark .expiry-alert { color: #fc8181; }
+  body.dark .low-stock { color: #fbd38d; }
+  body.dark .cat-tag { background: #2d3748; border-color: #2c5282; color: #63b3ed; }
+  body.dark .perm-section { background: #4a5568; border-color: #4a5568; }
+  body.dark .perm-title { color: #63b3ed; }
+  body.dark .toggle-row label { color: #e2e8f0; }
+
   #loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
   #loginScreen.hidden { display: none; }
   .login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
   .login-box h1 { text-align: center; color: #1a365d; font-size: 20px; margin-bottom: 20px; font-weight: 800;}
+  body.dark .login-box h1 { color: #63b3ed; }
   .form-group { margin-bottom: 16px; }
   input { width: 100%; padding: 14px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f7fafc; outline: none; }
   input:focus { border-color: #3182ce; background: #fff; }
@@ -24,13 +47,16 @@
   .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
 
   .tabs-wrapper { position: sticky; top: 60px; z-index: 99; background: #f0f4f8; }
+  body.dark .tabs-wrapper { background: #1a202c; }
   .tabs { display: flex; background: transparent; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
   .tabs::-webkit-scrollbar { display: none; }
   input[type="radio"][name="tabs"] { display: none !important; }
   .tabs label { flex: 0 0 auto; min-width: 85px; text-align: center; padding: 12px 8px; font-size: 12.5px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
+  body.dark .tabs label { background: #2d3748; color: #a0aec0; }
   .tabs label i { font-size: 22px; font-style: normal; line-height: 1; margin-bottom: 2px;}
   
   #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"] { color: #2c5282; background: #ebf4ff; border-color: #90cdf4; box-shadow: 0 4px 12px rgba(44,82,130,0.15);}
+  body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"] { color: #63b3ed; background: #4a5568; border-color: #63b3ed; }
  
   .panel { display: none; padding: 14px; }
   #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8 { display: block; }
@@ -156,7 +182,7 @@
           </div>
           <div class="section-body" id="bodyAddMed">
             <label class="field-label">📦 ዓይነት</label>
-            <select id="medType">
+            <select id="medType" onchange="onMedTypeChange()">
               <option value="medicine">💊 መድሃኒት</option>
               <option value="cosmetic">🧴 ኮስሞቲክስ</option>
             </select>
@@ -166,10 +192,14 @@
             <input type="text" id="medSubcategory" placeholder="ለምሳሌ: ታብሌት" autocomplete="off">
             <label class="field-label">💊 የምርት ስም</label>
             <input type="text" id="medName" placeholder="ለምሳሌ: Paracetamol" autocomplete="off">
-            <label class="field-label">🔢 የባች ቁጥር</label>
-            <input type="text" id="medBatch" placeholder="BATCH-001" autocomplete="off">
-            <label class="field-label">📅 የማለቂያ ቀን</label>
-            <input type="date" id="medExpiry">
+            
+            <div id="medicineOnlyFields">
+              <label class="field-label">🔢 የባች ቁጥር</label>
+              <input type="text" id="medBatch" placeholder="BATCH-001" autocomplete="off">
+              <label class="field-label">📅 የማለቂያ ቀን</label>
+              <input type="date" id="medExpiry">
+            </div>
+
             <label class="field-label">💰 የግዢ ዋጋ (ብር)</label>
             <input type="number" id="medCost" placeholder="0.00">
             <label class="field-label">🏷️ የሽያጭ ዋጋ (ብር)</label>
@@ -183,7 +213,14 @@
           <div class="section-header" id="hdrMedList" onclick="toggleSection('hdrMedList','bodyMedList')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የምርት ዝርዝር</span></div>
           </div>
-          <div class="section-body" id="bodyMedList"><div id="medListDisplay"></div></div>
+          <div class="section-body" id="bodyMedList">
+            <select id="filterTypeMed" onchange="renderMedList()" style="margin-bottom:10px;">
+              <option value="all">ሁሉም ዓይነት</option>
+              <option value="medicine">💊 መድሃኒት ብቻ</option>
+              <option value="cosmetic">🧴 ኮስሞቲክስ ብቻ</option>
+            </select>
+            <div id="medListDisplay"></div>
+          </div>
         </div>
       </div>
 
@@ -274,7 +311,23 @@
           <div class="section-header open" id="hdrInventory" onclick="toggleSection('hdrInventory','bodyInventory')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">የእቃ ክምችት</span></div>
           </div>
-          <div class="section-body open" id="bodyInventory"><div id="inventoryList"></div></div>
+          <div class="section-body open" id="bodyInventory">
+            <select id="filterTypeInv" onchange="loadInventory()" style="margin-bottom:10px;">
+              <option value="all">ሁሉም ዓይነት</option>
+              <option value="medicine">💊 መድሃኒት ብቻ</option>
+              <option value="cosmetic">🧴 ኮስሞቲክስ ብቻ</option>
+            </select>
+            <div id="inventoryList"></div>
+          </div>
+        </div>
+        <!-- 🆕 የማለቂያ ቀን ማሳወቂያ ለብቻው -->
+        <div class="section-collapsible">
+          <div class="section-header" id="hdrExpiryList" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">የማለቂያ ቀን ማሳወቂያ</span></div>
+          </div>
+          <div class="section-body" id="bodyExpiryList">
+            <div id="expiryListDisplay"></div>
+          </div>
         </div>
       </div>
 
@@ -401,16 +454,123 @@
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
           </div>
           <div class="section-body open" id="bodySettings">
-            <label class="field-label">🏥 የፋርማሲ ስም</label>
-            <input type="text" id="settingPharmacyName" placeholder="Hanitech Pharmacy">
-            <button class="btn btn-primary" onclick="savePharmacyName()">💾 አስቀምጥ</button>
-            <div style="height:1px; background:#edf2f7; margin:16px 0;"></div>
-            <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px;">🔐 ፓስወርድ ቀይር</h3>
-            <label class="field-label">የአሁኑ ፓስወርድ</label>
-            <input type="password" id="currentPass" placeholder="••••••••">
-            <label class="field-label">አዲስ ፓስወርድ</label>
-            <input type="password" id="newPass" placeholder="••••••••">
-            <button class="btn btn-warning" onclick="changePassword()">🔐 ፓስወርድ ቀይር</button>
+            <!-- 1. Pharmacy Name -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrPhName" onclick="toggleSection('hdrPhName','bodyPhName')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">የፋርማሲ ስም</span></div>
+              </div>
+              <div class="section-body" id="bodyPhName">
+                <input type="text" id="settingPharmacyName" placeholder="Hanitech Pharmacy">
+                <button class="btn btn-primary" onclick="savePharmacyName()">💾 አስቀምጥ</button>
+              </div>
+            </div>
+
+            <!-- 2. Password -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrPass" onclick="toggleSection('hdrPass','bodyPass')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔐</span><span class="sec-title">ፓስወርድ ቀይር</span></div>
+              </div>
+              <div class="section-body" id="bodyPass">
+                <label class="field-label">የአሁኑ ፓስወርድ</label>
+                <input type="password" id="currentPass" placeholder="••••••••">
+                <label class="field-label">አዲስ ፓስወርድ</label>
+                <input type="password" id="newPass" placeholder="••••••••">
+                <button class="btn btn-warning" onclick="changePassword()">🔐 ፓስወርድ ቀይር</button>
+              </div>
+            </div>
+
+            <!-- 3. Dark Mode -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrDark" onclick="toggleSection('hdrDark','bodyDark')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🌙</span><span class="sec-title">Dark Mode</span></div>
+              </div>
+              <div class="section-body" id="bodyDark">
+                <label class="toggle-row" style="display:flex; align-items:center; justify-content:space-between; padding:10px 0;">
+                  <span>🌙 Dark Mode አብራ/አጥፋ</span>
+                  <label class="switch" style="position:relative; display:inline-block; width:48px; height:26px;">
+                    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" style="opacity:0; width:0; height:0;">
+                    <span class="slider" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#cbd5e0; transition:.3s; border-radius:26px;"></span>
+                  </label>
+                </label>
+              </div>
+            </div>
+
+            <!-- 4. Notification -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrNotif" onclick="toggleSection('hdrNotif','bodyNotif')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔔</span><span class="sec-title">Notification</span></div>
+              </div>
+              <div class="section-body" id="bodyNotif">
+                <p style="font-size:12.5px; color:#718096; margin-bottom:10px;">በምሽት 8:00 ሽያጭ ማስገባት ማስታወሻ።</p>
+                <button class="btn btn-outline btn-sm" onclick="enableNotifications()">🔔 Notification አስነሳ</button>
+                <button class="btn btn-outline btn-sm" onclick="testNotification()" style="margin-top:8px;">🧪 ሞክር</button>
+                <div id="notifStatus" style="margin-top:10px; font-size:12.5px; color:#718096;"></div>
+              </div>
+            </div>
+
+            <!-- 5. Data Backup -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrBackup" onclick="toggleSection('hdrBackup','bodyBackup')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💾</span><span class="sec-title">ዳታ ባክአፕ / ሪስቶር</span></div>
+              </div>
+              <div class="section-body" id="bodyBackup">
+                <button class="btn btn-success" onclick="exportBackup()">📥 ዳታ አውጣ</button>
+                <button class="btn btn-warning" style="margin-top:10px;" onclick="document.getElementById('restoreFile').click()">📤 ዳታ መልስ</button>
+                <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="importBackup(event)">
+                <div id="backupStatus" style="margin-top:10px; font-size:13px;"></div>
+              </div>
+            </div>
+
+            <!-- 6. Reset -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrReset" onclick="toggleSection('hdrReset','bodyReset')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔄</span><span class="sec-title">አዲስ ቀን ጀምር (Reset)</span></div>
+              </div>
+              <div class="section-body" id="bodyReset">
+                <p style="font-size:12.5px; color:#718096; margin-bottom:10px;">የተመረጠውን ቀን ሽያጭ እና ወጪ ብቻ ያጠፋል።</p>
+                <button class="btn btn-danger" onclick="resetSelectedDate()">🔄 የተመረጠውን ቀን አጥፋ</button>
+              </div>
+            </div>
+
+            <!-- 7. Report Print -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrPrint" onclick="toggleSection('hdrPrint','bodyPrint')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🖨️</span><span class="sec-title">ሪፖርት ማውጫ</span></div>
+              </div>
+              <div class="section-body" id="bodyPrint">
+                <button class="btn btn-primary" onclick="printReport()">🖨️ Print ሪፖርት</button>
+                <button class="btn btn-success" style="margin-top:10px;" onclick="exportExcel()">📊 Excel (CSV)</button>
+              </div>
+            </div>
+
+            <!-- 8. Permissions -->
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrPermissions" onclick="toggleSection('hdrPermissions','bodyPermissions')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">የተጠቃሚዎች ፈቃዶች (Permissions)</span></div>
+              </div>
+              <div class="section-body" id="bodyPermissions">
+                <div class="info-banner">💡 ማናጀር እና አካውንታንት ምን ማድረግ እንደሚችሉ ይምረጡ።</div>
+                
+                <h3 style="font-size:14px; color:#2c5282; margin-bottom:10px;">🎯 ማናጀር (Manager)</h3>
+                <div class="perm-section">
+                  <label class="toggle-row"><span>📝 ሽያጭ ማስገባት</span><label class="switch"><input type="checkbox" id="perm_mgr_sales" checked><span class="slider"></span></label></label>
+                  <label class="toggle-row"><span>💸 ወጪ ማስገባት</span><label class="switch"><input type="checkbox" id="perm_mgr_expense" checked><span class="slider"></span></label></label>
+                  <label class="toggle-row"><span>➕ ምርት ጨምር</span><label class="switch"><input type="checkbox" id="perm_mgr_product" checked><span class="slider"></span></label></label>
+                  <label class="toggle-row"><span>🗂️ ምድቦች አስተዳድር</span><label class="switch"><input type="checkbox" id="perm_mgr_cat" checked><span class="slider"></span></label></label>
+                </div>
+
+                <h3 style="font-size:14px; color:#2c5282; margin-bottom:10px; margin-top:15px;">💼 አካውንታንት (Accountant)</h3>
+                <div class="perm-section">
+                  <label class="toggle-row"><span>📝 ሽያጭ ማስገባት</span><label class="switch"><input type="checkbox" id="perm_acc_sales" checked><span class="slider"></span></label></label>
+                  <label class="toggle-row"><span>💸 ወጪ ማስገባት</span><label class="switch"><input type="checkbox" id="perm_acc_expense" checked><span class="slider"></span></label></label>
+                  <label class="toggle-row"><span>➕ ምርት ጨምር</span><label class="switch"><input type="checkbox" id="perm_acc_product" checked><span class="slider"></span></label></label>
+                  <label class="toggle-row"><span>🗂️ ምድቦች አስተዳድር</span><label class="switch"><input type="checkbox" id="perm_acc_cat" checked><span class="slider"></span></label></label>
+                </div>
+                
+                <button class="btn btn-success" onclick="savePermissions()" style="margin-top:10px;">💾 ፈቃዶችን አስቀምጥ</button>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -423,7 +583,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB3bQkI8scEHg36kkxlAalbbCtE4R0Vv8U",
@@ -452,6 +612,12 @@
     if (!hd || !bd) return; 
     const o = bd.classList.toggle('open'); 
     hd.classList.toggle('open', o); 
+  };
+
+  window.onMedTypeChange = function() {
+    const type = document.getElementById('medType').value;
+    const medFields = document.getElementById('medicineOnlyFields');
+    medFields.style.display = type === 'cosmetic' ? 'none' : 'block';
   };
 
   window.login = async function() {
@@ -501,8 +667,10 @@
     loadDashboard();
     loadSettings();
     checkExpiryAlerts();
+    loadDarkMode();
   }
 
+  // --- ምድቦች (Categories) ---
   async function loadCategories() {
     try {
       const snap = await getDocs(collection(db, 'categories'));
@@ -542,6 +710,7 @@
     try { await deleteDoc(doc(db, 'categories', name)); loadCategories(); } catch(e) { alert(e.message); }
   };
 
+  // --- የወጪ ምድቦች ---
   async function loadExpCategories() {
     try {
       const snap = await getDocs(collection(db, 'expenseCategories'));
@@ -581,18 +750,24 @@
     try { await deleteDoc(doc(db, 'expenseCategories', name)); loadExpCategories(); } catch(e) { alert(e.message); }
   };
 
+  // --- መድሃኒት ---
   window.addMedicine = async function() {
     const type = document.getElementById('medType').value;
     const category = document.getElementById('medCategory').value;
     const subcategory = document.getElementById('medSubcategory').value.trim();
     const name = document.getElementById('medName').value.trim();
-    const batch = document.getElementById('medBatch').value.trim();
-    const expiry = document.getElementById('medExpiry').value;
     const cost = parseFloat(document.getElementById('medCost').value);
     const price = parseFloat(document.getElementById('medPrice').value);
     const qty = parseInt(document.getElementById('medQty').value);
 
-    if (!category || !subcategory || !name || !batch || !expiry || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) {
+    let batch = '', expiry = '';
+    if (type === 'medicine') {
+      batch = document.getElementById('medBatch').value.trim();
+      expiry = document.getElementById('medExpiry').value;
+      if (!batch || !expiry) { alert('⚠️ እባክህ የባች ቁጥር እና የማለቂያ ቀን ሙላ!'); return; }
+    }
+
+    if (!category || !subcategory || !name || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) {
       alert('⚠️ እባክህ ሁሉንም መረጃዎች በትክክል ሙላ!');
       return;
     }
@@ -604,8 +779,10 @@
       alert('✅ ምርቱ ተመዝግቧል!');
       document.getElementById('medSubcategory').value = '';
       document.getElementById('medName').value = '';
-      document.getElementById('medBatch').value = '';
-      document.getElementById('medExpiry').value = '';
+      if (type === 'medicine') {
+        document.getElementById('medBatch').value = '';
+        document.getElementById('medExpiry').value = '';
+      }
       document.getElementById('medCost').value = '';
       document.getElementById('medPrice').value = '';
       document.getElementById('medQty').value = '';
@@ -623,17 +800,23 @@
     } catch (err) { console.error(err); }
   }
 
-  function renderMedList() {
+  window.renderMedList = function() {
     const listEl = document.getElementById('medListDisplay');
-    if(allMedicines.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
+    const filter = document.getElementById('filterTypeMed').value;
+    let filtered = allMedicines;
+    if (filter !== 'all') filtered = allMedicines.filter(m => m.type === filter);
+    
+    if(filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
     let html = '';
-    allMedicines.forEach(m => {
+    filtered.forEach(m => {
       const typeLabel = m.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
-      html += `<div class="list-item"><div class="info"><div class="name">${m.name}</div><div class="meta">${typeLabel} | 📁 ${m.category} → ${m.subcategory} | 📦 ${m.batch} | 📅 ${m.expiry}</div></div><div class="amount">${m.price} ብር</div></div>`;
+      const extra = m.type === 'medicine' ? ` | 📦 ${m.batch} | 📅 ${m.expiry}` : '';
+      html += `<div class="list-item"><div class="info"><div class="name">${m.name}</div><div class="meta">${typeLabel} | 📁 ${m.category} → ${m.subcategory}${extra}</div></div><div class="amount">${m.price} ብር</div></div>`;
     });
     listEl.innerHTML = html;
-  }
+  };
 
+  // --- ሽያጭ (POS) ---
   function renderSellProducts() {
     const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase();
     const listEl = document.getElementById('sellProductList');
@@ -712,6 +895,7 @@
     } catch(e) { alert(e.message); }
   };
 
+  // --- ፈጣን ገቢ ---
   window.addQuickSale = async function() {
     const type = document.getElementById('quickType').value;
     const cat = document.getElementById('quickCat').value;
@@ -727,6 +911,7 @@
     } catch(e) { alert(e.message); }
   };
 
+  // --- ወጪ ---
   window.addExpense = async function() {
     const cat = document.getElementById('expCat').value;
     const note = document.getElementById('expNote').value.trim();
@@ -752,12 +937,17 @@
     allExpenses = []; snap.forEach(d => allExpenses.push({ id: d.id, ...d.data() }));
   }
 
+  // --- ክምችት ---
   function loadInventory() {
     const listEl = document.getElementById('inventoryList');
-    if (allMedicines.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
+    const filter = document.getElementById('filterTypeInv').value;
+    let filtered = allMedicines;
+    if (filter !== 'all') filtered = allMedicines.filter(m => m.type === filter);
+
+    if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
     
     const grouped = {};
-    allMedicines.forEach(med => {
+    filtered.forEach(med => {
       const typeKey = med.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
       const cat = med.category || 'ሌላ'; const sub = med.subcategory || 'ሌላ';
       const key = typeKey + ' - ' + cat;
@@ -773,21 +963,40 @@
         html += `<div style="font-size:13px; font-weight:bold; color:#4a5568; margin:8px 0 5px 5px;">↳ ${subName}</div>`;
         grouped[catName][subName].forEach(med => {
           const today = new Date(); today.setHours(0,0,0,0);
-          const expiryDate = new Date(med.expiry);
-          const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
           let alertHtml = ''; let rowStyle = '';
-          if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border:1px solid #fed7d7;'; }
-          else if (diffDays <= 30) { alertHtml = `<span class="expiry-alert" style="color:#dd6b20;">⚠️ ${diffDays} ቀን ቀርቷል</span>`; rowStyle = 'background:#fffaf0; border:1px solid #fbd38d;'; }
-          else if (med.quantity <= 10) { alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>'; }
+          if (med.type === 'medicine') {
+            const expiryDate = new Date(med.expiry);
+            const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+            if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border:1px solid #fed7d7;'; }
+            else if (diffDays <= 30) { alertHtml = `<span class="expiry-alert" style="color:#dd6b20;">⚠️ ${diffDays} ቀን ቀርቷል</span>`; rowStyle = 'background:#fffaf0; border:1px solid #fbd38d;'; }
+          }
+          if (med.quantity <= 10 && !alertHtml) { alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>'; }
           
-          html += `<div class="list-item" style="${rowStyle}"><div class="info"><div class="name">${med.name}</div><div class="meta">📦 ${med.batch} | 📅 ${med.expiry} ${alertHtml}</div></div><div class="amount">${med.quantity} <small style="font-size:10px;color:#718096;">ብዛት</small><br><small style="font-size:11px;color:#276749;">${med.price} ብር</small></div></div>`;
+          const extra = med.type === 'medicine' ? `<br>📦 ${med.batch} | 📅 ${med.expiry}` : '';
+          html += `<div class="list-item" style="${rowStyle}"><div class="info"><div class="name">${med.name}</div><div class="meta">${extra} ${alertHtml}</div></div><div class="amount">${med.quantity} <small style="font-size:10px;color:#718096;">ብዛት</small><br><small style="font-size:11px;color:#276749;">${med.price} ብር</small></div></div>`;
         });
       });
       html += `</div></div>`;
     });
     listEl.innerHTML = html;
+
+    // Expiry List (separate section)
+    const expListEl = document.getElementById('expiryListDisplay');
+    const expMeds = allMedicines.filter(m => m.type === 'medicine' && m.expiry).map(m => {
+      const diffDays = Math.ceil((new Date(m.expiry) - new Date()) / (1000 * 60 * 60 * 24));
+      return { ...m, diffDays };
+    }).filter(m => m.diffDays <= 30).sort((a,b) => a.diffDays - b.diffDays);
+
+    if (expMeds.length === 0) { expListEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የማለቂያ ቀን ማሳወቂያ የለም።</p>'; return; }
+    let expHtml = '';
+    expMeds.forEach(m => {
+      const isExpired = m.diffDays < 0;
+      expHtml += `<div class="list-item" style="${isExpired ? 'background:#fff5f5; border:1px solid #fed7d7;' : 'background:#fffaf0; border:1px solid #fbd38d;'}"><div class="info"><div class="name">${m.name}</div><div class="meta">📦 ${m.batch} | 📅 ${m.expiry}</div></div><div class="amount ${isExpired ? 'red' : ''}" style="font-size:12px;">${isExpired ? '🚨 ጊዜው አልፏል!' : `⚠️ ${m.diffDays} ቀን`}</div></div>`;
+    });
+    expListEl.innerHTML = expHtml;
   }
 
+  // --- የቀን ሪፖርት ---
   async function loadDailyReport() {
     const dateInput = document.getElementById('dailyReportDate');
     if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
@@ -826,6 +1035,7 @@
     document.getElementById('dailyUnsoldList').innerHTML = unsoldHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ሁሉም ተሽጠዋል።</p>';
   }
 
+  // --- የወር ሪፖርት ---
   async function loadMonthlyReport() {
     const monthInput = document.getElementById('monthlyReportMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().slice(0,7);
@@ -862,6 +1072,7 @@
     document.getElementById('monthlyUnsoldList').innerHTML = unsoldHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ሁሉም ተሽጠዋል።</p>';
   }
 
+  // --- ዳሽቦርድ ---
   async function loadDashboard() {
     const today = new Date().toISOString().split('T')[0];
     const month = today.substring(0,7);
@@ -885,6 +1096,7 @@
     document.getElementById('dashMonthProfit').innerHTML = (mRev - mExpSum).toFixed(2) + ' <small>ብር</small>';
   }
 
+  // --- ሴቲንግስ ---
   function loadSettings() {
     if(currentUserPharmacyId) {
       getDoc(doc(db, 'pharmacies', currentUserPharmacyId)).then(d => {
@@ -922,6 +1134,135 @@
     } catch (err) { alert('ስህተት: ' + err.message); }
   };
 
+  // --- ዳክ ሞድ ---
+  window.toggleDarkMode = function() {
+    const isDark = document.getElementById('darkModeToggle').checked;
+    if (isDark) { document.body.classList.add('dark'); } else { document.body.classList.remove('dark'); }
+    localStorage.setItem('pharmacy_dark', isDark ? '1' : '0');
+  };
+
+  function loadDarkMode() {
+    const saved = localStorage.getItem('pharmacy_dark');
+    if (saved === '1') {
+      document.body.classList.add('dark');
+      const cb = document.getElementById('darkModeToggle');
+      if (cb) cb.checked = true;
+    }
+  }
+
+  // --- ኖቲፊኬሽን ---
+  window.enableNotifications = async function() {
+    const status = document.getElementById('notifStatus');
+    if (!('Notification' in window)) { status.textContent = '❌ አይደግፍም'; return; }
+    try { 
+      const perm = await Notification.requestPermission(); 
+      if (perm === 'granted') { status.textContent = '✅ ተነስቷል'; status.style.color = '#38a169'; } 
+      else { status.textContent = '❌ አልተፈቀደም'; status.style.color = '#c53030'; } 
+    } catch (e) { status.textContent = '❌ ' + e.message; }
+  };
+
+  window.testNotification = function() {
+    if (Notification.permission !== 'granted') { alert('⚠️ መጀመሪያ Notification አስነሳ'); return; }
+    new Notification('💊 የፋርማሲ ማስታወሻ', { body: 'የዛሬ ሽያጭ አስገባ! 📊' });
+  };
+
+  // --- ዳታ ባክአፕ ---
+  window.exportBackup = async function() {
+    const statusEl = document.getElementById('backupStatus');
+    statusEl.textContent = '⏳ ዳታ በመሰብሰብ ላይ...';
+    try {
+      const data = { exportedAt: new Date().toISOString(), medicines: allMedicines, categories: allCategories, sales: allSales, expenses: allExpenses };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `pharmacy-backup-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      statusEl.textContent = '✅ ዳታ ወርዷል!'; statusEl.style.color = '#38a169';
+    } catch(e) { statusEl.textContent = '❌ ' + e.message; statusEl.style.color = '#c53030'; }
+  };
+
+  window.importBackup = function(event) {
+    const file = event.target.files[0]; if (!file) return;
+    if (!confirm('⚠️ ዳታ መመለስ አሁን ያለውን ዳታ ይተካል! እርግጠኛ ነህ?')) { event.target.value = ''; return; }
+    const statusEl = document.getElementById('backupStatus');
+    statusEl.textContent = '⏳ በመመለስ ላይ...';
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        for (const m of data.medicines || []) { const { id, ...rest } = m; await setDoc(doc(db, 'medicines', id), rest); }
+        for (const s of data.sales || []) { const { id, ...rest } = s; await setDoc(doc(db, 'sales', id), rest); }
+        for (const ex of data.expenses || []) { const { id, ...rest } = ex; await setDoc(doc(db, 'expenses', id), rest); }
+        statusEl.textContent = '✅ ዳታ ተመልሷል!'; statusEl.style.color = '#38a169';
+        loadAllData();
+      } catch(err) { statusEl.textContent = '❌ ' + err.message; statusEl.style.color = '#c53030'; }
+    };
+    reader.readAsText(file); event.target.value = '';
+  };
+
+  // --- ሪሴት ---
+  window.resetSelectedDate = async function() {
+    const date = document.getElementById('dailyReportDate').value;
+    if(!date) { alert('ቀን ምረጥ'); return; }
+    if(!confirm(`የ ${date} ሽያጭ እና ወጪ ማጥፋት ትፈልጋለህ?`)) return;
+    try {
+      const batch = writeBatch(db);
+      const sSnap = await getDocs(query(collection(db, 'sales'), where('date', '==', date)));
+      sSnap.forEach(d => batch.delete(d.ref));
+      const eSnap = await getDocs(query(collection(db, 'expenses'), where('date', '==', date)));
+      eSnap.forEach(d => batch.delete(d.ref));
+      const qSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '==', date)));
+      qSnap.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+      alert('✅ ተጠፍቷል!');
+      loadAllData();
+    } catch(e) { alert(e.message); }
+  };
+
+  // --- ሪፖርት ---
+  window.printReport = function() {
+    const monthLabel = document.getElementById('monthlyReportMonth').value;
+    const tRev = document.getElementById('monthlyTotalRevenue').innerText;
+    const tExp = document.getElementById('monthlyTotalExpense').innerText;
+    const tNet = document.getElementById('monthlyNetProfit').innerText;
+    const w = window.open('', '_blank');
+    w.document.write(`<html><head><title>Pharmacy Report - ${monthLabel}</title><style>body{font-family:Arial;padding:20px}h1{color:#2b6cb0}h2{color:#4a5568}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #cbd5e0;padding:10px}th{background:#ebf4ff}</style></head><body><h1>💊 Hanitech Pharmacy Report</h1><h2>📅 ${monthLabel}</h2><table><tr><th>መግለጫ</th><th>መጠን</th></tr><tr><td>ገቢ</td><td>${tRev}</td></tr><tr><td>ወጪ</td><td>${tExp}</td></tr><tr><td>ትርፍ</td><td>${tNet}</td></tr></table><script>window.onload=()=>setTimeout(()=>window.print(),500);<\/script></body></html>`);
+    w.document.close();
+  };
+
+  window.exportExcel = function() {
+    if (allSales.length === 0) { alert('ውሂብ የለም'); return; }
+    let csv = '\uFEFFቀን,ምርት,ብዛት,ዋጋ,ጠቅላላ\n';
+    allSales.forEach(s => { csv += `"${s.date}","${s.medicineName}",${s.quantity},${s.unitPrice},${s.total}\n`; });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `pharmacy-sales-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  };
+
+  // --- ፈቃዶች ---
+  window.savePermissions = async function() {
+    if(!currentUserPharmacyId) return;
+    const perms = {
+      manager: {
+        sales: document.getElementById('perm_mgr_sales').checked,
+        expense: document.getElementById('perm_mgr_expense').checked,
+        product: document.getElementById('perm_mgr_product').checked,
+        cat: document.getElementById('perm_mgr_cat').checked
+      },
+      accountant: {
+        sales: document.getElementById('perm_acc_sales').checked,
+        expense: document.getElementById('perm_acc_expense').checked,
+        product: document.getElementById('perm_acc_product').checked,
+        cat: document.getElementById('perm_acc_cat').checked
+      }
+    };
+    try {
+      await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), perms);
+      alert('✅ ፈቃዶች ተቀምጠዋል!');
+    } catch(e) { alert(e.message); }
+  };
+
+  // --- የማለቂያ ቀን ማሳወቂያ ---
   function checkExpiryAlerts() {
     const banner = document.getElementById('expiryBanner');
     const bannerText = document.getElementById('expiryBannerText');
@@ -930,6 +1271,7 @@
     let expiringSoonCount = 0;
 
     allMedicines.forEach(med => {
+      if (med.type !== 'medicine' || !med.expiry) return;
       const expiryDate = new Date(med.expiry);
       const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
       if (diffDays < 0) expiredCount++;
@@ -939,8 +1281,8 @@
     if (expiredCount > 0 || expiringSoonCount > 0) {
       banner.style.display = 'block';
       let msg = '';
-      if (expiredCount > 0) msg += `${expiredCount} ምርት ጊዜው አልፏል! `;
-      if (expiringSoonCount > 0) msg += `${expiringSoonCount} ምርት በ30 ቀን ውስጥ ያልቃል!`;
+      if (expiredCount > 0) msg += `${expiredCount} መድሃኒት ጊዜው አልፏል! `;
+      if (expiringSoonCount > 0) msg += `${expiringSoonCount} መድሃኒት በ30 ቀን ውስጥ ያልቃል!`;
       bannerText.textContent = msg;
     } else {
       banner.style.display = 'none';
