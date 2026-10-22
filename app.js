@@ -45,54 +45,66 @@ window.onMedTypeChange = function() {
 };
 
 window.login = async function() {
-  const email = document.getElementById('email').value;
+  const email = document.getElementById('email').value.trim(); // ክፍተቶችን ለማስወገድ trim ተጨምሯል
   const password = document.getElementById('password').value;
   const errorEl = document.getElementById('loginError');
   errorEl.style.display = 'none';
 
   try {
     const userCred = await signInWithEmailAndPassword(auth, email, password);
+    
+    // 1. የተጠቃሚውን ዳታ ከ 'users' መጫን
     const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
     
     if(userDoc.exists()) {
       const userData = userDoc.data();
       currentUserPharmacyId = userData.pharmacyId;
 
-      // 🆕 የተጠቃሚውን መረጃ ማሳየት (በተሻሻለ መልኩ)
-const userEmail = userData.email || email;
-document.getElementById('hdrUserEmail').innerText = userEmail;
-document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase();
+      // 2. የተጠቃሚውን ኢሜይል እና የመጀመሪያ ፊደል ማሳየት
+      const userEmail = userData.email || email;
+      document.getElementById('hdrUserEmail').innerText = userEmail;
+      document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase();
 
-      const role = userData.role || 'employee';
+      // 3. ሚናውን (Role) በትክክል ማሳየት (ካፒታል ፊደል/ክፍተት ቢኖር ለማስተካከል toLowerCase ተጨምሯል)
+      const role = (userData.role || 'employee').toString().toLowerCase().trim();
       const roleElement = document.getElementById('hdrUserRole');
       
-      if (role === 'owner') {
+      if (role === 'owner' || role === 'superadmin' || role === 'ባለቤት') {
         roleElement.innerText = '👑 ባለቤት';
         roleElement.style.background = '#fefcbf';
         roleElement.style.color = '#975a16';
-      } else if (role === 'manager') {
+      } else if (role === 'manager' || role === 'ማናጀር') {
         roleElement.innerText = '🎯 ማናጀር';
         roleElement.style.background = '#bee3f8';
         roleElement.style.color = '#2c5282';
-      } else if (role === 'accountant') {
+      } else if (role === 'accountant' || role === 'አካውንታንት') {
         roleElement.innerText = '💼 አካውንታንት';
         roleElement.style.background = '#c6f6d5';
         roleElement.style.color = '#22543d';
       } else {
         roleElement.innerText = '👤 ሠራተኛ';
+        roleElement.style.background = '#e2e8f0';
+        roleElement.style.color = '#4a5568';
       }
 
-      const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
-if(phDoc.exists()) {
-  const phData = phDoc.data();
-  document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phData.name || 'Pharmacy Tracker');
-  currentBizType = phData.bizType || 'retail';
-  lowStockThreshold = phData.lowStockThreshold || 10;
-}
+      // 4. የፋርማሲውን ስም ማምጣት
+      if (currentUserPharmacyId) {
+        const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
+        if(phDoc.exists()) {
+          const phData = phDoc.data();
+          // ስሙ ባዶ ከሆነ 'Pharmacy Tracker' ይላል
+          document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phData.name || 'Pharmacy Tracker');
+          currentBizType = phData.bizType || 'retail';
+          lowStockThreshold = phData.lowStockThreshold || 10;
+        } else {
+          document.getElementById('hdrPharmacyName').innerText = '💊 Pharmacy Tracker';
+        }
+      }
 
       document.getElementById('loginScreen').classList.add('hidden');
       document.getElementById('mainApp').classList.add('show');
       loadAllData();
+      
     } else {
       errorEl.textContent = '⚠️ የተጠቃሚው መረጃ በዳታቤዝ ውስጥ አልተገኘም።';
       errorEl.style.display = 'block';
