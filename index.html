@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Hanitech Pharmacy Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
   body { background: #f0f4f8; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; transition: background 0.3s, color 0.3s; }
@@ -116,6 +117,22 @@
   .cat-header .cat-name { font-size: 14px; font-weight: 800; color: #1a365d; }
   .cat-body { display: none; padding: 8px 6px 6px 6px; background: #fff; border: 1px solid #90cdf4; border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
   .cat-body.open { display: block; }
+
+  .chart-container { position: relative; height: 250px; margin-bottom: 15px; }
+
+  /* 🆕 ለታብሌት እና ዴስክቶፕ (Grid Layout) */
+  @media (min-width: 768px) {
+    .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .panel { padding: 20px; }
+    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+    
+    /* ሙሉ ስፋት የሚይዙ ካርዶች */
+    .section-collapsible.full-width, 
+    #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings {
+       grid-column: span 2;
+    }
+    .section-collapsible { margin-bottom: 0; }
+  }
 </style>
 </head>
 <body>
@@ -176,7 +193,7 @@
             <div class="cat-tags" id="catListDisplay" style="margin-top:10px;"></div>
           </div>
         </div>
-        <div class="section-collapsible">
+        <div class="section-collapsible full-width">
           <div class="section-header" id="hdrAddMed" onclick="toggleSection('hdrAddMed','bodyAddMed')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">አዲስ ምርት ጨምር</span></div>
           </div>
@@ -211,7 +228,7 @@
             <button class="btn btn-success" onclick="addMedicine()">💾 አስቀምጥ</button>
           </div>
         </div>
-        <div class="section-collapsible">
+        <div class="section-collapsible full-width">
           <div class="section-header" id="hdrMedList" onclick="toggleSection('hdrMedList','bodyMedList')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የምርት ዝርዝር</span></div>
           </div>
@@ -228,7 +245,7 @@
 
       <!-- TAB 2: SELL -->
       <div class="panel" id="panel2">
-        <div class="section-collapsible">
+        <div class="section-collapsible full-width">
           <div class="section-header open" id="hdrSell" onclick="toggleSection('hdrSell','bodySell')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">ከዝርዝር መሸጥ</span></div>
           </div>
@@ -255,7 +272,7 @@
             </div>
           </div>
         </div>
-        <div class="section-collapsible">
+        <div class="section-collapsible full-width">
           <div class="section-header" id="hdrQuickSale" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">ፈጣን ገቢ ማስገቢያ</span></div>
           </div>
@@ -302,6 +319,24 @@
           </div>
         </div>
         <div class="section-collapsible">
+          <div class="section-header" id="hdrFixedExp" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">የወር ቋሚ ወጪ (Fixed)</span></div>
+          </div>
+          <div class="section-body" id="bodyFixedExp">
+            <div class="info-banner">💡 የቤት ኪራይ፣ ደመወዝ፣ መብራት ወዘተ። ወር ሲመረጥ ይመዘገባል።</div>
+            <label class="field-label">📁 የወጪ ምድብ</label>
+            <select id="fixCat"></select>
+            <label class="field-label">📝 ዝርዝር (አማራጭ)</label>
+            <input type="text" id="fixNote" placeholder="ለምሳሌ: የጥቅምት ደሞዝ">
+            <label class="field-label">💰 መጠን (ብር)</label>
+            <input type="number" id="fixAmount" placeholder="0.00">
+            <label class="field-label">📅 ወር</label>
+            <input type="month" id="fixMonth">
+            <button class="btn btn-warning" onclick="addFixedExpense()">💾 አስቀምጥ</button>
+            <div id="fixedExpList" style="margin-top:14px;"></div>
+          </div>
+        </div>
+        <div class="section-collapsible full-width">
           <div class="section-header" id="hdrExpCatMgr" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">የወጪ ምድቦችን አስተዳድር</span></div>
           </div>
@@ -317,7 +352,7 @@
 
       <!-- TAB 4: INVENTORY -->
       <div class="panel" id="panel4">
-        <div class="section-collapsible">
+        <div class="section-collapsible full-width">
           <div class="section-header open" id="hdrInventory" onclick="toggleSection('hdrInventory','bodyInventory')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">የእቃ ክምችት</span></div>
           </div>
@@ -330,7 +365,6 @@
             <div id="inventoryList"></div>
           </div>
         </div>
-        <!-- Stock Adjust -->
         <div class="section-collapsible">
           <div class="section-header" id="hdrStockAdjust" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">የስቶክ ማስተካከያ</span></div>
@@ -346,7 +380,6 @@
             <button class="btn btn-warning" onclick="adjustStock()">🔧 አስተካክል</button>
           </div>
         </div>
-        <!-- Expiry List -->
         <div class="section-collapsible">
           <div class="section-header" id="hdrExpiryList" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">የማለቂያ ቀን ማሳወቂያ</span></div>
@@ -359,17 +392,23 @@
 
       <!-- TAB 5: DAILY REPORT -->
       <div class="panel" id="panel5">
-        <div class="section-collapsible">
+        <div class="section-collapsible full-width">
           <div class="section-header open" id="hdrDaily" onclick="toggleSection('hdrDaily','bodyDaily')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">የቀን ገቢ</span></div>
           </div>
           <div class="section-body open" id="bodyDaily">
-            <label class="field-label">ቀን ምረጥ</label>
-            <input type="date" id="dailyReportDate" onchange="loadDailyReport()">
-            <label class="field-label">🏢 ቅርንጫፍ</label>
-            <select id="dailyReportBranch" onchange="loadDailyReport()">
-              <option value="all">ሁሉም ቅርንጫፎች</option>
-            </select>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+               <div>
+                 <label class="field-label">ቀን ምረጥ</label>
+                 <input type="date" id="dailyReportDate" onchange="loadDailyReport()">
+               </div>
+               <div>
+                 <label class="field-label">🏢 ቅርንጫፍ</label>
+                 <select id="dailyReportBranch" onchange="loadDailyReport()">
+                   <option value="all">ሁሉም ቅርንጫፎች</option>
+                 </select>
+               </div>
+            </div>
             <div class="summary-box green" style="margin-top:14px;">
               <div class="label">የተመረጠው ቀን ገቢ</div>
               <div class="value" id="dailyTotalRevenue">0.00 <small>ብር</small></div>
@@ -384,14 +423,14 @@
             </div>
             <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
             
-            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+            <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የቀኑ ሽያጮች</span></div>
               </div>
               <div class="section-body" id="bodyDailySales"><div id="dailySalesList"></div></div>
             </div>
 
-            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+            <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrDailyUnsold" onclick="toggleSection('hdrDailyUnsold','bodyDailyUnsold')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ ምርቶች</span></div>
               </div>
@@ -403,24 +442,34 @@
 
       <!-- TAB 6: MONTHLY REPORT -->
       <div class="panel" id="panel6">
-        <div class="section-collapsible">
+        <div class="section-collapsible full-width">
           <div class="section-header open" id="hdrMonthly" onclick="toggleSection('hdrMonthly','bodyMonthly')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">የወር ገቢ</span></div>
           </div>
           <div class="section-body open" id="bodyMonthly">
-            <label class="field-label">ወር ምረጥ</label>
-            <input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()">
-            <label class="field-label">🏢 ቅርንጫፍ</label>
-            <select id="monthlyReportBranch" onchange="loadMonthlyReport()">
-              <option value="all">ሁሉም ቅርንጫፎች</option>
-            </select>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+               <div>
+                 <label class="field-label">ወር ምረጥ</label>
+                 <input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()">
+               </div>
+               <div>
+                 <label class="field-label">🏢 ቅርንጫፍ</label>
+                 <select id="monthlyReportBranch" onchange="loadMonthlyReport()">
+                   <option value="all">ሁሉም ቅርንጫፎች</option>
+                 </select>
+               </div>
+            </div>
             <div class="summary-box green" style="margin-top:14px;">
               <div class="label">የተመረጠው ወር ገቢ</div>
               <div class="value" id="monthlyTotalRevenue">0.00 <small>ብር</small></div>
             </div>
             <div class="summary-box red" style="margin-top:10px;">
-              <div class="label">የወሩ ወጪ</div>
+              <div class="label">የወሩ ተለዋዋጭ ወጪ</div>
               <div class="value" id="monthlyTotalExpense">0.00 <small>ብር</small></div>
+            </div>
+            <div class="summary-box red" style="margin-top:10px;">
+              <div class="label">የወሩ ቋሚ ወጪ</div>
+              <div class="value" id="monthlyFixedExpense">0.00 <small>ብር</small></div>
             </div>
             <div class="summary-box" style="margin-top:10px;">
               <div class="label">የወሩ ትርፍ</div>
@@ -428,14 +477,14 @@
             </div>
             <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
 
-            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+            <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የወሩ ሽያጮች</span></div>
               </div>
               <div class="section-body" id="bodyMonthlySales"><div id="monthlySalesList"></div></div>
             </div>
 
-            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+            <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrMonthlyUnsold" onclick="toggleSection('hdrMonthlyUnsold','bodyMonthlyUnsold')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ ምርቶች</span></div>
               </div>
@@ -449,7 +498,7 @@
       <div class="panel" id="panel7">
         <div class="section-collapsible">
           <div class="section-header open" id="hdrDash" onclick="toggleSection('hdrDash','bodyDash')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard (ዛሬ)</span></div>
           </div>
           <div class="section-body open" id="bodyDash">
             <div class="summary-box green">
@@ -464,7 +513,13 @@
               <div class="label">የዛሬ ትርፍ</div>
               <div class="value" id="dashTodayProfit">0.00 <small>ብር</small></div>
             </div>
-            <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
+          </div>
+        </div>
+        <div class="section-collapsible">
+          <div class="section-header open" id="hdrDashMonth" onclick="toggleSection('hdrDashMonth','bodyDashMonth')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard (ወር)</span></div>
+          </div>
+          <div class="section-body open" id="bodyDashMonth">
             <div class="summary-box" style="background:linear-gradient(135deg,#2c5282,#1a365d);">
               <div class="label">የዚህ ወር ገቢ</div>
               <div class="value" id="dashMonthRevenue">0.00 <small>ብር</small></div>
@@ -479,6 +534,17 @@
             </div>
           </div>
         </div>
+        <div class="section-collapsible full-width">
+          <div class="section-header open" id="hdrCharts" onclick="toggleSection('hdrCharts','bodyCharts')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📈</span><span class="sec-title">ግራፎች</span></div>
+          </div>
+          <div class="section-body open" id="bodyCharts">
+            <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px;">📈 የ30 ቀን ሽያጭ ግራፍ</h3>
+            <div class="chart-container"><canvas id="dailyChart"></canvas></div>
+            <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px; margin-top:15px;">🥧 የወሩ ወጪ ግራፍ</h3>
+            <div class="chart-container"><canvas id="expensePieChart"></canvas></div>
+          </div>
+        </div>
       </div>
 
       <!-- TAB 8: SETTINGS -->
@@ -488,7 +554,6 @@
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
           </div>
           <div class="section-body open" id="bodySettings">
-            <!-- Pharmacy Name -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrPhName" onclick="toggleSection('hdrPhName','bodyPhName')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">የፋርማሲ ስም</span></div>
@@ -499,7 +564,6 @@
               </div>
             </div>
 
-            <!-- Branches -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrBranches" onclick="toggleSection('hdrBranches','bodyBranches')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">ቅርንጫፎች</span></div>
@@ -513,7 +577,6 @@
               </div>
             </div>
 
-            <!-- Password -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrPass" onclick="toggleSection('hdrPass','bodyPass')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔐</span><span class="sec-title">ፓስወርድ ቀይር</span></div>
@@ -527,7 +590,6 @@
               </div>
             </div>
 
-            <!-- Dark Mode -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrDark" onclick="toggleSection('hdrDark','bodyDark')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🌙</span><span class="sec-title">Dark Mode</span></div>
@@ -543,7 +605,6 @@
               </div>
             </div>
 
-            <!-- Notification -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrNotif" onclick="toggleSection('hdrNotif','bodyNotif')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔔</span><span class="sec-title">Notification</span></div>
@@ -556,7 +617,6 @@
               </div>
             </div>
 
-            <!-- Data Backup -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrBackup" onclick="toggleSection('hdrBackup','bodyBackup')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💾</span><span class="sec-title">ዳታ ባክአፕ / ሪስቶር</span></div>
@@ -569,7 +629,6 @@
               </div>
             </div>
 
-            <!-- Reset -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrReset" onclick="toggleSection('hdrReset','bodyReset')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔄</span><span class="sec-title">አዲስ ቀን ጀምር (Reset)</span></div>
@@ -580,7 +639,6 @@
               </div>
             </div>
 
-            <!-- Print -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrPrint" onclick="toggleSection('hdrPrint','bodyPrint')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🖨️</span><span class="sec-title">ሪፖርት ማውጫ</span></div>
@@ -591,14 +649,12 @@
               </div>
             </div>
 
-            <!-- Permissions -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrPermissions" onclick="toggleSection('hdrPermissions','bodyPermissions')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">የተጠቃሚዎች ፈቃዶች (Permissions)</span></div>
               </div>
               <div class="section-body" id="bodyPermissions">
                 <div class="info-banner">💡 ማናጀር እና አካውንታንት የትኞቹን ታቦች ማየት እንደሚችሉ ይምረጡ።</div>
-                
                 <h3 style="font-size:14px; color:#2c5282; margin-bottom:10px;">🎯 ማናጀር (Manager)</h3>
                 <div class="perm-section">
                   <label class="toggle-row"><span>💊 መድሃኒቶች</span><label class="switch"><input type="checkbox" id="tabperm_mgr_med" checked><span class="slider"></span></label></label>
@@ -610,7 +666,6 @@
                   <label class="toggle-row"><span>📊 Dashboard</span><label class="switch"><input type="checkbox" id="tabperm_mgr_dash" checked><span class="slider"></span></label></label>
                   <label class="toggle-row"><span>⚙️ Settings</span><label class="switch"><input type="checkbox" id="tabperm_mgr_settings"><span class="slider"></span></label></label>
                 </div>
-
                 <h3 style="font-size:14px; color:#2c5282; margin-bottom:10px; margin-top:15px;">💼 አካውንታንት (Accountant)</h3>
                 <div class="perm-section">
                   <label class="toggle-row"><span>💊 መድሃኒቶች</span><label class="switch"><input type="checkbox" id="tabperm_acc_med" checked><span class="slider"></span></label></label>
@@ -622,7 +677,6 @@
                   <label class="toggle-row"><span>📊 Dashboard</span><label class="switch"><input type="checkbox" id="tabperm_acc_dash" checked><span class="slider"></span></label></label>
                   <label class="toggle-row"><span>⚙️ Settings</span><label class="switch"><input type="checkbox" id="tabperm_acc_settings"><span class="slider"></span></label></label>
                 </div>
-                
                 <button class="btn btn-success" onclick="savePermissions()" style="margin-top:10px;">💾 ፈቃዶችን አስቀምጥ</button>
               </div>
             </div>
@@ -660,8 +714,10 @@
   let allBranches = [];
   let allSales = [];
   let allExpenses = [];
+  let allFixed = [];
   let cart = []; 
   let currentUserPharmacyId = null;
+  let dailyChartInstance = null, expensePieChartInstance = null;
 
   window.toggleSection = function(h, b) { 
     const hd = document.getElementById(h); 
@@ -717,6 +773,7 @@
     await loadMedicines();
     await loadSales();
     await loadExpenses();
+    await loadFixed();
     loadInventory();
     renderSellProducts();
     renderCart();
@@ -1040,6 +1097,21 @@
     } catch(e) { alert(e.message); }
   };
 
+  window.addFixedExpense = async function() {
+    const cat = document.getElementById('fixCat').value;
+    const note = document.getElementById('fixNote').value.trim();
+    const amount = parseFloat(document.getElementById('fixAmount').value);
+    const month = document.getElementById('fixMonth').value;
+    if(!cat || isNaN(amount) || amount <= 0 || !month) { alert('ሁሉንም መረጃዎች ሙላ'); return; }
+    try {
+      await addDoc(collection(db, 'fixedExpenses'), { category: cat, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+      alert('✅ ተመዝግቧል!');
+      document.getElementById('fixNote').value = '';
+      document.getElementById('fixAmount').value = '';
+      loadAllData();
+    } catch(e) { alert(e.message); }
+  };
+
   async function loadSales() {
     const snap = await getDocs(collection(db, 'sales'));
     allSales = []; snap.forEach(d => allSales.push({ id: d.id, ...d.data() }));
@@ -1048,6 +1120,11 @@
   async function loadExpenses() {
     const snap = await getDocs(collection(db, 'expenses'));
     allExpenses = []; snap.forEach(d => allExpenses.push({ id: d.id, ...d.data() }));
+  }
+
+  async function loadFixed() {
+    const snap = await getDocs(collection(db, 'fixedExpenses'));
+    allFixed = []; snap.forEach(d => allFixed.push({ id: d.id, ...d.data() }));
   }
 
   // --- ክምችት ---
@@ -1077,7 +1154,7 @@
         grouped[catName][subName].forEach(med => {
           const today = new Date(); today.setHours(0,0,0,0);
           let alertHtml = ''; let rowStyle = '';
-          if (med.type === 'medicine') {
+          if (med.type === 'medicine' && med.expiry) {
             const expiryDate = new Date(med.expiry);
             const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
             if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border:1px solid #fed7d7;'; }
@@ -1191,6 +1268,9 @@
     const qMonthQuick = query(collection(db, 'quickSales'), where('date', '>=', selMonth + '-01'), where('date', '<=', selMonth + '-31'));
     const snapQuick = await getDocs(qMonthQuick);
 
+    let fixedTotal = 0;
+    allFixed.filter(f => f.month === selMonth).forEach(f => fixedTotal += f.amount);
+
     let totalRev = 0, totalExp = 0;
     let salesHtml = '', unsoldHtml = '';
     const soldIds = new Set();
@@ -1212,9 +1292,12 @@
       if(!soldIds.has(m.id)) unsoldHtml += `<div class="list-item"><div class="info"><div class="name">${m.name}</div><div class="meta">ቀሪ: ${m.quantity}</div></div></div>`;
     });
 
+    const netProfit = totalRev - totalExp - fixedTotal;
+
     document.getElementById('monthlyTotalRevenue').innerHTML = totalRev.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('monthlyTotalExpense').innerHTML = totalExp.toFixed(2) + ' <small>ብር</small>';
-    document.getElementById('monthlyNetProfit').innerHTML = (totalRev - totalExp).toFixed(2) + ' <small>ብር</small>';
+    document.getElementById('monthlyFixedExpense').innerHTML = fixedTotal.toFixed(2) + ' <small>ብር</small>';
+    document.getElementById('monthlyNetProfit').innerHTML = netProfit.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('monthlySalesList').innerHTML = salesHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
     document.getElementById('monthlyUnsoldList').innerHTML = unsoldHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ሁሉም ተሽጠዋል።</p>';
   }
@@ -1241,6 +1324,30 @@
     document.getElementById('dashMonthRevenue').innerHTML = mRev.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('dashMonthExpense').innerHTML = mExpSum.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('dashMonthProfit').innerHTML = (mRev - mExpSum).toFixed(2) + ' <small>ብር</small>';
+
+    renderCharts();
+  }
+
+  function renderCharts() {
+    const c1 = document.getElementById('dailyChart'); if (!c1) return;
+    const l = [], d = [];
+    for (let i = 29; i >= 0; i--) {
+      const dt = new Date(); dt.setDate(dt.getDate() - i);
+      const ds = dt.toISOString().split('T')[0];
+      l.push(dt.getDate() + '/' + (dt.getMonth()+1));
+      const h = allSales.filter(s => s.date === ds).reduce((a,b) => a + b.total, 0);
+      d.push(h);
+    }
+    if (dailyChartInstance) dailyChartInstance.destroy();
+    dailyChartInstance = new Chart(c1, { type: 'bar', data: { labels: l, datasets: [{ label: 'ሽያጭ', data: d, backgroundColor: '#2c5282', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false } });
+
+    const c2 = document.getElementById('expensePieChart'); if (!c2) return;
+    const month = new Date().toISOString().substring(0,7);
+    let varTotal = allExpenses.filter(e => e.date && e.date.startsWith(month)).reduce((a,b) => a + b.amount, 0);
+    let fixTotal = allFixed.filter(f => f.month === month).reduce((a,b) => a + b.amount, 0);
+    if (varTotal === 0 && fixTotal === 0) { if (expensePieChartInstance) expensePieChartInstance.destroy(); return; }
+    if (expensePieChartInstance) expensePieChartInstance.destroy();
+    expensePieChartInstance = new Chart(c2, { type: 'doughnut', data: { labels: ['ተለዋዋጭ', 'ቋሚ'], datasets: [{ data: [varTotal, fixTotal], backgroundColor: ['#c53030', '#dd6b20'] }] }, options: { responsive: true, maintainAspectRatio: false } });
   }
 
   // --- ሴቲንግስ ---
@@ -1318,7 +1425,7 @@
     const statusEl = document.getElementById('backupStatus');
     statusEl.textContent = '⏳ ዳታ በመሰብሰብ ላይ...';
     try {
-      const data = { exportedAt: new Date().toISOString(), medicines: allMedicines, categories: allCategories, branches: allBranches, sales: allSales, expenses: allExpenses };
+      const data = { exportedAt: new Date().toISOString(), medicines: allMedicines, categories: allCategories, branches: allBranches, sales: allSales, expenses: allExpenses, fixed: allFixed };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `pharmacy-backup-${new Date().toISOString().split('T')[0]}.json`;
@@ -1339,6 +1446,7 @@
         for (const m of data.medicines || []) { const { id, ...rest } = m; await setDoc(doc(db, 'medicines', id), rest); }
         for (const s of data.sales || []) { const { id, ...rest } = s; await setDoc(doc(db, 'sales', id), rest); }
         for (const ex of data.expenses || []) { const { id, ...rest } = ex; await setDoc(doc(db, 'expenses', id), rest); }
+        for (const fx of data.fixed || []) { const { id, ...rest } = fx; await setDoc(doc(db, 'fixedExpenses', id), rest); }
         statusEl.textContent = '✅ ዳታ ተመልሷል!'; statusEl.style.color = '#38a169';
         loadAllData();
       } catch(err) { statusEl.textContent = '❌ ' + err.message; statusEl.style.color = '#c53030'; }
@@ -1370,9 +1478,10 @@
     const monthLabel = document.getElementById('monthlyReportMonth').value;
     const tRev = document.getElementById('monthlyTotalRevenue').innerText;
     const tExp = document.getElementById('monthlyTotalExpense').innerText;
+    const tFix = document.getElementById('monthlyFixedExpense').innerText;
     const tNet = document.getElementById('monthlyNetProfit').innerText;
     const w = window.open('', '_blank');
-    w.document.write(`<html><head><title>Pharmacy Report - ${monthLabel}</title><style>body{font-family:Arial;padding:20px}h1{color:#2b6cb0}h2{color:#4a5568}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #cbd5e0;padding:10px}th{background:#ebf4ff}</style></head><body><h1>💊 Hanitech Pharmacy Report</h1><h2>📅 ${monthLabel}</h2><table><tr><th>መግለጫ</th><th>መጠን</th></tr><tr><td>ገቢ</td><td>${tRev}</td></tr><tr><td>ወጪ</td><td>${tExp}</td></tr><tr><td>ትርፍ</td><td>${tNet}</td></tr></table><script>window.onload=()=>setTimeout(()=>window.print(),500);<\/script></body></html>`);
+    w.document.write(`<html><head><title>Pharmacy Report - ${monthLabel}</title><style>body{font-family:Arial;padding:20px}h1{color:#2b6cb0}h2{color:#4a5568}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #cbd5e0;padding:10px}th{background:#ebf4ff}</style></head><body><h1>💊 Hanitech Pharmacy Report</h1><h2>📅 ${monthLabel}</h2><table><tr><th>መግለጫ</th><th>መጠን</th></tr><tr><td>ገቢ</td><td>${tRev}</td></tr><tr><td>ተለዋዋጭ ወጪ</td><td>${tExp}</td></tr><tr><td>ቋሚ ወጪ</td><td>${tFix}</td></tr><tr><td>ትርፍ</td><td>${tNet}</td></tr></table><script>window.onload=()=>setTimeout(()=>window.print(),500);<\/script></body></html>`);
     w.document.close();
   };
 
@@ -1448,6 +1557,7 @@
   document.getElementById('sellDate').value = today;
   document.getElementById('expDate').value = today;
   document.getElementById('quickDate').value = today;
+  document.getElementById('fixMonth').value = today.substring(0,7);
 </script>
 
 </body>
