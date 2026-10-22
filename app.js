@@ -44,71 +44,76 @@ window.onMedTypeChange = function() {
   medFields.style.display = type === 'cosmetic' ? 'none' : 'block';
 };
 
+// ==========================================
+// 🔐 LOGIN & HEADER LOADING (የተሻሻለ)
+// ==========================================
+
+async function loadUserHeader(user) {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (!userDoc.exists()) {
+      console.warn('User doc not found');
+      return;
+    }
+    const userData = userDoc.data();
+    currentUserPharmacyId = userData.pharmacyId;
+
+    // Email & Initial
+    const userEmail = userData.email || user.email || '';
+    document.getElementById('hdrUserEmail').innerText = userEmail;
+    document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase() || 'U';
+
+    // Role
+    const role = (userData.role || 'employee').toString().toLowerCase().trim();
+    const roleElement = document.getElementById('hdrUserRole');
+    
+    if (role === 'owner' || role === 'ባለቤት') {
+      roleElement.innerText = '👑 ባለቤት';
+      roleElement.style.background = '#fefcbf';
+      roleElement.style.color = '#975a16';
+    } else if (role === 'manager' || role === 'ማናጀር') {
+      roleElement.innerText = '🎯 ማናጀር';
+      roleElement.style.background = '#bee3f8';
+      roleElement.style.color = '#2c5282';
+    } else if (role === 'accountant' || role === 'አካውንታንት') {
+      roleElement.innerText = '💼 አካውንታንት';
+      roleElement.style.background = '#c6f6d5';
+      roleElement.style.color = '#22543d';
+    } else {
+      roleElement.innerText = '👤 ሠራተኛ';
+      roleElement.style.background = '#e2e8f0';
+      roleElement.style.color = '#4a5568';
+    }
+
+    // Pharmacy name
+    if (currentUserPharmacyId) {
+      const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
+      if (phDoc.exists()) {
+        const phData = phDoc.data();
+        document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phData.name || 'Pharmacy Tracker');
+        currentBizType = phData.bizType || 'retail';
+        lowStockThreshold = phData.lowStockThreshold || 10;
+      } else {
+        document.getElementById('hdrPharmacyName').innerText = '💊 Pharmacy Tracker';
+      }
+    } else {
+      document.getElementById('hdrPharmacyName').innerText = '💊 Pharmacy Tracker';
+    }
+  } catch (err) {
+    console.error('loadUserHeader error:', err);
+  }
+}
+
 window.login = async function() {
-  const email = document.getElementById('email').value.trim(); // ክፍተቶችን ለማስወገድ trim ተጨምሯል
+  const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
   const errorEl = document.getElementById('loginError');
   errorEl.style.display = 'none';
 
   try {
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
-    
-    // 1. የተጠቃሚውን ዳታ ከ 'users' መጫን
-    const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
-    
-    if(userDoc.exists()) {
-      const userData = userDoc.data();
-      currentUserPharmacyId = userData.pharmacyId;
-
-      // 2. የተጠቃሚውን ኢሜይል እና የመጀመሪያ ፊደል ማሳየት
-      const userEmail = userData.email || email;
-      document.getElementById('hdrUserEmail').innerText = userEmail;
-      document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase();
-
-      // 3. ሚናውን (Role) በትክክል ማሳየት (ካፒታል ፊደል/ክፍተት ቢኖር ለማስተካከል toLowerCase ተጨምሯል)
-      const role = (userData.role || 'employee').toString().toLowerCase().trim();
-      const roleElement = document.getElementById('hdrUserRole');
-      
-      if (role === 'owner' || role === 'superadmin' || role === 'ባለቤት') {
-        roleElement.innerText = '👑 ባለቤት';
-        roleElement.style.background = '#fefcbf';
-        roleElement.style.color = '#975a16';
-      } else if (role === 'manager' || role === 'ማናጀር') {
-        roleElement.innerText = '🎯 ማናጀር';
-        roleElement.style.background = '#bee3f8';
-        roleElement.style.color = '#2c5282';
-      } else if (role === 'accountant' || role === 'አካውንታንት') {
-        roleElement.innerText = '💼 አካውንታንት';
-        roleElement.style.background = '#c6f6d5';
-        roleElement.style.color = '#22543d';
-      } else {
-        roleElement.innerText = '👤 ሠራተኛ';
-        roleElement.style.background = '#e2e8f0';
-        roleElement.style.color = '#4a5568';
-      }
-
-      // 4. የፋርማሲውን ስም ማምጣት
-      if (currentUserPharmacyId) {
-        const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
-        if(phDoc.exists()) {
-          const phData = phDoc.data();
-          // ስሙ ባዶ ከሆነ 'Pharmacy Tracker' ይላል
-          document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phData.name || 'Pharmacy Tracker');
-          currentBizType = phData.bizType || 'retail';
-          lowStockThreshold = phData.lowStockThreshold || 10;
-        } else {
-          document.getElementById('hdrPharmacyName').innerText = '💊 Pharmacy Tracker';
-        }
-      }
-
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('mainApp').classList.add('show');
-      loadAllData();
-      
-    } else {
-      errorEl.textContent = '⚠️ የተጠቃሚው መረጃ በዳታቤዝ ውስጥ አልተገኘም።';
-      errorEl.style.display = 'block';
-    }
+    await signInWithEmailAndPassword(auth, email, password);
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('mainApp').classList.add('show');
   } catch (err) {
     errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም';
     errorEl.style.display = 'block';
@@ -117,18 +122,30 @@ window.login = async function() {
 
 window.logout = function() { signOut(auth); };
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('mainApp').classList.add('show');
-    loadAllData();
+    
+    // 1. መጀመሪያ ስም፣ ሚና እና ኢሜይል ይጫን
+    await loadUserHeader(user);
+    
+    // 2. ከዚያ ዳታ ይጫን
+    await loadAllData();
   } else {
     document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('mainApp').classList.remove('show');
+    currentUserPharmacyId = null;
   }
 });
 
+// ==========================================
+// 📦 DATA LOADING (የፋርማሲውን ዳታ ብቻ የሚያመጣ)
+// ==========================================
+
 async function loadAllData() {
+  if (!currentUserPharmacyId) return;
+  
   await loadCategories();
   await loadExpCategories();
   await loadBranches();
@@ -178,9 +195,11 @@ window.togglePaymentDetails = function() {
   details.style.display = method === 'credit' ? 'block' : 'none';
 };
 
+// ---- Categories ----
 async function loadCategories() {
   try {
-    const snap = await getDocs(collection(db, 'categories'));
+    const q = query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId));
+    const snap = await getDocs(q);
     allCategories = [];
     const select = document.getElementById('medCategory');
     select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
@@ -205,7 +224,10 @@ window.addCategory = async function() {
   const name = document.getElementById('newCat').value.trim();
   if(!name) { alert('ስም አስገባ'); return; }
   try {
-    await setDoc(doc(db, 'categories', name), { name: name });
+    await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name), { 
+      name: name,
+      pharmacyId: currentUserPharmacyId
+    });
     document.getElementById('newCat').value = '';
     loadCategories();
     alert('✅ ምድብ ተጨምሯል!');
@@ -214,12 +236,14 @@ window.addCategory = async function() {
 
 window.deleteCategory = async function(name) {
   if(!confirm('ይህን ምድብ ማጥፋት ትፈልጋለህ?')) return;
-  try { await deleteDoc(doc(db, 'categories', name)); loadCategories(); } catch(e) { alert(e.message); }
+  try { await deleteDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name)); loadCategories(); } catch(e) { alert(e.message); }
 };
 
+// ---- Expense Categories ----
 async function loadExpCategories() {
   try {
-    const snap = await getDocs(collection(db, 'expenseCategories'));
+    const q = query(collection(db, 'expenseCategories'), where('pharmacyId', '==', currentUserPharmacyId));
+    const snap = await getDocs(q);
     allExpCategories = [];
     const select = document.getElementById('expCat');
     select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
@@ -244,7 +268,10 @@ window.addExpCategory = async function() {
   const name = document.getElementById('newExpCat').value.trim();
   if(!name) { alert('ስም አስገባ'); return; }
   try {
-    await setDoc(doc(db, 'expenseCategories', name), { name: name });
+    await setDoc(doc(db, 'expenseCategories', currentUserPharmacyId + '_' + name), { 
+      name: name,
+      pharmacyId: currentUserPharmacyId
+    });
     document.getElementById('newExpCat').value = '';
     loadExpCategories();
     alert('✅ ምድብ ተጨምሯል!');
@@ -253,12 +280,14 @@ window.addExpCategory = async function() {
 
 window.deleteExpCategory = async function(name) {
   if(!confirm('ይህን ምድብ ማጥፋት ትፈልጋለህ?')) return;
-  try { await deleteDoc(doc(db, 'expenseCategories', name)); loadExpCategories(); } catch(e) { alert(e.message); }
+  try { await deleteDoc(doc(db, 'expenseCategories', currentUserPharmacyId + '_' + name)); loadExpCategories(); } catch(e) { alert(e.message); }
 };
 
+// ---- Branches ----
 async function loadBranches() {
   try {
-    const snap = await getDocs(collection(db, 'branches'));
+    const q = query(collection(db, 'branches'), where('pharmacyId', '==', currentUserPharmacyId));
+    const snap = await getDocs(q);
     allBranches = [];
     const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch'];
     selects.forEach(id => {
@@ -289,7 +318,10 @@ window.addBranch = async function() {
   const name = document.getElementById('newBranch').value.trim();
   if(!name) { alert('ስም አስገባ'); return; }
   try {
-    await setDoc(doc(db, 'branches', name), { name: name });
+    await setDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name), { 
+      name: name,
+      pharmacyId: currentUserPharmacyId
+    });
     document.getElementById('newBranch').value = '';
     loadBranches();
     alert('✅ ቅርንጫፍ ተጨምሯል!');
@@ -298,12 +330,14 @@ window.addBranch = async function() {
 
 window.deleteBranch = async function(name) {
   if(!confirm('ይህን ቅርንጫፍ ማጥፋት ትፈልጋለህ?')) return;
-  try { await deleteDoc(doc(db, 'branches', name)); loadBranches(); } catch(e) { alert(e.message); }
+  try { await deleteDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name)); loadBranches(); } catch(e) { alert(e.message); }
 };
 
+// ---- Customers ----
 async function loadCustomers() {
   try {
-    const snap = await getDocs(collection(db, 'customers'));
+    const q = query(collection(db, 'customers'), where('pharmacyId', '==', currentUserPharmacyId));
+    const snap = await getDocs(q);
     allCustomers = [];
     const sel = document.getElementById('sellCustomer');
     if (sel) sel.innerHTML = '<option value="">-- ደንበኛ ምረጥ --</option>';
@@ -330,7 +364,10 @@ window.addCustomer = async function() {
   const name = document.getElementById('newCustomer').value.trim();
   if(!name) { alert('ስም አስገባ'); return; }
   try {
-    await setDoc(doc(db, 'customers', name), { name: name });
+    await setDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name), { 
+      name: name,
+      pharmacyId: currentUserPharmacyId
+    });
     document.getElementById('newCustomer').value = '';
     loadCustomers();
     alert('✅ ደንበኛ ተጨምሯል!');
@@ -339,9 +376,10 @@ window.addCustomer = async function() {
 
 window.deleteCustomer = async function(name) {
   if(!confirm('ይህን ደንበኛ ማጥፋት ትፈልጋለህ?')) return;
-  try { await deleteDoc(doc(db, 'customers', name)); loadCustomers(); } catch(e) { alert(e.message); }
+  try { await deleteDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name)); loadCustomers(); } catch(e) { alert(e.message); }
 };
 
+// ---- Medicines ----
 window.addMedicine = async function() {
   const type = document.getElementById('medType').value;
   const category = document.getElementById('medCategory').value;
@@ -380,12 +418,18 @@ window.addMedicine = async function() {
 
 async function loadMedicines() {
   try {
-    const q = query(collection(db, 'medicines'), orderBy('createdAt', 'desc'));
+    const q = query(
+      collection(db, 'medicines'), 
+      where('pharmacyId', '==', currentUserPharmacyId),
+      orderBy('createdAt', 'desc')
+    );
     const snapshot = await getDocs(q);
     allMedicines = [];
     snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
     renderMedList();
-  } catch (err) { console.error(err); }
+  } catch (err) { 
+    console.error("Error loading medicines:", err); 
+  }
 }
 
 window.renderMedList = function() {
@@ -404,6 +448,7 @@ window.renderMedList = function() {
   listEl.innerHTML = html;
 };
 
+// ---- Sales & POS ----
 function renderSellProducts() {
   const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase();
   const listEl = document.getElementById('sellProductList');
@@ -523,6 +568,7 @@ window.addQuickSale = async function() {
   } catch(e) { alert(e.message); }
 };
 
+// ---- Expenses ----
 window.addExpense = async function() {
   const cat = document.getElementById('expCat').value;
   const branch = document.getElementById('expBranch').value;
@@ -555,27 +601,38 @@ window.addFixedExpense = async function() {
 };
 
 async function loadSales() {
-  const snap = await getDocs(collection(db, 'sales'));
-  allSales = []; snap.forEach(d => allSales.push({ id: d.id, ...d.data() }));
+  try {
+    const q = query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId));
+    const snap = await getDocs(q);
+    allSales = []; snap.forEach(d => allSales.push({ id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); }
 }
 
 async function loadExpenses() {
-  const snap = await getDocs(collection(db, 'expenses'));
-  allExpenses = []; snap.forEach(d => allExpenses.push({ id: d.id, ...d.data() }));
+  try {
+    const q = query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId));
+    const snap = await getDocs(q);
+    allExpenses = []; snap.forEach(d => allExpenses.push({ id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); }
 }
 
 async function loadFixed() {
-  const snap = await getDocs(collection(db, 'fixedExpenses'));
-  allFixed = []; snap.forEach(d => allFixed.push({ id: d.id, ...d.data() }));
+  try {
+    const q = query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId));
+    const snap = await getDocs(q);
+    allFixed = []; snap.forEach(d => allFixed.push({ id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); }
 }
 
 async function loadCreditPayments() {
   try {
-    const snap = await getDocs(collection(db, 'creditPayments'));
+    const q = query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId));
+    const snap = await getDocs(q);
     allCreditPayments = []; snap.forEach(d => allCreditPayments.push({ id: d.id, ...d.data() }));
   } catch(e) { console.error(e); }
 }
 
+// ---- Inventory & Stock ----
 function loadInventory() {
   const listEl = document.getElementById('inventoryList');
   const filter = document.getElementById('filterTypeInv').value;
@@ -671,6 +728,7 @@ window.adjustStock = async function() {
   } catch(e) { alert(e.message); }
 };
 
+// ---- Reports & Dashboard ----
 async function loadDailyReport() {
   const dateInput = document.getElementById('dailyReportDate');
   if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
@@ -683,7 +741,6 @@ async function loadDailyReport() {
     daySales = daySales.filter(s => s.branch === branch);
     dayExp = dayExp.filter(e => e.branch === branch);
   }
-  const dayQuick = await getDocs(query(collection(db, 'quickSales'), where('date', '==', selDate)));
 
   let totalRev = 0, totalExp = 0;
   let cashRev = 0, transferRev = 0, creditRev = 0, creditTotal = 0;
@@ -700,6 +757,9 @@ async function loadDailyReport() {
     const pmLabel = s.paymentMethod === 'transfer' ? '🏦' : (s.paymentMethod === 'credit' ? '📝' : '💵');
     salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር ${pmLabel}${s.customer ? ' | 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? ' | 🏢 '+s.branch : '')}${s.receipt ? ' | 🧾 '+s.receipt : ''}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`;
   });
+
+  const qQuick = query(collection(db, 'quickSales'), where('date', '==', selDate), where('pharmacyId', '==', currentUserPharmacyId));
+  const dayQuick = await getDocs(qQuick);
   dayQuick.forEach(d => {
     const q = d.data(); 
     if (branch !== 'all' && q.branch !== branch) return;
@@ -707,6 +767,7 @@ async function loadDailyReport() {
     cashRev += q.amount;
     quickHtml += `<div class="list-item"><div class="info"><div class="name">⚡ ${q.category}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`;
   });
+
   dayExp.forEach(e => {
     totalExp += e.amount;
     expHtml += `<div class="list-item"><div class="info"><div class="name">${e.category}</div>${e.note?'<div class="meta">'+e.note+'</div>':''}</div><div class="amount red">-${e.amount.toFixed(2)} ብር</div></div>`;
@@ -742,7 +803,8 @@ async function loadMonthlyReport() {
     monthSales = monthSales.filter(s => s.branch === branch);
     monthExp = monthExp.filter(e => e.branch === branch);
   }
-  const qMonthQuick = query(collection(db, 'quickSales'), where('date', '>=', selMonth + '-01'), where('date', '<=', selMonth + '-31'));
+  
+  const qMonthQuick = query(collection(db, 'quickSales'), where('date', '>=', selMonth + '-01'), where('date', '<=', selMonth + '-31'), where('pharmacyId', '==', currentUserPharmacyId));
   const snapQuick = await getDocs(qMonthQuick);
 
   let fixedTotal = 0;
@@ -799,7 +861,9 @@ async function loadDashboard() {
 
   const tSales = allSales.filter(s => s.date === today); let tRev = 0; tSales.forEach(s => tRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
   const tExp = allExpenses.filter(e => e.date === today); let tExpSum = 0; tExp.forEach(e => tExpSum += e.amount);
-  const tQuickSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '==', today)));
+  
+  const qTQuick = query(collection(db, 'quickSales'), where('date', '==', today), where('pharmacyId', '==', currentUserPharmacyId));
+  const tQuickSnap = await getDocs(qTQuick);
   tQuickSnap.forEach(d => tRev += d.data().amount);
 
   document.getElementById('dashTodayRevenue').innerHTML = tRev.toFixed(2) + ' <small>ብር</small>';
@@ -808,7 +872,9 @@ async function loadDashboard() {
 
   const mSales = allSales.filter(s => s.date && s.date.startsWith(month)); let mRev = 0; mSales.forEach(s => mRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
   const mExp = allExpenses.filter(e => e.date && e.date.startsWith(month)); let mExpSum = 0; mExp.forEach(e => mExpSum += e.amount);
-  const mQuickSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '>=', month + '-01'), where('date', '<=', month + '-31')));
+  
+  const qMQuick = query(collection(db, 'quickSales'), where('date', '>=', month + '-01'), where('date', '<=', month + '-31'), where('pharmacyId', '==', currentUserPharmacyId));
+  const mQuickSnap = await getDocs(qMQuick);
   mQuickSnap.forEach(d => mRev += d.data().amount);
 
   document.getElementById('dashMonthRevenue').innerHTML = mRev.toFixed(2) + ' <small>ብር</small>';
@@ -840,6 +906,7 @@ function renderCharts() {
   expensePieChartInstance = new Chart(c2, { type: 'doughnut', data: { labels: ['ተለዋዋጭ', 'ቋሚ'], datasets: [{ data: [varTotal, fixTotal], backgroundColor: ['#c53030', '#dd6b20'] }] }, options: { responsive: true, maintainAspectRatio: false } });
 }
 
+// ---- Credit Management ----
 function populateCreditCustomerSelect() {
   const sel = document.getElementById('creditPayCustomer');
   if (!sel) return;
@@ -890,6 +957,7 @@ window.addCreditPayment = async function() {
   } catch(e) { alert(e.message); }
 };
 
+// ---- Settings & Utilities ----
 async function loadSettings() {
   if(currentUserPharmacyId) {
     const d = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
@@ -1025,11 +1093,11 @@ window.resetSelectedDate = async function() {
   if(!confirm(`የ ${date} ሽያጭ እና ወጪ ማጥፋት ትፈልጋለህ?`)) return;
   try {
     const batch = writeBatch(db);
-    const sSnap = await getDocs(query(collection(db, 'sales'), where('date', '==', date)));
+    const sSnap = await getDocs(query(collection(db, 'sales'), where('date', '==', date), where('pharmacyId', '==', currentUserPharmacyId)));
     sSnap.forEach(d => batch.delete(d.ref));
-    const eSnap = await getDocs(query(collection(db, 'expenses'), where('date', '==', date)));
+    const eSnap = await getDocs(query(collection(db, 'expenses'), where('date', '==', date), where('pharmacyId', '==', currentUserPharmacyId)));
     eSnap.forEach(d => batch.delete(d.ref));
-    const qSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '==', date)));
+    const qSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '==', date), where('pharmacyId', '==', currentUserPharmacyId)));
     qSnap.forEach(d => batch.delete(d.ref));
     await batch.commit();
     alert('✅ ተጠፍቷል!');
