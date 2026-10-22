@@ -56,11 +56,11 @@
   body.dark .tabs label { background: #2d3748; color: #a0aec0; }
   .tabs label i { font-size: 20px; font-style: normal; line-height: 1; margin-bottom: 2px;}
   
-  #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"] { color: #2c5282; background: #ebf4ff; border-color: #90cdf4; box-shadow: 0 4px 12px rgba(44,82,130,0.15);}
-  body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"] { color: #63b3ed; background: #4a5568; border-color: #63b3ed; }
+  #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { color: #2c5282; background: #ebf4ff; border-color: #90cdf4; box-shadow: 0 4px 12px rgba(44,82,130,0.15);}
+  body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"] { color: #63b3ed; background: #4a5568; border-color: #63b3ed; }
  
   .panel { display: none; padding: 14px; }
-  #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8 { display: block; }
+  #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { display: block; }
   
   .section-collapsible { background: #fff; border-radius: 14px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
   .section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; }
@@ -123,7 +123,7 @@
   @media (min-width: 768px) {
     .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .panel { padding: 20px; }
-    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
     .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings { grid-column: span 2; }
     .section-collapsible { margin-bottom: 0; }
   }
@@ -158,6 +158,7 @@
     <input type="radio" name="tabs" id="tab6">
     <input type="radio" name="tabs" id="tab7">
     <input type="radio" name="tabs" id="tab8">
+    <input type="radio" name="tabs" id="tab9">
 
     <div class="tabs">
       <label for="tab1"><i>💊</i>መድሃኒቶች</label>
@@ -168,6 +169,7 @@
       <label for="tab6"><i>📆</i>የወር ገቢ</label>
       <label for="tab7"><i>📊</i>Dashboard</label>
       <label for="tab8"><i>⚙️</i>Settings</label>
+      <label for="tab9" id="tabCreditLabel" style="display:none;"><i>💳</i>ዱቤ</label>
     </div>
 
     <div class="panels">
@@ -252,6 +254,20 @@
               <label class="field-label">🏪 ደንበኛ (ፋርማሲ/ሱፐርማርኬት)</label>
               <select id="sellCustomer"></select>
             </div>
+            
+            <label class="field-label">💳 የክፍያ ዓይነት</label>
+            <select id="sellPaymentMethod" onchange="togglePaymentDetails()">
+              <option value="cash">💵 Cash</option>
+              <option value="transfer">🏦 Transfer</option>
+              <option value="credit" id="creditOption" style="display:none;">📝 Credit (ዱቤ)</option>
+            </select>
+
+            <div id="creditPaymentDetails" style="display:none; margin-top:10px; padding:10px; background:#fffaf0; border:1px solid #fbd38d; border-radius:8px;">
+              <label class="field-label" style="margin-top:0;">💰 የተከፈለ መጠን (Partial Payment)</label>
+              <input type="number" id="sellPaidAmount" placeholder="0.00" value="0">
+              <div class="info-banner" style="margin-top:8px; font-size:11.5px;">💡 የተከፈለው መጠን ብቻ ገቢ ሆኖ ይመዘገባል። ቀሪው ወደ ዕዳ ይመዘገባል።</div>
+            </div>
+
             <label class="field-label">🧾 የደረሰኝ ቁጥር (አማራጭ)</label>
             <input type="text" id="sellReceipt" placeholder="ለምሳሌ: REC-001">
             <div style="margin-top:10px;">
@@ -361,6 +377,10 @@
               <option value="cosmetic">🧴 ኮስሞቲክስ ብቻ</option>
             </select>
             <div id="inventoryList"></div>
+            <div class="summary-box green" style="margin-top:14px;">
+              <div class="label">ጠቅላላ የክምችት ዋጋ</div>
+              <div class="value" id="invTotalValue">0.00 <small>ብር</small></div>
+            </div>
           </div>
         </div>
         <div class="section-collapsible">
@@ -384,6 +404,14 @@
           </div>
           <div class="section-body" id="bodyExpiryList">
             <div id="expiryListDisplay"></div>
+          </div>
+        </div>
+        <div class="section-collapsible">
+          <div class="section-header" id="hdrLowStock" onclick="toggleSection('hdrLowStock','bodyLowStock')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የሚያልቅ ክምችት</span></div>
+          </div>
+          <div class="section-body" id="bodyLowStock">
+            <div id="lowStockListDisplay"></div>
           </div>
         </div>
       </div>
@@ -419,6 +447,17 @@
               <div class="label">የቀኑ ትርፍ</div>
               <div class="value" id="dailyNetProfit">0.00 <small>ብር</small></div>
             </div>
+            
+            <!-- 🆕 የክፍያ ዓይነት ማሳያ -->
+            <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
+              <div class="section-header" id="hdrDailyPayments" onclick="toggleSection('hdrDailyPayments','bodyDailyPayments')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
+              </div>
+              <div class="section-body" id="bodyDailyPayments">
+                <div id="dailyPaymentSummary"></div>
+              </div>
+            </div>
+
             <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
             
             <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
@@ -473,6 +512,17 @@
               <div class="label">የወሩ ትርፍ</div>
               <div class="value" id="monthlyNetProfit">0.00 <small>ብር</small></div>
             </div>
+
+            <!-- 🆕 የክፍያ ዓይነት ማሳያ -->
+            <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
+              <div class="section-header" id="hdrMonthlyPayments" onclick="toggleSection('hdrMonthlyPayments','bodyMonthlyPayments')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
+              </div>
+              <div class="section-body" id="bodyMonthlyPayments">
+                <div id="monthlyPaymentSummary"></div>
+              </div>
+            </div>
+
             <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
 
             <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
@@ -572,7 +622,18 @@
                   <option value="retail">🛒 Retail (ፋርማሲ)</option>
                   <option value="wholesale">🚚 Wholesale (አከፋፋይ)</option>
                 </select>
-                <div class="info-banner" style="margin-top:10px;">💡 Wholesale ከመረጡ በሽያጭ ገጹ ላይ "ደንበኛ" መስክ ይታያል።</div>
+                <div class="info-banner" style="margin-top:10px;">💡 Wholesale ከመረጡ በሽያጭ ገጹ ላይ "ደንበኛ" እና "Credit" ይታያሉ።</div>
+              </div>
+            </div>
+
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrLowStockThreshold" onclick="toggleSection('hdrLowStockThreshold','bodyLowStockThreshold')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የስቶክ ማሳወቂያ ገደብ</span></div>
+              </div>
+              <div class="section-body" id="bodyLowStockThreshold">
+                <label class="field-label">ከዚህ በታች ሲሆን ማሳወቂያ ይስጥ</label>
+                <input type="number" id="settingLowStockThreshold" placeholder="10" value="10">
+                <button class="btn btn-primary" onclick="saveLowStockThreshold()">💾 አስቀምጥ</button>
               </div>
             </div>
 
@@ -711,6 +772,33 @@
         </div>
       </div>
 
+      <!-- TAB 9: CREDIT (ዱቤ) -->
+      <div class="panel" id="panel9">
+        <div class="section-collapsible full-width">
+          <div class="section-header open" id="hdrCreditList" onclick="toggleSection('hdrCreditList','bodyCreditList')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የደንበኞች ዕዳ ዝርዝር</span></div>
+          </div>
+          <div class="section-body open" id="bodyCreditList">
+            <div id="creditCustomerList"></div>
+          </div>
+        </div>
+        <div class="section-collapsible full-width">
+          <div class="section-header open" id="hdrCreditPayment" onclick="toggleSection('hdrCreditPayment','bodyCreditPayment')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💰</span><span class="sec-title">የዱቤ ክፍያ መመዝገቢያ</span></div>
+          </div>
+          <div class="section-body open" id="bodyCreditPayment">
+            <label class="field-label">🏪 ደንበኛ ምረጥ</label>
+            <select id="creditPayCustomer"></select>
+            <label class="field-label">💰 የተከፈለ መጠን (ብር)</label>
+            <input type="number" id="creditPayAmount" placeholder="0.00">
+            <label class="field-label">📅 ቀን</label>
+            <input type="date" id="creditPayDate">
+            <button class="btn btn-success" onclick="addCreditPayment()">💾 ክፍያ መዝግብ</button>
+            <div id="creditPaymentHistory" style="margin-top:14px;"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -742,9 +830,11 @@
   let allSales = [];
   let allExpenses = [];
   let allFixed = [];
+  let allCreditPayments = [];
   let cart = []; 
   let currentUserPharmacyId = null;
   let currentBizType = 'retail';
+  let lowStockThreshold = 10;
   let dailyChartInstance = null, expensePieChartInstance = null;
 
   window.toggleSection = function(h, b) { 
@@ -776,6 +866,7 @@
         if(phDoc.exists()) {
           document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phDoc.data().name || 'Pharmacy Tracker');
           currentBizType = phDoc.data().bizType || 'retail';
+          lowStockThreshold = phDoc.data().lowStockThreshold || 10;
         }
       }
     } catch (err) {
@@ -806,6 +897,7 @@
     await loadSales();
     await loadExpenses();
     await loadFixed();
+    await loadCreditPayments();
     loadInventory();
     renderSellProducts();
     renderCart();
@@ -815,7 +907,36 @@
     loadSettings();
     checkExpiryAlerts();
     loadDarkMode();
+    applyBizTypeUI();
   }
+
+  function applyBizTypeUI() {
+    const creditOpt = document.getElementById('creditOption');
+    const tabCreditLabel = document.getElementById('tabCreditLabel');
+    const wholesaleFields = document.getElementById('wholesaleSaleFields');
+    const retailFields = document.getElementById('retailSaleFields');
+
+    if (currentBizType === 'wholesale') {
+      if (creditOpt) creditOpt.style.display = 'block';
+      if (tabCreditLabel) tabCreditLabel.style.display = 'flex';
+      if (wholesaleFields) wholesaleFields.style.display = 'block';
+      if (retailFields) retailFields.style.display = 'none';
+    } else {
+      if (creditOpt) creditOpt.style.display = 'none';
+      if (tabCreditLabel) tabCreditLabel.style.display = 'none';
+      if (wholesaleFields) wholesaleFields.style.display = 'none';
+      if (retailFields) retailFields.style.display = 'block';
+      const pm = document.getElementById('sellPaymentMethod');
+      if (pm && pm.value === 'credit') { pm.value = 'cash'; togglePaymentDetails(); }
+    }
+  }
+
+  window.togglePaymentDetails = function() {
+    const method = document.getElementById('sellPaymentMethod').value;
+    const details = document.getElementById('creditPaymentDetails');
+    if (!details) return;
+    details.style.display = method === 'credit' ? 'block' : 'none';
+  };
 
   // --- ምድቦች (Categories) ---
   async function loadCategories() {
@@ -943,7 +1064,7 @@
     try { await deleteDoc(doc(db, 'branches', name)); loadBranches(); } catch(e) { alert(e.message); }
   };
 
-  // --- 🆕 ደንበኞች (Customers) ---
+  // --- ደንበኞች (Customers) ---
   async function loadCustomers() {
     try {
       const snap = await getDocs(collection(db, 'customers'));
@@ -956,6 +1077,7 @@
         if (sel) sel.innerHTML += `<option value="${cName}">${cName}</option>`;
       });
       renderCustomerList();
+      populateCreditCustomerSelect();
     } catch(e) { console.error(e); }
   }
 
@@ -984,29 +1106,6 @@
     try { await deleteDoc(doc(db, 'customers', name)); loadCustomers(); } catch(e) { alert(e.message); }
   };
 
-  // --- 🆕 የድርጅት ዓይነት ---
-  window.saveBizType = async function() {
-    const type = document.getElementById('settingBizType').value;
-    currentBizType = type;
-    if (currentUserPharmacyId) {
-      try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { bizType: type }); } catch(e) { console.error(e); }
-    }
-    toggleBizFields();
-  };
-
-  function toggleBizFields() {
-    const retail = document.getElementById('retailSaleFields');
-    const wholesale = document.getElementById('wholesaleSaleFields');
-    if (!retail || !wholesale) return;
-    if (currentBizType === 'wholesale') {
-      retail.style.display = 'none';
-      wholesale.style.display = 'block';
-    } else {
-      retail.style.display = 'block';
-      wholesale.style.display = 'none';
-    }
-  }
-
   // --- መድሃኒት ---
   window.addMedicine = async function() {
     const type = document.getElementById('medType').value;
@@ -1017,7 +1116,6 @@
     const price = parseFloat(document.getElementById('medPrice').value);
     const qty = parseInt(document.getElementById('medQty').value);
 
-    // 🆕 የባች እና የማለቂያ ቀን ለሁለቱም ዓይነቶች ግዴታ ናቸው
     const batch = document.getElementById('medBatch').value.trim();
     const expiry = document.getElementById('medExpiry').value;
     const supplier = document.getElementById('medSupplier').value.trim();
@@ -1139,6 +1237,7 @@
     if(cart.length === 0) { alert('ምንም የተመረጠ የለም'); return; }
     const date = document.getElementById('sellDate').value;
     const receipt = document.getElementById('sellReceipt').value.trim();
+    const paymentMethod = document.getElementById('sellPaymentMethod').value;
     if(!date) { alert('ቀን ምረጥ'); return; }
 
     let branch = 'all', customer = '';
@@ -1149,16 +1248,28 @@
       branch = document.getElementById('sellBranch').value;
     }
 
+    let totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    let paidAmount = totalAmount;
+    if (paymentMethod === 'credit') {
+      paidAmount = parseFloat(document.getElementById('sellPaidAmount').value) || 0;
+      if (paidAmount > totalAmount) paidAmount = totalAmount;
+    }
+
     try {
       for(const item of cart) {
         await addDoc(collection(db, 'sales'), { 
-          medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, total: item.price * item.qty, 
+          medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, 
+          total: item.price * item.qty, 
+          paymentMethod: paymentMethod,
+          paidAmount: paymentMethod === 'credit' ? (item.price * item.qty) * (paidAmount/totalAmount) : (item.price * item.qty),
           date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
         });
         await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
       }
       alert('✅ ሽያጭ ተመዝግቧል!');
-      cart = []; renderCart(); loadAllData();
+      cart = []; renderCart();
+      document.getElementById('sellPaidAmount').value = '0';
+      loadAllData();
     } catch(e) { alert(e.message); }
   };
 
@@ -1172,7 +1283,7 @@
     if(!cat || !date || isNaN(amount) || amount <= 0) { alert('ሁሉንም መረጃዎች ሙላ'); return; }
 
     try {
-      await addDoc(collection(db, 'quickSales'), { type, category: cat, branch, date, amount, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+      await addDoc(collection(db, 'quickSales'), { type, category: cat, branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
       alert('✅ ተመዝግቧል!');
       document.getElementById('quickAmount').value = '';
       loadAllData();
@@ -1226,6 +1337,13 @@
     allFixed = []; snap.forEach(d => allFixed.push({ id: d.id, ...d.data() }));
   }
 
+  async function loadCreditPayments() {
+    try {
+      const snap = await getDocs(collection(db, 'creditPayments'));
+      allCreditPayments = []; snap.forEach(d => allCreditPayments.push({ id: d.id, ...d.data() }));
+    } catch(e) { console.error(e); }
+  }
+
   // --- ክምችት ---
   function loadInventory() {
     const listEl = document.getElementById('inventoryList');
@@ -1234,7 +1352,7 @@
     if (filter === 'medicine') filtered = allMedicines.filter(m => m.type === 'medicine');
     else if (filter === 'cosmetic') filtered = allMedicines.filter(m => m.type === 'cosmetic');
 
-    if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
+    if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; document.getElementById('invTotalValue').innerHTML = '0.00 <small>ብር</small>'; return; }
     
     const grouped = {};
     filtered.forEach(med => {
@@ -1247,11 +1365,15 @@
     });
 
     let html = '';
+    let grandTotal = 0;
     Object.keys(grouped).forEach(catName => {
+      let catTotalQty = 0, catTotalValue = 0;
       html += `<div class="cat-section"><div class="cat-header open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')"><div class="cat-left"><span class="cat-arrow">▶</span><span class="cat-name">📁 ${catName}</span></div></div><div class="cat-body open">`;
       Object.keys(grouped[catName]).forEach(subName => {
         html += `<div style="font-size:13px; font-weight:bold; color:#4a5568; margin:8px 0 5px 5px;">↳ ${subName}</div>`;
         grouped[catName][subName].forEach(med => {
+          catTotalQty += med.quantity;
+          catTotalValue += med.quantity * (med.price || 0);
           const today = new Date(); today.setHours(0,0,0,0);
           let alertHtml = ''; let rowStyle = '';
           if (med.expiry) {
@@ -1260,15 +1382,18 @@
             if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border:1px solid #fed7d7;'; }
             else if (diffDays <= 30) { alertHtml = `<span class="expiry-alert" style="color:#dd6b20;">⚠️ ${diffDays} ቀን ቀርቷል</span>`; rowStyle = 'background:#fffaf0; border:1px solid #fbd38d;'; }
           }
-          if (med.quantity <= 10 && !alertHtml) { alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>'; }
+          if (med.quantity <= lowStockThreshold && !alertHtml) { alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>'; }
           
           const extra = `<br>📦 ${med.batch || '-'} | 📅 ${med.expiry || '-'}`;
           html += `<div class="list-item" style="${rowStyle}"><div class="info"><div class="name">${med.name}</div><div class="meta">${extra} ${alertHtml}</div></div><div class="amount">${med.quantity} <small style="font-size:10px;color:#718096;">ብዛት</small><br><small style="font-size:11px;color:#276749;">${med.price} ብር</small></div></div>`;
         });
       });
+      grandTotal += catTotalValue;
+      html += `<div style="padding:8px; background:#ebf4ff; border-radius:6px; margin-top:8px; font-size:12.5px; font-weight:700; color:#2c5282;">📊 የዚህ ምድብ ድምር: ${catTotalQty} ብዛት | ${catTotalValue.toFixed(2)} ብር</div>`;
       html += `</div></div>`;
     });
     listEl.innerHTML = html;
+    document.getElementById('invTotalValue').innerHTML = grandTotal.toFixed(2) + ' <small>ብር</small>';
 
     const adjSel = document.getElementById('adjustMedId');
     adjSel.innerHTML = '<option value="">-- ምርት ምረጥ --</option>';
@@ -1280,13 +1405,27 @@
       return { ...m, diffDays };
     }).filter(m => m.diffDays <= 30).sort((a,b) => a.diffDays - b.diffDays);
 
-    if (expMeds.length === 0) { expListEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የማለቂያ ቀን ማሳወቂያ የለም።</p>'; return; }
-    let expHtml = '';
-    expMeds.forEach(m => {
-      const isExpired = m.diffDays < 0;
-      expHtml += `<div class="list-item" style="${isExpired ? 'background:#fff5f5; border:1px solid #fed7d7;' : 'background:#fffaf0; border:1px solid #fbd38d;'}"><div class="info"><div class="name">${m.name}</div><div class="meta">📦 ${m.batch || '-'} | 📅 ${m.expiry}</div></div><div class="amount ${isExpired ? 'red' : ''}" style="font-size:12px;">${isExpired ? '🚨 ጊዜው አልፏል!' : `⚠️ ${m.diffDays} ቀን`}</div></div>`;
-    });
-    expListEl.innerHTML = expHtml;
+    if (expMeds.length === 0) { expListEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የማለቂያ ቀን ማሳወቂያ የለም።</p>'; }
+    else {
+      let expHtml = '';
+      expMeds.forEach(m => {
+        const isExpired = m.diffDays < 0;
+        expHtml += `<div class="list-item" style="${isExpired ? 'background:#fff5f5; border:1px solid #fed7d7;' : 'background:#fffaf0; border:1px solid #fbd38d;'}"><div class="info"><div class="name">${m.name}</div><div class="meta">📦 ${m.batch || '-'} | 📅 ${m.expiry}</div></div><div class="amount ${isExpired ? 'red' : ''}" style="font-size:12px;">${isExpired ? '🚨 ጊዜው አልፏል!' : `⚠️ ${m.diffDays} ቀን`}</div></div>`;
+      });
+      expListEl.innerHTML = expHtml;
+    }
+
+    // Low Stock List
+    const lowStockEl = document.getElementById('lowStockListDisplay');
+    const lowMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold).sort((a,b) => a.quantity - b.quantity);
+    if (lowMeds.length === 0) { lowStockEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የሚያልቅ ክምችት የለም።</p>'; }
+    else {
+      let lowHtml = '';
+      lowMeds.forEach(m => {
+        lowHtml += `<div class="list-item" style="background:#fffaf0; border:1px solid #fbd38d;"><div class="info"><div class="name">${m.name}</div><div class="meta">📁 ${m.category} → ${m.subcategory}</div></div><div class="amount red" style="font-size:13px;">${m.quantity} ቀሪ</div></div>`;
+      });
+      lowStockEl.innerHTML = lowHtml;
+    }
   }
 
   window.adjustStock = async function() {
@@ -1318,18 +1457,25 @@
     const dayQuick = await getDocs(query(collection(db, 'quickSales'), where('date', '==', selDate)));
 
     let totalRev = 0, totalExp = 0;
+    let cashRev = 0, transferRev = 0, creditRev = 0, creditTotal = 0;
     let salesHtml = '', quickHtml = '', expHtml = '', unsoldHtml = '';
     const soldIds = new Set();
 
     daySales.forEach(s => {
-      totalRev += s.total;
+      totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total;
+      if (s.paymentMethod === 'transfer') transferRev += (s.paidAmount !== undefined ? s.paidAmount : s.total);
+      else if (s.paymentMethod === 'credit') { creditRev += (s.paidAmount || 0); creditTotal += s.total; }
+      else cashRev += (s.paidAmount !== undefined ? s.paidAmount : s.total);
+      
       soldIds.add(s.medicineId);
-      salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር${s.customer ? ' | 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? ' | 🏢 '+s.branch : '')}${s.receipt ? ' | 🧾 '+s.receipt : ''}</div></div><div class="amount">${s.total.toFixed(2)} ብር</div></div>`;
+      const pmLabel = s.paymentMethod === 'transfer' ? '🏦' : (s.paymentMethod === 'credit' ? '📝' : '💵');
+      salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር ${pmLabel}${s.customer ? ' | 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? ' | 🏢 '+s.branch : '')}${s.receipt ? ' | 🧾 '+s.receipt : ''}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`;
     });
     dayQuick.forEach(d => {
       const q = d.data(); 
       if (branch !== 'all' && q.branch !== branch) return;
       totalRev += q.amount;
+      cashRev += q.amount;
       quickHtml += `<div class="list-item"><div class="info"><div class="name">⚡ ${q.category}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`;
     });
     dayExp.forEach(e => {
@@ -1346,6 +1492,13 @@
     document.getElementById('dailyNetProfit').innerHTML = (totalRev - totalExp).toFixed(2) + ' <small>ብር</small>';
     document.getElementById('dailySalesList').innerHTML = salesHtml + quickHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
     document.getElementById('dailyUnsoldList').innerHTML = unsoldHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ሁሉም ተሽጠዋል።</p>';
+
+    document.getElementById('dailyPaymentSummary').innerHTML = `
+      <div class="list-item"><div class="info"><div class="name">💵 Cash</div></div><div class="amount">${cashRev.toFixed(2)} ብር</div></div>
+      <div class="list-item"><div class="info"><div class="name">🏦 Transfer</div></div><div class="amount">${transferRev.toFixed(2)} ብር</div></div>
+      <div class="list-item"><div class="info"><div class="name">📝 Credit (የተከፈለ)</div></div><div class="amount">${creditRev.toFixed(2)} ብር</div></div>
+      <div class="list-item" style="background:#fffaf0;"><div class="info"><div class="name">📊 Credit ጠቅላላ ሽያጭ</div></div><div class="amount">${creditTotal.toFixed(2)} ብር</div></div>
+    `;
   }
 
   // --- የወር ሪፖርት ---
@@ -1368,18 +1521,25 @@
     allFixed.filter(f => f.month === selMonth).forEach(f => fixedTotal += f.amount);
 
     let totalRev = 0, totalExp = 0;
+    let cashRev = 0, transferRev = 0, creditRev = 0, creditTotal = 0;
     let salesHtml = '', unsoldHtml = '';
     const soldIds = new Set();
 
     monthSales.forEach(s => {
-      totalRev += s.total;
+      totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total;
+      if (s.paymentMethod === 'transfer') transferRev += (s.paidAmount !== undefined ? s.paidAmount : s.total);
+      else if (s.paymentMethod === 'credit') { creditRev += (s.paidAmount || 0); creditTotal += s.total; }
+      else cashRev += (s.paidAmount !== undefined ? s.paidAmount : s.total);
+      
       soldIds.add(s.medicineId);
-      salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">${s.date} | x${s.quantity}${s.customer ? ' | 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? ' | 🏢 '+s.branch : '')}</div></div><div class="amount">${s.total.toFixed(2)} ብር</div></div>`;
+      const pmLabel = s.paymentMethod === 'transfer' ? '🏦' : (s.paymentMethod === 'credit' ? '📝' : '💵');
+      salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">${s.date} | x${s.quantity} ${pmLabel}${s.customer ? ' | 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? ' | 🏢 '+s.branch : '')}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`;
     });
     snapQuick.forEach(d => {
       const q = d.data(); 
       if (branch !== 'all' && q.branch !== branch) return;
       totalRev += q.amount;
+      cashRev += q.amount;
       salesHtml += `<div class="list-item"><div class="info"><div class="name">⚡ ${q.category}</div><div class="meta">${q.date}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`;
     });
     monthExp.forEach(e => totalExp += e.amount);
@@ -1396,6 +1556,13 @@
     document.getElementById('monthlyNetProfit').innerHTML = netProfit.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('monthlySalesList').innerHTML = salesHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
     document.getElementById('monthlyUnsoldList').innerHTML = unsoldHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ሁሉም ተሽጠዋል።</p>';
+
+    document.getElementById('monthlyPaymentSummary').innerHTML = `
+      <div class="list-item"><div class="info"><div class="name">💵 Cash</div></div><div class="amount">${cashRev.toFixed(2)} ብር</div></div>
+      <div class="list-item"><div class="info"><div class="name">🏦 Transfer</div></div><div class="amount">${transferRev.toFixed(2)} ብር</div></div>
+      <div class="list-item"><div class="info"><div class="name">📝 Credit (የተከፈለ)</div></div><div class="amount">${creditRev.toFixed(2)} ብር</div></div>
+      <div class="list-item" style="background:#fffaf0;"><div class="info"><div class="name">📊 Credit ጠቅላላ ሽያጭ</div></div><div class="amount">${creditTotal.toFixed(2)} ብር</div></div>
+    `;
   }
 
   // --- ዳሽቦርድ ---
@@ -1403,7 +1570,7 @@
     const today = new Date().toISOString().split('T')[0];
     const month = today.substring(0,7);
 
-    const tSales = allSales.filter(s => s.date === today); let tRev = 0; tSales.forEach(s => tRev += s.total);
+    const tSales = allSales.filter(s => s.date === today); let tRev = 0; tSales.forEach(s => tRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
     const tExp = allExpenses.filter(e => e.date === today); let tExpSum = 0; tExp.forEach(e => tExpSum += e.amount);
     const tQuickSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '==', today)));
     tQuickSnap.forEach(d => tRev += d.data().amount);
@@ -1412,7 +1579,7 @@
     document.getElementById('dashTodayExpense').innerHTML = tExpSum.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('dashTodayProfit').innerHTML = (tRev - tExpSum).toFixed(2) + ' <small>ብር</small>';
 
-    const mSales = allSales.filter(s => s.date && s.date.startsWith(month)); let mRev = 0; mSales.forEach(s => mRev += s.total);
+    const mSales = allSales.filter(s => s.date && s.date.startsWith(month)); let mRev = 0; mSales.forEach(s => mRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
     const mExp = allExpenses.filter(e => e.date && e.date.startsWith(month)); let mExpSum = 0; mExp.forEach(e => mExpSum += e.amount);
     const mQuickSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '>=', month + '-01'), where('date', '<=', month + '-31')));
     mQuickSnap.forEach(d => mRev += d.data().amount);
@@ -1431,7 +1598,7 @@
       const dt = new Date(); dt.setDate(dt.getDate() - i);
       const ds = dt.toISOString().split('T')[0];
       l.push(dt.getDate() + '/' + (dt.getMonth()+1));
-      const h = allSales.filter(s => s.date === ds).reduce((a,b) => a + b.total, 0);
+      const h = allSales.filter(s => s.date === ds).reduce((a,b) => a + (b.paidAmount !== undefined ? b.paidAmount : b.total), 0);
       d.push(h);
     }
     if (dailyChartInstance) dailyChartInstance.destroy();
@@ -1446,6 +1613,57 @@
     expensePieChartInstance = new Chart(c2, { type: 'doughnut', data: { labels: ['ተለዋዋጭ', 'ቋሚ'], datasets: [{ data: [varTotal, fixTotal], backgroundColor: ['#c53030', '#dd6b20'] }] }, options: { responsive: true, maintainAspectRatio: false } });
   }
 
+  // --- ዱቤ (Credit) ---
+  function populateCreditCustomerSelect() {
+    const sel = document.getElementById('creditPayCustomer');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">-- ደንበኛ ምረጥ --</option>';
+    allCustomers.forEach(c => { sel.innerHTML += `<option value="${c}">${c}</option>`; });
+  }
+
+  function calculateCustomerDebt(customerName) {
+    let totalCredit = 0, totalPaid = 0;
+    allSales.forEach(s => {
+      if (s.customer === customerName && s.paymentMethod === 'credit') {
+        totalCredit += s.total;
+        totalPaid += (s.paidAmount || 0);
+      }
+    });
+    allCreditPayments.forEach(p => {
+      if (p.customer === customerName) totalPaid += p.amount;
+    });
+    return { totalCredit, totalPaid, balance: totalCredit - totalPaid };
+  }
+
+  window.renderCreditList = function() {
+    const listEl = document.getElementById('creditCustomerList');
+    if (!listEl) return;
+    if (allCustomers.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ደንበኛ የለም።</p>'; return; }
+    
+    let html = '';
+    allCustomers.forEach(c => {
+      const { totalCredit, totalPaid, balance } = calculateCustomerDebt(c);
+      if (totalCredit === 0) return;
+      const color = balance > 0 ? '#c53030' : '#276749';
+      html += `<div class="list-item"><div class="info"><div class="name">${c}</div><div class="meta">ጠቅላላ ዱቤ: ${totalCredit.toFixed(2)} | የተከፈለ: ${totalPaid.toFixed(2)}</div></div><div class="amount" style="color:${color};">${balance.toFixed(2)} ብር</div></div>`;
+    });
+    listEl.innerHTML = html || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ዕዳ የለም።</p>';
+  };
+
+  window.addCreditPayment = async function() {
+    const customer = document.getElementById('creditPayCustomer').value;
+    const amount = parseFloat(document.getElementById('creditPayAmount').value);
+    const date = document.getElementById('creditPayDate').value;
+    if (!customer || isNaN(amount) || amount <= 0 || !date) { alert('ሁሉንም መረጃዎች ሙላ'); return; }
+    try {
+      await addDoc(collection(db, 'creditPayments'), { customer, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+      alert('✅ ክፍያ ተመዝግቧል!');
+      document.getElementById('creditPayAmount').value = '';
+      loadAllData();
+      renderCreditList();
+    } catch(e) { alert(e.message); }
+  };
+
   // --- ሴቲንግስ ---
   async function loadSettings() {
     if(currentUserPharmacyId) {
@@ -1453,13 +1671,16 @@
       if(d.exists()) {
         document.getElementById('settingPharmacyName').value = d.data().name || '';
         currentBizType = d.data().bizType || 'retail';
+        lowStockThreshold = d.data().lowStockThreshold || 10;
         document.getElementById('settingBizType').value = currentBizType;
+        document.getElementById('settingLowStockThreshold').value = lowStockThreshold;
       }
     }
-    toggleBizFields();
+    applyBizTypeUI();
     const qc = document.getElementById('quickCat');
     qc.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
     allCategories.forEach(c => { qc.innerHTML += `<option value="${c}">${c}</option>`; });
+    renderCreditList();
   }
 
   window.savePharmacyName = async function() {
@@ -1470,6 +1691,27 @@
       document.getElementById('hdrPharmacyName').innerText = '💊 ' + name;
       alert('✅ ተቀይሯል!');
     } catch(e) { alert(e.message); }
+  };
+
+  window.saveBizType = async function() {
+    const type = document.getElementById('settingBizType').value;
+    currentBizType = type;
+    if (currentUserPharmacyId) {
+      try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { bizType: type }); } catch(e) { console.error(e); }
+    }
+    applyBizTypeUI();
+    loadAllData();
+  };
+
+  window.saveLowStockThreshold = async function() {
+    const val = parseInt(document.getElementById('settingLowStockThreshold').value);
+    if (isNaN(val) || val < 1) { alert('ትክክለኛ ቁጥር አስገባ'); return; }
+    lowStockThreshold = val;
+    if (currentUserPharmacyId) {
+      try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { lowStockThreshold: val }); } catch(e) { console.error(e); }
+    }
+    loadInventory();
+    alert('✅ ተቀምጧል!');
   };
 
   window.changePassword = async function() {
@@ -1522,7 +1764,7 @@
     const statusEl = document.getElementById('backupStatus');
     statusEl.textContent = '⏳ ዳታ በመሰብሰብ ላይ...';
     try {
-      const data = { exportedAt: new Date().toISOString(), medicines: allMedicines, categories: allCategories, branches: allBranches, customers: allCustomers, sales: allSales, expenses: allExpenses, fixed: allFixed };
+      const data = { exportedAt: new Date().toISOString(), medicines: allMedicines, categories: allCategories, branches: allBranches, customers: allCustomers, sales: allSales, expenses: allExpenses, fixed: allFixed, creditPayments: allCreditPayments };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `pharmacy-backup-${new Date().toISOString().split('T')[0]}.json`;
@@ -1544,6 +1786,7 @@
         for (const s of data.sales || []) { const { id, ...rest } = s; await setDoc(doc(db, 'sales', id), rest); }
         for (const ex of data.expenses || []) { const { id, ...rest } = ex; await setDoc(doc(db, 'expenses', id), rest); }
         for (const fx of data.fixed || []) { const { id, ...rest } = fx; await setDoc(doc(db, 'fixedExpenses', id), rest); }
+        for (const cp of data.creditPayments || []) { const { id, ...rest } = cp; await setDoc(doc(db, 'creditPayments', id), rest); }
         statusEl.textContent = '✅ ዳታ ተመልሷል!'; statusEl.style.color = '#38a169';
         loadAllData();
       } catch(err) { statusEl.textContent = '❌ ' + err.message; statusEl.style.color = '#c53030'; }
@@ -1582,8 +1825,8 @@
 
   window.exportExcel = function() {
     if (allSales.length === 0) { alert('ውሂብ የለም'); return; }
-    let csv = '\uFEFFቀን,ምርት,ብዛት,ዋጋ,ጠቅላላ,ቅርንጫፍ,ደንበኛ,ደረሰኝ\n';
-    allSales.forEach(s => { csv += `"${s.date}","${s.medicineName}",${s.quantity},${s.unitPrice},${s.total},"${s.branch||''}","${s.customer||''}","${s.receipt||''}"\n`; });
+    let csv = '\uFEFFቀን,ምርት,ብዛት,ዋጋ,ጠቅላላ,የክፍያ ዓይነት,የተከፈለ,ቅርንጫፍ,ደንበኛ,ደረሰኝ\n';
+    allSales.forEach(s => { csv += `"${s.date}","${s.medicineName}",${s.quantity},${s.unitPrice},${s.total},"${s.paymentMethod||'cash'}",${s.paidAmount !== undefined ? s.paidAmount : s.total},"${s.branch||''}","${s.customer||''}","${s.receipt||''}"\n`; });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `pharmacy-sales-${new Date().toISOString().split('T')[0]}.csv`;
@@ -1651,6 +1894,7 @@
   document.getElementById('expDate').value = today;
   document.getElementById('quickDate').value = today;
   document.getElementById('fixMonth').value = today.substring(0,7);
+  document.getElementById('creditPayDate').value = today;
 </script>
 
 </body>
