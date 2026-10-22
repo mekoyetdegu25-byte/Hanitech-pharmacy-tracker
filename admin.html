@@ -7,8 +7,6 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
   body { background: #f0f4f8; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
-  
-  /* የመግቢያ ገጽ */
   #adminLogin { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
   .login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
   .login-box h1 { text-align: center; color: #1a365d; font-size: 20px; margin-bottom: 20px; font-weight: 800;}
@@ -16,27 +14,16 @@
   input, select { width: 100%; padding: 14px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f7fafc; outline: none; }
   input:focus, select:focus { border-color: #3182ce; background: #fff; }
   .btn-login { width: 100%; padding: 15px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; cursor: pointer; margin-top: 8px; }
-
-  /* ዋና ገጽ */
   #adminApp { display: none; }
   header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 16px; border-radius: 0 0 16px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
   header h1 { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
   .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
-
   .container { padding: 0 14px; }
-  
-  /* ካርዶች */
   .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
   .stat-card { background: #fff; border-radius: 14px; padding: 20px 10px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
   .stat-card .value { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
   .stat-card .label { font-size: 12px; color: #718096; font-weight: 600; }
-  
-  .val-blue { color: #2b6cb0; }
-  .val-green { color: #276749; }
-  .val-red { color: #c53030; }
-  .val-orange { color: #dd6b20; }
-
-  /* የተዘረጉ ክፍሎች */
+  .val-blue { color: #2b6cb0; } .val-green { color: #276749; } .val-red { color: #c53030; } .val-orange { color: #dd6b20; }
   .section-collapsible { background: #fff; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); overflow: hidden; }
   .section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px; cursor: pointer; }
   .section-header .sec-left { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; color: #2d3748; }
@@ -45,35 +32,22 @@
   .section-header.open .sec-arrow { transform: rotate(90deg); }
   .section-body { display: none; padding: 0 16px 16px 16px; border-top: 1px solid #edf2f7; padding-top: 16px; }
   .section-body.open { display: block; }
-
-  /* ቁልፎች */
   .btn { display: block; width: 100%; padding: 12px; font-size: 14px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; text-align: center; text-decoration: none; color: #fff; margin-bottom: 6px;}
   .btn-sm { padding: 8px; font-size: 12px; border-radius: 6px; }
-  .btn-success { background: #276749; }
-  .btn-primary { background: #2c5282; }
-  .btn-danger { background: #c53030; }
-  .btn-warning { background: #dd6b20; }
-  .btn-info { background: #3182ce; }
-  .btn-outline { background: transparent; border: 1.5px solid #cbd5e0; color: #4a5568; }
-
-  /* የፋርማሲ ካርድ */
+  .btn-success { background: #276749; } .btn-primary { background: #2c5282; } .btn-danger { background: #c53030; } .btn-warning { background: #dd6b20; } .btn-info { background: #3182ce; } .btn-outline { background: transparent; border: 1.5px solid #cbd5e0; color: #4a5568; }
   .tenant-card { background: #fff; border: 1px solid #edf2f7; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.03); }
   .tenant-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #edf2f7; padding-bottom: 10px; margin-bottom: 10px; }
   .tenant-title { font-size: 16px; font-weight: 800; color: #2c5282; display: flex; align-items: center; gap: 6px; }
   .tenant-website { font-size: 12px; color: #3182ce; text-decoration: none; }
-  
   .tenant-info { font-size: 13px; margin-bottom: 6px; color: #4a5568; display: flex; align-items: center; gap: 6px; }
   .tenant-info strong { color: #2d3748; }
-  
   .badge-status { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-top: 6px; }
   .status-active { background: #c6f6d5; color: #22543d; }
   .status-expired { background: #feebc8; color: #7b341e; }
   .status-suspended { background: #fed7d7; color: #822727; }
-
   .tenant-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
   .tenant-actions .btn { margin-bottom: 0; display: flex; align-items: center; justify-content: center; gap: 4px; }
   .tenant-actions .btn-full { grid-column: span 2; }
-
   @media (min-width: 768px) {
     .stats-grid { grid-template-columns: repeat(4, 1fr); }
     .tenant-actions { grid-template-columns: 1fr 1fr 1fr; }
@@ -83,7 +57,6 @@
 </head>
 <body>
 
-<!-- የመግቢያ ገጽ -->
 <div id="adminLogin">
   <div class="login-box">
     <h1>👑 Super Admin Panel</h1>
@@ -94,7 +67,6 @@
   </div>
 </div>
 
-<!-- ዋና ገጽ -->
 <div id="adminApp">
   <header>
     <h1>👑 Super Admin Panel</h1>
@@ -102,7 +74,6 @@
   </header>
 
   <div class="container">
-    <!-- Stats Grid -->
     <div class="stats-grid">
       <div class="stat-card"><div class="value val-blue" id="statTotalTenants">0</div><div class="label">📊 ጠቅላላ ፋርማሲዎች</div></div>
       <div class="stat-card"><div class="value val-green" id="statActiveTenants">0</div><div class="label">✅ ተከፋዮች</div></div>
@@ -114,10 +85,8 @@
       <div class="stat-card"><div class="value val-orange" id="statTotalUnpaid">0.00</div><div class="label">⏳ ያልተከፈለ (ብር)</div></div>
     </div>
 
-    <!-- Excel Export -->
     <button class="btn btn-success" style="margin-bottom: 16px;" onclick="exportExcel()">📊 Excel (CSV) አውጣ</button>
 
-    <!-- Password Requests -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">🔔 የፓስወርድ ማስተካከያ ጥያቄዎች <span class="badge" id="passReqBadge">0</span></div>
@@ -128,33 +97,28 @@
       </div>
     </div>
 
-    <!-- Add New Tenant -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">➕ አዲስ ፋርማሲ ጨምር</div>
         <span class="sec-arrow">▶</span>
       </div>
       <div class="section-body">
-        <div class="form-group"><label>የፋርማሲ ስም</label><input type="text" id="newTenantName" placeholder="ለምሳሌ: Addis Pharmacy"></div>
+        <div class="form-group"><label>የድርጅት ስም</label><input type="text" id="newTenantName" placeholder="ለምሳሌ: Addis Pharmacy"></div>
         <div class="form-group"><label>ድረ-ገጽ (Website)</label><input type="text" id="newTenantWebsite" placeholder="example.com"></div>
         <div class="form-group"><label>የባለቤት ኢሜይል (Owner)</label><input type="email" id="newTenantOwnerEmail" placeholder="owner@example.com"></div>
         <div class="form-group"><label>የማናጀር ኢሜይል (Manager)</label><input type="email" id="newTenantManagerEmail" placeholder="manager@example.com"></div>
         <div class="form-group"><label>የአካውንታንት ኢሜይል (Accountant)</label><input type="email" id="newTenantAccountantEmail" placeholder="accountant@example.com"></div>
-        
-        <!-- 🔑 የጊዜያዊ ፓስወርድ ማስገቢያ -->
         <div class="form-group">
           <label>🔑 የጊዜያዊ ፓስወርድ (ለሁሉም ተጠቃሚዎች)</label>
           <input type="text" id="newTenantTempPassword" placeholder="ለምሳሌ: 123456" value="123456">
           <div style="font-size:11px; color:#718096; margin-top:4px;">💡 ተጠቃሚዎቹ በዚህ ፓስወርድ ገብተው ወዲያውኑ እንዲቀይሩት ይጠየቃሉ።</div>
         </div>
-
         <div class="form-group"><label>የክፍያ መጠን (ብር/ወር)</label><input type="number" id="newTenantAmount" placeholder="0.00"></div>
         <div class="form-group"><label>የአገልግሎት ማብቂያ ቀን</label><input type="date" id="newTenantExpiry"></div>
         <button class="btn btn-primary" onclick="addTenant()">💾 ፋርማሲ ፍጠር</button>
       </div>
     </div>
 
-    <!-- Tenants List -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">📋 የፋርማሲዎች ዝርዝር <span class="badge" style="background:#2b6cb0;" id="tenantListBadge">0</span></div>
@@ -174,7 +138,6 @@
       </div>
     </div>
 
-    <!-- Backup / Restore -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">💾 ዳታ ማስቀመጥ እና መመለስ (Backup / Restore)</div>
@@ -187,7 +150,6 @@
         <div id="backupStatus" style="margin-top:10px; font-size:13px;"></div>
       </div>
     </div>
-    
   </div>
 </div>
 
@@ -209,7 +171,6 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // SUPER ADMIN EMAIL (እርስዎ ብቻ መግባት የሚችሉበት)
   const SUPER_ADMIN_EMAIL = "admin@hanitech.com"; 
 
   let allTenants = [];
@@ -408,7 +369,6 @@
     }
 
     try {
-      // 1. ፋርማሲውን በ 'pharmacies' ላይ መፍጠር
       const newPharmacyRef = await addDoc(collection(db, 'pharmacies'), {
         name: name,
         website: website,
@@ -427,38 +387,31 @@
         { email: ownerEmail, role: 'owner' },
         { email: managerEmail, role: 'manager' },
         { email: accountantEmail, role: 'accountant' }
-      ].filter(u => u.email !== ''); // ባዶ ኢሜይሎችን አስወግድ
+      ].filter(u => u.email !== '');
 
       let createdCount = 0;
       let errors = [];
 
-      // 2. ለእያንዳንዱ ተጠቃሚ የ Firebase Auth አካውንት መፍጠር
       for (const userObj of emailsToCreate) {
         try {
-          // ጊዜያዊ ፓስወርድ ተጠቅመን ተጠቃሚ መፍጠር
           const userCredential = await createUserWithEmailAndPassword(auth, userObj.email, tempPassword);
           const uid = userCredential.user.uid;
 
-          // 3. በ 'users' Collection ውስጥ መረጃውን ማስቀመጥ
           await setDoc(doc(db, 'users', uid), {
             email: userObj.email,
             role: userObj.role,
             pharmacyId: pharmacyId,
-            isTempPassword: true, // ይህ ተጠቃሚው ጊዜያዊ ፓስወርድ መጠቀሙን ያሳያል
+            isTempPassword: true,
             createdAt: new Date().toISOString()
           });
           createdCount++;
 
-          // ⚠️ ማስታወሻ፡ ተጠቃሚው ሲፈጠር በራስ-ሰር ወደ ሲስተሙ ይገባል (Admin ይሆናል)።
-          // ስለዚህ ወዲያውኑ ከሲስተሙ እናወጣው (Logout)።
-          await signOut(auth);
-
+          await signOut(auth); 
         } catch(err) {
           errors.push(`${userObj.email}: ${err.message}`);
         }
       }
 
-      // 4. እንደገና ወደ Admin አካውንት መግባት (ምክንያቱም logout ስላደረግን)
       await signInWithEmailAndPassword(auth, SUPER_ADMIN_EMAIL, document.getElementById('adminPassword').value);
 
       if (errors.length > 0) {
@@ -467,7 +420,6 @@
         alert(`✅ ፋርማሲው እና ${createdCount} ተጠቃሚዎች በተሳካ ሁኔታ ተፈጥረዋል!`);
       }
 
-      // 5. ማስገቢያ ቦታዎችን ማጽዳት
       document.getElementById('newTenantName').value = '';
       document.getElementById('newTenantWebsite').value = '';
       document.getElementById('newTenantOwnerEmail').value = '';
@@ -480,7 +432,6 @@
 
     } catch(e) { 
       alert('⚠️ ስህተት: ' + e.message); 
-      // ስህተት ከተፈጠረ እንደገና ወደ Admin መግባት እንሞክር
       try { await signInWithEmailAndPassword(auth, SUPER_ADMIN_EMAIL, document.getElementById('adminPassword').value); } catch(err) {}
     }
   };
@@ -558,7 +509,6 @@
     alert(historyText);
   };
 
-  // --- Excel Export ---
   window.exportExcel = function() {
     if (allTenants.length === 0) { alert('ውሂብ የለም'); return; }
     let csv = '\uFEFFስም,ድረ-ገጽ,ባለቤት,ማናጀር,አካውንታንት,የክፍያ መጠን,የማብቂያ ቀን,ሁኔታ\n';
@@ -572,7 +522,6 @@
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   };
 
-  // --- Backup / Restore ---
   window.exportBackup = async function() {
     const statusEl = document.getElementById('backupStatus');
     statusEl.textContent = '⏳ ዳታ በመሰብሰብ ላይ...';
