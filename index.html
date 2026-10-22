@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanitech Pharmacy Tracker</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+  body { background: #f0f4f8; color: #1a202c; padding-bottom: 80px; }
+  
+  /* የመግቢያ ገጽ */
+  #loginScreen { position: fixed; inset: 0; background: #2b6cb0; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+  .login-box { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+  .login-box h1 { text-align: center; color: #2b6cb0; margin-bottom: 20px; font-size: 22px;}
+  input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #cbd5e0; border-radius: 8px; font-size: 16px; background: #f7fafc;}
+  button { width: 100%; padding: 12px; background: #2b6cb0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s;}
+  button:hover { background: #2c5282; }
+
+  /* ዋና ገጽ */
+  #mainApp { display: none; }
+  header { background: #2b6cb0; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10;}
+  .container { padding: 15px; max-width: 800px; margin: 0 auto; }
+  
+  /* Tabs */
+  .tabs { display: flex; background: white; border-radius: 10px; padding: 5px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto;}
+  .tabs button { background: transparent; color: #4a5568; border: none; padding: 10px; border-radius: 8px; margin-right: 5px; font-size: 14px; white-space: nowrap;}
+  .tabs button.active { background: #ebf8ff; color: #2b6cb0; font-weight: bold;}
+  
+  .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: none;}
+  .card.active { display: block; }
+  .card h2 { font-size: 18px; margin-bottom: 15px; color: #2d3748; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+  
+  .form-group { margin-bottom: 15px; }
+  label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; color: #4a5568;}
+  
+  .list-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #edf2f7; align-items: center;}
+  .list-item:last-child { border-bottom: none; }
+  .item-info h3 { font-size: 16px; margin-bottom: 4px; color: #2d3748;}
+  .item-info p { font-size: 12px; color: #718096; }
+  .item-price { font-weight: bold; color: #2b6cb0; text-align: right;}
+  
+  .btn-logout { background: #e53e3e; padding: 8px 12px; width: auto; font-size: 14px; }
+  .btn-danger { background: #e53e3e; }
+  .btn-success { background: #38a169; }
+  .error { color: #e53e3e; font-size: 14px; text-align: center; margin-bottom: 10px; display: none; background: #fff5f5; padding: 10px; border-radius: 8px;}
+  
+  .stat-box { background: linear-gradient(135deg, #2b6cb0, #2c5282); color: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: center;}
+  .stat-box h3 { font-size: 14px; font-weight: normal; opacity: 0.9; margin-bottom: 5px;}
+  .stat-box .value { font-size: 28px; font-weight: bold;}
+  
+  .expiry-alert { color: #e53e3e; font-weight: bold; font-size: 12px; }
+  .low-stock { color: #dd6b20; font-weight: bold; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<!-- የመግቢያ ገጽ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>💊 Hanitech Pharmacy</h1>
+    <div class="error" id="loginError"></div>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">🔓 ግባ</button>
+  </div>
+</div>
+
+<!-- ዋና ገጽ -->
+<div id="mainApp">
+  <header>
+    <h2>💊 Pharmacy Tracker</h2>
+    <button class="btn-logout" onclick="logout()">ውጣ</button>
+  </header>
+  
+  <div class="container">
+    <!-- ታቦች -->
+    <div class="tabs">
+      <button class="active" onclick="switchTab('tab-add', this)">➕ መድሃኒት ጨምር</button>
+      <button onclick="switchTab('tab-sell', this)">🛒 ሽያጭ</button>
+      <button onclick="switchTab('tab-inventory', this)">📦 ክምችት</button>
+      <button onclick="switchTab('tab-report', this)">📊 ሪፖርት</button>
+    </div>
+
+    <!-- 1. አዲስ መድሃኒት መመዝገቢያ -->
+    <div class="card active" id="tab-add">
+      <h2>➕ አዲስ መድሃኒት ጨምር</h2>
+      <div class="form-group"><label>💊 የመድሃኒት ስም</label><input type="text" id="medName" placeholder="ለምሳሌ: Paracetamol"></div>
+      <div class="form-group"><label>🔢 የባች ቁጥር (Batch No)</label><input type="text" id="medBatch" placeholder="ለምሳሌ: BATCH-001"></div>
+      <div class="form-group"><label>📅 የማለቂያ ቀን (Expiry Date)</label><input type="date" id="medExpiry"></div>
+      <div class="form-group"><label>💰 የግዢ ዋጋ (Purchase Price)</label><input type="number" id="medCost" placeholder="0.00"></div>
+      <div class="form-group"><label>🏷️ የሽያጭ ዋጋ (Selling Price)</label><input type="number" id="medPrice" placeholder="0.00"></div>
+      <div class="form-group"><label>📦 ብዛት (Quantity)</label><input type="number" id="medQty" placeholder="0"></div>
+      <button onclick="addMedicine()" style="background:#38a169;">💾 አስቀምጥ</button>
+    </div>
+
+    <!-- 2. ሽያጭ ገጽ -->
+    <div class="card" id="tab-sell">
+      <h2>🛒 መድሃኒት ሽያጭ</h2>
+      <div class="form-group">
+        <label>💊 መድሃኒት ምረጥ</label>
+        <select id="sellMedId" onchange="updateSellPrice()"></select>
+      </div>
+      <div class="form-group"><label>📦 የሚሸጠው ብዛት</label><input type="number" id="sellQty" placeholder="0" min="1"></div>
+      <div class="form-group"><label>💵 ጠቅላላ ዋጋ (ብር)</label><input type="text" id="sellTotal" placeholder="0.00" readonly style="background:#edf2f7; font-weight:bold;"></div>
+      <button onclick="sellMedicine()" style="background:#38a169;">💸 ሽያጭ አድርግ</button>
+    </div>
+
+    <!-- 3. ክምችት ማሳያ -->
+    <div class="card" id="tab-inventory">
+      <h2>📦 የእቃ ክምችት</h2>
+      <div id="inventoryList"></div>
+    </div>
+
+    <!-- 4. ሪፖርት -->
+    <div class="card" id="tab-report">
+      <h2>📊 የሽያጭ ሪፖርት</h2>
+      
+      <div class="stat-box">
+        <h3>የዛሬ ገቢ</h3>
+        <div class="value" id="todayRevenue">0.00 ብር</div>
+      </div>
+      
+      <div class="stat-box" style="background: linear-gradient(135deg, #38a169, #2f855a);">
+        <h3>የዚህ ወር ገቢ</h3>
+        <div class="value" id="monthRevenue">0.00 ብር</div>
+      </div>
+
+      <h3 style="margin-top:20px; margin-bottom:10px; color:#4a5568;">የዛሬ ሽያጮች ዝርዝር</h3>
+      <div id="todaySalesList"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Firebase SDK እና ኮድ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, Timestamp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3bQkI8scEHg36kkxlAalbbCtE4R0Vv8U",
+    authDomain: "hanitech-pharmacy-tracker.firebaseapp.com",
+    projectId: "hanitech-pharmacy-tracker",
+    storageBucket: "hanitech-pharmacy-tracker.firebasestorage.app",
+    messagingSenderId: "692991067588",
+    appId: "1:692991067588:web:5f0cab885c4aaa64785091"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let allMedicines = []; // የመድሃኒቶች ዝርዝር ለማስቀመጥ
+
+  // --- የታብ መቀየሪያ ---
+  window.switchTab = function(tabId, btn) {
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+    
+    if (tabId === 'tab-inventory') loadInventory();
+    if (tabId === 'tab-sell') loadSellOptions();
+    if (tabId === 'tab-report') loadReport();
+  };
+
+  // --- መግቢያ እና መውጫ ---
+  window.login = async function() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorEl = document.getElementById('loginError');
+    errorEl.style.display = 'none';
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም';
+      errorEl.style.display = 'block';
+    }
+  };
+
+  window.logout = function() { signOut(auth); };
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      loadAllData();
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('mainApp').style.display = 'none';
+    }
+  });
+
+  // --- ዳታ መጫኛ ---
+  async function loadAllData() {
+    await loadMedicines();
+    loadInventory();
+    loadSellOptions();
+    loadReport();
+  }
+
+  // --- 1. መድሃኒት ማስቀመጥ ---
+  window.addMedicine = async function() {
+    const name = document.getElementById('medName').value.trim();
+    const batch = document.getElementById('medBatch').value.trim();
+    const expiry = document.getElementById('medExpiry').value;
+    const cost = parseFloat(document.getElementById('medCost').value);
+    const price = parseFloat(document.getElementById('medPrice').value);
+    const qty = parseInt(document.getElementById('medQty').value);
+
+    if (!name || !batch || !expiry || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) {
+      alert('⚠️ እባክህ ሁሉንም መረጃዎች በትክክል ሙላ! (ብዛት ከ 0 በላይ መሆን አለበት)');
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, 'medicines'), {
+        name, batch, expiry, cost, price, quantity: qty, createdAt: serverTimestamp()
+      });
+      alert('✅ መድሃኒቱ ተመዝግቧል!');
+      
+      // ሳጥኖችን ማጽዳት
+      document.getElementById('medName').value = '';
+      document.getElementById('medBatch').value = '';
+      document.getElementById('medExpiry').value = '';
+      document.getElementById('medCost').value = '';
+      document.getElementById('medPrice').value = '';
+      document.getElementById('medQty').value = '';
+      
+      loadAllData();
+    } catch (err) {
+      alert('⚠️ ስህተት: ' + err.message);
+    }
+  };
+
+  // --- 2. መድሃኒቶችን ማምጣት (ለሽያጭ እና ክምችት) ---
+  async function loadMedicines() {
+    try {
+      const q = query(collection(db, 'medicines'), orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(q);
+      allMedicines = [];
+      snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // --- 3. ክምችት ማሳያ ---
+  function loadInventory() {
+    const listEl = document.getElementById('inventoryList');
+    if (allMedicines.length === 0) {
+      listEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">ምንም መድሃኒት የለም።</p>';
+      return;
+    }
+
+    let html = '';
+    allMedicines.forEach(med => {
+      const today = new Date();
+      const expiryDate = new Date(med.expiry);
+      const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+      
+      let alertHtml = '';
+      if (diffDays < 0) alertHtml = '<span class="expiry-alert">⚠️ ጊዜው አልፏል!</span>';
+      else if (diffDays <= 30) alertHtml = `<span class="expiry-alert">⚠️ ${diffDays} ቀን ቀርቷል</span>`;
+      else if (med.quantity <= 10) alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>';
+
+      html += `
+        <div class="list-item">
+          <div class="item-info">
+            <h3>${med.name}</h3>
+            <p>Batch: ${med.batch} | የሚያልቅበት: ${med.expiry}</p>
+            ${alertHtml}
+          </div>
+          <div class="item-price">
+            <div style="font-size:18px;">${med.quantity}</div>
+            <div style="font-size:12px; color:#a0aec0;">የሽያጭ: ${med.price} ብር</div>
+          </div>
+        </div>
+      `;
+    });
+    listEl.innerHTML = html;
+  }
+
+  // --- 4. ሽያጭ ገጽ ---
+  function loadSellOptions() {
+    const select = document.getElementById('sellMedId');
+    select.innerHTML = '<option value="">-- መድሃኒት ምረጥ --</option>';
+    
+    allMedicines.forEach(med => {
+      if (med.quantity > 0) {
+        select.innerHTML += `<option value="${med.id}">${med.name} (ቀሪ: ${med.quantity})</option>`;
+      }
+    });
+  }
+
+  window.updateSellPrice = function() {
+    const id = document.getElementById('sellMedId').value;
+    if (!id) { document.getElementById('sellTotal').value = '0.00'; return; }
+    
+    const med = allMedicines.find(m => m.id === id);
+    if (med) {
+      document.getElementById('sellQty').value = 1; // ነባሪ ብዛት
+      document.getElementById('sellTotal').value = med.price.toFixed(2);
+    }
+  };
+
+  // ብዛት ሲቀየር ዋጋውን ማስተካከል
+  document.getElementById('sellQty')?.addEventListener('input', () => {
+    const id = document.getElementById('sellMedId').value;
+    const qty = parseInt(document.getElementById('sellQty').value) || 0;
+    if (!id) return;
+    const med = allMedicines.find(m => m.id === id);
+    if (med) document.getElementById('sellTotal').value = (med.price * qty).toFixed(2);
+  });
+
+  window.sellMedicine = async function() {
+    const id = document.getElementById('sellMedId').value;
+    const qty = parseInt(document.getElementById('sellQty').value);
+    
+    if (!id || isNaN(qty) || qty <= 0) {
+      alert('⚠️ እባክህ መድሃኒት እና ትክክለኛ ብዛት ምረጥ');
+      return;
+    }
+
+    const med = allMedicines.find(m => m.id === id);
+    if (med.quantity < qty) {
+      alert(`⚠️ በቂ ክምችት የለም! ያለው ብዛት: ${med.quantity}`);
+      return;
+    }
+
+    const total = med.price * qty;
+
+    try {
+      // 1. ሽያጩን መመዝገብ
+      await addDoc(collection(db, 'sales'), {
+        medicineId: id,
+        medicineName: med.name,
+        quantity: qty,
+        unitPrice: med.price,
+        total: total,
+        date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+        timestamp: serverTimestamp()
+      });
+
+      // 2. ከክምችቱ ላይ ብዛቱን መቀነስ
+      await updateDoc(doc(db, 'medicines', id), {
+        quantity: increment(-qty)
+      });
+
+      alert(`✅ ሽያጭ ተመዝግቧል!\n${med.name} x ${qty} = ${total.toFixed(2)} ብር`);
+      
+      loadAllData(); // ዳታውን አድስ
+      document.getElementById('sellQty').value = '';
+      document.getElementById('sellTotal').value = '';
+      document.getElementById('sellMedId').value = '';
+      
+    } catch (err) {
+      alert('⚠️ ስህተት: ' + err.message);
+    }
+  };
+
+  // --- 5. ሪፖርት ---
+  async function loadReport() {
+    const today = new Date().toISOString().split('T')[0];
+    const firstDayOfMonth = today.substring(0, 7) + '-01';
+
+    try {
+      // የዛሬ ሽያጮች
+      const qToday = query(collection(db, 'sales'), where('date', '==', today));
+      const snapToday = await getDocs(qToday);
+      let todayTotal = 0;
+      let todayHtml = '';
+      
+      snapToday.forEach(doc => {
+        const sale = doc.data();
+        todayTotal += sale.total;
+        todayHtml += `<div class="list-item"><div><b>${sale.medicineName}</b> (x${sale.quantity})</div><div style="color:#2b6cb0; font-weight:bold;">${sale.total.toFixed(2)} ብር</div></div>`;
+      });
+
+      document.getElementById('todayRevenue').innerText = todayTotal.toFixed(2) + ' ብር';
+      document.getElementById('todaySalesList').innerHTML = todayHtml || '<p style="text-align:center; color:#a0aec0;">ዛሬ ምንም ሽያጭ የለም።</p>';
+
+      // የወሩ ሽያጮች
+      const qMonth = query(collection(db, 'sales'), where('date', '>=', firstDayOfMonth), where('date', '<=', today));
+      const snapMonth = await getDocs(qMonth);
+      let monthTotal = 0;
+      snapMonth.forEach(doc => { monthTotal += doc.data().total; });
+
+      document.getElementById('monthRevenue').innerText = monthTotal.toFixed(2) + ' ብር';
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+</script>
+
+</body>
+</html>
