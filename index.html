@@ -120,24 +120,17 @@
 
   .chart-container { position: relative; height: 250px; margin-bottom: 15px; }
 
-  /* 🆕 ለታብሌት እና ዴስክቶፕ (Grid Layout) */
   @media (min-width: 768px) {
     .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .panel { padding: 20px; }
     #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-    
-    /* ሙሉ ስፋት የሚይዙ ካርዶች */
-    .section-collapsible.full-width, 
-    #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings {
-       grid-column: span 2;
-    }
+    .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings { grid-column: span 2; }
     .section-collapsible { margin-bottom: 0; }
   }
 </style>
 </head>
 <body>
 
-<!-- የመግቢያ ገጽ -->
 <div id="loginScreen" class="hidden">
   <div class="login-box">
     <h1>💊 Hanitech Pharmacy</h1>
@@ -148,7 +141,6 @@
   </div>
 </div>
 
-<!-- ዋና ገጽ -->
 <div id="mainApp">
   <header>
     <div class="h-left"><div class="h-title" id="hdrPharmacyName">💊 Pharmacy Tracker</div></div>
@@ -252,8 +244,14 @@
           <div class="section-body open" id="bodySell">
             <label class="field-label">📅 የሽያጭ ቀን</label>
             <input type="date" id="sellDate">
-            <label class="field-label">🏢 ቅርንጫፍ (Branch)</label>
-            <select id="sellBranch"></select>
+            <div id="retailSaleFields">
+              <label class="field-label">🏢 ቅርንጫፍ (Branch)</label>
+              <select id="sellBranch"></select>
+            </div>
+            <div id="wholesaleSaleFields" style="display:none;">
+              <label class="field-label">🏪 ደንበኛ (ፋርማሲ/ሱፐርማርኬት)</label>
+              <select id="sellCustomer"></select>
+            </div>
             <label class="field-label">🧾 የደረሰኝ ቁጥር (አማራጭ)</label>
             <input type="text" id="sellReceipt" placeholder="ለምሳሌ: REC-001">
             <div style="margin-top:10px;">
@@ -565,6 +563,20 @@
             </div>
 
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrBizType" onclick="toggleSection('hdrBizType','bodyBizType')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">የድርጅት ዓይነት</span></div>
+              </div>
+              <div class="section-body" id="bodyBizType">
+                <label class="field-label">ዓይነት ምረጥ</label>
+                <select id="settingBizType" onchange="saveBizType()">
+                  <option value="retail">🛒 Retail (ፋርማሲ)</option>
+                  <option value="wholesale">🚚 Wholesale (አከፋፋይ)</option>
+                </select>
+                <div class="info-banner" style="margin-top:10px;">💡 Wholesale ከመረጡ በሽያጭ ገጹ ላይ "ደንበኛ" መስክ ይታያል።</div>
+              </div>
+            </div>
+
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrBranches" onclick="toggleSection('hdrBranches','bodyBranches')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">ቅርንጫፎች</span></div>
               </div>
@@ -574,6 +586,20 @@
                   <button onclick="addBranch()">+ ጨምር</button>
                 </div>
                 <div class="cat-tags" id="branchListDisplay" style="margin-top:10px;"></div>
+              </div>
+            </div>
+
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrCustomers" onclick="toggleSection('hdrCustomers','bodyCustomers')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">ደንበኞች (ፋርማሲዎች)</span></div>
+              </div>
+              <div class="section-body" id="bodyCustomers">
+                <div class="info-banner">💡 አከፋፋይ ሲሆኑ የሚያገለግሏቸውን ፋርማሲዎች እዚህ ይመዝግቡ።</div>
+                <div class="cat-add-row">
+                  <input type="text" id="newCustomer" placeholder="አዲስ ደንበኛ ስም" autocomplete="off">
+                  <button onclick="addCustomer()">+ ጨምር</button>
+                </div>
+                <div class="cat-tags" id="customerListDisplay" style="margin-top:10px;"></div>
               </div>
             </div>
 
@@ -712,11 +738,13 @@
   let allCategories = [];
   let allExpCategories = [];
   let allBranches = [];
+  let allCustomers = [];
   let allSales = [];
   let allExpenses = [];
   let allFixed = [];
   let cart = []; 
   let currentUserPharmacyId = null;
+  let currentBizType = 'retail';
   let dailyChartInstance = null, expensePieChartInstance = null;
 
   window.toggleSection = function(h, b) { 
@@ -745,7 +773,10 @@
       if(userDoc.exists()) {
         currentUserPharmacyId = userDoc.data().pharmacyId;
         const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
-        if(phDoc.exists()) document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phDoc.data().name || 'Pharmacy Tracker');
+        if(phDoc.exists()) {
+          document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phDoc.data().name || 'Pharmacy Tracker');
+          currentBizType = phDoc.data().bizType || 'retail';
+        }
       }
     } catch (err) {
       errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም';
@@ -770,6 +801,7 @@
     await loadCategories();
     await loadExpCategories();
     await loadBranches();
+    await loadCustomers();
     await loadMedicines();
     await loadSales();
     await loadExpenses();
@@ -911,6 +943,70 @@
     try { await deleteDoc(doc(db, 'branches', name)); loadBranches(); } catch(e) { alert(e.message); }
   };
 
+  // --- 🆕 ደንበኞች (Customers) ---
+  async function loadCustomers() {
+    try {
+      const snap = await getDocs(collection(db, 'customers'));
+      allCustomers = [];
+      const sel = document.getElementById('sellCustomer');
+      if (sel) sel.innerHTML = '<option value="">-- ደንበኛ ምረጥ --</option>';
+      snap.forEach(doc => {
+        const cName = doc.data().name;
+        allCustomers.push(cName);
+        if (sel) sel.innerHTML += `<option value="${cName}">${cName}</option>`;
+      });
+      renderCustomerList();
+    } catch(e) { console.error(e); }
+  }
+
+  function renderCustomerList() {
+    const listEl = document.getElementById('customerListDisplay');
+    if(!listEl) return;
+    if(allCustomers.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:#a0aec0;">ምንም ደንበኛ የለም።</p>'; return; }
+    let html = '';
+    allCustomers.forEach(c => { html += `<span class="cat-tag">${c} <span class="del" onclick="deleteCustomer('${c}')">×</span></span>`; });
+    listEl.innerHTML = html;
+  }
+
+  window.addCustomer = async function() {
+    const name = document.getElementById('newCustomer').value.trim();
+    if(!name) { alert('ስም አስገባ'); return; }
+    try {
+      await setDoc(doc(db, 'customers', name), { name: name });
+      document.getElementById('newCustomer').value = '';
+      loadCustomers();
+      alert('✅ ደንበኛ ተጨምሯል!');
+    } catch(e) { alert(e.message); }
+  };
+
+  window.deleteCustomer = async function(name) {
+    if(!confirm('ይህን ደንበኛ ማጥፋት ትፈልጋለህ?')) return;
+    try { await deleteDoc(doc(db, 'customers', name)); loadCustomers(); } catch(e) { alert(e.message); }
+  };
+
+  // --- 🆕 የድርጅት ዓይነት ---
+  window.saveBizType = async function() {
+    const type = document.getElementById('settingBizType').value;
+    currentBizType = type;
+    if (currentUserPharmacyId) {
+      try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { bizType: type }); } catch(e) { console.error(e); }
+    }
+    toggleBizFields();
+  };
+
+  function toggleBizFields() {
+    const retail = document.getElementById('retailSaleFields');
+    const wholesale = document.getElementById('wholesaleSaleFields');
+    if (!retail || !wholesale) return;
+    if (currentBizType === 'wholesale') {
+      retail.style.display = 'none';
+      wholesale.style.display = 'block';
+    } else {
+      retail.style.display = 'block';
+      wholesale.style.display = 'none';
+    }
+  }
+
   // --- መድሃኒት ---
   window.addMedicine = async function() {
     const type = document.getElementById('medType').value;
@@ -921,14 +1017,12 @@
     const price = parseFloat(document.getElementById('medPrice').value);
     const qty = parseInt(document.getElementById('medQty').value);
 
-    let batch = '', expiry = '', supplier = '';
-    if (type === 'medicine') {
-      batch = document.getElementById('medBatch').value.trim();
-      expiry = document.getElementById('medExpiry').value;
-      supplier = document.getElementById('medSupplier').value.trim();
-      if (!batch || !expiry) { alert('⚠️ እባክህ የባች ቁጥር እና የማለቂያ ቀን ሙላ!'); return; }
-    }
+    // 🆕 የባች እና የማለቂያ ቀን ለሁለቱም ዓይነቶች ግዴታ ናቸው
+    const batch = document.getElementById('medBatch').value.trim();
+    const expiry = document.getElementById('medExpiry').value;
+    const supplier = document.getElementById('medSupplier').value.trim();
 
+    if (!batch || !expiry) { alert('⚠️ እባክህ የባች ቁጥር እና የማለቂያ ቀን ሙላ!'); return; }
     if (!category || !subcategory || !name || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) {
       alert('⚠️ እባክህ ሁሉንም መረጃዎች በትክክል ሙላ!');
       return;
@@ -941,11 +1035,9 @@
       alert('✅ ምርቱ ተመዝግቧል!');
       document.getElementById('medSubcategory').value = '';
       document.getElementById('medName').value = '';
-      if (type === 'medicine') {
-        document.getElementById('medBatch').value = '';
-        document.getElementById('medExpiry').value = '';
-        document.getElementById('medSupplier').value = '';
-      }
+      document.getElementById('medBatch').value = '';
+      document.getElementById('medExpiry').value = '';
+      document.getElementById('medSupplier').value = '';
       document.getElementById('medCost').value = '';
       document.getElementById('medPrice').value = '';
       document.getElementById('medQty').value = '';
@@ -973,7 +1065,7 @@
     let html = '';
     filtered.forEach(m => {
       const typeLabel = m.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
-      const extra = m.type === 'medicine' ? ` | 📦 ${m.batch} | 📅 ${m.expiry}` : '';
+      const extra = ` | 📦 ${m.batch || '-'} | 📅 ${m.expiry || '-'}`;
       html += `<div class="list-item"><div class="info"><div class="name">${m.name}</div><div class="meta">${typeLabel} | 📁 ${m.category} → ${m.subcategory}${extra}</div></div><div class="amount">${m.price} ብር</div></div>`;
     });
     listEl.innerHTML = html;
@@ -1046,15 +1138,22 @@
   window.completeSale = async function() {
     if(cart.length === 0) { alert('ምንም የተመረጠ የለም'); return; }
     const date = document.getElementById('sellDate').value;
-    const branch = document.getElementById('sellBranch').value;
     const receipt = document.getElementById('sellReceipt').value.trim();
     if(!date) { alert('ቀን ምረጥ'); return; }
+
+    let branch = 'all', customer = '';
+    if (currentBizType === 'wholesale') {
+      customer = document.getElementById('sellCustomer').value;
+      if (!customer) { alert('⚠️ እባክህ ደንበኛ ምረጥ!'); return; }
+    } else {
+      branch = document.getElementById('sellBranch').value;
+    }
 
     try {
       for(const item of cart) {
         await addDoc(collection(db, 'sales'), { 
           medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, total: item.price * item.qty, 
-          date, branch, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
+          date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
         });
         await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
       }
@@ -1132,7 +1231,8 @@
     const listEl = document.getElementById('inventoryList');
     const filter = document.getElementById('filterTypeInv').value;
     let filtered = allMedicines;
-    if (filter !== 'all') filtered = allMedicines.filter(m => m.type === filter);
+    if (filter === 'medicine') filtered = allMedicines.filter(m => m.type === 'medicine');
+    else if (filter === 'cosmetic') filtered = allMedicines.filter(m => m.type === 'cosmetic');
 
     if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
     
@@ -1154,7 +1254,7 @@
         grouped[catName][subName].forEach(med => {
           const today = new Date(); today.setHours(0,0,0,0);
           let alertHtml = ''; let rowStyle = '';
-          if (med.type === 'medicine' && med.expiry) {
+          if (med.expiry) {
             const expiryDate = new Date(med.expiry);
             const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
             if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border:1px solid #fed7d7;'; }
@@ -1162,7 +1262,7 @@
           }
           if (med.quantity <= 10 && !alertHtml) { alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>'; }
           
-          const extra = med.type === 'medicine' ? `<br>📦 ${med.batch} | 📅 ${med.expiry}` : '';
+          const extra = `<br>📦 ${med.batch || '-'} | 📅 ${med.expiry || '-'}`;
           html += `<div class="list-item" style="${rowStyle}"><div class="info"><div class="name">${med.name}</div><div class="meta">${extra} ${alertHtml}</div></div><div class="amount">${med.quantity} <small style="font-size:10px;color:#718096;">ብዛት</small><br><small style="font-size:11px;color:#276749;">${med.price} ብር</small></div></div>`;
         });
       });
@@ -1170,14 +1270,12 @@
     });
     listEl.innerHTML = html;
 
-    // Populate adjust select
     const adjSel = document.getElementById('adjustMedId');
     adjSel.innerHTML = '<option value="">-- ምርት ምረጥ --</option>';
     allMedicines.forEach(m => { adjSel.innerHTML += `<option value="${m.id}">${m.name} (ቀሪ: ${m.quantity})</option>`; });
 
-    // Expiry List (separate section)
     const expListEl = document.getElementById('expiryListDisplay');
-    const expMeds = allMedicines.filter(m => m.type === 'medicine' && m.expiry).map(m => {
+    const expMeds = allMedicines.filter(m => m.expiry).map(m => {
       const diffDays = Math.ceil((new Date(m.expiry) - new Date()) / (1000 * 60 * 60 * 24));
       return { ...m, diffDays };
     }).filter(m => m.diffDays <= 30).sort((a,b) => a.diffDays - b.diffDays);
@@ -1186,16 +1284,14 @@
     let expHtml = '';
     expMeds.forEach(m => {
       const isExpired = m.diffDays < 0;
-      expHtml += `<div class="list-item" style="${isExpired ? 'background:#fff5f5; border:1px solid #fed7d7;' : 'background:#fffaf0; border:1px solid #fbd38d;'}"><div class="info"><div class="name">${m.name}</div><div class="meta">📦 ${m.batch} | 📅 ${m.expiry}</div></div><div class="amount ${isExpired ? 'red' : ''}" style="font-size:12px;">${isExpired ? '🚨 ጊዜው አልፏል!' : `⚠️ ${m.diffDays} ቀን`}</div></div>`;
+      expHtml += `<div class="list-item" style="${isExpired ? 'background:#fff5f5; border:1px solid #fed7d7;' : 'background:#fffaf0; border:1px solid #fbd38d;'}"><div class="info"><div class="name">${m.name}</div><div class="meta">📦 ${m.batch || '-'} | 📅 ${m.expiry}</div></div><div class="amount ${isExpired ? 'red' : ''}" style="font-size:12px;">${isExpired ? '🚨 ጊዜው አልፏል!' : `⚠️ ${m.diffDays} ቀን`}</div></div>`;
     });
     expListEl.innerHTML = expHtml;
   }
 
-  // --- Stock Adjust ---
   window.adjustStock = async function() {
     const id = document.getElementById('adjustMedId').value;
     const qty = parseInt(document.getElementById('adjustQty').value);
-    const reason = document.getElementById('adjustReason').value.trim();
     if(!id || isNaN(qty) || qty < 0) { alert('ምርት እና ትክክለኛ ብዛት ምረጥ'); return; }
     try {
       await updateDoc(doc(db, 'medicines', id), { quantity: qty });
@@ -1228,7 +1324,7 @@
     daySales.forEach(s => {
       totalRev += s.total;
       soldIds.add(s.medicineId);
-      salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር${s.branch ? ' | 🏢 '+s.branch : ''}${s.receipt ? ' | 🧾 '+s.receipt : ''}</div></div><div class="amount">${s.total.toFixed(2)} ብር</div></div>`;
+      salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር${s.customer ? ' | 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? ' | 🏢 '+s.branch : '')}${s.receipt ? ' | 🧾 '+s.receipt : ''}</div></div><div class="amount">${s.total.toFixed(2)} ብር</div></div>`;
     });
     dayQuick.forEach(d => {
       const q = d.data(); 
@@ -1278,7 +1374,7 @@
     monthSales.forEach(s => {
       totalRev += s.total;
       soldIds.add(s.medicineId);
-      salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">${s.date} | x${s.quantity}${s.branch ? ' | 🏢 '+s.branch : ''}</div></div><div class="amount">${s.total.toFixed(2)} ብር</div></div>`;
+      salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">${s.date} | x${s.quantity}${s.customer ? ' | 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? ' | 🏢 '+s.branch : '')}</div></div><div class="amount">${s.total.toFixed(2)} ብር</div></div>`;
     });
     snapQuick.forEach(d => {
       const q = d.data(); 
@@ -1351,12 +1447,16 @@
   }
 
   // --- ሴቲንግስ ---
-  function loadSettings() {
+  async function loadSettings() {
     if(currentUserPharmacyId) {
-      getDoc(doc(db, 'pharmacies', currentUserPharmacyId)).then(d => {
-        if(d.exists()) document.getElementById('settingPharmacyName').value = d.data().name || '';
-      });
+      const d = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
+      if(d.exists()) {
+        document.getElementById('settingPharmacyName').value = d.data().name || '';
+        currentBizType = d.data().bizType || 'retail';
+        document.getElementById('settingBizType').value = currentBizType;
+      }
     }
+    toggleBizFields();
     const qc = document.getElementById('quickCat');
     qc.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
     allCategories.forEach(c => { qc.innerHTML += `<option value="${c}">${c}</option>`; });
@@ -1388,7 +1488,6 @@
     } catch (err) { alert('ስህተት: ' + err.message); }
   };
 
-  // --- ዳክ ሞድ ---
   window.toggleDarkMode = function() {
     const isDark = document.getElementById('darkModeToggle').checked;
     if (isDark) { document.body.classList.add('dark'); } else { document.body.classList.remove('dark'); }
@@ -1404,7 +1503,6 @@
     }
   }
 
-  // --- ኖቲፊኬሽን ---
   window.enableNotifications = async function() {
     const status = document.getElementById('notifStatus');
     if (!('Notification' in window)) { status.textContent = '❌ አይደግፍም'; return; }
@@ -1420,12 +1518,11 @@
     new Notification('💊 የፋርማሲ ማስታወሻ', { body: 'የዛሬ ሽያጭ አስገባ! 📊' });
   };
 
-  // --- ዳታ ባክአፕ ---
   window.exportBackup = async function() {
     const statusEl = document.getElementById('backupStatus');
     statusEl.textContent = '⏳ ዳታ በመሰብሰብ ላይ...';
     try {
-      const data = { exportedAt: new Date().toISOString(), medicines: allMedicines, categories: allCategories, branches: allBranches, sales: allSales, expenses: allExpenses, fixed: allFixed };
+      const data = { exportedAt: new Date().toISOString(), medicines: allMedicines, categories: allCategories, branches: allBranches, customers: allCustomers, sales: allSales, expenses: allExpenses, fixed: allFixed };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `pharmacy-backup-${new Date().toISOString().split('T')[0]}.json`;
@@ -1454,7 +1551,6 @@
     reader.readAsText(file); event.target.value = '';
   };
 
-  // --- ሪሴት ---
   window.resetSelectedDate = async function() {
     const date = document.getElementById('dailyReportDate').value;
     if(!date) { alert('ቀን ምረጥ'); return; }
@@ -1473,7 +1569,6 @@
     } catch(e) { alert(e.message); }
   };
 
-  // --- ሪፖርት ---
   window.printReport = function() {
     const monthLabel = document.getElementById('monthlyReportMonth').value;
     const tRev = document.getElementById('monthlyTotalRevenue').innerText;
@@ -1487,15 +1582,14 @@
 
   window.exportExcel = function() {
     if (allSales.length === 0) { alert('ውሂብ የለም'); return; }
-    let csv = '\uFEFFቀን,ምርት,ብዛት,ዋጋ,ጠቅላላ,ቅርንጫፍ,ደረሰኝ\n';
-    allSales.forEach(s => { csv += `"${s.date}","${s.medicineName}",${s.quantity},${s.unitPrice},${s.total},"${s.branch||''}","${s.receipt||''}"\n`; });
+    let csv = '\uFEFFቀን,ምርት,ብዛት,ዋጋ,ጠቅላላ,ቅርንጫፍ,ደንበኛ,ደረሰኝ\n';
+    allSales.forEach(s => { csv += `"${s.date}","${s.medicineName}",${s.quantity},${s.unitPrice},${s.total},"${s.branch||''}","${s.customer||''}","${s.receipt||''}"\n`; });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `pharmacy-sales-${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   };
 
-  // --- ፈቃዶች ---
   window.savePermissions = async function() {
     if(!currentUserPharmacyId) return;
     const perms = {
@@ -1526,7 +1620,6 @@
     } catch(e) { alert(e.message); }
   };
 
-  // --- የማለቂያ ቀን ማሳወቂያ ---
   function checkExpiryAlerts() {
     const banner = document.getElementById('expiryBanner');
     const bannerText = document.getElementById('expiryBannerText');
@@ -1535,7 +1628,7 @@
     let expiringSoonCount = 0;
 
     allMedicines.forEach(med => {
-      if (med.type !== 'medicine' || !med.expiry) return;
+      if (!med.expiry) return;
       const expiryDate = new Date(med.expiry);
       const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
       if (diffDays < 0) expiredCount++;
@@ -1545,8 +1638,8 @@
     if (expiredCount > 0 || expiringSoonCount > 0) {
       banner.style.display = 'block';
       let msg = '';
-      if (expiredCount > 0) msg += `${expiredCount} መድሃኒት ጊዜው አልፏል! `;
-      if (expiringSoonCount > 0) msg += `${expiringSoonCount} መድሃኒት በ30 ቀን ውስጥ ያልቃል!`;
+      if (expiredCount > 0) msg += `${expiredCount} ምርት ጊዜው አልፏል! `;
+      if (expiringSoonCount > 0) msg += `${expiringSoonCount} ምርት በ30 ቀን ውስጥ ያልቃል!`;
       bannerText.textContent = msg;
     } else {
       banner.style.display = 'none';
