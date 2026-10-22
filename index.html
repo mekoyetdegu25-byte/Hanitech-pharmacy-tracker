@@ -24,7 +24,8 @@
   .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
 
   /* 🆕 Tabs - Horizontal Scrollable */
-  .tabs { display: flex; background: transparent; position: sticky; top: 60px; z-index: 99; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
+  .tabs-wrapper { position: sticky; top: 60px; z-index: 99; background: #f0f4f8; }
+  .tabs { display: flex; background: transparent; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
   .tabs::-webkit-scrollbar { display: none; }
   .tabs input[type="radio"] { display: none; }
   .tabs label { flex: 0 0 auto; min-width: 85px; text-align: center; padding: 12px 8px; font-size: 12.5px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
@@ -115,9 +116,8 @@
   <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
 
   <div class="tabs-wrapper">
-
-    <div class="tabs">
-     <input type="radio" name="tabs" id="tab1" checked>
+    <!-- 🆕 Inputs ከ panels ጋር አንድ ደረጃ ላይ ናቸው -->
+    <input type="radio" name="tabs" id="tab1" checked>
     <input type="radio" name="tabs" id="tab2">
     <input type="radio" name="tabs" id="tab3">
     <input type="radio" name="tabs" id="tab4">
@@ -125,6 +125,8 @@
     <input type="radio" name="tabs" id="tab6">
     <input type="radio" name="tabs" id="tab7">
     <input type="radio" name="tabs" id="tab8">
+
+    <div class="tabs">
       <label for="tab1"><i>💊</i>መድሃኒቶች</label>
       <label for="tab2"><i>🛒</i>ሽያጭ</label>
       <label for="tab3"><i>💸</i>ወጪ</label>
@@ -191,8 +193,8 @@
           <div class="section-body open" id="bodySell">
             <label class="field-label">📅 የሽያጭ ቀን</label>
             <input type="date" id="sellDate">
-            <div class="search-box" style="margin-top:10px;">
-              <input type="text" id="searchSellInput" placeholder="🔍 መድሃኒት ፈልግ..." oninput="renderSellProducts()" style="padding-left:40px;">
+            <div style="margin-top:10px;">
+              <input type="text" id="searchSellInput" placeholder="🔍 መድሃኒት ፈልግ..." oninput="renderSellProducts()">
             </div>
             <div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
             <div style="border-top:2px solid #edf2f7; margin-top:15px; padding-top:10px;">
@@ -289,9 +291,8 @@
               <div class="label">የቀኑ ትርፍ</div>
               <div class="value" id="dailyNetProfit">0.00 <small>ብር</small></div>
             </div>
-            <div class="divider" style="height:1px; background:#edf2f7; margin:12px 0;"></div>
+            <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
             
-            <!-- 🆕 Collapsible የቀኑ ሽያጮች -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የቀኑ ሽያጮች</span></div>
@@ -299,7 +300,6 @@
               <div class="section-body" id="bodyDailySales"><div id="dailySalesList"></div></div>
             </div>
 
-            <!-- 🆕 Collapsible ያልተሸጡ መድሃኒቶች -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrDailyUnsold" onclick="toggleSection('hdrDailyUnsold','bodyDailyUnsold')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ መድሃኒቶች</span></div>
@@ -331,9 +331,8 @@
               <div class="label">የወሩ ትርፍ</div>
               <div class="value" id="monthlyNetProfit">0.00 <small>ብር</small></div>
             </div>
-            <div class="divider" style="height:1px; background:#edf2f7; margin:12px 0;"></div>
+            <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
 
-            <!-- 🆕 Collapsible የወሩ ሽያጮች -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የወሩ ሽያጮች</span></div>
@@ -341,7 +340,6 @@
               <div class="section-body" id="bodyMonthlySales"><div id="monthlySalesList"></div></div>
             </div>
 
-            <!-- 🆕 Collapsible ያልተሸጡ መድሃኒቶች -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrMonthlyUnsold" onclick="toggleSection('hdrMonthlyUnsold','bodyMonthlyUnsold')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ መድሃኒቶች</span></div>
@@ -371,7 +369,7 @@
               <div class="label">የዛሬ ትርፍ</div>
               <div class="value" id="dashTodayProfit">0.00 <small>ብር</small></div>
             </div>
-            <div class="divider" style="height:1px; background:#edf2f7; margin:12px 0;"></div>
+            <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
             <div class="summary-box" style="background:linear-gradient(135deg,#2c5282,#1a365d);">
               <div class="label">የዚህ ወር ገቢ</div>
               <div class="value" id="dashMonthRevenue">0.00 <small>ብር</small></div>
@@ -398,7 +396,7 @@
             <label class="field-label">🏥 የፋርማሲ ስም</label>
             <input type="text" id="settingPharmacyName" placeholder="Hanitech Pharmacy">
             <button class="btn btn-primary" onclick="savePharmacyName()">💾 አስቀምጥ</button>
-            <div class="divider" style="height:1px; background:#edf2f7; margin:16px 0;"></div>
+            <div style="height:1px; background:#edf2f7; margin:16px 0;"></div>
             <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px;">🔐 ፓስወርድ ቀይር</h3>
             <label class="field-label">የአሁኑ ፓስወርድ</label>
             <input type="password" id="currentPass" placeholder="••••••••">
@@ -497,7 +495,6 @@
     checkExpiryAlerts();
   }
 
-  // --- ምድቦች (Categories) ---
   async function loadCategories() {
     try {
       const snap = await getDocs(collection(db, 'categories'));
@@ -537,7 +534,6 @@
     try { await deleteDoc(doc(db, 'categories', name)); loadCategories(); } catch(e) { alert(e.message); }
   };
 
-  // --- የወጪ ምድቦች ---
   async function loadExpCategories() {
     try {
       const snap = await getDocs(collection(db, 'expenseCategories'));
@@ -577,7 +573,6 @@
     try { await deleteDoc(doc(db, 'expenseCategories', name)); loadExpCategories(); } catch(e) { alert(e.message); }
   };
 
-  // --- መድሃኒት ---
   window.addMedicine = async function() {
     const category = document.getElementById('medCategory').value;
     const subcategory = document.getElementById('medSubcategory').value.trim();
@@ -629,7 +624,6 @@
     listEl.innerHTML = html;
   }
 
-  // --- ሽያጭ (POS) ---
   function renderSellProducts() {
     const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase();
     const listEl = document.getElementById('sellProductList');
@@ -707,7 +701,6 @@
     } catch(e) { alert(e.message); }
   };
 
-  // --- ፈጣን ገቢ ---
   window.addQuickSale = async function() {
     const cat = document.getElementById('quickCat').value;
     const date = document.getElementById('quickDate').value;
@@ -722,7 +715,6 @@
     } catch(e) { alert(e.message); }
   };
 
-  // --- ወጪ ---
   window.addExpense = async function() {
     const cat = document.getElementById('expCat').value;
     const note = document.getElementById('expNote').value.trim();
@@ -748,7 +740,6 @@
     allExpenses = []; snap.forEach(d => allExpenses.push({ id: d.id, ...d.data() }));
   }
 
-  // --- ክምችት ---
   function loadInventory() {
     const listEl = document.getElementById('inventoryList');
     if (allMedicines.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም መድሃኒት የለም።</p>'; return; }
@@ -783,7 +774,6 @@
     listEl.innerHTML = html;
   }
 
-  // --- የቀን ሪፖርት ---
   async function loadDailyReport() {
     const dateInput = document.getElementById('dailyReportDate');
     if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
@@ -822,7 +812,6 @@
     document.getElementById('dailyUnsoldList').innerHTML = unsoldHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ሁሉም ተሽጠዋል።</p>';
   }
 
-  // --- የወር ሪፖርት ---
   async function loadMonthlyReport() {
     const monthInput = document.getElementById('monthlyReportMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().slice(0,7);
@@ -859,7 +848,6 @@
     document.getElementById('monthlyUnsoldList').innerHTML = unsoldHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ሁሉም ተሽጠዋል።</p>';
   }
 
-  // --- ዳሽቦርድ ---
   async function loadDashboard() {
     const today = new Date().toISOString().split('T')[0];
     const month = today.substring(0,7);
@@ -883,7 +871,6 @@
     document.getElementById('dashMonthProfit').innerHTML = (mRev - mExpSum).toFixed(2) + ' <small>ብር</small>';
   }
 
-  // --- ሴቲንግስ ---
   function loadSettings() {
     if(currentUserPharmacyId) {
       getDoc(doc(db, 'pharmacies', currentUserPharmacyId)).then(d => {
@@ -921,7 +908,6 @@
     } catch (err) { alert('ስህተት: ' + err.message); }
   };
 
-  // --- የማለቂያ ቀን ማሳወቂያ ---
   function checkExpiryAlerts() {
     const banner = document.getElementById('expiryBanner');
     const bannerText = document.getElementById('expiryBannerText');
