@@ -23,11 +23,9 @@
   header .h-title { font-size: 16px; font-weight: 700; }
   .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
 
-  /* 🆕 Tabs - Horizontal Scrollable */
   .tabs-wrapper { position: sticky; top: 60px; z-index: 99; background: #f0f4f8; }
   .tabs { display: flex; background: transparent; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
   .tabs::-webkit-scrollbar { display: none; }
-  .tabs input[type="radio"] { display: none; }
   input[type="radio"][name="tabs"] { display: none !important; }
   .tabs label { flex: 0 0 auto; min-width: 85px; text-align: center; padding: 12px 8px; font-size: 12.5px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
   .tabs label i { font-size: 22px; font-style: normal; line-height: 1; margin-bottom: 2px;}
@@ -117,7 +115,6 @@
   <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
 
   <div class="tabs-wrapper">
-    <!-- 🆕 Inputs ከ panels ጋር አንድ ደረጃ ላይ ናቸው -->
     <input type="radio" name="tabs" id="tab1" checked>
     <input type="radio" name="tabs" id="tab2">
     <input type="radio" name="tabs" id="tab3">
@@ -139,7 +136,7 @@
     </div>
 
     <div class="panels">
-      <!-- TAB 1: MEDICINES -->
+      <!-- TAB 1: MEDICINES & COSMETICS -->
       <div class="panel" id="panel1">
         <div class="section-collapsible">
           <div class="section-header" id="hdrCatMgr" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
@@ -155,14 +152,19 @@
         </div>
         <div class="section-collapsible">
           <div class="section-header" id="hdrAddMed" onclick="toggleSection('hdrAddMed','bodyAddMed')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">አዲስ መድሃኒት ጨምር</span></div>
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">አዲስ ምርት ጨምር</span></div>
           </div>
           <div class="section-body" id="bodyAddMed">
+            <label class="field-label">📦 ዓይነት</label>
+            <select id="medType">
+              <option value="medicine">💊 መድሃኒት</option>
+              <option value="cosmetic">🧴 ኮስሞቲክስ</option>
+            </select>
             <label class="field-label">📁 ዋና ምድብ</label>
             <select id="medCategory"></select>
             <label class="field-label">📂 ንዑስ ምድብ</label>
             <input type="text" id="medSubcategory" placeholder="ለምሳሌ: ታብሌት" autocomplete="off">
-            <label class="field-label">💊 የመድሃኒት ስም</label>
+            <label class="field-label">💊 የምርት ስም</label>
             <input type="text" id="medName" placeholder="ለምሳሌ: Paracetamol" autocomplete="off">
             <label class="field-label">🔢 የባች ቁጥር</label>
             <input type="text" id="medBatch" placeholder="BATCH-001" autocomplete="off">
@@ -179,7 +181,7 @@
         </div>
         <div class="section-collapsible">
           <div class="section-header" id="hdrMedList" onclick="toggleSection('hdrMedList','bodyMedList')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የመድሃኒት ዝርዝር</span></div>
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የምርት ዝርዝር</span></div>
           </div>
           <div class="section-body" id="bodyMedList"><div id="medListDisplay"></div></div>
         </div>
@@ -189,13 +191,13 @@
       <div class="panel" id="panel2">
         <div class="section-collapsible">
           <div class="section-header open" id="hdrSell" onclick="toggleSection('hdrSell','bodySell')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">ከመድሃኒት ዝርዝር መሸጥ</span></div>
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">ከዝርዝር መሸጥ</span></div>
           </div>
           <div class="section-body open" id="bodySell">
             <label class="field-label">📅 የሽያጭ ቀን</label>
             <input type="date" id="sellDate">
             <div style="margin-top:10px;">
-              <input type="text" id="searchSellInput" placeholder="🔍 መድሃኒት ፈልግ..." oninput="renderSellProducts()">
+              <input type="text" id="searchSellInput" placeholder="🔍 ምርት ፈልግ..." oninput="renderSellProducts()">
             </div>
             <div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
             <div style="border-top:2px solid #edf2f7; margin-top:15px; padding-top:10px;">
@@ -216,6 +218,11 @@
           </div>
           <div class="section-body" id="bodyQuickSale">
             <div class="info-banner">💡 ያለ ዝርዝር በቀጥታ ጠቅላላ ገቢ ማስገባት ይችላሉ።</div>
+            <label class="field-label">📦 ዓይነት</label>
+            <select id="quickType">
+              <option value="medicine">💊 መድሃኒት</option>
+              <option value="cosmetic">🧴 ኮስሞቲክስ</option>
+            </select>
             <label class="field-label">📁 ምድብ</label>
             <select id="quickCat"></select>
             <label class="field-label">📅 ቀን</label>
@@ -303,7 +310,7 @@
 
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrDailyUnsold" onclick="toggleSection('hdrDailyUnsold','bodyDailyUnsold')">
-                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ መድሃኒቶች</span></div>
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ ምርቶች</span></div>
               </div>
               <div class="section-body" id="bodyDailyUnsold"><div id="dailyUnsoldList"></div></div>
             </div>
@@ -343,7 +350,7 @@
 
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrMonthlyUnsold" onclick="toggleSection('hdrMonthlyUnsold','bodyMonthlyUnsold')">
-                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ መድሃኒቶች</span></div>
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ ምርቶች</span></div>
               </div>
               <div class="section-body" id="bodyMonthlyUnsold"><div id="monthlyUnsoldList"></div></div>
             </div>
@@ -575,6 +582,7 @@
   };
 
   window.addMedicine = async function() {
+    const type = document.getElementById('medType').value;
     const category = document.getElementById('medCategory').value;
     const subcategory = document.getElementById('medSubcategory').value.trim();
     const name = document.getElementById('medName').value.trim();
@@ -591,9 +599,9 @@
 
     try {
       await addDoc(collection(db, 'medicines'), {
-        category, subcategory, name, batch, expiry, cost, price, quantity: qty, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId
+        type, category, subcategory, name, batch, expiry, cost, price, quantity: qty, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId
       });
-      alert('✅ መድሃኒቱ ተመዝግቧል!');
+      alert('✅ ምርቱ ተመዝግቧል!');
       document.getElementById('medSubcategory').value = '';
       document.getElementById('medName').value = '';
       document.getElementById('medBatch').value = '';
@@ -617,10 +625,11 @@
 
   function renderMedList() {
     const listEl = document.getElementById('medListDisplay');
-    if(allMedicines.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም መድሃኒት የለም።</p>'; return; }
+    if(allMedicines.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
     let html = '';
     allMedicines.forEach(m => {
-      html += `<div class="list-item"><div class="info"><div class="name">${m.name}</div><div class="meta">📁 ${m.category} → ${m.subcategory} | 📦 ${m.batch} | 📅 ${m.expiry}</div></div><div class="amount">${m.price} ብር</div></div>`;
+      const typeLabel = m.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
+      html += `<div class="list-item"><div class="info"><div class="name">${m.name}</div><div class="meta">${typeLabel} | 📁 ${m.category} → ${m.subcategory} | 📦 ${m.batch} | 📅 ${m.expiry}</div></div><div class="amount">${m.price} ብር</div></div>`;
     });
     listEl.innerHTML = html;
   }
@@ -634,14 +643,15 @@
     if (search) filtered = filtered.filter(m => m.name.toLowerCase().includes(search));
 
     if (filtered.length === 0) {
-      listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም መድሃኒት አልተገኘም።</p>';
+      listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት አልተገኘም።</p>';
       return;
     }
 
     const grouped = {};
     filtered.forEach(m => {
-      if(!grouped[m.category]) grouped[m.category] = [];
-      grouped[m.category].push(m);
+      const key = (m.type === 'cosmetic' ? '🧴 ' : '💊 ') + m.category;
+      if(!grouped[key]) grouped[key] = [];
+      grouped[key].push(m);
     });
 
     let html = '';
@@ -703,13 +713,14 @@
   };
 
   window.addQuickSale = async function() {
+    const type = document.getElementById('quickType').value;
     const cat = document.getElementById('quickCat').value;
     const date = document.getElementById('quickDate').value;
     const amount = parseFloat(document.getElementById('quickAmount').value);
     if(!cat || !date || isNaN(amount) || amount <= 0) { alert('ሁሉንም መረጃዎች ሙላ'); return; }
 
     try {
-      await addDoc(collection(db, 'quickSales'), { category: cat, date, amount, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+      await addDoc(collection(db, 'quickSales'), { type, category: cat, date, amount, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
       alert('✅ ተመዝግቧል!');
       document.getElementById('quickAmount').value = '';
       loadAllData();
@@ -743,14 +754,16 @@
 
   function loadInventory() {
     const listEl = document.getElementById('inventoryList');
-    if (allMedicines.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም መድሃኒት የለም።</p>'; return; }
+    if (allMedicines.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
     
     const grouped = {};
     allMedicines.forEach(med => {
+      const typeKey = med.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
       const cat = med.category || 'ሌላ'; const sub = med.subcategory || 'ሌላ';
-      if(!grouped[cat]) grouped[cat] = {};
-      if(!grouped[cat][sub]) grouped[cat][sub] = [];
-      grouped[cat][sub].push(med);
+      const key = typeKey + ' - ' + cat;
+      if(!grouped[key]) grouped[key] = {};
+      if(!grouped[key][sub]) grouped[key][sub] = [];
+      grouped[key][sub].push(med);
     });
 
     let html = '';
@@ -926,8 +939,8 @@
     if (expiredCount > 0 || expiringSoonCount > 0) {
       banner.style.display = 'block';
       let msg = '';
-      if (expiredCount > 0) msg += `${expiredCount} መድሃኒት ጊዜው አልፏል! `;
-      if (expiringSoonCount > 0) msg += `${expiringSoonCount} መድሃኒት በ30 ቀን ውስጥ ያልቃል!`;
+      if (expiredCount > 0) msg += `${expiredCount} ምርት ጊዜው አልፏል! `;
+      if (expiringSoonCount > 0) msg += `${expiringSoonCount} ምርት በ30 ቀን ውስጥ ያልቃል!`;
       bannerText.textContent = msg;
     } else {
       banner.style.display = 'none';
