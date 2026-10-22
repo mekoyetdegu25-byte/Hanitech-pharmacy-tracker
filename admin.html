@@ -154,7 +154,7 @@
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+  import { initializeApp, initializeApp as initSecondaryApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
   import { getFirestore, collection, addDoc, getDocs, query, doc, updateDoc, getDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
@@ -300,12 +300,12 @@
 
     let filtered = allTenants.filter(t => {
       const matchesSearch = (t.name || '').toLowerCase().includes(searchVal) || 
-                            (t.email || '').toLowerCase().includes(searchVal) ||
+                            (t.ownerEmail || '').toLowerCase().includes(searchVal) ||
                             (t.website || '').toLowerCase().includes(searchVal);
       
       let statusMatch = true;
-      if (filterStatus === 'active') statusMatch = !t.isSuspended && t.expiryDate >= today;
-      if (filterStatus === 'expired') statusMatch = !t.isSuspended && t.expiryDate < today;
+      if (filterStatus === 'active') statusMatch = !t.isSuspended && t.expiryDate && t.expiryDate >= today;
+      if (filterStatus === 'expired') statusMatch = !t.isSuspended && t.expiryDate && t.expiryDate < today;
       if (filterStatus === 'suspended') statusMatch = t.isSuspended;
 
       return matchesSearch && statusMatch;
@@ -392,27 +392,30 @@
       let createdCount = 0;
       let errors = [];
 
-      for (const userObj of emailsToCreate) {
-        try {
-          const userCredential = await createUserWithEmailAndPassword(auth, userObj.email, tempPassword);
-          const uid = userCredential.user.uid;
+      const secondaryApp = initSecondaryApp(firebaseConfig, "SecondaryApp-" + Date.now());
+      const secondaryAuth = getAuth(secondaryApp);
 
-          await setDoc(doc(db, 'users', uid), {
-            email: userObj.email,
-            role: userObj.role,
-            pharmacyId: pharmacyId,
-            isTempPassword: true,
-            createdAt: new Date().toISOString()
-          });
-          createdCount++;
+      try {
+        for (const userObj of emailsToCreate) {
+          try {
+            const userCredential = await createUserWithEmailAndPassword(secondaryAuth, userObj.email, tempPassword);
+            const uid = userCredential.user.uid;
 
-          await signOut(auth); 
-        } catch(err) {
-          errors.push(`${userObj.email}: ${err.message}`);
+            await setDoc(doc(db, 'users', uid), {
+              email: userObj.email,
+              role: userObj.role,
+              pharmacyId: pharmacyId,
+              isTempPassword: true,
+              createdAt: new Date().toISOString()
+            });
+            createdCount++;
+          } catch(err) {
+            errors.push(`${userObj.email}: ${err.message}`);
+          }
         }
+      } finally {
+        await deleteApp(secondaryApp);
       }
-
-      await signInWithEmailAndPassword(auth, SUPER_ADMIN_EMAIL, document.getElementById('adminPassword').value);
 
       if (errors.length > 0) {
         alert(`⚠️ ፋርማሲው ተፈጥሯል ግን አንዳንድ ተጠቃሚዎች ላይ ስህተት አለ:\n${errors.join('\n')}`);
@@ -432,7 +435,6 @@
 
     } catch(e) { 
       alert('⚠️ ስህተት: ' + e.message); 
-      try { await signInWithEmailAndPassword(auth, SUPER_ADMIN_EMAIL, document.getElementById('adminPassword').value); } catch(err) {}
     }
   };
 
@@ -450,8 +452,9 @@
     currentExpiry.setMonth(currentExpiry.getMonth() + parseInt(months));
     const newExpiry = currentExpiry.toISOString().split('T')[0];
     
+    const monthlyAmount = parseFloat(tenant.amount) || 0;
     const history = tenant.paymentHistory || [];
-    history.push({ date: today.toISOString().split('T')[0], amount: tenant.amount * parseInt(months), months: parseInt(months) });
+    history.push({ date: today.toISOString().split('T')[0], amount: monthlyAmount * parseInt(months), months: parseInt(months) });
 
     try {
       await updateDoc(doc(db, 'pharmacies', id), { 
