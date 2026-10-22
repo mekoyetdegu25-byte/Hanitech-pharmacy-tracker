@@ -53,14 +53,47 @@ window.login = async function() {
   try {
     const userCred = await signInWithEmailAndPassword(auth, email, password);
     const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
+    
     if(userDoc.exists()) {
-      currentUserPharmacyId = userDoc.data().pharmacyId;
+      const userData = userDoc.data();
+      currentUserPharmacyId = userData.pharmacyId;
+
+      // 🆕 የተጠቃሚውን መረጃ ማሳየት (አዲስ የተጨመረ)
+      document.getElementById('hdrUserEmail').innerText = email;
+      document.getElementById('hdrUserInitial').innerText = email.charAt(0).toUpperCase();
+
+      const role = userData.role || 'employee';
+      const roleElement = document.getElementById('hdrUserRole');
+      
+      if (role === 'owner') {
+        roleElement.innerText = '👑 ባለቤት';
+        roleElement.style.background = '#fefcbf';
+        roleElement.style.color = '#975a16';
+      } else if (role === 'manager') {
+        roleElement.innerText = '🎯 ማናጀር';
+        roleElement.style.background = '#bee3f8';
+        roleElement.style.color = '#2c5282';
+      } else if (role === 'accountant') {
+        roleElement.innerText = '💼 አካውንታንት';
+        roleElement.style.background = '#c6f6d5';
+        roleElement.style.color = '#22543d';
+      } else {
+        roleElement.innerText = '👤 ሠራተኛ';
+      }
+
       const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
       if(phDoc.exists()) {
         document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phDoc.data().name || 'Pharmacy Tracker');
         currentBizType = phDoc.data().bizType || 'retail';
         lowStockThreshold = phDoc.data().lowStockThreshold || 10;
       }
+
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('mainApp').classList.add('show');
+      loadAllData();
+    } else {
+      errorEl.textContent = '⚠️ የተጠቃሚው መረጃ በዳታቤዝ ውስጥ አልተገኘም።';
+      errorEl.style.display = 'block';
     }
   } catch (err) {
     errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም';
