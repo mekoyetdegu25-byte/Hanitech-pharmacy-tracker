@@ -142,9 +142,21 @@
 </div>
 
 <div id="mainApp">
+  <!-- 🆕 Header ከተጠቃሚ መረጃ ጋር -->
   <header>
-    <div class="h-left"><div class="h-title" id="hdrPharmacyName">💊 Pharmacy Tracker</div></div>
-    <div class="h-right"><button class="btn-logout-hdr" onclick="logout()">ውጣ</button></div>
+    <div class="h-left" style="display: flex; align-items: center; gap: 10px;">
+      <div style="background: #1a202c; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; flex-shrink: 0;">
+        <span id="hdrUserInitial">A</span>
+      </div>
+      <div style="display: flex; flex-direction: column; line-height: 1.2;">
+        <div class="h-title" id="hdrPharmacyName" style="font-size: 15px; font-weight: 800;">Pharmacy Name</div>
+        <div id="hdrUserEmail" style="font-size: 11px; opacity: 0.8; margin-top: 2px;">email@example.com</div>
+      </div>
+    </div>
+    <div class="h-right" style="display: flex; align-items: center; gap: 8px;">
+      <span id="hdrUserRole" style="background: #fefcbf; color: #975a16; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold;">👑 ባለቤት</span>
+      <button class="btn-logout-hdr" onclick="logout()">🚪</button>
+    </div>
   </header>
 
   <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
@@ -448,7 +460,6 @@
               <div class="value" id="dailyNetProfit">0.00 <small>ብር</small></div>
             </div>
             
-            <!-- 🆕 የክፍያ ዓይነት ማሳያ -->
             <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
               <div class="section-header" id="hdrDailyPayments" onclick="toggleSection('hdrDailyPayments','bodyDailyPayments')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
@@ -513,7 +524,6 @@
               <div class="value" id="monthlyNetProfit">0.00 <small>ብር</small></div>
             </div>
 
-            <!-- 🆕 የክፍያ ዓይነት ማሳያ -->
             <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
               <div class="section-header" id="hdrMonthlyPayments" onclick="toggleSection('hdrMonthlyPayments','bodyMonthlyPayments')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
@@ -805,7 +815,7 @@
 
 <!-- Firebase SDK -->
 <script type="module">
-   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
   import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
@@ -851,6 +861,7 @@
     medFields.style.display = type === 'cosmetic' ? 'none' : 'block';
   };
 
+  // 🆕 የ login ፈንክሽን
   window.login = async function() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -860,14 +871,47 @@
     try {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
+      
       if(userDoc.exists()) {
-        currentUserPharmacyId = userDoc.data().pharmacyId;
+        const userData = userDoc.data();
+        currentUserPharmacyId = userData.pharmacyId;
+
+        // 🆕 የተጠቃሚውን መረጃ ማሳየት
+        document.getElementById('hdrUserEmail').innerText = email;
+        document.getElementById('hdrUserInitial').innerText = email.charAt(0).toUpperCase();
+
+        const role = userData.role || 'employee';
+        const roleElement = document.getElementById('hdrUserRole');
+        
+        if (role === 'owner') {
+          roleElement.innerText = '👑 ባለቤት';
+          roleElement.style.background = '#fefcbf';
+          roleElement.style.color = '#975a16';
+        } else if (role === 'manager') {
+          roleElement.innerText = '🎯 ማናጀር';
+          roleElement.style.background = '#bee3f8';
+          roleElement.style.color = '#2c5282';
+        } else if (role === 'accountant') {
+          roleElement.innerText = '💼 አካውንታንት';
+          roleElement.style.background = '#c6f6d5';
+          roleElement.style.color = '#22543d';
+        } else {
+          roleElement.innerText = '👤 ሠራተኛ';
+        }
+
         const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
         if(phDoc.exists()) {
           document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phDoc.data().name || 'Pharmacy Tracker');
           currentBizType = phDoc.data().bizType || 'retail';
           lowStockThreshold = phDoc.data().lowStockThreshold || 10;
         }
+
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('mainApp').classList.add('show');
+        loadAllData();
+      } else {
+        errorEl.textContent = '⚠️ የተጠቃሚው መረጃ በዳታቤዝ ውስጥ አልተገኘም።';
+        errorEl.style.display = 'block';
       }
     } catch (err) {
       errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም';
@@ -880,8 +924,8 @@
   onAuthStateChanged(auth, (user) => {
     if (user) {
       document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('mainApp').classList.add('show');
-      loadAllData();
+      // ማስታወሻ፡ እዚህ ጋር ወዲያውኑ ወደ ሲስተሙ አንገባም። 
+      // ምክንያቱም ተጠቃሚው ጊዜያዊ ፓስወርድ ሊኖረው ስለሚችል በ login() ፈንክሽን ውስጥ እንፈትሻለን።
     } else {
       document.getElementById('loginScreen').classList.remove('hidden');
       document.getElementById('mainApp').classList.remove('show');
@@ -938,10 +982,11 @@
     details.style.display = method === 'credit' ? 'block' : 'none';
   };
 
-  // --- ምድቦች (Categories) ---
+  // --- 🆕 ምድቦች (Categories) - ከ pharmacyId ጋር ---
   async function loadCategories() {
     try {
-      const snap = await getDocs(collection(db, 'categories'));
+      const q = query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId));
+      const snap = await getDocs(q);
       allCategories = [];
       const select = document.getElementById('medCategory');
       select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
@@ -966,7 +1011,10 @@
     const name = document.getElementById('newCat').value.trim();
     if(!name) { alert('ስም አስገባ'); return; }
     try {
-      await setDoc(doc(db, 'categories', name), { name: name });
+      await setDoc(doc(db, 'categories', name), { 
+        name: name, 
+        pharmacyId: currentUserPharmacyId 
+      });
       document.getElementById('newCat').value = '';
       loadCategories();
       alert('✅ ምድብ ተጨምሯል!');
@@ -978,10 +1026,11 @@
     try { await deleteDoc(doc(db, 'categories', name)); loadCategories(); } catch(e) { alert(e.message); }
   };
 
-  // --- የወጪ ምድቦች ---
+  // --- 🆕 የወጪ ምድቦች - ከ pharmacyId ጋር ---
   async function loadExpCategories() {
     try {
-      const snap = await getDocs(collection(db, 'expenseCategories'));
+      const q = query(collection(db, 'expenseCategories'), where('pharmacyId', '==', currentUserPharmacyId));
+      const snap = await getDocs(q);
       allExpCategories = [];
       const select = document.getElementById('expCat');
       select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
@@ -1006,7 +1055,10 @@
     const name = document.getElementById('newExpCat').value.trim();
     if(!name) { alert('ስም አስገባ'); return; }
     try {
-      await setDoc(doc(db, 'expenseCategories', name), { name: name });
+      await setDoc(doc(db, 'expenseCategories', name), { 
+        name: name, 
+        pharmacyId: currentUserPharmacyId 
+      });
       document.getElementById('newExpCat').value = '';
       loadExpCategories();
       alert('✅ ምድብ ተጨምሯል!');
@@ -1018,10 +1070,11 @@
     try { await deleteDoc(doc(db, 'expenseCategories', name)); loadExpCategories(); } catch(e) { alert(e.message); }
   };
 
-  // --- ቅርንጫፎች (Branches) ---
+  // --- 🆕 ቅርንጫፎች (Branches) - ከ pharmacyId ጋር ---
   async function loadBranches() {
     try {
-      const snap = await getDocs(collection(db, 'branches'));
+      const q = query(collection(db, 'branches'), where('pharmacyId', '==', currentUserPharmacyId));
+      const snap = await getDocs(q);
       allBranches = [];
       const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch'];
       selects.forEach(id => {
@@ -1052,7 +1105,10 @@
     const name = document.getElementById('newBranch').value.trim();
     if(!name) { alert('ስም አስገባ'); return; }
     try {
-      await setDoc(doc(db, 'branches', name), { name: name });
+      await setDoc(doc(db, 'branches', name), { 
+        name: name, 
+        pharmacyId: currentUserPharmacyId 
+      });
       document.getElementById('newBranch').value = '';
       loadBranches();
       alert('✅ ቅርንጫፍ ተጨምሯል!');
@@ -1064,10 +1120,11 @@
     try { await deleteDoc(doc(db, 'branches', name)); loadBranches(); } catch(e) { alert(e.message); }
   };
 
-  // --- ደንበኞች (Customers) ---
+  // --- 🆕 ደንበኞች (Customers) - ከ pharmacyId ጋር ---
   async function loadCustomers() {
     try {
-      const snap = await getDocs(collection(db, 'customers'));
+      const q = query(collection(db, 'customers'), where('pharmacyId', '==', currentUserPharmacyId));
+      const snap = await getDocs(q);
       allCustomers = [];
       const sel = document.getElementById('sellCustomer');
       if (sel) sel.innerHTML = '<option value="">-- ደንበኛ ምረጥ --</option>';
@@ -1094,7 +1151,10 @@
     const name = document.getElementById('newCustomer').value.trim();
     if(!name) { alert('ስም አስገባ'); return; }
     try {
-      await setDoc(doc(db, 'customers', name), { name: name });
+      await setDoc(doc(db, 'customers', name), { 
+        name: name, 
+        pharmacyId: currentUserPharmacyId 
+      });
       document.getElementById('newCustomer').value = '';
       loadCustomers();
       alert('✅ ደንበኛ ተጨምሯል!');
@@ -1143,9 +1203,14 @@
     } catch (err) { alert('⚠️ ስህተት: ' + err.message); }
   };
 
+  // --- 🆕 መድሃኒቶችን መጫን - ከ pharmacyId ጋር ---
   async function loadMedicines() {
     try {
-      const q = query(collection(db, 'medicines'), orderBy('createdAt', 'desc'));
+      const q = query(
+        collection(db, 'medicines'), 
+        where('pharmacyId', '==', currentUserPharmacyId),
+        orderBy('createdAt', 'desc')
+      );
       const snapshot = await getDocs(q);
       allMedicines = [];
       snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
@@ -1322,25 +1387,43 @@
     } catch(e) { alert(e.message); }
   };
 
+  // --- 🆕 ሽያጮችን መጫን - ከ pharmacyId ጋር ---
   async function loadSales() {
-    const snap = await getDocs(collection(db, 'sales'));
-    allSales = []; snap.forEach(d => allSales.push({ id: d.id, ...d.data() }));
+    try {
+      const q = query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId));
+      const snap = await getDocs(q);
+      allSales = []; 
+      snap.forEach(d => allSales.push({ id: d.id, ...d.data() }));
+    } catch(e) { console.error(e); }
   }
 
+  // --- 🆕 ወጪዎችን መጫን - ከ pharmacyId ጋር ---
   async function loadExpenses() {
-    const snap = await getDocs(collection(db, 'expenses'));
-    allExpenses = []; snap.forEach(d => allExpenses.push({ id: d.id, ...d.data() }));
+    try {
+      const q = query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId));
+      const snap = await getDocs(q);
+      allExpenses = []; 
+      snap.forEach(d => allExpenses.push({ id: d.id, ...d.data() }));
+    } catch(e) { console.error(e); }
   }
 
+  // --- 🆕 ቋሚ ወጪዎችን መጫን - ከ pharmacyId ጋር ---
   async function loadFixed() {
-    const snap = await getDocs(collection(db, 'fixedExpenses'));
-    allFixed = []; snap.forEach(d => allFixed.push({ id: d.id, ...d.data() }));
+    try {
+      const q = query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId));
+      const snap = await getDocs(q);
+      allFixed = []; 
+      snap.forEach(d => allFixed.push({ id: d.id, ...d.data() }));
+    } catch(e) { console.error(e); }
   }
 
+  // --- 🆕 የዱቤ ክፍያዎችን መጫን - ከ pharmacyId ጋር ---
   async function loadCreditPayments() {
     try {
-      const snap = await getDocs(collection(db, 'creditPayments'));
-      allCreditPayments = []; snap.forEach(d => allCreditPayments.push({ id: d.id, ...d.data() }));
+      const q = query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId));
+      const snap = await getDocs(q);
+      allCreditPayments = []; 
+      snap.forEach(d => allCreditPayments.push({ id: d.id, ...d.data() }));
     } catch(e) { console.error(e); }
   }
 
@@ -1454,7 +1537,7 @@
       daySales = daySales.filter(s => s.branch === branch);
       dayExp = dayExp.filter(e => e.branch === branch);
     }
-    const dayQuick = await getDocs(query(collection(db, 'quickSales'), where('date', '==', selDate)));
+    const dayQuick = await getDocs(query(collection(db, 'quickSales'), where('date', '==', selDate), where('pharmacyId', '==', currentUserPharmacyId)));
 
     let totalRev = 0, totalExp = 0;
     let cashRev = 0, transferRev = 0, creditRev = 0, creditTotal = 0;
@@ -1514,7 +1597,7 @@
       monthSales = monthSales.filter(s => s.branch === branch);
       monthExp = monthExp.filter(e => e.branch === branch);
     }
-    const qMonthQuick = query(collection(db, 'quickSales'), where('date', '>=', selMonth + '-01'), where('date', '<=', selMonth + '-31'));
+    const qMonthQuick = query(collection(db, 'quickSales'), where('date', '>=', selMonth + '-01'), where('date', '<=', selMonth + '-31'), where('pharmacyId', '==', currentUserPharmacyId));
     const snapQuick = await getDocs(qMonthQuick);
 
     let fixedTotal = 0;
@@ -1572,7 +1655,7 @@
 
     const tSales = allSales.filter(s => s.date === today); let tRev = 0; tSales.forEach(s => tRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
     const tExp = allExpenses.filter(e => e.date === today); let tExpSum = 0; tExp.forEach(e => tExpSum += e.amount);
-    const tQuickSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '==', today)));
+    const tQuickSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '==', today), where('pharmacyId', '==', currentUserPharmacyId)));
     tQuickSnap.forEach(d => tRev += d.data().amount);
 
     document.getElementById('dashTodayRevenue').innerHTML = tRev.toFixed(2) + ' <small>ብር</small>';
@@ -1581,7 +1664,7 @@
 
     const mSales = allSales.filter(s => s.date && s.date.startsWith(month)); let mRev = 0; mSales.forEach(s => mRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
     const mExp = allExpenses.filter(e => e.date && e.date.startsWith(month)); let mExpSum = 0; mExp.forEach(e => mExpSum += e.amount);
-    const mQuickSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '>=', month + '-01'), where('date', '<=', month + '-31')));
+    const mQuickSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '>=', month + '-01'), where('date', '<=', month + '-31'), where('pharmacyId', '==', currentUserPharmacyId)));
     mQuickSnap.forEach(d => mRev += d.data().amount);
 
     document.getElementById('dashMonthRevenue').innerHTML = mRev.toFixed(2) + ' <small>ብር</small>';
@@ -1800,11 +1883,11 @@
     if(!confirm(`የ ${date} ሽያጭ እና ወጪ ማጥፋት ትፈልጋለህ?`)) return;
     try {
       const batch = writeBatch(db);
-      const sSnap = await getDocs(query(collection(db, 'sales'), where('date', '==', date)));
+      const sSnap = await getDocs(query(collection(db, 'sales'), where('date', '==', date), where('pharmacyId', '==', currentUserPharmacyId)));
       sSnap.forEach(d => batch.delete(d.ref));
-      const eSnap = await getDocs(query(collection(db, 'expenses'), where('date', '==', date)));
+      const eSnap = await getDocs(query(collection(db, 'expenses'), where('date', '==', date), where('pharmacyId', '==', currentUserPharmacyId)));
       eSnap.forEach(d => batch.delete(d.ref));
-      const qSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '==', date)));
+      const qSnap = await getDocs(query(collection(db, 'quickSales'), where('date', '==', date), where('pharmacyId', '==', currentUserPharmacyId)));
       qSnap.forEach(d => batch.delete(d.ref));
       await batch.commit();
       alert('✅ ተጠፍቷል!');
