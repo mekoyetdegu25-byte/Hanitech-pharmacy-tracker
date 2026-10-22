@@ -31,7 +31,6 @@
   body.dark .perm-title { color: #63b3ed; }
   body.dark .toggle-row label { color: #e2e8f0; }
 
-  /* የመግቢያ ገጽ */
   #loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
   #loginScreen.hidden { display: none; }
   .login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
@@ -42,11 +41,6 @@
   input:focus { border-color: #3182ce; background: #fff; }
   .btn-login { width: 100%; padding: 15px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; cursor: pointer; margin-top: 8px; }
 
-  /* 🆕 የፓስወርድ ማስተካከያ ገጽ */
-  #forcePasswordScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1001; }
-  #forcePasswordScreen .login-box { border-top: 5px solid #c53030; }
-
-  /* ዋና ገጽ */
   #mainApp { display: none; }
   #mainApp.show { display: block; }
   header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 0 0 16px 16px; margin-bottom: 10px; }
@@ -137,7 +131,6 @@
 </head>
 <body>
 
-<!-- የመግቢያ ገጽ -->
 <div id="loginScreen" class="hidden">
   <div class="login-box">
     <h1>💊 Hanitech Pharmacy</h1>
@@ -145,19 +138,6 @@
     <div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
     <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="Password"></div>
     <button class="btn-login" onclick="login()">🔓 ግባ</button>
-  </div>
-</div>
-
-<!-- 🆕 የጊዜያዊ ፓስወርድ ማስተካከያ ገጽ -->
-<div id="forcePasswordScreen">
-  <div class="login-box">
-    <h1>🔐 ፓስወርድ ይቀይሩ</h1>
-    <p style="text-align:center; font-size:13px; color:#c53030; margin-bottom:15px; font-weight:bold;">እርስዎ የጊዜያዊ ፓስወርድ ተጠቅመዋል። እባክዎ ለደህንነትዎ አዲስ ፓስወርድ ይምረጡ።</p>
-    <div id="forcePassError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-    <div class="form-group"><label>🔒 አዲስ ፓስወርድ</label><input type="password" id="newForcePass" placeholder="ቢያንስ 6 ፊደል"></div>
-    <div class="form-group"><label>🔒 አዲስ ፓስወርድ ደግመው ያስገቡ</label><input type="password" id="confirmForcePass" placeholder="ቢያንስ 6 ፊደል"></div>
-    <button class="btn-login" style="background:#c53030;" onclick="forceChangePassword()">✅ ፓስወርድ ቀይር እና ግባ</button>
-    <button class="btn-logout-hdr" style="width:100%; margin-top:10px; background:#edf2f7; color:#4a5568;" onclick="logout()">ውጣ</button>
   </div>
 </div>
 
@@ -468,6 +448,7 @@
               <div class="value" id="dailyNetProfit">0.00 <small>ብር</small></div>
             </div>
             
+            <!-- 🆕 የክፍያ ዓይነት ማሳያ -->
             <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
               <div class="section-header" id="hdrDailyPayments" onclick="toggleSection('hdrDailyPayments','bodyDailyPayments')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
@@ -532,6 +513,7 @@
               <div class="value" id="monthlyNetProfit">0.00 <small>ብር</small></div>
             </div>
 
+            <!-- 🆕 የክፍያ ዓይነት ማሳያ -->
             <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
               <div class="section-header" id="hdrMonthlyPayments" onclick="toggleSection('hdrMonthlyPayments','bodyMonthlyPayments')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
@@ -823,7 +805,7 @@
 
 <!-- Firebase SDK -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
   import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
@@ -869,43 +851,6 @@
     medFields.style.display = type === 'cosmetic' ? 'none' : 'block';
   };
 
-  // 🆕 የፓስወርድ ማስገደጃ
-  window.forceChangePassword = async function() {
-    const newPass = document.getElementById('newForcePass').value;
-    const confirmPass = document.getElementById('confirmForcePass').value;
-    const errorEl = document.getElementById('forcePassError');
-    errorEl.style.display = 'none';
-
-    if (newPass.length < 6) {
-      errorEl.textContent = '⚠️ ፓስወርድ ቢያንስ 6 ፊደል መሆን አለበት!';
-      errorEl.style.display = 'block';
-      return;
-    }
-    if (newPass !== confirmPass) {
-      errorEl.textContent = '⚠️ ፓስወርዶቹ አይመሳሰሉም!';
-      errorEl.style.display = 'block';
-      return;
-    }
-
-    try {
-      const user = auth.currentUser;
-      await updatePassword(user, newPass);
-      
-      // የጊዜያዊ ፓስወርድ ሁኔታን ወደ ውሸት (false) መቀየር
-      await updateDoc(doc(db, 'users', user.uid), { isTempPassword: false });
-      
-      alert('✅ ፓስወርድ በተሳካ ሁኔታ ተቀይሯል! አሁን ወደ ሲስተሙ እንገባለን።');
-      
-      document.getElementById('forcePasswordScreen').style.display = 'none';
-      document.getElementById('mainApp').classList.add('show');
-      loadAllData();
-
-    } catch (err) {
-      errorEl.textContent = '⚠️ ስህተት: ' + err.message;
-      errorEl.style.display = 'block';
-    }
-  };
-
   window.login = async function() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -916,16 +861,7 @@
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
       if(userDoc.exists()) {
-        const data = userDoc.data();
-        currentUserPharmacyId = data.pharmacyId;
-
-        // 🆕 የጊዜያዊ ፓስወርድ መሆኑን ማረጋገጥ
-        if (data.isTempPassword === true) {
-          document.getElementById('loginScreen').classList.add('hidden');
-          document.getElementById('forcePasswordScreen').style.display = 'flex';
-          return;
-        }
-
+        currentUserPharmacyId = userDoc.data().pharmacyId;
         const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
         if(phDoc.exists()) {
           document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phDoc.data().name || 'Pharmacy Tracker');
@@ -944,12 +880,11 @@
   onAuthStateChanged(auth, (user) => {
     if (user) {
       document.getElementById('loginScreen').classList.add('hidden');
-      // ማስታወሻ፡ እዚህ ጋር ወዲያውኑ ወደ ሲስተሙ አንገባም። 
-      // ምክንያቱም ተጠቃሚው ጊዜያዊ ፓስወርድ ሊኖረው ስለሚችል በ login() ፈንክሽን ውስጥ እንፈትሻለን።
+      document.getElementById('mainApp').classList.add('show');
+      loadAllData();
     } else {
       document.getElementById('loginScreen').classList.remove('hidden');
       document.getElementById('mainApp').classList.remove('show');
-      document.getElementById('forcePasswordScreen').style.display = 'none';
     }
   });
 
