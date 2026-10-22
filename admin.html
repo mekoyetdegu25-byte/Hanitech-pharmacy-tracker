@@ -56,7 +56,7 @@
   .btn-info { background: #3182ce; }
   .btn-outline { background: transparent; border: 1.5px solid #cbd5e0; color: #4a5568; }
 
-  /* የሜቴል ካርድ */
+  /* የፋርማሲ ካርድ */
   .tenant-card { background: #fff; border: 1px solid #edf2f7; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.03); }
   .tenant-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #edf2f7; padding-bottom: 10px; margin-bottom: 10px; }
   .tenant-title { font-size: 16px; font-weight: 800; color: #2c5282; display: flex; align-items: center; gap: 6px; }
@@ -104,7 +104,7 @@
   <div class="container">
     <!-- Stats Grid -->
     <div class="stats-grid">
-      <div class="stat-card"><div class="value val-blue" id="statTotalTenants">0</div><div class="label">📊 ጠቅላላ ሜቴሎች</div></div>
+      <div class="stat-card"><div class="value val-blue" id="statTotalTenants">0</div><div class="label">📊 ጠቅላላ ፋርማሲዎች</div></div>
       <div class="stat-card"><div class="value val-green" id="statActiveTenants">0</div><div class="label">✅ ተከፋዮች</div></div>
       <div class="stat-card"><div class="value val-orange" id="statExpiredTenants">0</div><div class="label">⏳ ያለፈባቸው</div></div>
       <div class="stat-card"><div class="value val-red" id="statSuspendedTenants">0</div><div class="label">❌ የታገዱ</div></div>
@@ -131,31 +131,38 @@
     <!-- Add New Tenant -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
-        <div class="sec-left">➕ አዲስ ሜቴል ጨምር</div>
+        <div class="sec-left">➕ አዲስ ፋርማሲ ጨምር</div>
         <span class="sec-arrow">▶</span>
       </div>
       <div class="section-body">
-        <div class="form-group"><label>የድርጅት ስም</label><input type="text" id="newTenantName" placeholder="ለምሳሌ: Addis Pharmacy"></div>
+        <div class="form-group"><label>የፋርማሲ ስም</label><input type="text" id="newTenantName" placeholder="ለምሳሌ: Addis Pharmacy"></div>
         <div class="form-group"><label>ድረ-ገጽ (Website)</label><input type="text" id="newTenantWebsite" placeholder="example.com"></div>
         <div class="form-group"><label>የባለቤት ኢሜይል (Owner)</label><input type="email" id="newTenantOwnerEmail" placeholder="owner@example.com"></div>
         <div class="form-group"><label>የማናጀር ኢሜይል (Manager)</label><input type="email" id="newTenantManagerEmail" placeholder="manager@example.com"></div>
         <div class="form-group"><label>የአካውንታንት ኢሜይል (Accountant)</label><input type="email" id="newTenantAccountantEmail" placeholder="accountant@example.com"></div>
+        
+        <!-- 🔑 የጊዜያዊ ፓስወርድ ማስገቢያ -->
+        <div class="form-group">
+          <label>🔑 የጊዜያዊ ፓስወርድ (ለሁሉም ተጠቃሚዎች)</label>
+          <input type="text" id="newTenantTempPassword" placeholder="ለምሳሌ: 123456" value="123456">
+          <div style="font-size:11px; color:#718096; margin-top:4px;">💡 ተጠቃሚዎቹ በዚህ ፓስወርድ ገብተው ወዲያውኑ እንዲቀይሩት ይጠየቃሉ።</div>
+        </div>
+
         <div class="form-group"><label>የክፍያ መጠን (ብር/ወር)</label><input type="number" id="newTenantAmount" placeholder="0.00"></div>
         <div class="form-group"><label>የአገልግሎት ማብቂያ ቀን</label><input type="date" id="newTenantExpiry"></div>
-        <button class="btn btn-primary" onclick="addTenant()">💾 ሜቴል ፍጠር</button>
+        <button class="btn btn-primary" onclick="addTenant()">💾 ፋርማሲ ፍጠር</button>
       </div>
     </div>
 
     <!-- Tenants List -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
-        <div class="sec-left">📋 የሜቴሎች ዝርዝር <span class="badge" style="background:#2b6cb0;" id="tenantListBadge">0</span></div>
+        <div class="sec-left">📋 የፋርማሲዎች ዝርዝር <span class="badge" style="background:#2b6cb0;" id="tenantListBadge">0</span></div>
         <span class="sec-arrow">▶</span>
       </div>
       <div class="section-body">
-        <!-- Search & Filter -->
         <div style="display:flex; gap:8px; margin-bottom:12px; flex-direction:column;">
-          <input type="text" id="searchTenant" placeholder="🔍 ሜቴል በስም ወይም በኢሜይል ፈልግ..." oninput="renderTenantList()">
+          <input type="text" id="searchTenant" placeholder="🔍 ፋርማሲ በስም ወይም በኢሜይል ፈልግ..." oninput="renderTenantList()">
           <select id="filterTenantStatus" onchange="renderTenantList()">
             <option value="all">ሁሉም ሁኔታ</option>
             <option value="active">✅ ንቁ</option>
@@ -186,7 +193,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
   import { getFirestore, collection, addDoc, getDocs, query, doc, updateDoc, getDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -344,7 +351,7 @@
     });
 
     if (filtered.length === 0) {
-      listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሜቴል አልተገኘም።</p>';
+      listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ፋርማሲ አልተገኘም።</p>';
       return;
     }
 
@@ -387,16 +394,22 @@
     const ownerEmail = document.getElementById('newTenantOwnerEmail').value.trim();
     const managerEmail = document.getElementById('newTenantManagerEmail').value.trim();
     const accountantEmail = document.getElementById('newTenantAccountantEmail').value.trim();
+    const tempPassword = document.getElementById('newTenantTempPassword').value.trim();
     const amount = parseFloat(document.getElementById('newTenantAmount').value) || 0;
     const expiry = document.getElementById('newTenantExpiry').value;
 
-    if (!name || !ownerEmail || !expiry) {
-      alert('⚠️ እባክዎ ስም፣ የባለቤት ኢሜይል እና የማብቂያ ቀን ይሙሉ!');
+    if (!name || !ownerEmail || !expiry || !tempPassword) {
+      alert('⚠️ እባክዎ ስም፣ የባለቤት ኢሜይል፣ የማብቂያ ቀን እና የጊዜያዊ ፓስወርድ ይሙሉ!');
+      return;
+    }
+    if (tempPassword.length < 6) {
+      alert('⚠️ የጊዜያዊ ፓስወርድ ቢያንስ 6 ፊደል መሆን አለበት!');
       return;
     }
 
     try {
-      await addDoc(collection(db, 'pharmacies'), {
+      // 1. ፋርማሲውን በ 'pharmacies' ላይ መፍጠር
+      const newPharmacyRef = await addDoc(collection(db, 'pharmacies'), {
         name: name,
         website: website,
         ownerEmail: ownerEmail,
@@ -408,17 +421,68 @@
         paymentHistory: [],
         createdAt: new Date().toISOString()
       });
+      
+      const pharmacyId = newPharmacyRef.id;
+      const emailsToCreate = [
+        { email: ownerEmail, role: 'owner' },
+        { email: managerEmail, role: 'manager' },
+        { email: accountantEmail, role: 'accountant' }
+      ].filter(u => u.email !== ''); // ባዶ ኢሜይሎችን አስወግድ
 
-      alert('✅ ሜቴል ተፈጥሯል!');
+      let createdCount = 0;
+      let errors = [];
+
+      // 2. ለእያንዳንዱ ተጠቃሚ የ Firebase Auth አካውንት መፍጠር
+      for (const userObj of emailsToCreate) {
+        try {
+          // ጊዜያዊ ፓስወርድ ተጠቅመን ተጠቃሚ መፍጠር
+          const userCredential = await createUserWithEmailAndPassword(auth, userObj.email, tempPassword);
+          const uid = userCredential.user.uid;
+
+          // 3. በ 'users' Collection ውስጥ መረጃውን ማስቀመጥ
+          await setDoc(doc(db, 'users', uid), {
+            email: userObj.email,
+            role: userObj.role,
+            pharmacyId: pharmacyId,
+            isTempPassword: true, // ይህ ተጠቃሚው ጊዜያዊ ፓስወርድ መጠቀሙን ያሳያል
+            createdAt: new Date().toISOString()
+          });
+          createdCount++;
+
+          // ⚠️ ማስታወሻ፡ ተጠቃሚው ሲፈጠር በራስ-ሰር ወደ ሲስተሙ ይገባል (Admin ይሆናል)።
+          // ስለዚህ ወዲያውኑ ከሲስተሙ እናወጣው (Logout)።
+          await signOut(auth);
+
+        } catch(err) {
+          errors.push(`${userObj.email}: ${err.message}`);
+        }
+      }
+
+      // 4. እንደገና ወደ Admin አካውንት መግባት (ምክንያቱም logout ስላደረግን)
+      await signInWithEmailAndPassword(auth, SUPER_ADMIN_EMAIL, document.getElementById('adminPassword').value);
+
+      if (errors.length > 0) {
+        alert(`⚠️ ፋርማሲው ተፈጥሯል ግን አንዳንድ ተጠቃሚዎች ላይ ስህተት አለ:\n${errors.join('\n')}`);
+      } else {
+        alert(`✅ ፋርማሲው እና ${createdCount} ተጠቃሚዎች በተሳካ ሁኔታ ተፈጥረዋል!`);
+      }
+
+      // 5. ማስገቢያ ቦታዎችን ማጽዳት
       document.getElementById('newTenantName').value = '';
       document.getElementById('newTenantWebsite').value = '';
       document.getElementById('newTenantOwnerEmail').value = '';
       document.getElementById('newTenantManagerEmail').value = '';
       document.getElementById('newTenantAccountantEmail').value = '';
+      document.getElementById('newTenantTempPassword').value = '123456';
       document.getElementById('newTenantAmount').value = '';
       document.getElementById('newTenantExpiry').value = '';
       loadAdminData();
-    } catch(e) { alert(e.message); }
+
+    } catch(e) { 
+      alert('⚠️ ስህተት: ' + e.message); 
+      // ስህተት ከተፈጠረ እንደገና ወደ Admin መግባት እንሞክር
+      try { await signInWithEmailAndPassword(auth, SUPER_ADMIN_EMAIL, document.getElementById('adminPassword').value); } catch(err) {}
+    }
   };
 
   window.markPaid = async function(id) {
@@ -457,7 +521,7 @@
   };
 
   window.deleteTenant = async function(id) {
-    if(!confirm('ይህን ሜቴል ማጥፋት ትፈልጋለህ? ይህ ተግባር አይመለስም!')) return;
+    if(!confirm('ይህን ፋርማሲ ማጥፋት ትፈልጋለህ? ይህ ተግባር አይመለስም!')) return;
     try {
       await deleteDoc(doc(db, 'pharmacies', id));
       loadAdminData();
@@ -468,7 +532,7 @@
   window.editTenant = function(id) {
     const t = allTenants.find(x => x.id === id);
     if(!t) return;
-    const newName = prompt('አዲስ የድርጅት ስም:', t.name);
+    const newName = prompt('አዲስ የፋርማሲ ስም:', t.name);
     const newWebsite = prompt('አዲስ ድረ-ገጽ:', t.website);
     const newAmount = prompt('አዲስ የክፍያ መጠን:', t.amount);
     
@@ -504,7 +568,7 @@
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `admin-tenants-${new Date().toISOString().split('T')[0]}.csv`;
+    const a = document.createElement('a'); a.href = url; a.download = `admin-pharmacies-${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   };
 
