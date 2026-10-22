@@ -58,9 +58,10 @@ window.login = async function() {
       const userData = userDoc.data();
       currentUserPharmacyId = userData.pharmacyId;
 
-      // 🆕 የተጠቃሚውን መረጃ ማሳየት (አዲስ የተጨመረ)
-      document.getElementById('hdrUserEmail').innerText = email;
-      document.getElementById('hdrUserInitial').innerText = email.charAt(0).toUpperCase();
+      // 🆕 የተጠቃሚውን መረጃ ማሳየት (በተሻሻለ መልኩ)
+const userEmail = userData.email || email;
+document.getElementById('hdrUserEmail').innerText = userEmail;
+document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase();
 
       const role = userData.role || 'employee';
       const roleElement = document.getElementById('hdrUserRole');
@@ -82,11 +83,12 @@ window.login = async function() {
       }
 
       const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
-      if(phDoc.exists()) {
-        document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phDoc.data().name || 'Pharmacy Tracker');
-        currentBizType = phDoc.data().bizType || 'retail';
-        lowStockThreshold = phDoc.data().lowStockThreshold || 10;
-      }
+if(phDoc.exists()) {
+  const phData = phDoc.data();
+  document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phData.name || 'Pharmacy Tracker');
+  currentBizType = phData.bizType || 'retail';
+  lowStockThreshold = phData.lowStockThreshold || 10;
+}
 
       document.getElementById('loginScreen').classList.add('hidden');
       document.getElementById('mainApp').classList.add('show');
