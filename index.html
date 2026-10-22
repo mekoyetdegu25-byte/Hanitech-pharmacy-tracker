@@ -142,7 +142,6 @@
 </div>
 
 <div id="mainApp">
-  <!-- 🆕 Header ከተጠቃሚ መረጃ ጋር -->
   <header>
     <div class="h-left" style="display: flex; align-items: center; gap: 10px;">
       <div style="background: #1a202c; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; flex-shrink: 0;">
@@ -813,7 +812,6 @@
   </div>
 </div>
 
-<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
@@ -861,7 +859,6 @@
     medFields.style.display = type === 'cosmetic' ? 'none' : 'block';
   };
 
-  // 🆕 የ login ፈንክሽን
   window.login = async function() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -876,7 +873,6 @@
         const userData = userDoc.data();
         currentUserPharmacyId = userData.pharmacyId;
 
-        // 🆕 የተጠቃሚውን መረጃ ማሳየት
         document.getElementById('hdrUserEmail').innerText = email;
         document.getElementById('hdrUserInitial').innerText = email.charAt(0).toUpperCase();
 
@@ -924,8 +920,6 @@
   onAuthStateChanged(auth, (user) => {
     if (user) {
       document.getElementById('loginScreen').classList.add('hidden');
-      // ማስታወሻ፡ እዚህ ጋር ወዲያውኑ ወደ ሲስተሙ አንገባም። 
-      // ምክንያቱም ተጠቃሚው ጊዜያዊ ፓስወርድ ሊኖረው ስለሚችል በ login() ፈንክሽን ውስጥ እንፈትሻለን።
     } else {
       document.getElementById('loginScreen').classList.remove('hidden');
       document.getElementById('mainApp').classList.remove('show');
@@ -982,7 +976,6 @@
     details.style.display = method === 'credit' ? 'block' : 'none';
   };
 
-  // --- 🆕 ምድቦች (Categories) - ከ pharmacyId ጋር ---
   async function loadCategories() {
     try {
       const q = query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId));
@@ -1026,7 +1019,6 @@
     try { await deleteDoc(doc(db, 'categories', name)); loadCategories(); } catch(e) { alert(e.message); }
   };
 
-  // --- 🆕 የወጪ ምድቦች - ከ pharmacyId ጋር ---
   async function loadExpCategories() {
     try {
       const q = query(collection(db, 'expenseCategories'), where('pharmacyId', '==', currentUserPharmacyId));
@@ -1070,7 +1062,6 @@
     try { await deleteDoc(doc(db, 'expenseCategories', name)); loadExpCategories(); } catch(e) { alert(e.message); }
   };
 
-  // --- 🆕 ቅርንጫፎች (Branches) - ከ pharmacyId ጋር ---
   async function loadBranches() {
     try {
       const q = query(collection(db, 'branches'), where('pharmacyId', '==', currentUserPharmacyId));
@@ -1120,7 +1111,6 @@
     try { await deleteDoc(doc(db, 'branches', name)); loadBranches(); } catch(e) { alert(e.message); }
   };
 
-  // --- 🆕 ደንበኞች (Customers) - ከ pharmacyId ጋር ---
   async function loadCustomers() {
     try {
       const q = query(collection(db, 'customers'), where('pharmacyId', '==', currentUserPharmacyId));
@@ -1166,7 +1156,6 @@
     try { await deleteDoc(doc(db, 'customers', name)); loadCustomers(); } catch(e) { alert(e.message); }
   };
 
-  // --- መድሃኒት ---
   window.addMedicine = async function() {
     const type = document.getElementById('medType').value;
     const category = document.getElementById('medCategory').value;
@@ -1203,7 +1192,6 @@
     } catch (err) { alert('⚠️ ስህተት: ' + err.message); }
   };
 
-  // --- 🆕 መድሃኒቶችን መጫን - ከ pharmacyId ጋር ---
   async function loadMedicines() {
     try {
       const q = query(
@@ -1234,7 +1222,6 @@
     listEl.innerHTML = html;
   };
 
-  // --- ሽያጭ (POS) ---
   function renderSellProducts() {
     const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase();
     const listEl = document.getElementById('sellProductList');
@@ -1338,7 +1325,6 @@
     } catch(e) { alert(e.message); }
   };
 
-  // --- ፈጣን ገቢ ---
   window.addQuickSale = async function() {
     const type = document.getElementById('quickType').value;
     const cat = document.getElementById('quickCat').value;
@@ -1355,7 +1341,6 @@
     } catch(e) { alert(e.message); }
   };
 
-  // --- ወጪ ---
   window.addExpense = async function() {
     const cat = document.getElementById('expCat').value;
     const branch = document.getElementById('expBranch').value;
@@ -1387,7 +1372,6 @@
     } catch(e) { alert(e.message); }
   };
 
-  // --- 🆕 ሽያጮችን መጫን - ከ pharmacyId ጋር ---
   async function loadSales() {
     try {
       const q = query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId));
@@ -1397,7 +1381,6 @@
     } catch(e) { console.error(e); }
   }
 
-  // --- 🆕 ወጪዎችን መጫን - ከ pharmacyId ጋር ---
   async function loadExpenses() {
     try {
       const q = query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId));
@@ -1407,7 +1390,6 @@
     } catch(e) { console.error(e); }
   }
 
-  // --- 🆕 ቋሚ ወጪዎችን መጫን - ከ pharmacyId ጋር ---
   async function loadFixed() {
     try {
       const q = query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId));
@@ -1417,7 +1399,6 @@
     } catch(e) { console.error(e); }
   }
 
-  // --- 🆕 የዱቤ ክፍያዎችን መጫን - ከ pharmacyId ጋር ---
   async function loadCreditPayments() {
     try {
       const q = query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId));
@@ -1427,7 +1408,6 @@
     } catch(e) { console.error(e); }
   }
 
-  // --- ክምችት ---
   function loadInventory() {
     const listEl = document.getElementById('inventoryList');
     const filter = document.getElementById('filterTypeInv').value;
@@ -1498,7 +1478,6 @@
       expListEl.innerHTML = expHtml;
     }
 
-    // Low Stock List
     const lowStockEl = document.getElementById('lowStockListDisplay');
     const lowMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold).sort((a,b) => a.quantity - b.quantity);
     if (lowMeds.length === 0) { lowStockEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የሚያልቅ ክምችት የለም።</p>'; }
@@ -1524,7 +1503,6 @@
     } catch(e) { alert(e.message); }
   };
 
-  // --- የቀን ሪፖርት ---
   async function loadDailyReport() {
     const dateInput = document.getElementById('dailyReportDate');
     if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
@@ -1584,7 +1562,6 @@
     `;
   }
 
-  // --- የወር ሪፖርት ---
   async function loadMonthlyReport() {
     const monthInput = document.getElementById('monthlyReportMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().slice(0,7);
@@ -1648,7 +1625,6 @@
     `;
   }
 
-  // --- ዳሽቦርድ ---
   async function loadDashboard() {
     const today = new Date().toISOString().split('T')[0];
     const month = today.substring(0,7);
@@ -1696,7 +1672,6 @@
     expensePieChartInstance = new Chart(c2, { type: 'doughnut', data: { labels: ['ተለዋዋጭ', 'ቋሚ'], datasets: [{ data: [varTotal, fixTotal], backgroundColor: ['#c53030', '#dd6b20'] }] }, options: { responsive: true, maintainAspectRatio: false } });
   }
 
-  // --- ዱቤ (Credit) ---
   function populateCreditCustomerSelect() {
     const sel = document.getElementById('creditPayCustomer');
     if (!sel) return;
@@ -1747,7 +1722,6 @@
     } catch(e) { alert(e.message); }
   };
 
-  // --- ሴቲንግስ ---
   async function loadSettings() {
     if(currentUserPharmacyId) {
       const d = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
