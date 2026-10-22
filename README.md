@@ -1,1 +1,18 @@
-Hanitech pharmacy sales and inventory tracker
+# 💊 Hanitech Pharmacy Tracker
+
+የፋርማሲ ሽያጭ፣ የእቃ ክምችት እና የዕለት ገቢ መከታተያ ሲስተም።
+
+## 🚀 ዋና ዋና ባህሪያት (Features)
+- ➕ አዲስ መድሃኒት መመዝገብ (ስም፣ ባች፣ ማለቂያ ቀን፣ የግዢ/ሽያጭ ዋጋ፣ ብዛት)
+- 🛒 የሽያጭ ስርዓት (POS) - ሲሸጡ ክምችቱ በራስ-ሰር ይቀንሳል
+- 📦 የእቃ ክምችት ማሳያ እና የማለቂያ ቀን ማሳወቂያ
+- 📊 የዕለት እና የወር ገቢ ሪፖርት
+- 🔐 በ Firebase Authentication የተጠበቀ መግቢያ
+
+## 🛠️ የተሰራበት ቴክኖሎጂ (Tech Stack)
+- HTML, CSS, JavaScript
+- Firebase (Firestore & Authentication)
+- Netlify (Hosting)
+
+## 📱 እንዴት እንደሚሰራ
+ይህ ሲስተም በስልክ ወይም በኮምፒውተር ብራውዘር ላይ የሚሰራ ነው። የፋርማሲ ባለቤቶች እና ሰራተኞች የራሳቸውን የመግቢያ መለያ በመጠቀም ሽያጭ ማስገባት፣ ክምችት መከታተል እና ሪፖርት ማየት ይችላሉ።
