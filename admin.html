@@ -85,7 +85,6 @@
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc, getDocs, collection, deleteDoc, serverTimestamp, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
-  // 🚨 እዚህ ጋር የፋርማሲውን firebaseConfig አስገባ
   const firebaseConfig = {
     apiKey: "AIzaSyB3bQkI8scEHg36kkxlAalbbCtE4R0Vv8U",
     authDomain: "hanitech-pharmacy-tracker.firebaseapp.com",
@@ -99,8 +98,7 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
   
-  // 🚨 እርስዎ የሚጠቀሙበት የአድሚን ኢሜይል
-  const ADMIN_EMAIL = "admin@hanitech.com"; 
+  const ADMIN_EMAIL = "admin@hanitech.com"; // 🚨 ይህንን በ Firebase ላይ በእርስዎ ኢሜይል ይቀይሩት
 
   let secondaryApp;
   let secondaryAuth;
@@ -136,7 +134,6 @@
 
   window.logout = function() { signOut(auth); };
 
-  // --- ፋርማሲ መጨመር ---
   window.addPharmacy = async function() {
     const name = document.getElementById('phName').value.trim();
     const email = document.getElementById('phEmail').value.trim();
@@ -155,18 +152,15 @@
     statusEl.style.color = '#2b6cb0';
 
     try {
-      // 1. ተጠቃሚ ፍጠር
       const cred = await createUserWithEmailAndPassword(secondaryAuth, email, pass);
       const uid = cred.user.uid;
-      await signOut(secondaryAuth); // ወዲያውኑ ውጣ
+      await signOut(secondaryAuth);
 
-      // 2. ፋርማሲውን በዳታቤዝ መዝግብ
       const phId = 'pharmacy-' + Date.now();
       await setDoc(doc(db, 'pharmacies', phId), {
         name, ownerEmail: email, ownerUid: uid, monthlyPrice: price, status: 'active', createdAt: serverTimestamp()
       });
 
-      // 3. የተጠቃሚውን ሚና መዝግብ
       await setDoc(doc(db, 'users', uid), {
         email, role: 'owner', pharmacyId: phId, createdAt: serverTimestamp()
       });
@@ -186,7 +180,6 @@
     }
   };
 
-  // --- ፋርማሲዎችን ማምጣት ---
   async function loadPharmacies() {
     const listEl = document.getElementById('pharmaciesList');
     try {
@@ -223,7 +216,6 @@
     } catch(e) { alert('ስህተት: ' + e.message); }
   }
 
-  // --- የፓስወርድ ጥያቄዎችን ማምጣት ---
   async function loadAlerts() {
     const listEl = document.getElementById('alertsList');
     try {
