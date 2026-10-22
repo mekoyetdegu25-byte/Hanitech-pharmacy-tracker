@@ -2,225 +2,265 @@
 <html lang="am">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Hanitech Pharmacy Tracker</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-  body { background: #f0f4f8; color: #1a202c; padding-bottom: 80px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { background: #f0f4f8; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
   
-  #loginScreen { position: fixed; inset: 0; background: #2b6cb0; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
-  .login-box { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-  .login-box h1 { text-align: center; color: #2b6cb0; margin-bottom: 20px; font-size: 22px;}
-  input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #cbd5e0; border-radius: 8px; font-size: 16px; background: #f7fafc; }
-  button { width: 100%; padding: 12px; background: #2b6cb0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s;}
-  button:hover { background: #2c5282; }
+  /* የመግቢያ ገጽ */
+  #loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+  #loginScreen.hidden { display: none; }
+  .login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
+  .login-box h1 { text-align: center; color: #1a365d; font-size: 20px; margin-bottom: 20px; font-weight: 800;}
+  .form-group { margin-bottom: 16px; }
+  input { width: 100%; padding: 14px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f7fafc; outline: none; }
+  input:focus { border-color: #3182ce; background: #fff; }
+  .btn-login { width: 100%; padding: 15px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; cursor: pointer; margin-top: 8px; }
 
   #mainApp { display: none; }
-  header { background: #2b6cb0; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10;}
-  .container { padding: 15px; max-width: 800px; margin: 0 auto; }
-  
-  .tabs { display: flex; background: white; border-radius: 10px; padding: 5px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto; gap: 5px;}
-  .tabs button { background: transparent; color: #4a5568; border: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; white-space: nowrap;}
-  .tabs button.active { background: #ebf8ff; color: #2b6cb0; font-weight: bold;}
+  #mainApp.show { display: block; }
+  header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 0 0 16px 16px; margin-bottom: 10px; }
+  header .h-title { font-size: 16px; font-weight: 700; }
+  .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
 
-.card { display: none; }
-.card.active { display: block; }
+  /* Tabs (ልክ እንደ Hotel Tracker) */
+  .tabs { display: flex; background: transparent; position: sticky; top: 60px; z-index: 99; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: center; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs input[type="radio"] { display: none; }
+  .tabs label { flex: 1; max-width: 150px; text-align: center; padding: 12px 8px; font-size: 12.5px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
+  .tabs label i { font-size: 22px; font-style: normal; line-height: 1; margin-bottom: 2px;}
+  
+  #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"] { color: #2c5282; background: #ebf4ff; border-color: #90cdf4; box-shadow: 0 4px 12px rgba(44,82,130,0.15);}
  
-  .section-collapsible { background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; }
-  .section-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; cursor: pointer; user-select: none; background: #fff; }
-  .section-header:hover { background: #f7fafc; }
-  .section-header .sec-title { font-weight: bold; font-size: 16px; color: #2b6cb0; display: flex; align-items: center; gap: 8px;}
-  .section-header .sec-arrow { transition: transform 0.2s; font-size: 12px; color: #a0aec0;}
+  .panel { display: none; padding: 14px; }
+  #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5 { display: block; }
+  
+  /* Collapsible Sections */
+  .section-collapsible { background: #fff; border-radius: 14px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; user-select: none; }
+  .section-header .sec-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; display: inline-block; }
   .section-header.open .sec-arrow { transform: rotate(90deg); }
-  .section-body { display: none; padding: 0 20px 20px 20px; border-top: 1px solid #edf2f7; padding-top: 15px;}
+  .section-header .sec-icon { font-size: 20px; }
+  .section-header .sec-title { font-size: 14.5px; font-weight: 800; color: #2c5282; }
+  .section-body { display: none; padding: 0 16px 16px 16px; border-top: 1px solid #edf2f7; padding-top: 15px;}
   .section-body.open { display: block; }
-  
-  .form-group { margin-bottom: 15px; }
-  label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; color: #4a5568;}
-  
-  .list-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #edf2f7; align-items: center;}
-  .list-item:last-child { border-bottom: none; }
-  .item-info h3 { font-size: 16px; margin-bottom: 4px; color: #2d3748;}
-  .item-info p { font-size: 12px; color: #718096; }
-  .item-price { font-weight: bold; color: #2b6cb0; text-align: right;}
-  
-  .btn-logout { background: #e53e3e; padding: 8px 12px; width: auto; font-size: 14px; }
-  .btn-danger { background: #e53e3e; }
-  .btn-success { background: #38a169; }
-  .error { color: #e53e3e; font-size: 14px; text-align: center; margin-bottom: 10px; display: none; background: #fff5f5; padding: 10px; border-radius: 8px;}
-  
-  .stat-box { background: linear-gradient(135deg, #2b6cb0, #2c5282); color: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: center;}
-  .stat-box h3 { font-size: 14px; font-weight: normal; opacity: 0.9; margin-bottom: 5px;}
-  .stat-box .value { font-size: 28px; font-weight: bold;}
-  
-  .expiry-alert { color: #e53e3e; font-weight: bold; font-size: 12px; }
-  .low-stock { color: #dd6b20; font-weight: bold; font-size: 12px; }
 
-  #expiryBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 15px; border-radius: 8px; border: 1px solid #fed7d7; font-weight: bold; font-size: 14px; text-align: center; }
+  label.field-label { display: block; font-size: 12.5px; font-weight: 600; color: #4a5568; margin-bottom: 5px; margin-top: 10px; }
+  input[type="text"], input[type="number"], input[type="date"], input[type="month"], select { width: 100%; padding: 12px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #f7fafc; outline: none; }
+  input:focus, select:focus { border-color: #3182ce; background: #fff; }
+  .btn { display: block; width: 100%; padding: 13px; font-size: 15px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; margin-top: 14px; }
+  .btn-primary { background: #2c5282; color: #fff; }
+  .btn-success { background: #276749; color: #fff; }
+  .btn-danger { background: #c53030; color: #fff; }
+  
+  .summary-box { background: linear-gradient(135deg, #2c5282, #1a365d); color: #fff; border-radius: 14px; padding: 18px; margin-bottom: 14px; text-align: center; }
+  .summary-box.green { background: linear-gradient(135deg, #276749, #22543d); }
+  .summary-box .label { font-size: 12px; opacity: 0.85; margin-bottom: 4px; }
+  .summary-box .value { font-size: 26px; font-weight: 800; }
+
+  .list-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 12px; background: #f7fafc; border-radius: 10px; margin-bottom: 8px; border: 1px solid #edf2f7; }
+  .list-item .info { flex: 1; min-width: 0; }
+  .list-item .name { font-size: 14px; font-weight: 600; color: #2d3748; }
+  .list-item .meta { font-size: 11.5px; color: #718096; margin-top: 2px; }
+  .list-item .amount { font-size: 14px; font-weight: 700; color: #2c5282; margin-left: 10px; white-space: nowrap; }
+  .list-item .amount.red { color: #c53030; }
+
+  /* Category Tags */
+  .cat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .cat-tag { display: inline-flex; align-items: center; gap: 5px; background: #fff; border: 1px solid #bee3f8; color: #2c5282; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .cat-tag .del { cursor: pointer; color: #c53030; font-weight: 800; font-size: 14px; padding: 0 2px; }
+  .cat-add-row { display: flex; gap: 6px; align-items: center; }
+  .cat-add-row input { padding: 9px 10px; font-size: 13.5px; flex: 1; }
+  .cat-add-row button { background: #2c5282; color: #fff; border: none; padding: 9px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+  .info-banner { background: #ebf8ff; border: 1px solid #90cdf4; border-radius: 10px; padding: 12px; font-size: 12.5px; color: #2c5282; margin-bottom: 12px; line-height: 1.5; }
+  
+  .expiry-alert { color: #e53e3e; font-weight: bold; font-size: 11.5px; }
+  .low-stock { color: #dd6b20; font-weight: bold; font-size: 11.5px; }
+
+  #expiryBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fed7d7; font-weight: bold; font-size: 13px; text-align: center; }
 </style>
 </head>
 <body>
 
 <!-- የመግቢያ ገጽ -->
-<div id="loginScreen">
+<div id="loginScreen" class="hidden">
   <div class="login-box">
     <h1>💊 Hanitech Pharmacy</h1>
-    <div class="error" id="loginError"></div>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">🔓 ግባ</button>
+    <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
+    <div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
+    <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="Password"></div>
+    <button class="btn-login" onclick="login()">🔓 ግባ</button>
   </div>
 </div>
 
 <!-- ዋና ገጽ -->
 <div id="mainApp">
   <header>
-    <h2>💊 Pharmacy Tracker</h2>
-    <button class="btn-logout" onclick="logout()">ውጣ</button>
+    <div class="h-left">
+      <div class="h-title" id="hdrPharmacyName">💊 Pharmacy Tracker</div>
+    </div>
+    <div class="h-right">
+      <button class="btn-logout-hdr" onclick="logout()">ውጣ</button>
+    </div>
   </header>
 
   <div id="expiryBanner">
     ⚠️ <span id="expiryBannerText"></span>
   </div>
-  
-  <div class="container">
-    <!-- Tabs -->
+
+  <!-- 🆕 Tabs (ልክ እንደ Hotel Tracker) -->
+  <div class="tabs-wrapper">
+    <input type="radio" name="tabs" id="tab1" checked>
+    <input type="radio" name="tabs" id="tab2">
+    <input type="radio" name="tabs" id="tab3">
+    <input type="radio" name="tabs" id="tab4">
+    <input type="radio" name="tabs" id="tab5">
+
     <div class="tabs">
-      <button class="active" onclick="switchTab('tab-add', this)">➕ መድሃኒት</button>
-      <button onclick="switchTab('tab-sell', this)">🛒 ሽያጭ</button>
-      <button onclick="switchTab('tab-inventory', this)">📦 ክምችት</button>
-      <button onclick="switchTab('tab-daily', this)">📅 የቀን ገቢ</button>
-      <button onclick="switchTab('tab-monthly', this)">📆 የወር ገቢ</button>
-      <button onclick="switchTab('tab-settings', this)">⚙️ ሴቲንግስ</button>
+      <label for="tab1"><i>💊</i>መድሃኒቶች</label>
+      <label for="tab2"><i>📅</i>የቀን ገቢ</label>
+      <label for="tab3"><i>📆</i>የወር ገቢ</label>
+      <label for="tab4"><i>📊</i>Dashboard</label>
+      <label for="tab5"><i>⚙️</i>Settings</label>
     </div>
 
-    <!-- 1. መድሃኒት (Category & Add) -->
-    <div class="card active" id="tab-add">
-      <!-- Category Manager -->
-      <div class="section-collapsible">
-        <div class="section-header" onclick="toggleSection(this)">
-          <div class="sec-title">📁 ምድቦች አስተዳድር</div>
-          <div class="sec-arrow">▶</div>
+    <div class="panels">
+      <!-- TAB 1: MEDICINES -->
+      <div class="panel" id="panel1">
+        <!-- Category Manager -->
+        <div class="section-collapsible">
+          <div class="section-header" id="hdrCatMgr" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">ምድቦችን አስተዳድር</span></div>
+          </div>
+          <div class="section-body" id="bodyCatMgr">
+            <div class="cat-add-row">
+              <input type="text" id="newCat" placeholder="አዲስ ምድብ (ለምሳሌ: አንቲባዮቲክስ)" autocomplete="off">
+              <button onclick="addCategory()">+ ጨምር</button>
+            </div>
+            <div class="cat-tags" id="catListDisplay" style="margin-top:10px;"></div>
+          </div>
         </div>
-        <div class="section-body">
-          <div class="form-group"><label>ዋና ምድብ (Category)</label><input type="text" id="newCat" placeholder="ለምሳሌ: አንቲባዮቲክስ"></div>
-          <button onclick="addCategory()" style="background:#38a169; margin-bottom:10px;">+ ምድብ ጨምር</button>
-          <div id="catListDisplay" style="margin-top:10px;"></div>
-        </div>
-      </div>
 
-      <!-- Add Medicine -->
-      <div class="section-collapsible">
-        <div class="section-header open" onclick="toggleSection(this)">
-          <div class="sec-title">➕ አዲስ መድሃኒት ጨምር</div>
-          <div class="sec-arrow">▶</div>
-        </div>
-        <div class="section-body open">
-          <div class="form-group">
-            <label>📁 ዋና ምድብ (Category)</label>
+        <!-- Add Medicine -->
+        <div class="section-collapsible">
+          <div class="section-header" id="hdrAddMed" onclick="toggleSection('hdrAddMed','bodyAddMed')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">አዲስ መድሃኒት ጨምር</span></div>
+          </div>
+          <div class="section-body" id="bodyAddMed">
+            <label class="field-label">📁 ዋና ምድብ</label>
             <select id="medCategory"></select>
+            <label class="field-label">📂 ንዑስ ምድብ</label>
+            <input type="text" id="medSubcategory" placeholder="ለምሳሌ: ታብሌት" autocomplete="off">
+            <label class="field-label">💊 የመድሃኒት ስም</label>
+            <input type="text" id="medName" placeholder="ለምሳሌ: Paracetamol" autocomplete="off">
+            <label class="field-label">🔢 የባች ቁጥር</label>
+            <input type="text" id="medBatch" placeholder="BATCH-001" autocomplete="off">
+            <label class="field-label">📅 የማለቂያ ቀን</label>
+            <input type="date" id="medExpiry">
+            <label class="field-label">💰 የግዢ ዋጋ (ብር)</label>
+            <input type="number" id="medCost" placeholder="0.00">
+            <label class="field-label">🏷️ የሽያጭ ዋጋ (ብር)</label>
+            <input type="number" id="medPrice" placeholder="0.00">
+            <label class="field-label">📦 ብዛት</label>
+            <input type="number" id="medQty" placeholder="0">
+            <button class="btn btn-success" onclick="addMedicine()">💾 አስቀምጥ</button>
           </div>
-          <div class="form-group">
-            <label>📂 ንዑስ ምድብ (Subcategory)</label>
-            <input type="text" id="medSubcategory" placeholder="ለምሳሌ: ታብሌት">
+        </div>
+        
+        <!-- Inventory List (in Medicine Tab) -->
+        <div class="section-collapsible">
+          <div class="section-header" id="hdrInventory" onclick="toggleSection('hdrInventory','bodyInventory')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">የመድሃኒት ክምችት</span></div>
           </div>
-          <div class="form-group"><label>💊 የመድሃኒት ስም</label><input type="text" id="medName" placeholder="ለምሳሌ: Paracetamol"></div>
-          <div class="form-group"><label>🔢 የባች ቁጥር</label><input type="text" id="medBatch" placeholder="BATCH-001"></div>
-          <div class="form-group"><label>📅 የማለቂያ ቀን</label><input type="date" id="medExpiry"></div>
-          <div class="form-group"><label>💰 የግዢ ዋጋ</label><input type="number" id="medCost" placeholder="0.00"></div>
-          <div class="form-group"><label>🏷️ የሽያጭ ዋጋ</label><input type="number" id="medPrice" placeholder="0.00"></div>
-          <div class="form-group"><label>📦 ብዛት</label><input type="number" id="medQty" placeholder="0"></div>
-          <button onclick="addMedicine()" style="background:#38a169;">💾 አስቀምጥ</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. ሽያጭ -->
-    <div class="card" id="tab-sell">
-      <div class="section-collapsible">
-        <div class="section-header open" onclick="toggleSection(this)">
-          <div class="sec-title">🛒 መድሃኒት ሽያጭ</div>
-          <div class="sec-arrow">▶</div>
-        </div>
-        <div class="section-body open">
-          <div class="form-group"><label>📅 የሽያጭ ቀን</label><input type="date" id="sellDate"></div>
-          <div class="form-group"><label>💊 መድሃኒት ምረጥ</label><select id="sellMedId" onchange="updateSellPrice()"></select></div>
-          <div class="form-group"><label>📦 ብዛት</label><input type="number" id="sellQty" placeholder="0" min="1"></div>
-          <div class="form-group"><label>💵 ጠቅላላ ዋጋ</label><input type="text" id="sellTotal" readonly style="background:#edf2f7; font-weight:bold;"></div>
-          <button onclick="sellMedicine()" style="background:#38a169;">💸 ሽያጭ አድርግ</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. ክምችት -->
-    <div class="card" id="tab-inventory">
-      <div class="section-collapsible">
-        <div class="section-header open" onclick="toggleSection(this)">
-          <div class="sec-title">📦 የእቃ ክምችት</div>
-          <div class="sec-arrow">▶</div>
-        </div>
-        <div class="section-body open">
-          <div id="inventoryList"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. የቀን ገቢ -->
-    <div class="card" id="tab-daily">
-      <div class="section-collapsible">
-        <div class="section-header open" onclick="toggleSection(this)">
-          <div class="sec-title">📅 የቀን ገቢ</div>
-          <div class="sec-arrow">▶</div>
-        </div>
-        <div class="section-body open">
-          <div class="form-group"><label>ቀን ምረጥ</label><input type="date" id="dailyReportDate" onchange="loadDailyReport()"></div>
-          <div class="stat-box" style="background: linear-gradient(135deg, #38a169, #2f855a);">
-            <h3>የተመረጠው ቀን ገቢ</h3>
-            <div class="value" id="dailyTotalRevenue">0.00 ብር</div>
-          </div>
-          <div id="dailySalesList"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. የወር ገቢ -->
-    <div class="card" id="tab-monthly">
-      <div class="section-collapsible">
-        <div class="section-header open" onclick="toggleSection(this)">
-          <div class="sec-title">📆 የወር ገቢ</div>
-          <div class="sec-arrow">▶</div>
-        </div>
-        <div class="section-body open">
-          <div class="form-group"><label>ወር ምረጥ</label><input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()"></div>
-          <div class="stat-box" style="background: linear-gradient(135deg, #2b6cb0, #2c5282);">
-            <h3>የተመረጠው ወር ገቢ</h3>
-            <div class="value" id="monthlyTotalRevenue">0.00 ብር</div>
-          </div>
-          <div id="monthlySalesList"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6. ሴቲንግስ -->
-    <div class="card" id="tab-settings">
-      <div class="section-collapsible">
-        <div class="section-header open" onclick="toggleSection(this)">
-          <div class="sec-title">⚙️ ሴቲንግስ</div>
-          <div class="sec-arrow">▶</div>
-        </div>
-        <div class="section-body open">
-          <div class="form-group"><label>🏥 የፋርማሲ ስም</label><input type="text" id="settingPharmacyName"></div>
-          <button onclick="savePharmacyName()" style="background:#2b6cb0; margin-bottom:20px;">💾 አስቀምጥ</button>
-          <div style="border-top:1px solid #edf2f7; padding-top:20px;">
-            <h3 style="font-size:15px; margin-bottom:15px; color:#4a5568;">🔐 ፓስወርድ ቀይር</h3>
-            <div class="form-group"><label>የአሁኑ ፓስወርድ</label><input type="password" id="currentPass"></div>
-            <div class="form-group"><label>አዲስ ፓስወርድ</label><input type="password" id="newPass"></div>
-            <button onclick="changePassword()" style="background:#dd6b20;">🔐 ፓስወርድ ቀይር</button>
+          <div class="section-body" id="bodyInventory">
+            <div id="inventoryList"></div>
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- TAB 2: DAILY REPORT -->
+      <div class="panel" id="panel2">
+        <div class="section-collapsible">
+          <div class="section-header open" id="hdrDaily" onclick="toggleSection('hdrDaily','bodyDaily')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">የቀን ገቢ</span></div>
+          </div>
+          <div class="section-body open" id="bodyDaily">
+            <label class="field-label">ቀን ምረጥ</label>
+            <input type="date" id="dailyReportDate" onchange="loadDailyReport()">
+            <div class="summary-box green" style="margin-top:14px;">
+              <div class="label">የተመረጠው ቀን ገቢ</div>
+              <div class="value" id="dailyTotalRevenue">0.00 <small>ብር</small></div>
+            </div>
+            <div id="dailySalesList" style="margin-top:14px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: MONTHLY REPORT -->
+      <div class="panel" id="panel3">
+        <div class="section-collapsible">
+          <div class="section-header open" id="hdrMonthly" onclick="toggleSection('hdrMonthly','bodyMonthly')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">የወር ገቢ</span></div>
+          </div>
+          <div class="section-body open" id="bodyMonthly">
+            <label class="field-label">ወር ምረጥ</label>
+            <input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()">
+            <div class="summary-box" style="margin-top:14px;">
+              <div class="label">የተመረጠው ወር ገቢ</div>
+              <div class="value" id="monthlyTotalRevenue">0.00 <small>ብር</small></div>
+            </div>
+            <div id="monthlySalesList" style="margin-top:14px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: DASHBOARD -->
+      <div class="panel" id="panel4">
+        <div class="section-collapsible">
+          <div class="section-header open" id="hdrDash" onclick="toggleSection('hdrDash','bodyDash')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
+          </div>
+          <div class="section-body open" id="bodyDash">
+            <div class="summary-box green">
+              <div class="label">የዛሬ ገቢ</div>
+              <div class="value" id="dashTodayRevenue">0.00 <small>ብር</small></div>
+            </div>
+            <div class="summary-box" style="margin-top:14px;">
+              <div class="label">የዚህ ወር ገቢ</div>
+              <div class="value" id="dashMonthRevenue">0.00 <small>ብር</small></div>
+            </div>
+            <div class="divider" style="height:1px; background:#edf2f7; margin:12px 0;"></div>
+            <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px;">የዛሬ ሽያጮች ዝርዝር</h3>
+            <div id="dashTodaySales"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: SETTINGS -->
+      <div class="panel" id="panel5">
+        <div class="section-collapsible">
+          <div class="section-header open" id="hdrSettings" onclick="toggleSection('hdrSettings','bodySettings')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
+          </div>
+          <div class="section-body open" id="bodySettings">
+            <label class="field-label">🏥 የፋርማሲ ስም</label>
+            <input type="text" id="settingPharmacyName" placeholder="Hanitech Pharmacy">
+            <button class="btn btn-primary" onclick="savePharmacyName()">💾 አስቀምጥ</button>
+            <div class="divider" style="height:1px; background:#edf2f7; margin:16px 0;"></div>
+            <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px;">🔐 ፓስወርድ ቀይር</h3>
+            <label class="field-label">የአሁኑ ፓስወርድ</label>
+            <input type="password" id="currentPass" placeholder="••••••••">
+            <label class="field-label">አዲስ ፓስወርድ</label>
+            <input type="password" id="newPass" placeholder="••••••••">
+            <button class="btn btn-warning" style="background:#dd6b20; color:#fff;" onclick="changePassword()">🔐 ፓስወርድ ቀይር</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -247,24 +287,12 @@
   let allCategories = [];
   let currentUserPharmacyId = null;
 
-  window.toggleSection = function(headerEl) {
-    const body = headerEl.nextElementSibling;
-    headerEl.classList.toggle('open');
-    body.classList.toggle('open');
-  };
-
-  window.switchTab = function(tabId, btn) {
-    document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    btn.classList.add('active');
-    
-    if (tabId === 'tab-inventory') loadInventory();
-    if (tabId === 'tab-sell') loadSellOptions();
-    if (tabId === 'tab-daily') loadDailyReport();
-    if (tabId === 'tab-monthly') loadMonthlyReport();
-    if (tabId === 'tab-settings') loadSettings();
-    if (tabId === 'tab-add') loadCategories();
+  window.toggleSection = function(h, b) { 
+    const hd = document.getElementById(h); 
+    const bd = document.getElementById(b); 
+    if (!hd || !bd) return; 
+    const o = bd.classList.toggle('open'); 
+    hd.classList.toggle('open', o); 
   };
 
   window.login = async function() {
@@ -276,7 +304,11 @@
     try {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
-      if(userDoc.exists()) currentUserPharmacyId = userDoc.data().pharmacyId;
+      if(userDoc.exists()) {
+        currentUserPharmacyId = userDoc.data().pharmacyId;
+        const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
+        if(phDoc.exists()) document.getElementById('hdrPharmacyName').innerText = phDoc.data().name || 'Pharmacy Tracker';
+      }
     } catch (err) {
       errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም';
       errorEl.style.display = 'block';
@@ -287,12 +319,12 @@
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'block';
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('mainApp').classList.add('show');
       loadAllData();
     } else {
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('mainApp').style.display = 'none';
+      document.getElementById('loginScreen').classList.remove('hidden');
+      document.getElementById('mainApp').classList.remove('show');
     }
   });
 
@@ -300,9 +332,9 @@
     await loadCategories();
     await loadMedicines();
     loadInventory();
-    loadSellOptions();
     loadDailyReport();
     loadMonthlyReport();
+    loadDashboard();
     loadSettings();
     checkExpiryAlerts();
   }
@@ -329,7 +361,7 @@
     if(allCategories.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:#a0aec0;">ምንም ምድብ የለም።</p>'; return; }
     let html = '';
     allCategories.forEach(c => {
-      html += `<div class="list-item"><div class="item-info"><h3>📁 ${c}</h3></div><button class="btn-danger" style="width:auto; padding:5px 10px; font-size:12px;" onclick="deleteCategory('${c}')">🗑️</button></div>`;
+      html += `<span class="cat-tag">${c} <span class="del" onclick="deleteCategory('${c}')">×</span></span>`;
     });
     listEl.innerHTML = html;
   }
@@ -397,7 +429,7 @@
   // --- ክምችት ---
   function loadInventory() {
     const listEl = document.getElementById('inventoryList');
-    if (allMedicines.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">ምንም መድሃኒት የለም።</p>'; return; }
+    if (allMedicines.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም መድሃኒት የለም።</p>'; return; }
     let html = '';
     const sortedMeds = [...allMedicines].sort((a, b) => new Date(a.expiry) - new Date(b.expiry));
     sortedMeds.forEach(med => {
@@ -405,56 +437,23 @@
       const expiryDate = new Date(med.expiry);
       const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
       let alertHtml = ''; let rowStyle = '';
-      if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border-left: 4px solid #e53e3e;'; }
-      else if (diffDays <= 30) { alertHtml = `<span class="expiry-alert" style="color:#dd6b20;">⚠️ ${diffDays} ቀን ቀርቷል</span>`; rowStyle = 'background:#fffaf0; border-left: 4px solid #dd6b20;'; }
+      if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border:1px solid #fed7d7;'; }
+      else if (diffDays <= 30) { alertHtml = `<span class="expiry-alert" style="color:#dd6b20;">⚠️ ${diffDays} ቀን ቀርቷል</span>`; rowStyle = 'background:#fffaf0; border:1px solid #fbd38d;'; }
       else if (med.quantity <= 10) { alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>'; }
-      html += `<div class="list-item" style="${rowStyle}"><div class="item-info"><h3>${med.name}</h3><p>📁 ${med.category} → ${med.subcategory}</p><p>📅 ${med.expiry} ${alertHtml}</p></div><div class="item-price"><div style="font-size:18px; ${med.quantity <= 10 ? 'color:#e53e3e;' : ''}">${med.quantity}</div><div style="font-size:12px; color:#a0aec0;">${med.price} ብር</div></div></div>`;
+      
+      html += `
+        <div class="list-item" style="${rowStyle}">
+          <div class="info">
+            <div class="name">${med.name}</div>
+            <div class="meta">📁 ${med.category} → ${med.subcategory} | 📦 ${med.batch}</div>
+            <div class="meta">📅 ${med.expiry} ${alertHtml}</div>
+          </div>
+          <div class="amount">${med.quantity} <small style="font-size:10px;color:#718096;">ብዛት</small><br><small style="font-size:11px;color:#276749;">${med.price} ብር</small></div>
+        </div>
+      `;
     });
     listEl.innerHTML = html;
   }
-
-  // --- ሽያጭ ---
-  function loadSellOptions() {
-    const select = document.getElementById('sellMedId');
-    const dateInput = document.getElementById('sellDate');
-    if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
-    select.innerHTML = '<option value="">-- መድሃኒት ምረጥ --</option>';
-    allMedicines.forEach(med => { if (med.quantity > 0) select.innerHTML += `<option value="${med.id}">${med.name} (ቀሪ: ${med.quantity})</option>`; });
-  }
-
-  window.updateSellPrice = function() {
-    const id = document.getElementById('sellMedId').value;
-    if (!id) { document.getElementById('sellTotal').value = '0.00'; return; }
-    const med = allMedicines.find(m => m.id === id);
-    if (med) { document.getElementById('sellQty').value = 1; document.getElementById('sellTotal').value = med.price.toFixed(2); }
-  };
-
-  document.getElementById('sellQty')?.addEventListener('input', () => {
-    const id = document.getElementById('sellMedId').value;
-    const qty = parseInt(document.getElementById('sellQty').value) || 0;
-    if (!id) return;
-    const med = allMedicines.find(m => m.id === id);
-    if (med) document.getElementById('sellTotal').value = (med.price * qty).toFixed(2);
-  });
-
-  window.sellMedicine = async function() {
-    const id = document.getElementById('sellMedId').value;
-    const qty = parseInt(document.getElementById('sellQty').value);
-    const sellDate = document.getElementById('sellDate').value;
-    if (!id || isNaN(qty) || qty <= 0 || !sellDate) { alert('⚠️ እባክህ መድሃኒት፣ ትክክለኛ ብዛት እና ቀን ምረጥ'); return; }
-    const med = allMedicines.find(m => m.id === id);
-    if (med.quantity < qty) { alert(`⚠️ በቂ ክምችት የለም! ያለው: ${med.quantity}`); return; }
-    const total = med.price * qty;
-    try {
-      await addDoc(collection(db, 'sales'), { medicineId: id, medicineName: med.name, quantity: qty, unitPrice: med.price, total: total, date: sellDate, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
-      await updateDoc(doc(db, 'medicines', id), { quantity: increment(-qty) });
-      alert(`✅ ሽያጭ ተመዝግቧል!\n${med.name} x ${qty} = ${total.toFixed(2)} ብር`);
-      loadAllData();
-      document.getElementById('sellQty').value = '';
-      document.getElementById('sellTotal').value = '';
-      document.getElementById('sellMedId').value = '';
-    } catch (err) { alert('⚠️ ስህተት: ' + err.message); }
-  };
 
   // --- የቀን ገቢ ---
   async function loadDailyReport() {
@@ -471,11 +470,11 @@
       snap.forEach(doc => {
         const sale = doc.data();
         total += sale.total;
-        html += `<div class="list-item"><div class="item-info"><h3>${sale.medicineName}</h3><p>ብዛት: ${sale.quantity} x ${sale.unitPrice} ብር</p></div><div class="item-price">${sale.total.toFixed(2)} ብር</div></div>`;
+        html += `<div class="list-item"><div class="info"><div class="name">${sale.medicineName}</div><div class="meta">ብዛት: ${sale.quantity} x ${sale.unitPrice} ብር</div></div><div class="amount">${sale.total.toFixed(2)} ብር</div></div>`;
       });
       
-      document.getElementById('dailyTotalRevenue').innerText = total.toFixed(2) + ' ብር';
-      document.getElementById('dailySalesList').innerHTML = html || '<p style="text-align:center; color:#a0aec0;">በዚህ ቀን ምንም ሽያጭ የለም።</p>';
+      document.getElementById('dailyTotalRevenue').innerHTML = total.toFixed(2) + ' <small>ብር</small>';
+      document.getElementById('dailySalesList').innerHTML = html || '<p style="text-align:center; color:#a0aec0; font-size:13px;">በዚህ ቀን ምንም ሽያጭ የለም።</p>';
     } catch(e) { console.error(e); }
   }
 
@@ -485,7 +484,7 @@
     if(!monthInput.value) monthInput.value = new Date().toISOString().slice(0,7);
     const selectedMonth = monthInput.value;
     const firstDay = selectedMonth + '-01';
-    const lastDay = selectedMonth + '-31'; // ግምታዊ
+    const lastDay = selectedMonth + '-31';
     
     try {
       const q = query(collection(db, 'sales'), where('date', '>=', firstDay), where('date', '<=', lastDay));
@@ -496,12 +495,42 @@
       snap.forEach(doc => {
         const sale = doc.data();
         total += sale.total;
-        html += `<div class="list-item"><div class="item-info"><h3>${sale.medicineName}</h3><p>${sale.date} | ብዛት: ${sale.quantity}</p></div><div class="item-price">${sale.total.toFixed(2)} ብር</div></div>`;
+        html += `<div class="list-item"><div class="info"><div class="name">${sale.medicineName}</div><div class="meta">${sale.date} | ብዛት: ${sale.quantity}</div></div><div class="amount">${sale.total.toFixed(2)} ብር</div></div>`;
       });
       
-      document.getElementById('monthlyTotalRevenue').innerText = total.toFixed(2) + ' ብር';
-      document.getElementById('monthlySalesList').innerHTML = html || '<p style="text-align:center; color:#a0aec0;">በዚህ ወር ምንም ሽያጭ የለም።</p>';
+      document.getElementById('monthlyTotalRevenue').innerHTML = total.toFixed(2) + ' <small>ብር</small>';
+      document.getElementById('monthlySalesList').innerHTML = html || '<p style="text-align:center; color:#a0aec0; font-size:13px;">በዚህ ወር ምንም ሽያጭ የለም።</p>';
     } catch(e) { console.error(e); }
+  }
+
+  // --- ዳሽቦርድ ---
+  async function loadDashboard() {
+    const today = new Date().toISOString().split('T')[0];
+    const firstDayOfMonth = today.substring(0, 7) + '-01';
+
+    try {
+      const qToday = query(collection(db, 'sales'), where('date', '==', today));
+      const snapToday = await getDocs(qToday);
+      let todayTotal = 0;
+      let todayHtml = '';
+      
+      snapToday.forEach(doc => {
+        const sale = doc.data();
+        todayTotal += sale.total;
+        todayHtml += `<div class="list-item"><div class="info"><div class="name">${sale.medicineName}</div><div class="meta">x${sale.quantity}</div></div><div class="amount">${sale.total.toFixed(2)} ብር</div></div>`;
+      });
+
+      document.getElementById('dashTodayRevenue').innerHTML = todayTotal.toFixed(2) + ' <small>ብር</small>';
+      document.getElementById('dashTodaySales').innerHTML = todayHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ዛሬ ምንም ሽያጭ የለም።</p>';
+
+      const qMonth = query(collection(db, 'sales'), where('date', '>=', firstDayOfMonth), where('date', '<=', today));
+      const snapMonth = await getDocs(qMonth);
+      let monthTotal = 0;
+      snapMonth.forEach(doc => { monthTotal += doc.data().total; });
+
+      document.getElementById('dashMonthRevenue').innerHTML = monthTotal.toFixed(2) + ' <small>ብር</small>';
+
+    } catch (err) { console.error(err); }
   }
 
   // --- ሴቲንግስ ---
@@ -518,6 +547,7 @@
     if(!name || !currentUserPharmacyId) return;
     try {
       await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { name: name });
+      document.getElementById('hdrPharmacyName').innerText = name;
       alert('✅ ተቀይሯል!');
     } catch(e) { alert(e.message); }
   };
