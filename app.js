@@ -45,7 +45,7 @@ window.onMedTypeChange = function() {
 };
 
 // ==========================================
-// 🔐 LOGIN & HEADER LOADING (የተሻሻለ)
+// 🔐 LOGIN & HEADER LOADING
 // ==========================================
 
 async function loadUserHeader(user) {
@@ -58,12 +58,10 @@ async function loadUserHeader(user) {
     const userData = userDoc.data();
     currentUserPharmacyId = userData.pharmacyId;
 
-    // Email & Initial
     const userEmail = userData.email || user.email || '';
     document.getElementById('hdrUserEmail').innerText = userEmail;
     document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase() || 'U';
 
-    // Role
     const role = (userData.role || 'employee').toString().toLowerCase().trim();
     const roleElement = document.getElementById('hdrUserRole');
     
@@ -85,7 +83,6 @@ async function loadUserHeader(user) {
       roleElement.style.color = '#4a5568';
     }
 
-    // Pharmacy name
     if (currentUserPharmacyId) {
       const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
       if (phDoc.exists()) {
@@ -112,10 +109,40 @@ window.login = async function() {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('mainApp').classList.add('show');
+    // onAuthStateChanged ይጠራል
   } catch (err) {
     errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም';
+    errorEl.style.display = 'block';
+  }
+};
+
+window.saveFirstTimePassword = async function() {
+  const newPass = document.getElementById('firstTimeNewPass').value;
+  const errorEl = document.getElementById('changePassError');
+  errorEl.style.display = 'none';
+
+  if (newPass.length < 6) {
+    errorEl.textContent = '⚠️ ፓስወርድ ቢያንስ 6 ፊደል መሆን አለበት!';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const user = auth.currentUser;
+    await updatePassword(user, newPass);
+    await updateDoc(doc(db, 'users', user.uid), { isTempPassword: false });
+    
+    alert('✅ ፓስወርድዎ በተሳካ ሁኔታ ተቀይሯል!');
+    
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('changePassForm').style.display = 'none';
+    document.getElementById('mainApp').classList.add('show');
+    
+    await loadUserHeader(user);
+    await loadAllData();
+    
+  } catch (err) {
+    errorEl.textContent = '⚠️ ስህተት: ' + err.message + ' (እባክዎ እንደገና ይሞክሩ)';
     errorEl.style.display = 'block';
   }
 };
@@ -127,14 +154,26 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('mainApp').classList.add('show');
     
-    // 1. መጀመሪያ ስም፣ ሚና እና ኢሜይል ይጫን
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      
+      if (userData.isTempPassword) {
+        document.getElementById('mainApp').classList.remove('show');
+        document.getElementById('loginScreen').classList.remove('hidden');
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('changePassForm').style.display = 'block';
+        return;
+      }
+    }
+
     await loadUserHeader(user);
-    
-    // 2. ከዚያ ዳታ ይጫን
     await loadAllData();
   } else {
     document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('mainApp').classList.remove('show');
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('changePassForm').style.display = 'none';
     currentUserPharmacyId = null;
   }
 });
