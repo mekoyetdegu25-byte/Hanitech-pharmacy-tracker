@@ -134,10 +134,25 @@
 <div id="loginScreen" class="hidden">
   <div class="login-box">
     <h1>💊 Hanitech Pharmacy</h1>
-    <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-    <div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
-    <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="Password"></div>
-    <button class="btn-login" onclick="login()">🔓 ግባ</button>
+    
+    <!-- መደበኛ የመግቢያ ፎርም -->
+    <div id="loginForm">
+      <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
+      <div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
+      <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="Password"></div>
+      <button class="btn-login" onclick="login()">🔓 ግባ</button>
+    </div>
+
+    <!-- የጊዜያዊ ፓስወርድ መቀየሪያ ፎርም -->
+    <div id="changePassForm" style="display:none;">
+      <div style="background:#fffaf0; color:#dd6b20; padding:10px; border-radius:8px; font-size:13px; margin-bottom:15px; border:1px solid #fbd38d;">
+        ⚠️ እንኳን ደህና መጡ! እባክዎ መጀመሪያ የጊዜያዊ ፓስወርድዎን ወደ አዲስ ይቀይሩ።
+      </div>
+      <div id="changePassError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
+      <div class="form-group"><label>🔐 አዲስ ፓስወርድ</label><input type="password" id="firstTimeNewPass" placeholder="ቢያንስ 6 ፊደል"></div>
+      <button class="btn-login" onclick="saveFirstTimePassword()">💾 ፓስወርድ ቀይር እና ግባ</button>
+      <button class="btn-login" style="background:#a0aec0; margin-top:8px; font-size:14px;" onclick="logout()">🚪 ውጣ</button>
+    </div>
   </div>
 </div>
 
