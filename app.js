@@ -26,9 +26,19 @@ let allFixed = [];
 let allCreditPayments = [];
 let cart = []; 
 let currentUserPharmacyId = null;
+let currentUserRole = 'employee';
 let currentBizType = 'retail';
 let lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
+
+// Splash Screen Logic
+setTimeout(() => {
+  const splash = document.getElementById('splashScreen');
+  if(splash) {
+    splash.classList.add('fade-out');
+    setTimeout(() => { splash.style.display = 'none'; }, 500);
+  }
+}, 1500);
 
 window.toggleSection = function(h, b) { 
   const hd = document.getElementById(h); 
@@ -57,23 +67,23 @@ async function loadUserHeader(user) {
     }
     const userData = userDoc.data();
     currentUserPharmacyId = userData.pharmacyId;
+    currentUserRole = (userData.role || 'employee').toString().toLowerCase().trim();
 
     const userEmail = userData.email || user.email || '';
     document.getElementById('hdrUserEmail').innerText = userEmail;
     document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase() || 'U';
 
-    const role = (userData.role || 'employee').toString().toLowerCase().trim();
     const roleElement = document.getElementById('hdrUserRole');
     
-    if (role === 'owner' || role === 'ባለቤት') {
+    if (currentUserRole === 'owner' || currentUserRole === 'ባለቤት') {
       roleElement.innerText = '👑 ባለቤት';
       roleElement.style.background = '#fefcbf';
       roleElement.style.color = '#975a16';
-    } else if (role === 'manager' || role === 'ማናጀር') {
+    } else if (currentUserRole === 'manager' || currentUserRole === 'ማናጀር') {
       roleElement.innerText = '🎯 ማናጀር';
       roleElement.style.background = '#bee3f8';
       roleElement.style.color = '#2c5282';
-    } else if (role === 'accountant' || role === 'አካውንታንት') {
+    } else if (currentUserRole === 'accountant' || currentUserRole === 'አካውንታንት') {
       roleElement.innerText = '💼 አካውንታንት';
       roleElement.style.background = '#c6f6d5';
       roleElement.style.color = '#22543d';
@@ -109,10 +119,48 @@ window.login = async function() {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    // onAuthStateChanged ይጠራል
   } catch (err) {
     errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም';
     errorEl.style.display = 'block';
+  }
+};
+
+window.showResetRequest = function() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('resetRequestForm').style.display = 'block';
+};
+
+window.backToLogin = function() {
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('resetRequestForm').style.display = 'none';
+  document.getElementById('resetRequestMsg').style.display = 'none';
+};
+
+window.submitPasswordRequest = async function() {
+  const email = document.getElementById('resetEmail').value.trim();
+  const msgEl = document.getElementById('resetRequestMsg');
+  
+  if(!email) {
+    msgEl.textContent = '⚠️ እባክዎ ኢሜይል ያስገቡ';
+    msgEl.style.color = 'red';
+    msgEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, 'passwordRequests'), {
+      email: email,
+      date: new Date().toISOString().split('T')[0],
+      timestamp: serverTimestamp()
+    });
+    msgEl.textContent = '✅ ጥያቄዎ ተልኳል! አድሚኑ ፓስወርድዎን ሲያስተካክል ይነገርዎታል።';
+    msgEl.style.color = '#276749';
+    msgEl.style.display = 'block';
+    document.getElementById('resetEmail').value = '';
+  } catch(e) {
+    msgEl.textContent = '⚠️ ስህተት: ' + e.message;
+    msgEl.style.color = 'red';
+    msgEl.style.display = 'block';
   }
 };
 
@@ -162,6 +210,7 @@ onAuthStateChanged(auth, async (user) => {
         document.getElementById('mainApp').classList.remove('show');
         document.getElementById('loginScreen').classList.remove('hidden');
         document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('resetRequestForm').style.display = 'none';
         document.getElementById('changePassForm').style.display = 'block';
         return;
       }
@@ -169,17 +218,86 @@ onAuthStateChanged(auth, async (user) => {
 
     await loadUserHeader(user);
     await loadAllData();
+    applyPermissionsUI(); 
   } else {
     document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('mainApp').classList.remove('show');
     document.getElementById('loginForm').style.display = 'block';
     document.getElementById('changePassForm').style.display = 'none';
+    document.getElementById('resetRequestForm').style.display = 'none';
     currentUserPharmacyId = null;
+    currentUserRole = 'employee';
   }
 });
 
+// Apply Permissions to Tabs
+async function applyPermissionsUI() {
+  const tabInputs = document.querySelectorAll('input[name="tabs"]');
+  const tabsLabels = document.querySelectorAll('.tabs label');
+
+  // Owners see everything
+  if (currentUserRole === 'owner') return;
+
+  let perms = null;
+  try {
+    const permDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'));
+    if (permDoc.exists()) {
+      perms = permDoc.data();
+    }
+  } catch(e) { console.error("Error loading permissions:", e); }
+
+  if (!perms) return;
+
+  const rolePerms = currentUserRole === 'manager' ? perms.manager : perms.accountant;
+  if (!rolePerms) return;
+
+  const tabMap = {
+    'tab1': rolePerms.med,
+    'tab2': rolePerms.sell,
+    'tab3': rolePerms.exp,
+    'tab4': rolePerms.inv,
+    'tab5': rolePerms.daily,
+    'tab6': rolePerms.monthly,
+    'tab7': rolePerms.dash,
+    'tab8': rolePerms.settings,
+    'tab9': true 
+  };
+
+  const labelMap = {
+    'tab1': 'መድሃኒቶች',
+    'tab2': 'ሽያጭ',
+    'tab3': 'ወጪ',
+    'tab4': 'ክምችት',
+    'tab5': 'የቀን ገቢ',
+    'tab6': 'የወር ገቢ',
+    'tab7': 'Dashboard',
+    'tab8': 'Settings',
+    'tab9': 'ዱቤ'
+  };
+
+  let firstAvailableTab = null;
+
+  for (const [tabId, isAllowed] of Object.entries(tabMap)) {
+    const inputEl = document.getElementById(tabId);
+    if (inputEl && inputEl.parentElement.tagName === 'DIV') {
+      const labelEl = document.querySelector(`.tabs label[for="${tabId}"]`);
+      
+      if (!isAllowed) {
+        if(inputEl) inputEl.style.display = 'none';
+        if(labelEl) labelEl.style.display = 'none';
+      } else if (!firstAvailableTab) {
+        firstAvailableTab = tabId;
+      }
+    }
+  }
+
+  if (firstAvailableTab && !document.getElementById(firstAvailableTab).checked) {
+    document.getElementById(firstAvailableTab).checked = true;
+  }
+}
+
 // ==========================================
-// 📦 DATA LOADING (የፋርማሲውን ዳታ ብቻ የሚያመጣ)
+// 📦 DATA LOADING 
 // ==========================================
 
 async function loadAllData() {
@@ -999,20 +1117,71 @@ window.addCreditPayment = async function() {
 // ---- Settings & Utilities ----
 async function loadSettings() {
   if(currentUserPharmacyId) {
-    const d = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
-    if(d.exists()) {
-      document.getElementById('settingPharmacyName').value = d.data().name || '';
-      currentBizType = d.data().bizType || 'retail';
-      lowStockThreshold = d.data().lowStockThreshold || 10;
-      document.getElementById('settingBizType').value = currentBizType;
-      document.getElementById('settingLowStockThreshold').value = lowStockThreshold;
-    }
+    try {
+      const d = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
+      if(d.exists()) {
+        const data = d.data();
+        document.getElementById('settingPharmacyName').value = data.name || '';
+        currentBizType = data.bizType || 'retail';
+        lowStockThreshold = data.lowStockThreshold || 10;
+        
+        document.getElementById('settingBizType').value = currentBizType;
+        document.getElementById('settingLowStockThreshold').value = lowStockThreshold;
+      }
+    } catch(e) { console.error("Error loading settings:", e); }
   }
   applyBizTypeUI();
+  
   const qc = document.getElementById('quickCat');
   qc.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
   allCategories.forEach(c => { qc.innerHTML += `<option value="${c}">${c}</option>`; });
   renderCreditList();
+
+  // Load permissions if owner
+  if (currentUserRole === 'owner') {
+    try {
+      const permDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'));
+      if (permDoc.exists()) {
+        const p = permDoc.data();
+        if (p.manager) {
+          document.getElementById('tabperm_mgr_med').checked = p.manager.med;
+          document.getElementById('tabperm_mgr_sell').checked = p.manager.sell;
+          document.getElementById('tabperm_mgr_exp').checked = p.manager.exp;
+          document.getElementById('tabperm_mgr_inv').checked = p.manager.inv;
+          document.getElementById('tabperm_mgr_daily').checked = p.manager.daily;
+          document.getElementById('tabperm_mgr_monthly').checked = p.manager.monthly;
+          document.getElementById('tabperm_mgr_dash').checked = p.manager.dash;
+          document.getElementById('tabperm_mgr_settings').checked = p.manager.settings;
+        }
+        if (p.accountant) {
+          document.getElementById('tabperm_acc_med').checked = p.accountant.med;
+          document.getElementById('tabperm_acc_sell').checked = p.accountant.sell;
+          document.getElementById('tabperm_acc_exp').checked = p.accountant.exp;
+          document.getElementById('tabperm_acc_inv').checked = p.accountant.inv;
+          document.getElementById('tabperm_acc_daily').checked = p.accountant.daily;
+          document.getElementById('tabperm_acc_monthly').checked = p.accountant.monthly;
+          document.getElementById('tabperm_acc_dash').checked = p.accountant.dash;
+          document.getElementById('tabperm_acc_settings').checked = p.accountant.settings;
+        }
+      }
+    } catch(e) { console.error(e); }
+  }
+
+  // Load Support Info
+  try {
+    const supportDoc = await getDoc(doc(db, 'settings', 'support'));
+    const supportDiv = document.getElementById('supportInfoDisplay');
+    if (supportDoc.exists()) {
+      const s = supportDoc.data();
+      supportDiv.innerHTML = `
+        <div class="list-item"><div class="info"><div class="name">📞 ስልክ</div></div><div class="amount" style="font-size:13px;">${s.phone || '-'}</div></div>
+        <div class="list-item"><div class="info"><div class="name">📧 ኢሜይል</div></div><div class="amount" style="font-size:13px;">${s.email || '-'}</div></div>
+        <div class="list-item"><div class="info"><div class="name">✈️ ቴሌግራም</div></div><div class="amount" style="font-size:13px;">${s.telegram || '-'}</div></div>
+      `;
+    } else {
+      supportDiv.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">መረጃ አልተገኘም።</p>';
+    }
+  } catch(e) { console.error(e); }
 }
 
 window.savePharmacyName = async function() {
@@ -1032,7 +1201,6 @@ window.saveBizType = async function() {
     try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { bizType: type }); } catch(e) { console.error(e); }
   }
   applyBizTypeUI();
-  loadAllData();
 };
 
 window.saveLowStockThreshold = async function() {
@@ -1142,6 +1310,35 @@ window.resetSelectedDate = async function() {
     alert('✅ ተጠፍቷል!');
     loadAllData();
   } catch(e) { alert(e.message); }
+};
+
+window.factoryReset = async function() {
+  if(!confirm('⚠️ ሁሉንም ዳታ (መድሃኒት፣ ሽያጭ፣ ወጪ፣ ወዘተ) ማጥፋት ትፈልጋለህ? ይህ ተግባር አይመለስም!')) return;
+  if(!confirm('🚨 እርግጠኛ ነህ? ሁሉንም ዳታ ይጠፋል!')) return;
+  
+  const btn = event.target;
+  btn.textContent = '⏳ በማጽዳት ላይ...';
+  btn.disabled = true;
+
+  try {
+    const collectionsToClear = ['medicines', 'sales', 'expenses', 'fixedExpenses', 'creditPayments', 'quickSales', 'categories', 'expenseCategories', 'branches', 'customers'];
+    
+    for (const colName of collectionsToClear) {
+      const q = query(collection(db, colName), where('pharmacyId', '==', currentUserPharmacyId));
+      const snap = await getDocs(q);
+      const batch = writeBatch(db);
+      snap.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+    }
+    
+    alert('✅ ሁሉም ዳታ በተሳካ ሁኔታ ተጠፍቷል!');
+    loadAllData();
+  } catch(e) {
+    alert('⚠️ ስህተት: ' + e.message);
+  } finally {
+    btn.textContent = '🚨 ሁሉንም ዳታ አጥፋ';
+    btn.disabled = false;
+  }
 };
 
 window.printReport = function() {
