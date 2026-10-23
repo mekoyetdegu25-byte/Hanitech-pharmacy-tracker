@@ -287,6 +287,20 @@
   header { 
     width: 100%;
     height: 70px;
+@media (min-width: 768px) {
+  /* ገጹ ሙሉ ስክሪኑን እንዲይዝ */
+  body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; overflow: hidden; }
+  
+  #mainApp.show { 
+    display: block; 
+    height: 100vh; 
+    width: 100%;
+  }
+
+  /* ራስጌው (Header) */
+  header { 
+    width: 100%;
+    height: 70px;
     border-radius: 0; 
     margin-bottom: 0; 
     padding: 0 24px; 
@@ -299,14 +313,14 @@
     top: 0; left: 0;
   }
 
-  /* 3. ባነሮቹ ከራስጌው በታች በቀኝ በኩል እንዲታዩ */
+  /* ባነሮቹ ከራስጌው በታች በቀኝ በኩል እንዲታዩ */
   #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner {
-    margin: 10px 24px 0 284px; /* 260px (ታቦች) + 24px (ክፍተት) */
+    margin: 10px 24px 0 284px; 
     position: relative;
     z-index: 500;
   }
 
-  /* 4. 👈 የግራ በኩል ታቦች (Sidebar) - ተለያይተው ይቆማሉ */
+  /* 👈 የግራ በኩል ታቦች (Sidebar) - ተለያይተው ይቆማሉ */
   .tabs-wrapper { 
     position: fixed; 
     top: 70px; 
@@ -326,6 +340,7 @@
     flex-direction: column; 
     padding: 0 16px; 
     gap: 8px; 
+    width: 100%;
   }
   
   .tabs label { 
@@ -351,7 +366,7 @@
     font-weight: 800;
   }
 
-  /* 5. 👉 የቀኝ በኩል ይዘት (Panels) - ከታቦቹ ጎን ይቀመጣል */
+  /* 👉 የቀኝ በኩል ይዘት (Panels) - ከታቦቹ ጎን ይቀመጣል */
   .panels { 
     margin-left: 260px; /* የታቦቹን ስፋት ይተዋል */
     margin-top: 70px; /* የራስጌውን ስፋት ይተዋል */
@@ -376,6 +391,7 @@
     grid-column: 1 / -1; 
   }
   
+  /* የካርድ መልክ እንዲኖራቸው */
   .section-collapsible { 
     margin-bottom: 0; 
     box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
@@ -385,7 +401,9 @@
   }
   body.dark .section-collapsible { background: #2d3748; border-color: #4a5568; }
 
+  /* ዳሽቦርድ ካርዶች */
   .dash-grid { grid-template-columns: 1fr 1fr; }
+}
 }
 </style>
 </head>
