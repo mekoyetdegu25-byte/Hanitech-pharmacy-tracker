@@ -6,1027 +6,876 @@
 <title>Hanitech Pharmacy Tracker</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background: #f0f4f8; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; transition: background 0.3s, color 0.3s; }
-  body.dark { background: #1a202c; color: #e2e8f0; }
-  body.dark .section-collapsible, body.dark .login-box { background: #2d3748; color: #e2e8f0; }
-  body.dark label { color: #a0aec0; }
-  body.dark input, body.dark select { background: #4a5568; border-color: #4a5568; color: #e2e8f0; }
-  body.dark input:focus, body.dark select:focus { border-color: #63b3ed; }
-  body.dark .section-header .sec-title { color: #63b3ed; }
-  body.dark .cat-header { background: linear-gradient(135deg, #2c5282, #2a4365); border-color: #2c5282; }
-  body.dark .cat-body { background: #2d3748; border-color: #2c5282; }
-  body.dark .list-item { background: #4a5568; border-color: #4a5568; }
-  body.dark .list-item .name { color: #e2e8f0; }
-  body.dark .list-item .meta { color: #a0aec0; }
-  body.dark .list-item .qty-input { background: #2d3748; color: #63b3ed; border-color: #718096; }
-  body.dark .info-banner { background: #2c5282; border-color: #3182ce; color: #bee3f8; }
-  body.dark .summary-box { background: linear-gradient(135deg, #2a4365, #1a365d); }
-  body.dark .summary-box.green { background: linear-gradient(135deg, #22543d, #1c4532); }
-  body.dark .summary-box.red { background: linear-gradient(135deg, #742a2a, #63171b); }
-  body.dark .expiry-alert { color: #fc8181; }
-  body.dark .low-stock { color: #fbd38d; }
-  body.dark .cat-tag { background: #2d3748; border-color: #2c5282; color: #63b3ed; }
-  body.dark .perm-section { background: #4a5568; border-color: #4a5568; }
-  body.dark .perm-title { color: #63b3ed; }
-  body.dark .toggle-row label { color: #e2e8f0; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: #f0f4f8; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; transition: background 0.3s, color 0.3s; }
+body.dark { background: #1a202c; color: #e2e8f0; }
+body.dark .section-collapsible, body.dark .login-box { background: #2d3748; color: #e2e8f0; }
+body.dark label { color: #a0aec0; }
+body.dark input, body.dark select { background: #4a5568; border-color: #4a5568; color: #e2e8f0; }
+body.dark input:focus, body.dark select:focus { border-color: #63b3ed; }
+body.dark .section-header .sec-title { color: #63b3ed; }
+body.dark .cat-header { background: linear-gradient(135deg, #2c5282, #2a4365); border-color: #2c5282; }
+body.dark .cat-body { background: #2d3748; border-color: #2c5282; }
+body.dark .list-item { background: #4a5568; border-color: #4a5568; }
+body.dark .list-item .name { color: #e2e8f0; }
+body.dark .list-item .meta { color: #a0aec0; }
+body.dark .list-item .qty-input { background: #2d3748; color: #63b3ed; border-color: #718096; }
+body.dark .info-banner { background: #2c5282; border-color: #3182ce; color: #bee3f8; }
+body.dark .summary-box { background: linear-gradient(135deg, #2a4365, #1a365d); }
+body.dark .summary-box.green { background: linear-gradient(135deg, #22543d, #1c4532); }
+body.dark .summary-box.red { background: linear-gradient(135deg, #742a2a, #63171b); }
+body.dark .expiry-alert { color: #fc8181; }
+body.dark .low-stock { color: #fbd38d; }
+body.dark .cat-tag { background: #2d3748; border-color: #2c5282; color: #63b3ed; }
+body.dark .perm-section { background: #4a5568; border-color: #4a5568; }
+body.dark .perm-title { color: #63b3ed; }
+body.dark .toggle-row label { color: #e2e8f0; } 
 
-  /* Splash Screen */
-  #splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
-  #splashScreen.fade-out { opacity: 0; pointer-events: none; }
-  .logo-text { font-size: 32px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
-  .logo-text span { color: #63b3ed; }
-  .sub-text { font-size: 14px; margin-top: 10px; color: #a0aec0; font-weight: 600; letter-spacing: 2px;}
+/* Splash Screen */
+#splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
+#splashScreen.fade-out { opacity: 0; pointer-events: none; }
+.logo-text { font-size: 32px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+.logo-text span { color: #63b3ed; }
+.sub-text { font-size: 14px; margin-top: 10px; color: #a0aec0; font-weight: 600; letter-spacing: 2px;} 
 
-  #loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
-  #loginScreen.hidden { display: none; }
-  .login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
-  .login-box h1 { text-align: center; color: #1a365d; font-size: 20px; margin-bottom: 20px; font-weight: 800;}
-  body.dark .login-box h1 { color: #63b3ed; }
-  .form-group { margin-bottom: 16px; }
-  input { width: 100%; padding: 14px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f7fafc; outline: none; }
-  input:focus { border-color: #3182ce; background: #fff; }
-  .btn-login { width: 100%; padding: 15px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; cursor: pointer; margin-top: 8px; }
+#loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+#loginScreen.hidden { display: none; }
+.login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
+.login-box h1 { text-align: center; color: #1a365d; font-size: 20px; margin-bottom: 20px; font-weight: 800;}
+body.dark .login-box h1 { color: #63b3ed; }
+.form-group { margin-bottom: 16px; }
+input { width: 100%; padding: 14px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f7fafc; outline: none; }
+input:focus { border-color: #3182ce; background: #fff; }
+.btn-login { width: 100%; padding: 15px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; cursor: pointer; margin-top: 8px; } 
 
-  #mainApp { display: none; }
-  #mainApp.show { display: block; }
-  header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 0 0 16px 16px; margin-bottom: 10px; }
-  header .h-title { font-size: 15px; font-weight: 800; }
-  header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spacing: 0.5px; }
-  .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+#mainApp { display: none; }
+#mainApp.show { display: block; }
+header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 0 0 16px 16px; margin-bottom: 10px; }
+header .h-title { font-size: 15px; font-weight: 800; }
+header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spacing: 0.5px; }
+.btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; } 
 
-  .tabs-wrapper { position: sticky; top: 60px; z-index: 99; background: #f0f4f8; }
-  body.dark .tabs-wrapper { background: #1a202c; }
-  .tabs { display: flex; background: transparent; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
-  .tabs::-webkit-scrollbar { display: none; }
-  input[type="radio"][name="tabs"] { display: none !important; }
-  .tabs label { flex: 0 0 auto; min-width: 75px; text-align: center; padding: 10px 6px; font-size: 12px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
-  body.dark .tabs label { background: #2d3748; color: #a0aec0; }
-  .tabs label i { font-size: 20px; font-style: normal; line-height: 1; margin-bottom: 2px;}
-  
-  #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { color: #2c5282; background: #ebf4ff; border-color: #90cdf4; box-shadow: 0 4px 12px rgba(44,82,130,0.15);}
-  body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"] { color: #63b3ed; background: #4a5568; border-color: #63b3ed; }
- 
-  .panel { display: none; padding: 14px; }
-  #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { display: block; }
-  
-  .section-collapsible { background: #fff; border-radius: 14px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
-  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; }
-  .section-header .sec-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-  .section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; display: inline-block; }
-  .section-header.open .sec-arrow { transform: rotate(90deg); }
-  .section-header .sec-icon { font-size: 18px; }
-  .section-header .sec-title { font-size: 14px; font-weight: 800; color: #2c5282; }
-  .section-body { display: none; padding: 0 14px 14px 14px; border-top: 1px solid #edf2f7; padding-top: 12px;}
-  .section-body.open { display: block; }
+.tabs-wrapper { position: sticky; top: 60px; z-index: 99; background: #f0f4f8; }
+body.dark .tabs-wrapper { background: #1a202c; }
+.tabs { display: flex; background: transparent; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
+.tabs::-webkit-scrollbar { display: none; }
+input[type="radio"][name="tabs"] { display: none !important; }
+.tabs label { flex: 0 0 auto; min-width: 75px; text-align: center; padding: 10px 6px; font-size: 12px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
+body.dark .tabs label { background: #2d3748; color: #a0aec0; }
+.tabs label i { font-size: 20px; font-style: normal; line-height: 1; margin-bottom: 2px;} 
 
-  label.field-label { display: block; font-size: 12.5px; font-weight: 600; color: #4a5568; margin-bottom: 5px; margin-top: 10px; }
-  input[type="text"], input[type="number"], input[type="date"], input[type="month"], select { width: 100%; padding: 14px; font-size: 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #f7fafc; outline: none; }
-  input:focus, select:focus { border-color: #3182ce; background: #fff; }
-  .btn { display: block; width: 100%; padding: 15px; font-size: 16px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; margin-top: 14px; }
-  .btn-primary { background: #2c5282; color: #fff; }
-  .btn-success { background: #276749; color: #fff; }
-  .btn-danger { background: #c53030; color: #fff; }
-  .btn-warning { background: #dd6b20; color: #fff; }
-  
-  .summary-box { background: linear-gradient(135deg, #2c5282, #1a365d); color: #fff; border-radius: 14px; padding: 18px; margin-bottom: 14px; text-align: center; }
-  .summary-box.green { background: linear-gradient(135deg, #276749, #22543d); }
-  .summary-box.red { background: linear-gradient(135deg, #c53030, #9b2c2c); }
-  .summary-box .label { font-size: 12px; opacity: 0.85; margin-bottom: 4px; }
-  .summary-box .value { font-size: 26px; font-weight: 800; }
+#tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { color: #2c5282; background: #ebf4ff; border-color: #90cdf4; box-shadow: 0 4px 12px rgba(44,82,130,0.15);}
+body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"] { color: #63b3ed; background: #4a5568; border-color: #63b3ed; } 
 
-  .list-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 12px; background: #f7fafc; border-radius: 10px; margin-bottom: 8px; border: 1px solid #edf2f7; }
-  .list-item .info { flex: 1; min-width: 0; }
-  .list-item .name { font-size: 14px; font-weight: 600; color: #2d3748; }
-  .list-item .meta { font-size: 11.5px; color: #718096; margin-top: 2px; }
-  .list-item .amount { font-size: 14px; font-weight: 700; color: #2c5282; margin-left: 10px; white-space: nowrap; }
-  .list-item .amount.red { color: #c53030; }
-  .list-item .qty-input { width: 65px; padding: 8px; font-size: 15px; text-align: center; border: 1.5px solid #cbd5e0; border-radius: 8px; margin-left: 8px; font-weight: 700; color: #2c5282; background: #fff; }
+.panel { display: none; padding: 14px; }
+#tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { display: block; } 
 
-  .cat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-  .cat-tag { display: inline-flex; align-items: center; gap: 5px; background: #fff; border: 1px solid #bee3f8; color: #2c5282; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-  .cat-tag .del { cursor: pointer; color: #c53030; font-weight: 800; font-size: 14px; padding: 0 2px; }
-  .cat-add-row { display: flex; gap: 6px; align-items: center; }
-  .cat-add-row input { padding: 9px 10px; font-size: 13.5px; flex: 1; }
-  .cat-add-row button { background: #2c5282; color: #fff; border: none; padding: 9px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.section-collapsible { background: #fff; border-radius: 14px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
+.section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; }
+.section-header .sec-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; display: inline-block; }
+.section-header.open .sec-arrow { transform: rotate(90deg); }
+.section-header .sec-icon { font-size: 18px; }
+.section-header .sec-title { font-size: 14px; font-weight: 800; color: #2c5282; }
+.section-body { display: none; padding: 0 14px 14px 14px; border-top: 1px solid #edf2f7; padding-top: 12px;}
+.section-body.open { display: block; } 
 
-  .info-banner { background: #ebf8ff; border: 1px solid #90cdf4; border-radius: 10px; padding: 12px; font-size: 12.5px; color: #2c5282; margin-bottom: 12px; line-height: 1.5; }
-  .expiry-alert { color: #e53e3e; font-weight: bold; font-size: 11.5px; }
-  .low-stock { color: #dd6b20; font-weight: bold; font-size: 11.5px; }
+label.field-label { display: block; font-size: 12.5px; font-weight: 600; color: #4a5568; margin-bottom: 5px; margin-top: 10px; }
+input[type="text"], input[type="number"], input[type="date"], input[type="month"], select { width: 100%; padding: 14px; font-size: 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #f7fafc; outline: none; }
+input:focus, select:focus { border-color: #3182ce; background: #fff; }
+.btn { display: block; width: 100%; padding: 15px; font-size: 16px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; margin-top: 14px; }
+.btn-primary { background: #2c5282; color: #fff; }
+.btn-success { background: #276749; color: #fff; }
+.btn-danger { background: #c53030; color: #fff; }
+.btn-warning { background: #dd6b20; color: #fff; } 
 
-  #expiryBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fed7d7; font-weight: bold; font-size: 13px; text-align: center; }
-  #stockAlertBanner { display: none; background: #fffaf0; color: #dd6b20; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fbd38d; font-weight: bold; font-size: 13px; text-align: center; }
-  #creditAlertBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fed7d7; font-weight: bold; font-size: 13px; text-align: center; }
+.summary-box { background: linear-gradient(135deg, #2c5282, #1a365d); color: #fff; border-radius: 14px; padding: 18px; margin-bottom: 14px; text-align: center; }
+.summary-box.green { background: linear-gradient(135deg, #276749, #22543d); }
+.summary-box.red { background: linear-gradient(135deg, #c53030, #9b2c2c); }
+.summary-box .label { font-size: 12px; opacity: 0.85; margin-bottom: 4px; }
+.summary-box .value { font-size: 26px; font-weight: 800; } 
 
-  .cat-section { margin-bottom: 10px; }
-  .cat-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: linear-gradient(135deg, #ebf4ff, #bee3f8); border-radius: 10px; cursor: pointer; border: 1px solid #90cdf4; }
-  .cat-header.open { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
-  .cat-header .cat-left { display: flex; align-items: center; gap: 8px; flex: 1; }
-  .cat-header .cat-arrow { font-size: 12px; font-weight: 900; color: #2c5282; transition: transform 0.2s; display: inline-block; }
-  .cat-header.open .cat-arrow { transform: rotate(90deg); }
-  .cat-header .cat-name { font-size: 14px; font-weight: 800; color: #1a365d; }
-  .cat-body { display: none; padding: 8px 6px 6px 6px; background: #fff; border: 1px solid #90cdf4; border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
-  .cat-body.open { display: block; }
+.list-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 12px; background: #f7fafc; border-radius: 10px; margin-bottom: 8px; border: 1px solid #edf2f7; }
+.list-item .info { flex: 1; min-width: 0; }
+.list-item .name { font-size: 14px; font-weight: 600; color: #2d3748; }
+.list-item .meta { font-size: 11.5px; color: #718096; margin-top: 2px; }
+.list-item .amount { font-size: 14px; font-weight: 700; color: #2c5282; margin-left: 10px; white-space: nowrap; }
+.list-item .amount.red { color: #c53030; }
+.list-item .qty-input { width: 65px; padding: 8px; font-size: 15px; text-align: center; border: 1.5px solid #cbd5e0; border-radius: 8px; margin-left: 8px; font-weight: 700; color: #2c5282; background: #fff; } 
 
-  .chart-container { position: relative; height: 250px; margin-bottom: 15px; }
+.cat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.cat-tag { display: inline-flex; align-items: center; gap: 5px; background: #fff; border: 1px solid #bee3f8; color: #2c5282; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.cat-tag .del { cursor: pointer; color: #c53030; font-weight: 800; font-size: 14px; padding: 0 2px; }
+.cat-add-row { display: flex; gap: 6px; align-items: center; }
+.cat-add-row input { padding: 9px 10px; font-size: 13.5px; flex: 1; }
+.cat-add-row button { background: #2c5282; color: #fff; border: none; padding: 9px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; } 
 
-  /* Dashboard Grid Layout (አዲስ) */
-  .dash-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
-  .dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: space-between; }
-  body.dark .dash-card { background: #2d3748; border-color: #4a5568; }
-  
-  .dash-header { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 700; color: #4a5568; margin-bottom: 12px; }
-  body.dark .dash-header { color: #a0aec0; }
-  
-  .dash-badge { background: #ebf8ff; color: #2b6cb0; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
-  .dash-badge.green { background: #c6f6d5; color: #22543d; }
-  .dash-badge.red { background: #fed7d7; color: #822727; }
-  
-  .dash-val-box { border-radius: 8px; padding: 16px; text-align: center; color: #fff; }
-  .dash-val-label { font-size: 12px; opacity: 0.9; margin-bottom: 4px; }
-  .dash-val-number { font-size: 24px; font-weight: 800; }
-  
-  .dash-list { list-style: none; padding: 0; margin: 0; }
-  .dash-list li { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed #edf2f7; }
-  body.dark .dash-list li { border-bottom-color: #4a5568; }
-  .dash-list li:last-child { border-bottom: none; padding-bottom: 0; }
+.info-banner { background: #ebf8ff; border: 1px solid #90cdf4; border-radius: 10px; padding: 12px; font-size: 12.5px; color: #2c5282; margin-bottom: 12px; line-height: 1.5; }
+.expiry-alert { color: #e53e3e; font-weight: bold; font-size: 11.5px; }
+.low-stock { color: #dd6b20; font-weight: bold; font-size: 11.5px; } 
 
+#expiryBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fed7d7; font-weight: bold; font-size: 13px; text-align: center; }
+#stockAlertBanner { display: none; background: #fffaf0; color: #dd6b20; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fbd38d; font-weight: bold; font-size: 13px; text-align: center; }
+#creditAlertBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fed7d7; font-weight: bold; font-size: 13px; text-align: center; } 
+
+.cat-section { margin-bottom: 10px; }
+.cat-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: linear-gradient(135deg, #ebf4ff, #bee3f8); border-radius: 10px; cursor: pointer; border: 1px solid #90cdf4; }
+.cat-header.open { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.cat-header .cat-left { display: flex; align-items: center; gap: 8px; flex: 1; }
+.cat-header .cat-arrow { font-size: 12px; font-weight: 900; color: #2c5282; transition: transform 0.2s; display: inline-block; }
+.cat-header.open .cat-arrow { transform: rotate(90deg); }
+.cat-header .cat-name { font-size: 14px; font-weight: 800; color: #1a365d; }
+.cat-body { display: none; padding: 8px 6px 6px 6px; background: #fff; border: 1px solid #90cdf4; border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
+.cat-body.open { display: block; } 
+
+.chart-container { position: relative; height: 250px; margin-bottom: 15px; } 
+
+/* Dashboard Grid Layout (አዲስ) */
+.dash-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+.dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: space-between; }
+body.dark .dash-card { background: #2d3748; border-color: #4a5568; } 
+
+.dash-header { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 700; color: #4a5568; margin-bottom: 12px; }
+body.dark .dash-header { color: #a0aec0; } 
+
+.dash-badge { background: #ebf8ff; color: #2b6cb0; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
+.dash-badge.green { background: #c6f6d5; color: #22543d; }
+.dash-badge.red { background: #fed7d7; color: #822727; } 
+
+.dash-val-box { border-radius: 8px; padding: 16px; text-align: center; color: #fff; }
+.dash-val-label { font-size: 12px; opacity: 0.9; margin-bottom: 4px; }
+.dash-val-number { font-size: 24px; font-weight: 800; } 
+
+.dash-list { list-style: none; padding: 0; margin: 0; }
+.dash-list li { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed #edf2f7; }
+body.dark .dash-list li { border-bottom-color: #4a5568; }
+.dash-list li:last-child { border-bottom: none; padding-bottom: 0; } 
+
+/* የተስተካከለው የዴስክቶፕ (Desktop) አቀማመጥ */
 @media (min-width: 768px) {
-  /* 1. ገጹ ሙሉ ስክሪኑን እንዲይዝ */
-  body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; overflow: hidden; }
-  
-  /* 2. ዋናው ገጽ ሁለት አምድ ይሆናል (ግራ ለታቦች፣ ቀኝ ለይዘት) */
-  #mainApp.show { 
-    display: grid; 
-    grid-template-columns: 260px 1fr; 
-    grid-template-rows: 70px 1fr;
-    height: 100vh; 
-    width: 100%;
-    max-width: 100%;
-  }
+    body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; } 
 
-  /* 3. ራስጌው (Header) በሁለቱም አምዶች ላይ ይዘልቃል */
-  header { 
-    grid-column: 1 / -1; 
-    grid-row: 1;
-    border-radius: 0; 
-    margin-bottom: 0; 
-    padding: 0 24px; 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 101;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+    #mainApp.show {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+    } 
 
-  /* 4. 👈 የግራ በኩል ታቦች (Sidebar) */
-  .tabs-wrapper { 
-    grid-column: 1; 
-    grid-row: 2;
-    position: static; 
-    height: 100%; 
-    background: #fff; 
-    border-right: 1px solid #e2e8f0; 
-    padding-top: 20px; 
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-  body.dark .tabs-wrapper { background: #2d3748; border-right: 1px solid #4a5568; }
+    header {
+        flex-shrink: 0;
+        height: 70px;
+        border-radius: 0;
+        margin-bottom: 0;
+        padding: 0 24px;
+        position: static;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 101;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    } 
 
-  input[type="radio"][name="tabs"] { display: none !important; }
+    .main-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: hidden;
+        background: #f0f4f8;
+    }
+    body.dark .main-content-wrapper { background: #1a202c; } 
 
-  .tabs { 
-    display: flex;
-    flex-direction: column; 
-    padding: 0 16px; 
-    gap: 8px; 
-    width: 100%;
-  }
-  
-  .tabs label { 
-    flex-direction: row; 
-    justify-content: flex-start; 
-    padding: 14px 20px; 
-    min-width: 100%; 
-    font-size: 15px;
-    box-shadow: none;
-    border: none;
-    border-radius: 10px;
-    background: transparent;
-  }
-  
-  .tabs label:hover { background: #edf2f7; }
-  body.dark .tabs label:hover { background: #4a5568; }
-  .tabs label i { margin-bottom: 0; margin-right: 15px; font-size: 24px;}
+    #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner {
+        margin: 15px 24px 0 24px;
+        flex-shrink: 0;
+    } 
 
-  #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { 
-    background: #ebf4ff; 
-    color: #2c5282;
-    border-left: 4px solid #2c5282; 
-    font-weight: 800;
-  }
+    .tabs-wrapper {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        overflow: hidden;
+        background: transparent;
+        position: static;
+    } 
 
-  /* 5. 👉 የቀኝ በኩል ይዘት (Panels) */
-  .panels { 
-    grid-column: 2; 
-    grid-row: 2;
-    padding: 24px; 
-    background: #f0f4f8;
-    overflow-y: auto;
-    height: 100%;
-  }
-  body.dark .panels { background: #1a202c; }
-  
-  .panel { padding: 0; width: 100%; }
-  
-  /* 6. ይዘቱ በ 2 ወይም 3 አምዶች እንዲሆን (ካርድ መልክ) */
-  #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
-    gap: 20px; 
-    align-items: start; 
-  }
-  
-  .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings { 
-    grid-column: 1 / -1; 
-  }
-  
-  .section-collapsible { 
-    margin-bottom: 0; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-    border: 1px solid #edf2f7;
-    background: #fff;
-    border-radius: 12px;
-  }
-  body.dark .section-collapsible { background: #2d3748; border-color: #4a5568; }
+    /* 👈 የግራ በኩል ታቦች (Sidebar) */
+    .tabs {
+        flex-direction: column;
+        width: 260px;
+        background: #fff;
+        border-right: 1px solid #e2e8f0;
+        padding: 24px 16px;
+        gap: 8px;
+        overflow-y: auto;
+        flex-shrink: 0;
+        height: 100%;
+    }
+    body.dark .tabs { background: #2d3748; border-right: 1px solid #4a5568; } 
 
-  .dash-grid { grid-template-columns: 1fr 1fr; }
+    .tabs label {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 14px 20px;
+        min-width: 100%;
+        font-size: 15px;
+        box-shadow: none;
+        border: none;
+        border-radius: 10px;
+        transition: all 0.2s;
+    } 
+
+    .tabs label:hover { background: #edf2f7; }
+    body.dark .tabs label:hover { background: #4a5568; } 
+
+    .tabs label i { margin-bottom: 0; margin-right: 15px; font-size: 24px; } 
+
+    #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] {
+        background: #ebf4ff;
+        color: #2c5282;
+        border-left: 4px solid #2c5282;
+        font-weight: 800;
+    }
+    body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"] {
+        background: #4a5568;
+        color: #63b3ed;
+        border-left: 4px solid #63b3ed;
+    } 
+
+    /* 👉 የቀኝ በኩል ይዘቶች (Panels) */
+    .panels {
+        flex: 1;
+        padding: 24px;
+        background: #f0f4f8;
+        overflow-y: auto;
+    }
+    body.dark .panels { background: #1a202c; } 
+
+    .panel { padding: 0; } 
+
+    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+        align-items: start;
+    } 
+
+    .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings {
+        grid-column: 1 / -1;
+    } 
+
+    .section-collapsible {
+        margin-bottom: 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border: 1px solid #edf2f7;
+    } 
+
+    /* Dashboard Grid Layout (Desktop) */
+    .dash-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
-<body>
+<body> 
 
 <!-- የሎጎ መግቢያ ገጽ (Splash Screen) -->
 <div id="splashScreen">
-  <div class="logo-text">HaniTech <span>Digital</span></div>
-  <div class="sub-text">Pharmacy Tracker</div>
-</div>
+<div class="logo-text">HaniTech <span>Digital</span></div>
+<div class="sub-text">Pharmacy Tracker</div>
+</div> 
 
 <div id="loginScreen" class="hidden">
-  <div class="login-box">
-    <h1>💊 Hanitech Pharmacy</h1>
-    
-    <div id="loginForm">
-      <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-      <div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
-      <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="Password"></div>
-      <button class="btn-login" onclick="login()">🔓 ግባ</button>
-      <button class="btn-login" style="background:#e2e8f0; color:#4a5568; margin-top:8px; font-size:14px;" onclick="showResetRequest()">🔑 ፓስወርድ ረሳሁ?</button>
-    </div>
+<div class="login-box">
+<h1>💊 Hanitech Pharmacy</h1> 
 
-    <div id="resetRequestForm" style="display:none;">
-      <h2 style="font-size:16px; text-align:center; margin-bottom:10px; color:#2c5282;">🔑 ፓስወርድ ማስተካከያ ጥያቄ</h2>
-      <div id="resetRequestMsg" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-      <div class="form-group"><label>📧 ኢሜይልዎን ያስገቡ</label><input type="email" id="resetEmail" placeholder="Email"></div>
-      <button class="btn-login" onclick="submitPasswordRequest()">📩 ጥያቄ ላክ</button>
-      <button class="btn-login" style="background:#a0aec0; margin-top:8px; font-size:14px;" onclick="backToLogin()">⬅️ ተመለስ</button>
-    </div>
+<div id="loginForm">
+<div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
+<div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
+<div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="Password"></div>
+<button class="btn-login" onclick="login()">🔓 ግባ</button>
+<button class="btn-login" style="background:#e2e8f0; color:#4a5568; margin-top:8px; font-size:14px;" onclick="showResetRequest()">🔑 ፓስወርድ ረሳሁ?</button>
+</div> 
 
-    <div id="changePassForm" style="display:none;">
-      <div style="background:#fffaf0; color:#dd6b20; padding:10px; border-radius:8px; font-size:13px; margin-bottom:15px; border:1px solid #fbd38d;">
-        ⚠️ እንኳን ደህና መጡ! እባክዎ መጀመሪያ የጊዜያዊ ፓስወርድዎን ወደ አዲስ ይቀይሩ።
-      </div>
-      <div id="changePassError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-      <div class="form-group"><label>🔐 አዲስ ፓስወርድ</label><input type="password" id="firstTimeNewPass" placeholder="ቢያንስ 6 ፊደል"></div>
-      <button class="btn-login" onclick="saveFirstTimePassword()">💾 ፓስወርድ ቀይር እና ግባ</button>
-      <button class="btn-login" style="background:#a0aec0; margin-top:8px; font-size:14px;" onclick="logout()">🚪 ውጣ</button>
-    </div>
-  </div>
+<div id="resetRequestForm" style="display:none;">
+<h2 style="font-size:16px; text-align:center; margin-bottom:10px; color:#2c5282;">🔑 ፓስወርድ ማስተካከያ ጥያቄ</h2>
+<div id="resetRequestMsg" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
+<div class="form-group"><label>📧 ኢሜይልዎን ያስገቡ</label><input type="email" id="resetEmail" placeholder="Email"></div>
+<button class="btn-login" onclick="submitPasswordRequest()">📩 ጥያቄ ላክ</button>
+<button class="btn-login" style="background:#a0aec0; margin-top:8px; font-size:14px;" onclick="backToLogin()">⬅️ ተመለስ</button>
+</div> 
+
+<div id="changePassForm" style="display:none;">
+<div style="background:#fffaf0; color:#dd6b20; padding:10px; border-radius:8px; font-size:13px; margin-bottom:15px; border:1px solid #fbd38d;">
+⚠️ እንኳን ደህና መጡ! እባክዎ መጀመሪያ የጊዜያዊ ፓስወርድዎን ወደ አዲስ ይቀይሩ።
 </div>
+<div id="changePassError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
+<div class="form-group"><label>🔐 አዲስ ፓስወርድ</label><input type="password" id="firstTimeNewPass" placeholder="ቢያንስ 6 ፊደል"></div>
+<button class="btn-login" onclick="saveFirstTimePassword()">💾 ፓስወርድ ቀይር እና ግባ</button>
+<button class="btn-login" style="background:#a0aec0; margin-top:8px; font-size:14px;" onclick="logout()">🚪 ውጣ</button>
+</div>
+</div>
+</div> 
 
 <div id="mainApp">
-  <header>
-    <div class="h-left" style="display: flex; align-items: center; gap: 10px;">
-      <div style="background: #1a202c; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; flex-shrink: 0;">
-        <span id="hdrUserInitial">A</span>
-      </div>
-      <div style="display: flex; flex-direction: column; line-height: 1.2;">
-        <div class="h-title" id="hdrPharmacyName" style="font-size: 15px; font-weight: 800;">Pharmacy Name</div>
-        <div class="h-brand">HaniTech Digital</div>
-        <div id="hdrUserEmail" style="font-size: 11px; opacity: 0.8; margin-top: 2px;">email@example.com</div>
-      </div>
-    </div>
-    <div class="h-right" style="display: flex; align-items: center; gap: 8px;">
-      <span id="hdrUserRole" style="background: #fefcbf; color: #975a16; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold;">👑 ባለቤት</span>
-      <button class="btn-logout-hdr" onclick="logout()">🚪</button>
-    </div>
-  </header>
+<header>
+<div class="h-left" style="display: flex; align-items: center; gap: 10px;">
+<div style="background: #1a202c; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; flex-shrink: 0;">
+<span id="hdrUserInitial">A</span>
+</div>
+<div style="display: flex; flex-direction: column; line-height: 1.2;">
+<div class="h-title" id="hdrPharmacyName" style="font-size: 15px; font-weight: 800;">Pharmacy Name</div>
+<div class="h-brand">HaniTech Digital</div>
+<div id="hdrUserEmail" style="font-size: 11px; opacity: 0.8; margin-top: 2px;">email@example.com</div>
+</div>
+</div>
+<div class="h-right" style="display: flex; align-items: center; gap: 8px;">
+<span id="hdrUserRole" style="background: #fefcbf; color: #975a16; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold;">👑 ባለቤት</span>
+<button class="btn-logout-hdr" onclick="logout()">🚪</button>
+</div>
+</header> 
 
-  <div class="main-content-wrapper">
-    <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
-    <div id="stockAlertBanner">🚨 <span id="stockAlertText"></span></div>
-    <div id="creditAlertBanner">💳 <span id="creditAlertText"></span></div>
-    <div id="suspendedWarningBanner" style="display:none; background:#fed7d7; color:#822727; padding:12px; margin: 0 14px 10px; border-radius:10px; font-weight:bold; font-size:13px; text-align:center;">
-      🚫 ይህ ፋርማሲ በአድሚን ተቆልፏል! እባክዎ አድሚኑን ያግኙ።
-    </div>
+<div class="main-content-wrapper">
+<div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
+<div id="stockAlertBanner">🚨 <span id="stockAlertText"></span></div>
+<div id="creditAlertBanner">💳 <span id="creditAlertText"></span></div>
+<div id="suspendedWarningBanner" style="display:none; background:#fed7d7; color:#822727; padding:12px; margin: 0 14px 10px; border-radius:10px; font-weight:bold; font-size:13px; text-align:center;">
+🚫 ይህ ፋርማሲ በአድሚን ተቆልፏል! እባክዎ አድሚኑን ያግኙ።
+</div> 
 
-    <div class="tabs-wrapper">
-      <input type="radio" name="tabs" id="tab1" checked>
-      <input type="radio" name="tabs" id="tab2">
-      <input type="radio" name="tabs" id="tab3">
-      <input type="radio" name="tabs" id="tab4">
-      <input type="radio" name="tabs" id="tab5">
-      <input type="radio" name="tabs" id="tab6">
-      <input type="radio" name="tabs" id="tab7">
-      <input type="radio" name="tabs" id="tab8">
-      <input type="radio" name="tabs" id="tab9">
+<div class="tabs-wrapper">
+<input type="radio" name="tabs" id="tab1" checked>
+<input type="radio" name="tabs" id="tab2">
+<input type="radio" name="tabs" id="tab3">
+<input type="radio" name="tabs" id="tab4">
+<input type="radio" name="tabs" id="tab5">
+<input type="radio" name="tabs" id="tab6">
+<input type="radio" name="tabs" id="tab7">
+<input type="radio" name="tabs" id="tab8">
+<input type="radio" name="tabs" id="tab9"> 
 
-      <div class="tabs">
-        <label for="tab1"><i>💊</i>መድሃኒቶች</label>
-        <label for="tab2"><i>🛒</i>ሽያጭ</label>
-        <label for="tab3"><i>💸</i>ወጪ</label>
-        <label for="tab4"><i>📦</i>ክምችት</label>
-        <label for="tab5"><i>📅</i>የቀን ገቢ</label>
-        <label for="tab6"><i>📆</i>የወር ገቢ</label>
-        <label for="tab7"><i>📊</i>Dashboard</label>
-        <label for="tab8"><i>⚙️</i>Settings</label>
-        <label for="tab9" id="tabCreditLabel" style="display:none;"><i>💳</i>ዱቤ</label>
-      </div>
+<div class="tabs">
+<label for="tab1"><i>💊</i>መድሃኒቶች</label>
+<label for="tab2"><i>🛒</i>ሽያጭ</label>
+<label for="tab3"><i>💸</i>ወጪ</label>
+<label for="tab4"><i>📦</i>ክምችት</label>
+<label for="tab5"><i>📅</i>የቀን ገቢ</label>
+<label for="tab6"><i>📆</i>የወር ገቢ</label>
+<label for="tab7"><i>📊</i>Dashboard</label>
+<label for="tab8"><i>⚙️</i>Settings</label>
+<label for="tab9" id="tabCreditLabel" style="display:none;"><i>💳</i>ዱቤ</label>
+</div> 
 
-      <div class="panels">
-        <!-- PANEL 1 -->
-        <div class="panel" id="panel1">
-          <div class="section-collapsible">
-            <div class="section-header" id="hdrCatMgr" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">ምድቦችን አስተዳድር</span></div>
-            </div>
-            <div class="section-body" id="bodyCatMgr">
-              <div class="cat-add-row">
-                <input type="text" id="newCat" placeholder="አዲስ ዋና ምድብ" autocomplete="off">
-                <button onclick="addCategory()">+ ጨምር</button>
-              </div>
-              <div class="cat-tags" id="catListDisplay" style="margin-top:10px;"></div>
-            </div>
-          </div>
-          <div class="section-collapsible full-width">
-            <div class="section-header" id="hdrAddMed" onclick="toggleSection('hdrAddMed','bodyAddMed')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">አዲስ ምርት ጨምር</span></div>
-            </div>
-            <div class="section-body" id="bodyAddMed">
-              <label class="field-label">📦 ዓይነት</label>
-              <select id="medType" onchange="onMedTypeChange()">
-                <option value="medicine">💊 መድሃኒት</option>
-                <option value="cosmetic">🧴 ኮስሞቲክስ</option>
-              </select>
-              <label class="field-label">📁 ዋና ምድብ</label>
-              <select id="medCategory"></select>
-              <label class="field-label">📂 ንዑስ ምድብ</label>
-              <input type="text" id="medSubcategory" placeholder="ለምሳሌ: ታብሌት" autocomplete="off">
-              <label class="field-label">💊 የምርት ስም</label>
-              <input type="text" id="medName" placeholder="ለምሳሌ: Paracetamol" autocomplete="off">
-              
-              <div id="medicineOnlyFields">
-                <label class="field-label">🔢 የባች ቁጥር</label>
-                <input type="text" id="medBatch" placeholder="BATCH-001" autocomplete="off">
-                <label class="field-label">📅 የማለቂያ ቀን</label>
-                <input type="date" id="medExpiry">
-                <label class="field-label">🏭 አቅራቢ (Supplier)</label>
-                <input type="text" id="medSupplier" placeholder="ለምሳሌ: Addis Pharma" autocomplete="off">
-              </div>
+<div class="panels">
+<!-- PANEL 1 -->
+<div class="panel" id="panel1">
+<div class="section-collapsible">
+<div class="section-header" id="hdrCatMgr" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">ምድቦችን አስተዳድር</span></div>
+</div>
+<div class="section-body" id="bodyCatMgr">
+<div class="cat-add-row">
+<input type="text" id="newCat" placeholder="አዲስ ዋና ምድብ" autocomplete="off">
+<button onclick="addCategory()">+ ጨምር</button>
+</div>
+<div class="cat-tags" id="catListDisplay" style="margin-top:10px;"></div>
+</div>
+</div>
+<div class="section-collapsible full-width">
+<div class="section-header" id="hdrAddMed" onclick="toggleSection('hdrAddMed','bodyAddMed')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">አዲስ ምርት ጨምር</span></div>
+</div>
+<div class="section-body" id="bodyAddMed">
+<label class="field-label">📦 ዓይነት</label>
+<select id="medType" onchange="onMedTypeChange()">
+<option value="medicine">💊 መድሃኒት</option>
+<option value="cosmetic">🧴 ኮስሞቲክስ</option>
+</select>
+<label class="field-label">📁 ዋና ምድብ</label>
+<select id="medCategory"></select>
+<label class="field-label">📂 ንዑስ ምድብ</label>
+<input type="text" id="medSubcategory" placeholder="ለምሳሌ: ታብሌት" autocomplete="off">
+<label class="field-label">💊 የምርት ስም</label>
+<input type="text" id="medName" placeholder="ለምሳሌ: Paracetamol" autocomplete="off"> 
 
-              <label class="field-label">💰 የግዢ ዋጋ (ብር)</label>
-              <input type="number" id="medCost" placeholder="0.00">
-              <label class="field-label">🏷️ የሽያጭ ዋጋ (ብር)</label>
-              <input type="number" id="medPrice" placeholder="0.00">
-              <label class="field-label">📦 ብዛት</label>
-              <input type="number" id="medQty" placeholder="0">
-              <button class="btn btn-success" onclick="addMedicine()">💾 አስቀምጥ</button>
-            </div>
-          </div>
-          <div class="section-collapsible full-width">
-            <div class="section-header" id="hdrMedList" onclick="toggleSection('hdrMedList','bodyMedList')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የምርት ዝርዝር</span></div>
-            </div>
-            <div class="section-body" id="bodyMedList">
-              <select id="filterTypeMed" onchange="renderMedList()" style="margin-bottom:10px;">
-                <option value="all">ሁሉም ዓይነት</option>
-                <option value="medicine">💊 መድሃኒት ብቻ</option>
-                <option value="cosmetic">🧴 ኮስሞቲክስ ብቻ</option>
-              </select>
-              <div id="medListDisplay"></div>
-            </div>
-          </div>
-        </div>
+<div id="medicineOnlyFields">
+<label class="field-label">🔢 የባች ቁጥር</label>
+<input type="text" id="medBatch" placeholder="BATCH-001" autocomplete="off">
+<label class="field-label">📅 የማለቂያ ቀን</label>
+<input type="date" id="medExpiry">
+<label class="field-label">🏭 አቅራቢ (Supplier)</label>
+<input type="text" id="medSupplier" placeholder="ለምሳሌ: Addis Pharma" autocomplete="off">
+</div> 
 
-        <!-- PANEL 2 -->
-        <div class="panel" id="panel2">
-          <div class="section-collapsible full-width">
-            <div class="section-header open" id="hdrSell" onclick="toggleSection('hdrSell','bodySell')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">ከዝርዝር መሸጥ</span></div>
-            </div>
-            <div class="section-body open" id="bodySell">
-              <label class="field-label">📅 የሽያጭ ቀን</label>
-              <input type="date" id="sellDate">
-              <div id="retailSaleFields">
-                <label class="field-label">🏢 ቅርንጫፍ (Branch)</label>
-                <select id="sellBranch"></select>
-              </div>
-              <div id="wholesaleSaleFields" style="display:none;">
-                <label class="field-label">🏪 ደንበኛ (ፋርማሲ/ሱፐርማርኬት)</label>
-                <select id="sellCustomer"></select>
-              </div>
-              
-              <label class="field-label">💳 የክፍያ ዓይነት</label>
-              <select id="sellPaymentMethod" onchange="togglePaymentDetails()">
-                <option value="cash">💵 Cash</option>
-                <option value="transfer">🏦 Transfer</option>
-                <option value="credit" id="creditOption" style="display:none;">📝 Credit (ዱቤ)</option>
-              </select>
+<label class="field-label">💰 የግዢ ዋጋ (ብር)</label>
+<input type="number" id="medCost" placeholder="0.00">
+<label class="field-label">🏷️ የሽያጭ ዋጋ (ብር)</label>
+<input type="number" id="medPrice" placeholder="0.00">
+<label class="field-label">📦 ብዛት</label>
+<input type="number" id="medQty" placeholder="0">
+<button class="btn btn-success" onclick="addMedicine()">💾 አስቀምጥ</button>
+</div>
+</div>
+<div class="section-collapsible full-width">
+<div class="section-header" id="hdrMedList" onclick="toggleSection('hdrMedList','bodyMedList')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የምርት ዝርዝር</span></div>
+</div>
+<div class="section-body" id="bodyMedList">
+<select id="filterTypeMed" onchange="renderMedList()" style="margin-bottom:10px;">
+<option value="all">ሁሉም ዓይነት</option>
+<option value="medicine">💊 መድሃኒት ብቻ</option>
+<option value="cosmetic">🧴 ኮስሞቲክስ ብቻ</option>
+</select>
+<div id="medListDisplay"></div>
+</div>
+</div>
+</div> 
 
-              <div id="creditPaymentDetails" style="display:none; margin-top:10px; padding:10px; background:#fffaf0; border:1px solid #fbd38d; border-radius:8px;">
-                <label class="field-label" style="margin-top:0;">💰 የተከፈለ መጠን (Partial Payment)</label>
-                <input type="number" id="sellPaidAmount" placeholder="0.00" value="0">
-                <div class="info-banner" style="margin-top:8px; font-size:11.5px;">💡 የተከፈለው መጠን ብቻ ገቢ ሆኖ ይመዘገባል። ቀሪው ወደ ዕዳ ይመዘገባል።</div>
-              </div>
+<!-- PANEL 2 -->
+<div class="panel" id="panel2">
+<div class="section-collapsible full-width">
+<div class="section-header open" id="hdrSell" onclick="toggleSection('hdrSell','bodySell')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">ከዝርዝር መሸጥ</span></div>
+</div>
+<div class="section-body open" id="bodySell">
+<label class="field-label">📅 የሽያጭ ቀን</label>
+<input type="date" id="sellDate">
+<div id="retailSaleFields">
+<label class="field-label">🏢 ቅርንጫፍ (Branch)</label>
+<select id="sellBranch"></select>
+</div>
+<div id="wholesaleSaleFields" style="display:none;">
+<label class="field-label">🏪 ደንበኛ (ፋርማሲ/ሱፐርማርኬት)</label>
+<select id="sellCustomer"></select>
+</div> 
 
-              <label class="field-label">🧾 የደረሰኝ ቁጥር (አማራጭ)</label>
-              <input type="text" id="sellReceipt" placeholder="ለምሳሌ: REC-001">
-              <div style="margin-top:10px;">
-                <input type="text" id="searchSellInput" placeholder="🔍 ምርት ፈልግ..." oninput="renderSellProducts()">
-              </div>
-              <div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
-              <div style="border-top:2px solid #edf2f7; margin-top:15px; padding-top:10px;">
-                <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛍️ የተመረጡ ሽያጮች</h3>
-                <div id="cartList" style="margin-bottom:10px;"></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                  <span style="font-weight:700; color:#2d3748;">ጠቅላላ፦</span>
-                  <span id="cartTotal" style="font-weight:800; color:#276749; font-size:18px;">0.00 ብር</span>
-                </div>
-                <button class="btn btn-success" onclick="completeSale()">💸 ሽያጭ አድርግ</button>
-                <button class="btn btn-danger" style="margin-top:8px; background:#a0aec0;" onclick="clearCart()">🗑️ ግልጽ አድርግ</button>
-              </div>
-            </div>
-          </div>
-          <div class="section-collapsible full-width">
-            <div class="section-header" id="hdrQuickSale" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">ፈጣን ገቢ ማስገቢያ</span></div>
-            </div>
-            <div class="section-body" id="bodyQuickSale">
-              <div class="info-banner">💡 ያለ ዝርዝር በቀጥታ ጠቅላላ ገቢ ማስገባት ይችላሉ።</div>
-              <label class="field-label">📦 ዓይነት</label>
-              <select id="quickType">
-                <option value="medicine">💊 መድሃኒት</option>
-                <option value="cosmetic">🧴 ኮስሞቲክስ</option>
-              </select>
-              <label class="field-label">📁 ምድብ</label>
-              <select id="quickCat"></select>
-              <label class="field-label">🏢 ቅርንጫፍ</label>
-              <select id="quickBranch"></select>
-              <label class="field-label">📅 ቀን</label>
-              <input type="date" id="quickDate">
-              <label class="field-label">💰 መጠን (ብር)</label>
-              <input type="number" id="quickAmount" placeholder="0.00">
-              <button class="btn btn-success" onclick="addQuickSale()">+ ጨምር</button>
-              <div id="quickSaleList" style="margin-top:14px;"></div>
-            </div>
-          </div>
-        </div>
+<label class="field-label">💳 የክፍያ ዓይነት</label>
+<select id="sellPaymentMethod" onchange="togglePaymentDetails()">
+<option value="cash">💵 Cash</option>
+<option value="transfer">🏦 Transfer</option>
+<option value="credit" id="creditOption" style="display:none;">📝 Credit (ዱቤ)</option>
+</select> 
 
-        <!-- PANEL 3 -->
-        <div class="panel" id="panel3">
-          <div class="section-collapsible">
-            <div class="section-header open" id="hdrAddExp" onclick="toggleSection('hdrAddExp','bodyAddExp')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">የቀን ወጪ መመዝገቢያ</span></div>
-            </div>
-            <div class="section-body open" id="bodyAddExp">
-              <label class="field-label">📁 የወጪ ምድብ</label>
-              <select id="expCat"></select>
-              <label class="field-label">🏢 ቅርንጫፍ</label>
-              <select id="expBranch"></select>
-              <label class="field-label">📝 ዝርዝር (አማራጭ)</label>
-              <input type="text" id="expNote" placeholder="ለምሳሌ: ትራንስፖርት">
-              <label class="field-label">💰 መጠን (ብር)</label>
-              <input type="number" id="expAmount" placeholder="0.00">
-              <label class="field-label">📅 ቀን</label>
-              <input type="date" id="expDate">
-              <button class="btn btn-danger" onclick="addExpense()">💾 አስቀምጥ</button>
-              <div id="expList" style="margin-top:14px;"></div>
-            </div>
-          </div>
-          <div class="section-collapsible">
-            <div class="section-header" id="hdrFixedExp" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">የወር ቋሚ ወጪ (Fixed)</span></div>
-            </div>
-            <div class="section-body" id="bodyFixedExp">
-              <div class="info-banner">💡 የቤት ኪራይ፣ ደመወዝ፣ መብራት ወዘተ። ወር ሲመረጥ ይመዘገባል።</div>
-              <label class="field-label">📁 የወጪ ምድብ</label>
-              <select id="fixCat"></select>
-              <label class="field-label">📝 ዝርዝር (አማራጭ)</label>
-              <input type="text" id="fixNote" placeholder="ለምሳሌ: የጥቅምት ደሞዝ">
-              <label class="field-label">💰 መጠን (ብር)</label>
-              <input type="number" id="fixAmount" placeholder="0.00">
-              <label class="field-label">📅 ወር</label>
-              <input type="month" id="fixMonth">
-              <button class="btn btn-warning" onclick="addFixedExpense()">💾 አስቀምጥ</button>
-              <div id="fixedExpList" style="margin-top:14px;"></div>
-            </div>
-          </div>
-          <div class="section-collapsible full-width">
-            <div class="section-header" id="hdrExpCatMgr" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">የወጪ ምድቦችን አስተዳድር</span></div>
-            </div>
-            <div class="section-body" id="bodyExpCatMgr">
-              <div class="cat-add-row">
-                <input type="text" id="newExpCat" placeholder="አዲስ የወጪ ምድብ" autocomplete="off">
-                <button onclick="addExpCategory()">+ ጨምር</button>
-              </div>
-              <div class="cat-tags" id="expCatListDisplay" style="margin-top:10px;"></div>
-            </div>
-          </div>
-        </div>
+<div id="creditPaymentDetails" style="display:none; margin-top:10px; padding:10px; background:#fffaf0; border:1px solid #fbd38d; border-radius:8px;">
+<label class="field-label" style="margin-top:0;">💰 የተከፈለ መጠን (Partial Payment)</label>
+<input type="number" id="sellPaidAmount" placeholder="0.00" value="0">
+<div class="info-banner" style="margin-top:8px; font-size:11.5px;">💡 የተከፈለው መጠን ብቻ ገቢ ሆኖ ይመዘገባል። ቀሪው ወደ ዕዳ ይመዘገባል።</div>
+</div> 
 
-        <!-- PANEL 4 -->
-        <div class="panel" id="panel4">
-          <div class="section-collapsible full-width">
-            <div class="section-header open" id="hdrInventory" onclick="toggleSection('hdrInventory','bodyInventory')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">የእቃ ክምችት</span></div>
-            </div>
-            <div class="section-body open" id="bodyInventory">
-              <select id="filterTypeInv" onchange="loadInventory()" style="margin-bottom:10px;">
-                <option value="all">ሁሉም ዓይነት</option>
-                <option value="medicine">💊 መድሃኒት ብቻ</option>
-                <option value="cosmetic">🧴 ኮስሞቲክስ ብቻ</option>
-              </select>
-              <div id="inventoryList"></div>
-              <div class="summary-box green" style="margin-top:14px;">
-                <div class="label">ጠቅላላ የክምችት ዋጋ</div>
-                <div class="value" id="invTotalValue">0.00 <small>ብር</small></div>
-              </div>
-            </div>
-          </div>
-          <div class="section-collapsible">
-            <div class="section-header" id="hdrStockAdjust" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">የስቶክ ማስተካከያ</span></div>
-            </div>
-            <div class="section-body" id="bodyStockAdjust">
-              <div class="info-banner">💡 እቃ ሲበላሽ ወይም ሲጠፋ ከክምችቱ ላይ ለማስተካከል።</div>
-              <label class="field-label">📦 ምርት ምረጥ</label>
-              <select id="adjustMedId"></select>
-              <label class="field-label">🔢 አዲስ ብዛት</label>
-              <input type="number" id="adjustQty" placeholder="0">
-              <label class="field-label">📝 ምክንያት (አማራጭ)</label>
-              <input type="text" id="adjustReason" placeholder="ለምሳሌ: ተበላሽቷል">
-              <button class="btn btn-warning" onclick="adjustStock()">🔧 አስተካክል</button>
-            </div>
-          </div>
-          <div class="section-collapsible">
-            <div class="section-header" id="hdrExpiryList" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">የማለቂያ ቀን ማሳወቂያ</span></div>
-            </div>
-            <div class="section-body" id="bodyExpiryList">
-              <div id="expiryListDisplay"></div>
-            </div>
-          </div>
-          <div class="section-collapsible">
-            <div class="section-header" id="hdrLowStock" onclick="toggleSection('hdrLowStock','bodyLowStock')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የሚያልቅ ክምችት</span></div>
-            </div>
-            <div class="section-body" id="bodyLowStock">
-              <div id="lowStockListDisplay"></div>
-            </div>
-          </div>
-        </div>
+<label class="field-label">🧾 የደረሰኝ ቁጥር (አማራጭ)</label>
+<input type="text" id="sellReceipt" placeholder="ለምሳሌ: REC-001">
+<div style="margin-top:10px;">
+<input type="text" id="searchSellInput" placeholder="🔍 ምርት ፈልግ..." oninput="renderSellProducts()">
+</div>
+<div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
+<div style="border-top:2px solid #edf2f7; margin-top:15px; padding-top:10px;">
+<h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛍️ የተመረጡ ሽያጮች</h3>
+<div id="cartList" style="margin-bottom:10px;"></div>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+<span style="font-weight:700; color:#2d3748;">ጠቅላላ፦</span>
+<span id="cartTotal" style="font-weight:800; color:#276749; font-size:18px;">0.00 ብር</span>
+</div>
+<button class="btn btn-success" onclick="completeSale()">💸 ሽያጭ አድርግ</button>
+<button class="btn btn-danger" style="margin-top:8px; background:#a0aec0;" onclick="clearCart()">🗑️ ግልጽ አድርግ</button>
+</div>
+</div>
+</div>
+<div class="section-collapsible full-width">
+<div class="section-header" id="hdrQuickSale" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">ፈጣን ገቢ ማስገቢያ</span></div>
+</div>
+<div class="section-body" id="bodyQuickSale">
+<div class="info-banner">💡 ያለ ዝርዝር በቀጥታ ጠቅላላ ገቢ ማስገባት ይችላሉ።</div>
+<label class="field-label">📦 ዓይነት</label>
+<select id="quickType">
+<option value="medicine">💊 መድሃኒት</option>
+<option value="cosmetic">🧴 ኮስሞቲክስ</option>
+</select>
+<label class="field-label">📁 ምድብ</label>
+<select id="quickCat"></select>
+<label class="field-label">🏢 ቅርንጫፍ</label>
+<select id="quickBranch"></select>
+<label class="field-label">📅 ቀን</label>
+<input type="date" id="quickDate">
+<label class="field-label">💰 መጠን (ብር)</label>
+<input type="number" id="quickAmount" placeholder="0.00">
+<button class="btn btn-success" onclick="addQuickSale()">+ ጨምር</button>
+<div id="quickSaleList" style="margin-top:14px;"></div>
+</div>
+</div>
+</div> 
 
-        <!-- PANEL 5 -->
-        <div class="panel" id="panel5">
-          <div class="section-collapsible full-width">
-            <div class="section-header open" id="hdrDaily" onclick="toggleSection('hdrDaily','bodyDaily')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">የቀን ገቢ</span></div>
-            </div>
-            <div class="section-body open" id="bodyDaily">
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                 <div>
-                   <label class="field-label">ቀን ምረጥ</label>
-                   <input type="date" id="dailyReportDate" onchange="loadDailyReport()">
-                 </div>
-                 <div>
-                   <label class="field-label">🏢 ቅርንጫፍ</label>
-                   <select id="dailyReportBranch" onchange="loadDailyReport()">
-                     <option value="all">ሁሉም ቅርንጫፎች</option>
-                   </select>
-                 </div>
-              </div>
-              <div class="summary-box green" style="margin-top:14px;">
-                <div class="label">የተመረጠው ቀን ገቢ</div>
-                <div class="value" id="dailyTotalRevenue">0.00 <small>ብር</small></div>
-              </div>
-              <div class="summary-box red" style="margin-top:10px;">
-                <div class="label">የቀኑ ወጪ</div>
-                <div class="value" id="dailyTotalExpense">0.00 <small>ብር</small></div>
-              </div>
-              <div class="summary-box" style="margin-top:10px;">
-                <div class="label">የቀኑ ትርፍ</div>
-                <div class="value" id="dailyNetProfit">0.00 <small>ብር</small></div>
-              </div>
-              
-              <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
-                <div class="section-header" id="hdrDailyPayments" onclick="toggleSection('hdrDailyPayments','bodyDailyPayments')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
-                </div>
-                <div class="section-body" id="bodyDailyPayments">
-                  <div id="dailyPaymentSummary"></div>
-                </div>
-              </div>
+<!-- PANEL 3 -->
+<div class="panel" id="panel3">
+<div class="section-collapsible">
+<div class="section-header open" id="hdrAddExp" onclick="toggleSection('hdrAddExp','bodyAddExp')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">የቀን ወጪ መመዝገቢያ</span></div>
+</div>
+<div class="section-body open" id="bodyAddExp">
+<label class="field-label">📁 የወጪ ምድብ</label>
+<select id="expCat"></select>
+<label class="field-label">🏢 ቅርንጫፍ</label>
+<select id="expBranch"></select>
+<label class="field-label">📝 ዝርዝር (አማራጭ)</label>
+<input type="text" id="expNote" placeholder="ለምሳሌ: ትራንስፖርት">
+<label class="field-label">💰 መጠን (ብር)</label>
+<input type="number" id="expAmount" placeholder="0.00">
+<label class="field-label">📅 ቀን</label>
+<input type="date" id="expDate">
+<button class="btn btn-danger" onclick="addExpense()">💾 አስቀምጥ</button>
+<div id="expList" style="margin-top:14px;"></div>
+</div>
+</div>
+<div class="section-collapsible">
+<div class="section-header" id="hdrFixedExp" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">የወር ቋሚ ወጪ (Fixed)</span></div>
+</div>
+<div class="section-body" id="bodyFixedExp">
+<div class="info-banner">💡 የቤት ኪራይ፣ ደመወዝ፣ መብራት ወዘተ። ወር ሲመረጥ ይመዘገባል።</div>
+<label class="field-label">📁 የወጪ ምድብ</label>
+<select id="fixCat"></select>
+<label class="field-label">📝 ዝርዝር (አማራጭ)</label>
+<input type="text" id="fixNote" placeholder="ለምሳሌ: የጥቅምት ደሞዝ">
+<label class="field-label">💰 መጠን (ብር)</label>
+<input type="number" id="fixAmount" placeholder="0.00">
+<label class="field-label">📅 ወር</label>
+<input type="month" id="fixMonth">
+<button class="btn btn-warning" onclick="addFixedExpense()">💾 አስቀምጥ</button>
+<div id="fixedExpList" style="margin-top:14px;"></div>
+</div>
+</div>
+<div class="section-collapsible full-width">
+<div class="section-header" id="hdrExpCatMgr" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">የወጪ ምድቦችን አስተዳድር</span></div>
+</div>
+<div class="section-body" id="bodyExpCatMgr">
+<div class="cat-add-row">
+<input type="text" id="newExpCat" placeholder="አዲስ የወጪ ምድብ" autocomplete="off">
+<button onclick="addExpCategory()">+ ጨምር</button>
+</div>
+<div class="cat-tags" id="expCatListDisplay" style="margin-top:10px;"></div>
+</div>
+</div>
+</div> 
 
-              <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
-              
-              <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የቀኑ ሽያጮች</span></div>
-                </div>
-                <div class="section-body" id="bodyDailySales"><div id="dailySalesList"></div></div>
-              </div>
+<!-- PANEL 4 -->
+<div class="panel" id="panel4">
+<div class="section-collapsible full-width">
+<div class="section-header open" id="hdrInventory" onclick="toggleSection('hdrInventory','bodyInventory')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">የእቃ ክምችት</span></div>
+</div>
+<div class="section-body open" id="bodyInventory">
+<select id="filterTypeInv" onchange="loadInventory()" style="margin-bottom:10px;">
+<option value="all">ሁሉም ዓይነት</option>
+<option value="medicine">💊 መድሃኒት ብቻ</option>
+<option value="cosmetic">🧴 ኮስሞቲክስ ብቻ</option>
+</select>
+<div id="inventoryList"></div>
+<div class="summary-box green" style="margin-top:14px;">
+<div class="label">ጠቅላላ የክምችት ዋጋ</div>
+<div class="value" id="invTotalValue">0.00 <small>ብር</small></div>
+</div>
+</div>
+</div>
+<div class="section-collapsible">
+<div class="section-header" id="hdrStockAdjust" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">የስቶክ ማስተካከያ</span></div>
+</div>
+<div class="section-body" id="bodyStockAdjust">
+<div class="info-banner">💡 እቃ ሲበላሽ ወይም ሲጠፋ ከክምችቱ ላይ ለማስተካከል።</div>
+<label class="field-label">📦 ምርት ምረጥ</label>
+<select id="adjustMedId"></select>
+<label class="field-label">🔢 አዲስ ብዛት</label>
+<input type="number" id="adjustQty" placeholder="0">
+<label class="field-label">📝 ምክንያት (አማራጭ)</label>
+<input type="text" id="adjustReason" placeholder="ለምሳሌ: ተበላሽቷል">
+<button class="btn btn-warning" onclick="adjustStock()">🔧 አስተካክል</button>
+</div>
+</div>
+<div class="section-collapsible">
+<div class="section-header" id="hdrExpiryList" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">የማለቂያ ቀን ማሳወቂያ</span></div>
+</div>
+<div class="section-body" id="bodyExpiryList">
+<div id="expiryListDisplay"></div>
+</div>
+</div>
+<div class="section-collapsible">
+<div class="section-header" id="hdrLowStock" onclick="toggleSection('hdrLowStock','bodyLowStock')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የሚያልቅ ክምችት</span></div>
+</div>
+<div class="section-body" id="bodyLowStock">
+<div id="lowStockListDisplay"></div>
+</div>
+</div>
+</div> 
 
-              <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrDailyUnsold" onclick="toggleSection('hdrDailyUnsold','bodyDailyUnsold')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ ምርቶች</span></div>
-                </div>
-                <div class="section-body" id="bodyDailyUnsold"><div id="dailyUnsoldList"></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
+<!-- PANEL 5 -->
+<div class="panel" id="panel5">
+<div class="section-collapsible full-width">
+<div class="section-header open" id="hdrDaily" onclick="toggleSection('hdrDaily','bodyDaily')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">የቀን ገቢ</span></div>
+</div>
+<div class="section-body open" id="bodyDaily">
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+<div>
+<label class="field-label">ቀን ምረጥ</label>
+<input type="date" id="dailyReportDate" onchange="loadDailyReport()">
+</div>
+<div>
+<label class="field-label">🏢 ቅርንጫፍ</label>
+<select id="dailyReportBranch" onchange="loadDailyReport()">
+<option value="all">ሁሉም ቅርንጫፎች</option>
+</select>
+</div>
+</div>
+<div class="summary-box green" style="margin-top:14px;">
+<div class="label">የተመረጠው ቀን ገቢ</div>
+<div class="value" id="dailyTotalRevenue">0.00 <small>ብር</small></div>
+</div>
+<div class="summary-box red" style="margin-top:10px;">
+<div class="label">የቀኑ ወጪ</div>
+<div class="value" id="dailyTotalExpense">0.00 <small>ብር</small></div>
+</div>
+<div class="summary-box" style="margin-top:10px;">
+<div class="label">የቀኑ ትርፍ</div>
+<div class="value" id="dailyNetProfit">0.00 <small>ብር</small></div>
+</div> 
 
-        <!-- PANEL 6 -->
-        <div class="panel" id="panel6">
-          <div class="section-collapsible full-width">
-            <div class="section-header open" id="hdrMonthly" onclick="toggleSection('hdrMonthly','bodyMonthly')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">የወር ገቢ</span></div>
-            </div>
-            <div class="section-body open" id="bodyMonthly">
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                 <div>
-                   <label class="field-label">ወር ምረጥ</label>
-                   <input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()">
-                 </div>
-                 <div>
-                   <label class="field-label">🏢 ቅርንጫፍ</label>
-                   <select id="monthlyReportBranch" onchange="loadMonthlyReport()">
-                     <option value="all">ሁሉም ቅርንጫፎች</option>
-                   </select>
-                 </div>
-              </div>
-              <div class="summary-box green" style="margin-top:14px;">
-                <div class="label">የተመረጠው ወር ገቢ</div>
-                <div class="value" id="monthlyTotalRevenue">0.00 <small>ብር</small></div>
-              </div>
-              <div class="summary-box red" style="margin-top:10px;">
-                <div class="label">የወሩ ተለዋዋጭ ወጪ</div>
-                <div class="value" id="monthlyTotalExpense">0.00 <small>ብር</small></div>
-              </div>
-              <div class="summary-box red" style="margin-top:10px;">
-                <div class="label">የወሩ ቋሚ ወጪ</div>
-                <div class="value" id="monthlyFixedExpense">0.00 <small>ብር</small></div>
-              </div>
-              <div class="summary-box" style="margin-top:10px;">
-                <div class="label">የወሩ ትርፍ</div>
-                <div class="value" id="monthlyNetProfit">0.00 <small>ብር</small></div>
-              </div>
+<div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
+<div class="section-header" id="hdrDailyPayments" onclick="toggleSection('hdrDailyPayments','bodyDailyPayments')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
+</div>
+<div class="section-body" id="bodyDailyPayments">
+<div id="dailyPaymentSummary"></div>
+</div>
+</div> 
 
-              <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
-                <div class="section-header" id="hdrMonthlyPayments" onclick="toggleSection('hdrMonthlyPayments','bodyMonthlyPayments')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
-                </div>
-                <div class="section-body" id="bodyMonthlyPayments">
-                  <div id="monthlyPaymentSummary"></div>
-                </div>
-              </div>
+<div style="height:1px; background:#edf2f7; margin:12px 0;"></div> 
 
-              <div style="height:1px; background:#edf2f7; margin:12px 0;"></div>
+<div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
+<div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የቀኑ ሽያጮች</span></div>
+</div>
+<div class="section-body" id="bodyDailySales"><div id="dailySalesList"></div></div>
+</div> 
 
-              <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የወሩ ሽያጮች</span></div>
-                </div>
-                <div class="section-body" id="bodyMonthlySales"><div id="monthlySalesList"></div></div>
-              </div>
+<div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
+<div class="section-header" id="hdrDailyUnsold" onclick="toggleSection('hdrDailyUnsold','bodyDailyUnsold')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ ምርቶች</span></div>
+</div>
+<div class="section-body" id="bodyDailyUnsold"><div id="dailyUnsoldList"></div></div>
+</div>
+</div>
+</div>
+</div> 
 
-              <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrMonthlyUnsold" onclick="toggleSection('hdrMonthlyUnsold','bodyMonthlyUnsold')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">ያልተሸጡ ምርቶች</span></div>
-                </div>
-                <div class="section-body" id="bodyMonthlyUnsold"><div id="monthlyUnsoldList"></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
+<!-- PANEL 6 (የወር ገቢ) -->
+<div class="panel" id="panel6">
+<div class="section-collapsible full-width">
+<div class="section-header open" id="hdrMonthly" onclick="toggleSection('hdrMonthly','bodyMonthly')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">የወር ገቢ</span></div>
+</div>
+<div class="section-body open" id="bodyMonthly">
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+<div>
+<label class="field-label">ወር ምረጥ</label>
+<input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()">
+</div>
+<div>
+<label class="field-label">🏢 ቅርንጫፍ</label>
+<select id="monthlyReportBranch" onchange="loadMonthlyReport()">
+<option value="all">ሁሉም ቅርንጫፎች</option>
+</select>
+</div>
+</div>
+<div class="summary-box green" style="margin-top:14px;">
+<div class="label">የተመረጠው ወር ገቢ</div>
+<div class="value" id="monthlyTotalRevenue">0.00 <small>ብር</small></div>
+</div>
+<div class="summary-box red" style="margin-top:10px;">
+<div class="label">የወሩ ተለዋዋጭ ወጪ</div>
+<div class="value" id="monthlyTotalExpense">0.00 <small>ብር</small></div>
+</div>
+<div class="summary-box red" style="margin-top:10px;">
+<div class="label">የወሩ ቋሚ ወጪ</div>
+<div class="value" id="monthlyFixedExpense">0.00 <small>ብር</small></div>
+</div>
+<div class="summary-box" style="margin-top:10px;">
+<div class="label">የወሩ ትርፍ</div>
+<div class="value" id="monthlyNetProfit">0.00 <small>ብር</small></div>
+</div> 
 
-        <!-- PANEL 7 (Dashboard) -->
-        <div class="panel" id="panel7">
-          <div class="dash-grid">
-            
-            <!-- 1. የወር ምርጫ -->
-            <div class="dash-card">
-              <div class="dash-header">
-                <span>📅 ወር ምርጫ</span>
-                <span class="dash-badge" id="dashCurrentMonthLabel">...</span>
-              </div>
-              <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                <button class="btn btn-primary" style="width: 40px; height: 40px; padding: 0; border-radius: 8px;" onclick="changeDashMonth(-1)">◀</button>
-                <div style="font-size: 18px; font-weight: 800;" id="dashMonthTitle">...</div>
-                <button class="btn btn-primary" style="width: 40px; height: 40px; padding: 0; border-radius: 8px;" onclick="changeDashMonth(1)">▶</button>
-              </div>
-            </div>
+<div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7; margin-top:12px;">
+<div class="section-header" id="hdrMonthlyPayments" onclick="toggleSection('hdrMonthlyPayments','bodyMonthlyPayments')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የክፍያ ዓይነት ማሳያ</span></div>
+</div>
+<div class="section-body" id="bodyMonthlyPayments">
+<div id="monthlyPaymentSummary"></div>
+</div>
+</div> 
 
-            <!-- 2. የወር ጠቅላላ ገቢ -->
-            <div class="dash-card">
-              <div class="dash-header">
-                <span>💰 የወር ጠቅላላ ገቢ</span>
-                <span class="dash-badge green" id="dashRevBadge">0.00 ብር</span>
-              </div>
-              <div class="dash-val-box" style="background: linear-gradient(135deg, #1a365d, #2c5282);">
-                <div class="dash-val-label">የወር ጠቅላላ ገቢ</div>
-                <div class="dash-val-number" id="dashMonthRevenue">0.00 ብር</div>
-              </div>
-            </div>
+<!-- ከዚህ በታች ያለው የእርስዎ ኮድ የተቆራረጠበት ክፍል ነው -->
+<div style="height:1px; background:#edf2f7; margin:12px 0;"></div> 
 
-            <!-- 3. የወር ማጠቃለያ -->
-            <div class="dash-card">
-              <div class="dash-header"><span>📊 የወር ማጠቃለያ</span></div>
-              <ul class="dash-list">
-                <li><span>📅 የወር ጠቅላላ ገቢ</span><strong id="dashListRev" style="color:#2b6cb0;">0.00 ብር</strong></li>
-                <li><span>💸 የተለዋዋጭ ወጪዎች</span><strong id="dashListVarExp" style="color:#c53030;">0.00 ብር</strong></li>
-                <li><span>🏢 ቋሚ ወጪዎች</span><strong id="dashListFixExp" style="color:#c53030;">0.00 ብር</strong></li>
-                <li style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #edf2f7;"><span>💰 ትርፍ (Profit)</span><strong id="dashListProfit" style="color:#276749;">0.00 ብር</strong></li>
-              </ul>
-            </div>
-
-            <!-- 4. የወር ትርፍ -->
-            <div class="dash-card">
-              <div class="dash-header">
-                <span>💰 የወር ትርፍ</span>
-                <span class="dash-badge green">Net</span>
-              </div>
-              <div class="dash-val-box" style="background: linear-gradient(135deg, #22543d, #276749);">
-                <div class="dash-val-label">የወር ትርፍ</div>
-                <div class="dash-val-number" id="dashNetProfit">0.00 ብር</div>
-              </div>
-            </div>
-
-            <!-- 5. ተጨማሪ ሪፖርቶች -->
-            <div class="dash-card" style="grid-column: 1 / -1;">
-              <div class="dash-header" style="margin-bottom: 0;">
-                <span>📈 ተጨማሪ መረጃዎች</span>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
-                <button class="btn btn-outline" style="background:#f7fafc; border:1px solid #e2e8f0; color:#2c5282; text-align:left; display:flex; justify-content:space-between; align-items:center;">
-                  <span>🏆 የምርት ብዛት</span>
-                  <span class="dash-badge">0</span>
-                </button>
-                <button class="btn btn-outline" style="background:#f7fafc; border:1px solid #e2e8f0; color:#2c5282; text-align:left; display:flex; justify-content:space-between; align-items:center;">
-                  <span>📉 ያልተሸጡ ምርቶች</span>
-                  <span class="dash-badge red">0</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Charts -->
-            <div class="dash-card" style="grid-column: 1 / -1;">
-              <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px;">📈 የ30 ቀን ሽያጭ ግራፍ</h3>
-              <div class="chart-container"><canvas id="dailyChart"></canvas></div>
-              <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px; margin-top:15px;">🥧 የወሩ ወጪ ግራፍ</h3>
-              <div class="chart-container"><canvas id="expensePieChart"></canvas></div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- PANEL 8 -->
-        <div class="panel" id="panel8">
-          <div class="section-collapsible">
-            <div class="section-header open" id="hdrSettings" onclick="toggleSection('hdrSettings','bodySettings')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
-            </div>
-            <div class="section-body open" id="bodySettings">
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrPhName" onclick="toggleSection('hdrPhName','bodyPhName')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">የፋርማሲ ስም</span></div>
-                </div>
-                <div class="section-body" id="bodyPhName">
-                  <input type="text" id="settingPharmacyName" placeholder="Hanitech Pharmacy">
-                  <button class="btn btn-primary" onclick="savePharmacyName()">💾 አስቀምጥ</button>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrBizType" onclick="toggleSection('hdrBizType','bodyBizType')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">የድርጅት ዓይነት</span></div>
-                </div>
-                <div class="section-body" id="bodyBizType">
-                  <label class="field-label">ዓይነት ምረጥ</label>
-                  <select id="settingBizType" onchange="saveBizType()">
-                    <option value="retail">🛒 Retail (ችርቻሮ)</option>
-                    <option value="wholesale">🚚 Wholesale (አከፋፋይ)</option>
-                  </select>
-                  <div class="info-banner" style="margin-top:10px;" id="bizTypeInfo">
-                    💡 ከሁለቱ ውስጥ አንዱን መርጠው ይጠቀሙ።
-                  </div>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrLowStockThreshold" onclick="toggleSection('hdrLowStockThreshold','bodyLowStockThreshold')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የስቶክ ማሳወቂያ ገደብ</span></div>
-                </div>
-                <div class="section-body" id="bodyLowStockThreshold">
-                  <label class="field-label">ከዚህ በታች ሲሆን ማሳወቂያ ይስጥ</label>
-                  <input type="number" id="settingLowStockThreshold" placeholder="10" value="10">
-                  <button class="btn btn-primary" onclick="saveLowStockThreshold()">💾 አስቀምጥ</button>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrBranches" onclick="toggleSection('hdrBranches','bodyBranches')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">ቅርንጫፎች</span></div>
-                </div>
-                <div class="section-body" id="bodyBranches">
-                  <div class="cat-add-row">
-                    <input type="text" id="newBranch" placeholder="አዲስ ቅርንጫፍ" autocomplete="off">
-                    <button onclick="addBranch()">+ ጨምር</button>
-                  </div>
-                  <div class="cat-tags" id="branchListDisplay" style="margin-top:10px;"></div>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrCustomers" onclick="toggleSection('hdrCustomers','bodyCustomers')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">ደንበኞች (ፋርማሲዎች)</span></div>
-                </div>
-                <div class="section-body" id="bodyCustomers">
-                  <div class="info-banner">💡 አከፋፋይ ሲሆኑ የሚያገለግሏቸውን ፋርማሲዎች እዚህ ይመዝግቡ።</div>
-                  <div class="cat-add-row">
-                    <input type="text" id="newCustomer" placeholder="አዲስ ደንበኛ ስም" autocomplete="off">
-                    <button onclick="addCustomer()">+ ጨምር</button>
-                  </div>
-                  <div class="cat-tags" id="customerListDisplay" style="margin-top:10px;"></div>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrPass" onclick="toggleSection('hdrPass','bodyPass')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔐</span><span class="sec-title">ፓስወርድ ቀይር</span></div>
-                </div>
-                <div class="section-body" id="bodyPass">
-                  <label class="field-label">የአሁኑ ፓስወርድ</label>
-                  <input type="password" id="currentPass" placeholder="••••••••">
-                  <label class="field-label">አዲስ ፓስወርድ</label>
-                  <input type="password" id="newPass" placeholder="••••••••">
-                  <button class="btn btn-warning" onclick="changePassword()">🔐 ፓስወርድ ቀይር</button>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrDark" onclick="toggleSection('hdrDark','bodyDark')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🌙</span><span class="sec-title">Dark Mode</span></div>
-                </div>
-                <div class="section-body" id="bodyDark">
-                  <label class="toggle-row" style="display:flex; align-items:center; justify-content:space-between; padding:10px 0;">
-                    <span>🌙 Dark Mode አብራ/አጥፋ</span>
-                    <label class="switch" style="position:relative; display:inline-block; width:48px; height:26px;">
-                      <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" style="opacity:0; width:0; height:0;">
-                      <span class="slider" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#cbd5e0; transition:.3s; border-radius:26px;"></span>
-                    </label>
-                  </label>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrNotif" onclick="toggleSection('hdrNotif','bodyNotif')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔔</span><span class="sec-title">Notification</span></div>
-                </div>
-                <div class="section-body" id="bodyNotif">
-                  <p style="font-size:12.5px; color:#718096; margin-bottom:10px;">በምሽት 8:00 ሽያጭ ማስገባት ማስታወሻ።</p>
-                  <button class="btn btn-outline btn-sm" onclick="enableNotifications()">🔔 Notification አስነሳ</button>
-                  <button class="btn btn-outline btn-sm" onclick="testNotification()" style="margin-top:8px;">🧪 ሞክር</button>
-                  <div id="notifStatus" style="margin-top:10px; font-size:12.5px; color:#718096;"></div>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrBackup" onclick="toggleSection('hdrBackup','bodyBackup')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💾</span><span class="sec-title">ዳታ ባክአፕ / ሪስቶር</span></div>
-                </div>
-                <div class="section-body" id="bodyBackup">
-                  <button class="btn btn-success" onclick="exportBackup()">📥 ዳታ አውጣ</button>
-                  <button class="btn btn-warning" style="margin-top:10px;" onclick="document.getElementById('restoreFile').click()">📤 ዳታ መልስ</button>
-                  <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="importBackup(event)">
-                  <div id="backupStatus" style="margin-top:10px; font-size:13px;"></div>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrReset" onclick="toggleSection('hdrReset','bodyReset')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔄</span><span class="sec-title">አዲስ ቀን ጀምር (Reset)</span></div>
-                </div>
-                <div class="section-body" id="bodyReset">
-                  <p style="font-size:12.5px; color:#718096; margin-bottom:10px;">የተመረጠውን ቀን ሽያጭ እና ወጪ ብቻ ያጠፋል።</p>
-                  <button class="btn btn-danger" onclick="resetSelectedDate()">🔄 የተመረጠውን ቀን አጥፋ</button>
-                  <div style="height:1px; background:#edf2f7; margin:15px 0;"></div>
-                  <p style="font-size:12.5px; color:#c53030; font-weight:bold; margin-bottom:10px;">⚠️ ሁሉንም ዳታ ማጥፋት (Factory Reset)</p>
-                  <button class="btn btn-danger" onclick="factoryReset()">🚨 ሁሉንም ዳታ አጥፋ</button>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrSupport" onclick="toggleSection('hdrSupport','bodySupport')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📞</span><span class="sec-title">የድጋፍ መረጃ (Support)</span></div>
-                </div>
-                <div class="section-body" id="bodySupport">
-                  <div id="supportInfoDisplay">
-                    <p style="text-align:center; color:#a0aec0; font-size:13px;">በመጫን ላይ...</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrPrint" onclick="toggleSection('hdrPrint','bodyPrint')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🖨️</span><span class="sec-title">ሪፖርት ማውጫ</span></div>
-                </div>
-                <div class="section-body" id="bodyPrint">
-                  <button class="btn btn-primary" onclick="printReport()">🖨️ Print ሪፖርት</button>
-                  <button class="btn btn-success" style="margin-top:10px;" onclick="exportExcel()">📊 Excel (CSV)</button>
-                </div>
-              </div>
-
-              <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                <div class="section-header" id="hdrPermissions" onclick="toggleSection('hdrPermissions','bodyPermissions')">
-                  <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">የተጠቃሚዎች ፈቃዶች (Permissions)</span></div>
-                </div>
-                <div class="section-body" id="bodyPermissions">
-                  <div class="info-banner">💡 ማናጀር እና አካውንታንት የትኞቹን ታቦች ማየት እንደሚችሉ ይምረጡ።</div>
-                  <h3 style="font-size:14px; color:#2c5282; margin-bottom:10px;">🎯 ማናጀር (Manager)</h3>
-                  <div class="perm-section">
-                    <label class="toggle-row"><span>💊 መድሃኒቶች</span><label class="switch"><input type="checkbox" id="tabperm_mgr_med" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>🛒 ሽያጭ</span><label class="switch"><input type="checkbox" id="tabperm_mgr_sell" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>💸 ወጪ</span><label class="switch"><input type="checkbox" id="tabperm_mgr_exp" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>📦 ክምችት</span><label class="switch"><input type="checkbox" id="tabperm_mgr_inv" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>📅 የቀን ገቢ</span><label class="switch"><input type="checkbox" id="tabperm_mgr_daily" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>📆 የወር ገቢ</span><label class="switch"><input type="checkbox" id="tabperm_mgr_monthly" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>📊 Dashboard</span><label class="switch"><input type="checkbox" id="tabperm_mgr_dash" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>⚙️ Settings</span><label class="switch"><input type="checkbox" id="tabperm_mgr_settings"><span class="slider"></span></label></label>
-                  </div>
-                  <h3 style="font-size:14px; color:#2c5282; margin-bottom:10px; margin-top:15px;">💼 አካውንታንት (Accountant)</h3>
-                  <div class="perm-section">
-                    <label class="toggle-row"><span>💊 መድሃኒቶች</span><label class="switch"><input type="checkbox" id="tabperm_acc_med" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>🛒 ሽያጭ</span><label class="switch"><input type="checkbox" id="tabperm_acc_sell" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>💸 ወጪ</span><label class="switch"><input type="checkbox" id="tabperm_acc_exp" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>📦 ክምችት</span><label class="switch"><input type="checkbox" id="tabperm_acc_inv" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>📅 የቀን ገቢ</span><label class="switch"><input type="checkbox" id="tabperm_acc_daily" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>📆 የወር ገቢ</span><label class="switch"><input type="checkbox" id="tabperm_acc_monthly" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>📊 Dashboard</span><label class="switch"><input type="checkbox" id="tabperm_acc_dash" checked><span class="slider"></span></label></label>
-                    <label class="toggle-row"><span>⚙️ Settings</span><label class="switch"><input type="checkbox" id="tabperm_acc_settings"><span class="slider"></span></label></label>
-                  </div>
-                  <button class="btn btn-success" onclick="savePermissions()" style="margin-top:10px;">💾 ፈቃዶችን አስቀምጥ</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PANEL 9 -->
-        <div class="panel" id="panel9">
-          <div class="section-collapsible full-width">
-            <div class="section-header open" id="hdrCreditList" onclick="toggleSection('hdrCreditList','bodyCreditList')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የደንበኞች ዕዳ ዝርዝር</span></div>
-            </div>
-            <div class="section-body open" id="bodyCreditList">
-              <div id="creditCustomerList"></div>
-            </div>
-          </div>
-          <div class="section-collapsible full-width">
-            <div class="section-header open" id="hdrCreditPayment" onclick="toggleSection('hdrCreditPayment','bodyCreditPayment')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💰</span><span class="sec-title">የዱቤ ክፍያ መመዝገቢያ</span></div>
-            </div>
-            <div class="section-body open" id="bodyCreditPayment">
-              <label class="field-label">🏪 ደንበኛ ምረጥ</label>
-              <select id="creditPayCustomer"></select>
-              <label class="field-label">💰 የተከፈለ መጠን (ብር)</label>
-              <input type="number" id="creditPayAmount" placeholder="0.00">
-              <label class="field-label">📅 ቀን</label>
-              <input type="date" id="creditPayDate">
-              <button class="btn btn-success" onclick="addCreditPayment()">💾 ክፍያ መዝግብ</button>
-              <div id="creditPaymentHistory" style="margin-top:14px;"></div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
+<div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
+<div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የወሩ ሽያጮች</span></div>
+</div>
+<div class="section-body" id="bodyMonthlySales"><div id="monthlySalesList"></div></div>
+</div>
+</div>
+</div>
 </div>
 
-<script type="module" src="app.js"></script>
+<!-- PANEL 7 (Dashboard) - አዲስ የተጨመረ -->
+<div class="panel" id="panel7">
+<div class="section-collapsible full-width">
+<div class="section-header open" id="hdrDash" onclick="toggleSection('hdrDash','bodyDash')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
+</div>
+<div class="section-body open" id="bodyDash">
+    
+    <div class="dash-grid">
+        <div class="dash-card">
+            <div class="dash-header">የወር ጠቅላላ ገቢ <span class="dash-badge green">የወር ጠቅላላ ገቢ</span></div>
+            <div class="dash-val-box" style="background: linear-gradient(135deg, #2b6cb0, #2c5282);">
+                <div class="dash-val-label">የወር ጠቅላላ ገቢ</div>
+                <div class="dash-val-number" id="dashGrossIncome">0.00 ብር</div>
+            </div>
+        </div>
+        
+        <div class="dash-card">
+            <div class="dash-header">የወር ወጪ <span class="dash-badge red">የወር ወጪ</span></div>
+            <div class="dash-val-box" style="background: linear-gradient(135deg, #276749, #22543d);">
+                <div class="dash-val-label">የወር ወጪ</div>
+                <div class="dash-val-number" id="dashTotalExpense">0.00 ብር</div>
+            </div>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-header">የወር ትርፍ <span class="dash-badge">የወር ትርፍ</span></div>
+            <ul class="dash-list">
+                <li><span>የወር ጠቅላላ ገቢ</span> <span id="dashGrossIncomeList">0.00 ብር</span></li>
+                <li><span>የተከፈሉ ወጪዎች</span> <span id="dashPaidExpenses">0.00 ብር</span></li>
+                <li><span>የወር ትርፍ</span> <span id="dashProfit">0.00 ብር</span></li>
+            </ul>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-header">የሽያጭ መረጃ <span class="dash-badge">Net</span></div>
+            <div class="dash-val-box" style="background: linear-gradient(135deg, #2f855a, #276749);">
+                <div class="dash-val-label">የወር ትርፍ</div>
+                <div class="dash-val-number" id="dashNetProfit">0.00 ብር</div>
+            </div>
+        </div>
+
+        <div class="dash-card" style="grid-column: 1 / -1; display: flex; flex-direction: row; gap: 20px; justify-content: space-around;">
+            <div style="text-align: center;">
+                <div style="font-size: 24px; font-weight: 800; color: #2b6cb0;" id="dashTotalSalesCount">0</div>
+                <div style="font-size: 12px; color: #718096;">🛒 የሽያጭ ብዛት</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 24px; font-weight: 800; color: #2b6cb0;" id="dashTotalItemsSold">0</div>
+                <div style="font-size: 12px; color: #718096;">📦 የተሸጡ ዕቃዎች</div>
+            </div>
+        </div>
+
+        <div class="dash-card" style="grid-column: 1 / -1;">
+            <div class="dash-header">📈 የ30 ቀን ሽያጭ ግራፍ</div>
+            <div class="chart-container">
+                <canvas id="dailyChartCanvas"></canvas>
+            </div>
+        </div>
+
+        <div class="dash-card" style="grid-column: 1 / -1;">
+            <div class="dash-header">🥧 የወር ወጪ ግራፍ</div>
+            <div class="chart-container" style="height: 200px;">
+                <canvas id="expensePieChartCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<!-- PANEL 8 (Settings) - አዲስ የተጨመረ -->
+<div class="panel" id="panel8">
+<div class="section-collapsible full-width">
+<div class="section-header open" id="hdrSettings" onclick="toggleSection('hdrSettings','bodySettings')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
+</div>
+<div class="section-body open" id="bodySettings">
+    
+    <div class="section-collapsible">
+        <div class="section-header" onclick="toggleSection('hdrBranchMgr','bodyBranchMgr')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">ቅርንጫፎችን አስተዳድር</span></div>
+        </div>
+        <div class="section-body" id="bodyBranchMgr">
+            <div class="cat-add-row">
+                <input type="text" id="newBranch" placeholder="አዲስ ቅርንጫፍ ስም" autocomplete="off">
+                <button onclick="addBranch()">+ ጨምር</button>
+            </div>
+            <div class="cat-tags" id="branchListDisplay" style="margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <div class="section-collapsible">
+        <div class="section-header" onclick="toggleSection('hdrDarkMode','bodyDarkMode')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🌙</span><span class="sec-title">ጨለማ ገጽታ (Dark Mode)</span></div>
+        </div>
+        <div class="section-body" id="bodyDarkMode">
+            <div class="toggle-row" style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                <label style="margin:0;">ጨለማ ገጽታን አብራ</label>
+                <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" style="width:20px; height:20px;">
+            </div>
+        </div>
+    </div>
+
+    <div class="section-collapsible">
+        <div class="section-header" onclick="toggleSection('hdrPassChange','bodyPassChange')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔐</span><span class="sec-title">ፓስወርድ ቀይር</span></div>
+        </div>
+        <div class="section-body" id="bodyPassChange">
+            <label class="field-label">የአሁኑ ፓስወርድ</label>
+            <input type="password" id="currentPassword" placeholder="********">
+            <label class="field-label">አዲስ ፓስወርድ</label>
+            <input type="password" id="newPassword" placeholder="********">
+            <button class="btn btn-warning" onclick="changeCurrentPassword()">💾 ቀይር</button>
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+
+<!-- PANEL 9 (Credit / ዱቤ) - አዲስ የተጨመረ -->
+<div class="panel" id="panel9">
+<div class="section-collapsible full-width">
+<div class="section-header open" id="hdrCredit" onclick="toggleSection('hdrCredit','bodyCredit')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የዱቤ ክፍያዎች</span></div>
+</div>
+<div class="section-body open" id="bodyCredit">
+    <div class="info-banner">💡 ከዚህ ገጽ የዱቤ ክፍያዎችን መመዝገብ እና መከታተል ይችላሉ።</div>
+    <label class="field-label">🏪 ደንበኛ</label>
+    <select id="creditCustomerSelect"></select>
+    <label class="field-label">💰 የተከፈለ መጠን (ብር)</label>
+    <input type="number" id="creditAmount" placeholder="0.00">
+    <label class="field-label">📅 ቀን</label>
+    <input type="date" id="creditDate">
+    <button class="btn btn-success" onclick="addCreditPayment()">💾 ክፍያ መዝግብ</button>
+    
+    <div style="height:1px; background:#edf2f7; margin:20px 0;"></div>
+    <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px;">የቅርብ ጊዜ ክፍያዎች</h3>
+    <div id="creditPaymentList"></div>
+</div>
+</div>
+</div>
+
+</div> <!-- End of panels -->
+</div> <!-- End of tabs-wrapper -->
+</div> <!-- End of main-content-wrapper -->
+</div> <!-- End of mainApp -->
 
 </body>
 </html>
