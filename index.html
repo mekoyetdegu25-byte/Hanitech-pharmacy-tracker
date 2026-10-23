@@ -162,7 +162,8 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
     .main-content-wrapper { display: flex; flex-direction: column; flex: 1; overflow: hidden; background: #f0f4f8; }
     body.dark .main-content-wrapper { background: #1a202c; } 
 
-    #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner { margin: 15px 24px 0 24px; flex-shrink: 0; } 
+    #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner { margin: 15px 24px 0 24px; flex-shrink: 0; }
+    #userPaymentAlert { margin: 15px 24px 0 24px !important; flex-shrink: 0; }
 
     .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: transparent; position: static; width: 100%; } 
 
@@ -188,20 +189,17 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 
     .panel { padding: 0; } 
 
-    /* ሁሉም ታቦች በGrid እንዲሆኑ - ለሁለት አምድ (2 columns) */
     #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 {
         display: grid; 
-        grid-template-columns: repeat(2, 1fr); /* ሁልጊዜ ሁለት አምድ */
+        grid-template-columns: repeat(2, 1fr); 
         gap: 20px; 
         align-items: start;
     } 
 
-    /* የSettings ዋና ካርድ ብቻ ሙሉ ስፋት እንዲይዝ (ሶስተኛው ስእል ላይ እንደሚታየው) */
     #panel8 > .section-collapsible {
         grid-column: 1 / -1;
     }
 
-    /* በSettings ውስጥ ያሉት ንዑስ ካርዶች ራሳቸውን የቻሉ እንዲሆኑ */
     #bodySettings {
         display: grid; 
         grid-template-columns: repeat(2, 1fr); 
@@ -210,10 +208,9 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
     }
     #bodySettings > .section-collapsible {
         margin-bottom: 0;
-        background: #f7fafc; /* ትንሽ የተለየ ቀለም እንዲኖራቸው */
+        background: #f7fafc; 
     }
 
-    /* ሙሉ ስፋት መያዝ ያለባቸው ልዩ ካርዶች (እንደ ዳሽቦርድ እና ሪፖርቶች) */
     #hdrDaily, #hdrMonthly, #hdrDash, .true-full-width {
         grid-column: 1 / -1 !important;
     }
@@ -223,16 +220,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 
     .dash-grid { grid-template-columns: repeat(2, 1fr); }
     .dash-card[style*="grid-column: 1 / -1"] { grid-column: 1 / -1 !important; }
-}
-
-/* ለትልቅ ስክሪን (1200px እና ከዚያ በላይ) ሶስት አምድ እንዲሆን ከፈለጉ ይህንን ይጠቀሙ */
-@media (min-width: 1200px) {
-    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 {
-        grid-template-columns: repeat(3, 1fr); 
-    }
-    #bodySettings {
-        grid-template-columns: repeat(3, 1fr);
-    }
 }
 </style>
 </head>
@@ -290,6 +277,11 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <button class="btn-logout-hdr" onclick="logout()">🚪</button>
 </div>
 </header> 
+
+<!-- Payment Expiry Alert Banner for User -->
+<div id="userPaymentAlert" style="display:none; background:#fffaf0; color:#dd6b20; padding:12px; margin: 10px 14px; border-radius:10px; border:1px solid #fbd38d; font-weight:bold; font-size:13px; text-align:center; z-index: 102;">
+  ⚠️ <span id="userPaymentAlertText"></span>
+</div>
 
 <div class="main-content-wrapper">
 <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
@@ -442,8 +434,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <option value="medicine">💊 መድሃኒት</option>
 <option value="cosmetic">🧴 ኮስሞቲክስ</option>
 </select>
-<label class="field-label">📁 ምድብ</label>
-<select id="quickCat"></select>
+<!-- ምድብ ተወግዷል -->
 <label class="field-label">🏢 ቅርንጫፍ</label>
 <select id="quickBranch"></select>
 <label class="field-label">📅 ቀን</label>
@@ -887,7 +878,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 12. Support (ተስተካክሏል) -->
+    <!-- 12. Support -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrSupport" onclick="toggleSection('hdrSupport','bodySupport')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📞</span><span class="sec-title">የድጋፍ መረጃ (Support Info)</span></div>
@@ -926,9 +917,20 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div class="panel" id="panel9">
 <div class="section-collapsible true-full-width">
 <div class="section-header open" id="hdrCredit" onclick="toggleSection('hdrCredit','bodyCredit')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የዱቤ ክፍያዎች</span></div>
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">የዱቤ ክፍያዎች እና ዕዳዎች</span></div>
 </div>
 <div class="section-body open" id="bodyCredit">
+    
+    <!-- ያልተከፈሉ ዕዳዎች ማጠቃለያ -->
+    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7; margin-bottom:12px;">
+        <div class="section-header open" id="hdrCreditList" onclick="toggleSection('hdrCreditList','bodyCreditList')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">በዱቤ የተሸጡ (ያልተከፈሉ)</span></div>
+        </div>
+        <div class="section-body open" id="bodyCreditList">
+            <div id="unpaidCreditList"></div>
+        </div>
+    </div>
+
     <div class="info-banner">💡 ከዚህ ገጽ የዱቤ ክፍያዎችን መመዝገብ እና መከታተል ይችላሉ።</div>
     <label class="field-label">🏪 ደንበኛ</label>
     <select id="creditCustomerSelect"></select>
@@ -1056,6 +1058,9 @@ async function loadUserHeader(user) {
                 allowedBizType = phData.bizType || 'retail';
                 currentBizType = phData.userBizType || allowedBizType; 
                 lowStockThreshold = phData.lowStockThreshold || 10; 
+                
+                checkUserPaymentStatus(phData); // የክፍያ ማሳወቂያ ማረጋገጫ
+
                 if (phData.isSuspended) {
                     document.getElementById('mainApp').classList.remove('show');
                     document.getElementById('loginScreen').classList.remove('hidden');
@@ -1067,6 +1072,41 @@ async function loadUserHeader(user) {
         }
     } catch (err) { console.error('loadUserHeader error:', err); }
 } 
+
+// አዲስ የተጨመረ ተግባር
+function checkUserPaymentStatus(phData) {
+    const alertBanner = document.getElementById('userPaymentAlert');
+    const alertText = document.getElementById('userPaymentAlertText');
+    if (!alertBanner) return;
+
+    const expiryDate = phData.expiryDate;
+    if (!expiryDate) {
+        alertBanner.style.display = 'none';
+        return;
+    }
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const expiry = new Date(expiryDate);
+    const diffTime = expiry - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+        alertBanner.style.display = 'block';
+        alertBanner.style.background = '#fed7d7';
+        alertBanner.style.color = '#822727';
+        alertBanner.style.borderColor = '#feb2b2';
+        alertText.innerHTML = `🚨 የክፍያ ጊዜዎ አልፏል! እባክዎ አስተዳዳሪውን ያግኙ።`;
+    } else if (diffDays <= 5) {
+        alertBanner.style.display = 'block';
+        alertBanner.style.background = '#fefcbf';
+        alertBanner.style.color = '#975a16';
+        alertBanner.style.borderColor = '#fef08a';
+        alertText.innerHTML = `⚠️ የክፍያ ጊዜዎ በ ${diffDays} ቀናት ውስጥ ያበቃል! እባክዎ አስቀድመው ይክፈሉ።`;
+    } else {
+        alertBanner.style.display = 'none';
+    }
+}
 
 window.login = async function() {
     const email = document.getElementById('email').value.trim();
@@ -1168,7 +1208,8 @@ async function loadAllData() {
     await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
     await loadMedicines(); await loadSales(); await loadExpenses(); await loadFixed(); await loadCreditPayments();
     loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); checkExpiryAlerts(); loadDarkMode(); applyBizTypeUI();
-    renderSalesHistory(); // አዲስ የተጨመረ
+    renderSalesHistory(); 
+    renderUnpaidCredits(); // አዲስ የተጨመረ ለዱቤ
 } 
 
 function applyBizTypeUI() {
@@ -1226,7 +1267,13 @@ async function loadExpCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'expenseCategories'), where('pharmacyId', '==', currentUserPharmacyId)));
         allExpCategories = []; const select = document.getElementById('expCat'); select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
-        snap.forEach(doc => { const catName = doc.data().name; allExpCategories.push(catName); select.innerHTML += `<option value="${catName}">${catName}</option>`; });
+        const fixSelect = document.getElementById('fixCat'); if(fixSelect) fixSelect.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
+        
+        snap.forEach(doc => { 
+            const catName = doc.data().name; allExpCategories.push(catName); 
+            select.innerHTML += `<option value="${catName}">${catName}</option>`; 
+            if(fixSelect) fixSelect.innerHTML += `<option value="${catName}">${catName}</option>`; 
+        });
         renderExpCatList();
     } catch(e) { console.error(e); }
 } 
@@ -1329,23 +1376,13 @@ window.addMedicine = async function() {
 
 async function loadMedicines() {
     try {
-        console.log("Loading medicines for Pharmacy ID:", currentUserPharmacyId); // ለማረጋገጥ
-        
-        const q = query(
-            collection(db, 'medicines'), 
-            where('pharmacyId', '==', currentUserPharmacyId), 
-        );
+        const q = query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId));
         const snapshot = await getDocs(q);
         allMedicines = [];
         snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
-        
-        console.log("Medicines found:", allMedicines.length); // ስንት ምርት እንደተገኘ ለማየት
         renderMedList();
-    } catch (err) { 
-        console.error("Error loading medicines:", err); 
-        alert("ስህተት አጋጥሟል: " + err.message);
-    }
-}
+    } catch (err) { console.error("Error loading medicines:", err); }
+} 
 
 window.renderMedList = function() {
     const listEl = document.getElementById('medListDisplay');
@@ -1458,14 +1495,14 @@ window.completeSale = async function() {
 
 window.addQuickSale = async function() {
     const type = document.getElementById('quickType').value;
-    const cat = document.getElementById('quickCat').value;
     const branch = document.getElementById('quickBranch').value;
     const date = document.getElementById('quickDate').value;
     const amount = parseFloat(document.getElementById('quickAmount').value);
-    if(!cat || !date || isNaN(amount) || amount <= 0) { alert('ሁሉንም መረጃዎች ሙላ'); return; } 
+    // ምድብ አያስፈልግም
+    if(!date || isNaN(amount) || amount <= 0) { alert('ሁሉንም መረጃዎች ሙላ'); return; } 
 
     try {
-        await addDoc(collection(db, 'quickSales'), { type, category: cat, branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+        await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
         alert('✅ ተመዝግቧል!');
         document.getElementById('quickAmount').value = '';
         loadAllData();
@@ -1520,6 +1557,8 @@ function loadInventory() {
     const listEl = document.getElementById('inventoryList');
     const filter = document.getElementById('filterTypeInv').value;
     let filtered = allMedicines;
+    
+    // ማስተካከያ፡ የተመረጠውን ብቻ ማሳየት
     if (filter === 'medicine') filtered = allMedicines.filter(m => m.type === 'medicine');
     else if (filter === 'cosmetic') filtered = allMedicines.filter(m => m.type === 'cosmetic'); 
 
@@ -1663,7 +1702,19 @@ async function loadMonthlyReport() {
     if (branch !== 'all') { monthSales = monthSales.filter(s => s.branch === branch); monthExp = monthExp.filter(e => e.branch === branch); }
 
     let totalRev = 0, totalExp = 0, totalFixed = 0;
-    monthSales.forEach(s => { totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total; });
+    let cashRev = 0, transferRev = 0, creditRev = 0;
+    let salesHtml = '';
+
+    monthSales.forEach(s => { 
+        totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total; 
+        if (s.paymentMethod === 'transfer') transferRev += (s.paidAmount !== undefined ? s.paidAmount : s.total);
+        else if (s.paymentMethod === 'credit') creditRev += (s.paidAmount || 0);
+        else cashRev += (s.paidAmount !== undefined ? s.paidAmount : s.total); 
+
+        const pmLabel = s.paymentMethod === 'transfer' ? '🏦' : (s.paymentMethod === 'credit' ? '📝' : '💵');
+        salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር ${pmLabel} ${s.customer ? '| 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? '| 🏢 '+s.branch : '')} | 📅 ${s.date}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`;
+    });
+    
     monthExp.forEach(e => { totalExp += e.amount; });
     monthFixed.forEach(f => { totalFixed += f.amount; });
 
@@ -1671,6 +1722,10 @@ async function loadMonthlyReport() {
     document.getElementById('monthlyTotalExpense').innerHTML = totalExp.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('monthlyFixedExpense').innerHTML = totalFixed.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('monthlyNetProfit').innerHTML = (totalRev - totalExp - totalFixed).toFixed(2) + ' <small>ብር</small>';
+    
+    // ማስተካከያ፡ የወሩ ሽያጮች እና የክፍያ ዓይነት ማሳያ
+    document.getElementById('monthlySalesList').innerHTML = salesHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
+    document.getElementById('monthlyPaymentSummary').innerHTML = `<div class="list-item"><div class="info"><div class="name">💵 Cash</div></div><div class="amount">${cashRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">🏦 Transfer</div></div><div class="amount">${transferRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">📝 Credit</div></div><div class="amount">${creditRev.toFixed(2)} ብር</div></div>`;
 }
 
 async function loadDashboard() {
@@ -1710,7 +1765,7 @@ function renderCharts() {
     }
 }
 
-// ---- Settings & Support Info ----
+// ---- Settings ----
 async function loadSettings() {
     try {
         const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
@@ -1750,10 +1805,9 @@ async function loadSettings() {
     } catch(e) { console.error(e); }
 
     loadCreditPaymentHistory();
-    loadSupportInfo(); // አዲስ የተጨመረ
+    loadSupportInfo(); 
 }
 
-// አዲስ የተጨመረ
 async function loadSupportInfo() {
     try {
         const supportDoc = await getDoc(doc(db, 'settings', 'support'));
@@ -1846,7 +1900,7 @@ window.addCreditPayment = async function() {
         await addDoc(collection(db, 'creditPayments'), { customer, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
         alert('✅ ክፍያው ተመዝግቧል!');
         document.getElementById('creditAmount').value = '';
-        loadCreditPayments();
+        loadAllData();
     } catch(e) { alert(e.message); }
 };
 function loadCreditPaymentHistory() {
@@ -1854,6 +1908,57 @@ function loadCreditPaymentHistory() {
     if(allCreditPayments.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ክፍያ የለም።</p>'; return; }
     let html = '';
     allCreditPayments.forEach(p => { html += `<div class="list-item"><div class="info"><div class="name">🏪 ${p.customer}</div><div class="meta">📅 ${p.date}</div></div><div class="amount green">+ ${p.amount.toFixed(2)} ብር</div></div>`; });
+    listEl.innerHTML = html;
+}
+
+// አዲስ የተጨመረ፡ በዱቤ የተሸጡ ዕቃዎችን እና ዕዳ ማሳያ
+function renderUnpaidCredits() {
+    const listEl = document.getElementById('unpaidCreditList');
+    if(!listEl) return;
+
+    // በዱቤ የተሸጡ እና ሙሉ በሙሉ ያልተከፈሉ ሽያጮችን መለየት
+    const creditSales = allSales.filter(s => s.paymentMethod === 'credit');
+    
+    // ለእያንዳንዱ ደንበኛ ያለውን ጠቅላላ ዕዳ ማስላት
+    const customerDebts = {};
+    creditSales.forEach(sale => {
+        const customer = sale.customer || 'ያልታወቀ ደንበኛ';
+        const unpaid = sale.total - (sale.paidAmount || 0);
+        if(unpaid > 0) {
+            if(!customerDebts[customer]) customerDebts[customer] = 0;
+            customerDebts[customer] += unpaid;
+        }
+    });
+
+    // ከተመዘገቡ የዱቤ ክፍያዎች መቀነስ (ከተመዘገቡ)
+    allCreditPayments.forEach(payment => {
+        const customer = payment.customer;
+        if(customerDebts[customer]) {
+            customerDebts[customer] -= payment.amount;
+            if(customerDebts[customer] <= 0) delete customerDebts[customer]; // ከተከፈለ አጥፋ
+        }
+    });
+
+    const customersWithDebt = Object.keys(customerDebts);
+
+    if(customersWithDebt.length === 0) {
+        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ያልተከፈለ ዕዳ የለም።</p>';
+        return;
+    }
+
+    let html = '';
+    customersWithDebt.forEach(customer => {
+        const debt = customerDebts[customer];
+        if(debt > 0) {
+            html += `<div class="list-item" style="background:#fff5f5; border-color:#fed7d7;">
+                <div class="info">
+                    <div class="name" style="color:#c53030;">🏪 ${customer}</div>
+                    <div class="meta">ያልተከፈለ ዕዳ</div>
+                </div>
+                <div class="amount red" style="font-size:16px;">${debt.toFixed(2)} ብር</div>
+            </div>`;
+        }
+    });
     listEl.innerHTML = html;
 }
 
@@ -1901,7 +2006,6 @@ function renderSalesHistory() {
         return;
     }
 
-    // ከአዲስ ወደ አሮጌ መደርደር
     const sortedSales = [...allSales].sort((a, b) => {
         const dateA = a.date || '';
         const dateB = b.date || '';
@@ -1949,16 +2053,12 @@ window.deleteSale = async function(saleId, medicineId, quantity) {
     if (!confirm('🚨 እርግጠኛ ነዎት? ይህን ሽያጭ መሰረዝ ትፈልጋለህ? (ክምችቱ ወደነበረበት ይመለሳል)')) return;
     
     try {
-        // 1. የተሸጠውን ብዛት ወደ ክምችት መመለስ
         if (medicineId) {
             await updateDoc(doc(db, 'medicines', medicineId), { quantity: increment(quantity) });
         }
-        
-        // 2. የሽያጩን መዝገብ መሰረዝ
         await deleteDoc(doc(db, 'sales', saleId));
-        
         alert('✅ ሽያጩ ተሰርዟል እና ክምችቱ ተመልሷል!');
-        loadAllData(); // ገጹን ማደስ
+        loadAllData();
     } catch(e) {
         alert('⚠️ ስህተት: ' + e.message);
     }
