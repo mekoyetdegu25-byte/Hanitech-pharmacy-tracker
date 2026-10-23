@@ -1282,17 +1282,25 @@ function setupRealtimeListeners() {
     if(unsubCredit) unsubCredit();
 
     // መድሃኒቶች
-    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        allMedicines = [];
-        snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
-        renderMedList(); 
-        loadInventory(); 
-        renderSellProducts(); 
-        checkExpiryAlerts();
-    }, (error) => {
-        console.error("Error in medicines listener: ", error);
-        alert("የመድሃኒት ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
+unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
+    allMedicines = [];
+    snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
+    
+    // በ JavaScript በኩል መደርደር (አዲሱ መጀመሪያ)
+    allMedicines.sort((a, b) => {
+        const timeA = a.createdAt?.seconds || 0;
+        const timeB = b.createdAt?.seconds || 0;
+        return timeB - timeA;
     });
+
+    renderMedList(); 
+    loadInventory(); 
+    renderSellProducts(); 
+    checkExpiryAlerts();
+}, (error) => {
+    console.error("Error in medicines listener: ", error);
+    // alert ተወግዷል (ተጠቃሚው ስህተት እንዳያይ)
+});
 
     // ሽያጮች
     unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
@@ -1505,6 +1513,29 @@ window.addMedicine = async function() {
     } catch (err) { alert('⚠️ ስህተት: ' + err.message); }
 }; 
 
+async function loadMedicines() {
+    try {
+        const q = query(
+            collection(db, 'medicines'), 
+            where('pharmacyId', '==', currentUserPharmacyId)
+        );
+        const snapshot = await getDocs(q);
+        allMedicines = [];
+        snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
+        
+        // በ JavaScript በኩል አዲሱ መጀመሪያ እንዲሆን መደርደር
+        allMedicines.sort((a, b) => {
+            const timeA = a.createdAt?.seconds || 0;
+            const timeB = b.createdAt?.seconds || 0;
+            return timeB - timeA;
+        });
+
+        renderMedList();
+    } catch (err) { 
+        console.error("Error loading medicines:", err); 
+    }
+}
+   
 window.renderMedList = function() {
     const listEl = document.getElementById('medListDisplay');
     const filter = document.getElementById('filterTypeMed').value;
