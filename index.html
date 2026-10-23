@@ -1281,34 +1281,66 @@ function setupRealtimeListeners() {
     if(unsubFixed) unsubFixed();
     if(unsubCredit) unsubCredit();
 
+    // መድሃኒቶች
     unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         allMedicines = [];
         snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
-        renderMedList(); loadInventory(); renderSellProducts(); checkExpiryAlerts();
+        renderMedList(); 
+        loadInventory(); 
+        renderSellProducts(); 
+        checkExpiryAlerts();
+    }, (error) => {
+        console.error("Error in medicines listener: ", error);
+        alert("የመድሃኒት ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 
+    // ሽያጮች
     unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         allSales = [];
         snapshot.forEach(doc => allSales.push({ id: doc.id, ...doc.data() }));
-        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); generateReport();
+        loadDailyReport(); 
+        loadMonthlyReport(); 
+        loadDashboard(); 
+        renderSalesHistory(); 
+        renderUnpaidCredits(); 
+        generateReport();
+    }, (error) => {
+        console.error("Error in sales listener: ", error);
     });
 
+    // ወጪዎች
     unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         allExpenses = [];
         snapshot.forEach(doc => allExpenses.push({ id: doc.id, ...doc.data() }));
-        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); generateReport();
+        loadDailyReport(); 
+        loadMonthlyReport(); 
+        loadDashboard(); 
+        renderExpenseHistory(); 
+        generateReport();
+    }, (error) => {
+        console.error("Error in expenses listener: ", error);
     });
 
+    // ቋሚ ወጪዎች
     unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         allFixed = [];
         snapshot.forEach(doc => allFixed.push({ id: doc.id, ...doc.data() }));
-        loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory(); generateReport();
+        loadMonthlyReport(); 
+        loadDashboard(); 
+        renderFixedExpenseHistory(); 
+        generateReport();
+    }, (error) => {
+        console.error("Error in fixed expenses listener: ", error);
     });
 
+    // የዱቤ ክፍያዎች
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         allCreditPayments = [];
         snapshot.forEach(doc => allCreditPayments.push({ id: doc.id, ...doc.data() }));
-        loadCreditPaymentHistory(); renderUnpaidCredits();
+        loadCreditPaymentHistory(); 
+        renderUnpaidCredits();
+    }, (error) => {
+        console.error("Error in credit payments listener: ", error);
     });
 }
 
