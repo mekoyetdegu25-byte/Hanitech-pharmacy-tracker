@@ -151,66 +151,63 @@
   body.dark .dash-list li { border-bottom-color: #4a5568; }
   .dash-list li:last-child { border-bottom: none; padding-bottom: 0; }
 
-  /* DESKTOP LAYOUT */
+  /* Desktop Layout */
   @media (min-width: 768px) {
     body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; }
     
+    /* 👇 ይህ በትክክል የሚሰራው የግሪድ አቀማመጥ ነው */
     #mainApp.show { 
-      display: flex; 
-      flex-direction: column;
+      display: grid; 
+      grid-template-columns: 260px 1fr; 
+      grid-template-rows: 70px 1fr; 
       height: 100vh; 
       width: 100%;
       max-width: 100%;
-      overflow: hidden;
     }
 
     header { 
-      width: 100%;
-      height: 70px;
+      grid-column: 1 / -1; 
+      grid-row: 1;
       border-radius: 0; 
       margin-bottom: 0; 
       padding: 0 24px; 
+      position: static; 
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       z-index: 101;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-shrink: 0;
-      position: relative;
     }
 
-    /* 👈 የሁለት አምድ መጠቅለያ */
-    .main-content-wrapper {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-      width: 100%;
+    /* ባነሮቹ ከራስጌው በታች በቀኝ በኩል እንዲሆኑ (ከታቦቹ ጋር እንዳይጋቡ) */
+    #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner {
+      grid-column: 2;
+      margin: 10px 24px 0 24px;
+      z-index: 100;
+      position: absolute; /* በቀኝ በኩል ብቻ እንዲያርፉ */
+      right: 0;
+      width: calc(100% - 260px - 48px);
     }
-    body.dark .main-content-wrapper { background: #1a202c; }
 
-    /* የግራ በኩል ታቦች (Sidebar) */
+    /* 👈 የግራ በኩል ታቦች (Sidebar) */
     .tabs-wrapper { 
-      width: 260px; 
-      height: 100%; 
+      grid-column: 1; 
+      grid-row: 1 / span 2; /* ራስጌውን ጨምሮ ሙሉ ቁመቱን ይይዛል */
+      margin-top: 70px; /* ከራስጌው በታች እንዲጀምር */
+      position: static; 
+      height: calc(100vh - 70px); 
       background: #fff; 
       border-right: 1px solid #e2e8f0; 
       padding-top: 20px; 
       overflow-y: auto;
-      flex-shrink: 0;
-      position: static;
     }
     body.dark .tabs-wrapper { background: #2d3748; border-right: 1px solid #4a5568; }
 
-    /* ራዲዮ ቁልፎቹን ደብቅ */
-    input[type="radio"][name="tabs"] { display: none !important; }
-
     .tabs { 
-      display: flex;
       flex-direction: column; 
       padding: 0 16px; 
       gap: 8px; 
       width: 100%;
-      overflow: visible;
     }
     
     .tabs label { 
@@ -223,7 +220,6 @@
       border: none;
       border-radius: 10px;
       background: transparent;
-      cursor: pointer;
     }
     
     .tabs label:hover { background: #edf2f7; }
@@ -231,7 +227,6 @@
     
     .tabs label i { margin-bottom: 0; margin-right: 15px; font-size: 24px;}
 
-    /* የተመረጠው ታብ ስታይል */
     #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { 
       background: #ebf4ff; 
       color: #2c5282;
@@ -243,122 +238,44 @@
       color: #63b3ed;
       border-left: 4px solid #63b3ed; 
     }
-@media (min-width: 768px) {
-  body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; }
-  
-  #mainApp.show { 
-    display: grid; 
-    grid-template-columns: 260px 1fr; /* 👈 የግራ ታቦች ስፋት 260px፣ ቀኝ ይዘት ቀሪውን ይወስዳል */
-    grid-template-rows: 70px 1fr; 
-    height: 100vh; 
-    width: 100%;
-    max-width: 100%;
-  }
 
-  /* ራስጌው (Header) ሁለቱንም አምዶች ይይዛል */
-  header { 
-    grid-column: 1 / -1; 
-    grid-row: 1;
-    border-radius: 0; 
-    margin-bottom: 0; 
-    padding: 0 24px; 
-    position: static; 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 101;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+    /* 👉 የቀኝ በኩል ይዘት (Panels) */
+    .panels { 
+      grid-column: 2; 
+      grid-row: 2;
+      padding: 24px; 
+      background: #f0f4f8;
+      overflow-y: auto;
+      height: 100%;
+      margin-top: 10px;
+    }
+    body.dark .panels { background: #1a202c; }
+    
+    .panel { padding: 0; }
+    
+    /* ይዘቱ በ 2 ወይም 3 አምዶች እንዲሆን */
+    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+      gap: 20px; 
+      align-items: start; 
+    }
+    
+    .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings { 
+      grid-column: 1 / -1; 
+    }
+    
+    .section-collapsible { 
+      margin-bottom: 0; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      border: 1px solid #edf2f7;
+      background: #fff;
+      border-radius: 12px;
+    }
+    body.dark .section-collapsible { background: #2d3748; border-color: #4a5568; }
 
-  /* 👈 የግራ በኩል ታቦች (Sidebar) */
-  .tabs-wrapper { 
-    grid-column: 1; /* በግራ በኩል እንዲቀመጥ */
-    grid-row: 2;
-    position: static; 
-    height: 100%; 
-    background: #fff; 
-    border-right: 1px solid #e2e8f0; 
-    padding-top: 20px; 
-    overflow-y: auto;
+    .dash-grid { grid-template-columns: 1fr 1fr; }
   }
-  body.dark .tabs-wrapper { background: #2d3748; border-right: 1px solid #4a5568; }
-
-  .tabs { 
-    flex-direction: column; 
-    padding: 0 16px; 
-    gap: 8px; 
-    width: 100%;
-  }
-  
-  .tabs label { 
-    flex-direction: row; 
-    justify-content: flex-start; 
-    padding: 14px 20px; 
-    min-width: 100%; 
-    font-size: 15px;
-    box-shadow: none;
-    border: none;
-    border-radius: 10px;
-    background: transparent;
-  }
-  
-  .tabs label:hover { background: #edf2f7; }
-  body.dark .tabs label:hover { background: #4a5568; }
-  
-  .tabs label i { margin-bottom: 0; margin-right: 15px; font-size: 24px;}
-
-  #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { 
-    background: #ebf4ff; 
-    color: #2c5282;
-    border-left: 4px solid #2c5282; 
-    font-weight: 800;
-  }
-  body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"] { 
-    background: #4a5568; 
-    color: #63b3ed;
-    border-left: 4px solid #63b3ed; 
-  }
-
-  /* 👉 የቀኝ በኩል ይዘት (Panels) */
-  .panels { 
-    grid-column: 2; /* 👈 በቀኝ በኩል እንዲቀመጥ */
-    grid-row: 2;
-    padding: 24px; 
-    background: #f0f4f8;
-    overflow-y: auto;
-    height: 100%;
-    width: 100%;
-  }
-  body.dark .panels { background: #1a202c; }
-  
-  .panel { padding: 0; width: 100%; }
-  
-  /* ይዘቱ በ 2 ወይም 3 አምዶች እንዲሆን (ልክ እንደ ካርድ) */
-  #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
-    gap: 20px; 
-    align-items: start; 
-  }
-  
-  /* ሙሉ ስፋት ያለባቸው ክፍሎች */
-  .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings { 
-    grid-column: 1 / -1; 
-  }
-  
-  /* የካርድ መልክ እንዲኖራቸው */
-  .section-collapsible { 
-    margin-bottom: 0; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-    border: 1px solid #edf2f7;
-    background: #fff;
-    border-radius: 12px;
-  }
-  body.dark .section-collapsible { background: #2d3748; border-color: #4a5568; }
-
-  /* Dashboard Grid Layout (የዳሽቦርዱ ካርዶች በ2 አምድ) */
-  .dash-grid { grid-template-columns: 1fr 1fr; }
-}
 </style>
 </head>
 <body>
@@ -418,6 +335,7 @@
     </div>
   </header>
 
+  <!-- 👇 ይህ መጠቅለያ አሁን በትክክል ተስተካክሏል -->
   <div class="main-content-wrapper" style="display: contents;">
     <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
     <div id="stockAlertBanner">🚨 <span id="stockAlertText"></span></div>
