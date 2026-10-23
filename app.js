@@ -31,6 +31,7 @@ let currentBizType = 'retail';
 let allowedBizType = 'retail';
 let lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
+let dashViewDate = new Date(); // ለዳሽቦርድ ወር መቀየሪያ
 
 // Splash Screen Logic
 setTimeout(() => {
@@ -100,13 +101,11 @@ async function loadUserHeader(user) {
         const phData = phDoc.data();
         document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phData.name || 'Pharmacy Tracker');
         
-        // 👇 አዲስ (Admin የፈቀደው እና ተጠቃሚው የመረጠው)
         allowedBizType = phData.bizType || 'retail'; 
         currentBizType = phData.userBizType || allowedBizType; 
         
         lowStockThreshold = phData.lowStockThreshold || 10;
 
-        // 👇 የተጠቃሚውን መግቢያ ለመከልከል (Suspended)
         if (phData.isSuspended) {
           document.getElementById('mainApp').classList.remove('show');
           document.getElementById('loginScreen').classList.remove('hidden');
@@ -249,7 +248,6 @@ async function applyPermissionsUI() {
   const tabInputs = document.querySelectorAll('input[name="tabs"]');
   const tabsLabels = document.querySelectorAll('.tabs label');
 
-  // Owners see everything
   if (currentUserRole === 'owner') return;
 
   let perms = null;
@@ -338,7 +336,6 @@ function applyBizTypeUI() {
   const tab7Label = document.querySelector('label[for="tab7"]');
   const tab8Label = document.querySelector('label[for="tab8"]');
 
-  // መጀመሪያ ሁሉንም አሳይ
   if (tab3Label) tab3Label.style.display = 'flex';
   if (tab4Label) tab4Label.style.display = 'flex';
   if (tab5Label) tab5Label.style.display = 'flex';
@@ -358,7 +355,6 @@ function applyBizTypeUI() {
     if (tab7Label) tab7Label.style.display = 'none';
 
   } else {
-    // Retail
     if (creditOpt) creditOpt.style.display = 'none';
     if (tabCreditLabel) tabCreditLabel.style.display = 'none';
     if (wholesaleFields) wholesaleFields.style.display = 'none';
@@ -1036,56 +1032,57 @@ async function loadMonthlyReport() {
   `;
 }
 
+window.changeDashMonth = function(offset) {
+  dashViewDate.setMonth(dashViewDate.getMonth() + offset);
+  loadDashboard();
+};
+
 async function loadDashboard() {
-  const today = new Date().toISOString().split('T')[0];
-  const month = today.substring(0,7);
-
-  // --- የዛሬ ---
-  const tSales = allSales.filter(s => s.date === today); 
-  let tRev = 0; 
-  tSales.forEach(s => tRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
-  const tExp = allExpenses.filter(e => e.date === today); 
-  let tExpSum = 0; 
-  tExp.forEach(e => tExpSum += e.amount);
+  const monthStr = dashViewDate.toISOString().slice(0,7);
   
-  const qTQuick = query(collection(db, 'quickSales'), where('date', '==', today), where('pharmacyId', '==', currentUserPharmacyId));
-  const tQuickSnap = await getDocs(qTQuick);
-  tQuickSnap.forEach(d => tRev += d.data().amount);
+  // የወር ስም ማሳያ
+  const monthNames = ["ጃንዩወሪ", "ፌብሩወሪ", "ማርች", "ኤፕሪል", "ሜይ", "ጁን", "ጁላይ", "ኦገስት", "ሴፕቴምበር", "ኦክቶበር", "ኖቬምበር", "ዲሴምበር"];
+  const mIndex = dashViewDate.getMonth();
+  const year = dashViewDate.getFullYear();
+  
+  if(document.getElementById('dashMonthTitle')) document.getElementById('dashMonthTitle').innerText = `${monthNames[mIndex]} ${year}`;
+  if(document.getElementById('dashCurrentMonthLabel')) document.getElementById('dashCurrentMonthLabel').innerText = `${monthStr}`;
 
-  document.getElementById('dashTodayRevenue').innerHTML = tRev.toFixed(2) + ' <small>ብር</small>';
-  document.getElementById('dashTodayExpense').innerHTML = tExpSum.toFixed(2) + ' <small>ብር</small>';
-  document.getElementById('dashTodayProfit').innerHTML = (tRev - tExpSum).toFixed(2) + ' <small>ብር</small>';
-
-  // --- የወር ---
-  const mSales = allSales.filter(s => s.date && s.date.startsWith(month)); 
+  // --- የወሩ መረጃ ማሰባሰብ ---
+  const mSales = allSales.filter(s => s.date && s.date.startsWith(monthStr)); 
   let mRev = 0; 
   mSales.forEach(s => mRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
-  const mExp = allExpenses.filter(e => e.date && e.date.startsWith(month)); 
+  
+  const mExp = allExpenses.filter(e => e.date && e.date.startsWith(monthStr)); 
   let mExpSum = 0; 
   mExp.forEach(e => mExpSum += e.amount);
   
-  const qMQuick = query(collection(db, 'quickSales'), where('date', '>=', month + '-01'), where('date', '<=', month + '-31'), where('pharmacyId', '==', currentUserPharmacyId));
+  let fixedTotal = 0;
+  allFixed.filter(f => f.month === monthStr).forEach(f => fixedTotal += f.amount);
+
+  const qMQuick = query(collection(db, 'quickSales'), where('date', '>=', monthStr + '-01'), where('date', '<=', monthStr + '-31'), where('pharmacyId', '==', currentUserPharmacyId));
   const mQuickSnap = await getDocs(qMQuick);
   mQuickSnap.forEach(d => mRev += d.data().amount);
 
-  // 👇 አዲስ - የተጣራ ትርፍ (ጠቅላላ ሽያጭ - የእቃዎች የግዢ ዋጋ - ወጪዎች)
+  // የተጣራ ትርፍ ስሌት
   let costOfGoodsSold = 0;
   mSales.forEach(s => {
     const med = allMedicines.find(m => m.id === s.medicineId);
-    if (med && med.cost) {
-      costOfGoodsSold += (med.cost * s.quantity);
-    }
+    if (med && med.cost) costOfGoodsSold += (med.cost * s.quantity);
   });
-  const netProfit = mRev - costOfGoodsSold - mExpSum;
+  const netProfit = mRev - costOfGoodsSold - mExpSum - fixedTotal;
 
-  document.getElementById('dashMonthRevenue').innerHTML = mRev.toFixed(2) + ' <small>ብር</small>';
-  document.getElementById('dashMonthExpense').innerHTML = mExpSum.toFixed(2) + ' <small>ብር</small>';
-  document.getElementById('dashMonthProfit').innerHTML = (mRev - mExpSum).toFixed(2) + ' <small>ብር</small>';
+  // --- HTML ላይ ማሳየት ---
   
-  // 👇 አዲስ የተጨመረ
-  if (document.getElementById('dashNetProfit')) {
-    document.getElementById('dashNetProfit').innerHTML = netProfit.toFixed(2) + ' <small>ብር</small>';
-  }
+  if(document.getElementById('dashMonthRevenue')) document.getElementById('dashMonthRevenue').innerText = mRev.toFixed(2) + ' ብር';
+  if(document.getElementById('dashRevBadge')) document.getElementById('dashRevBadge').innerText = mRev.toFixed(2) + ' ብር';
+  
+  if(document.getElementById('dashListRev')) document.getElementById('dashListRev').innerText = mRev.toFixed(2) + ' ብር';
+  if(document.getElementById('dashListVarExp')) document.getElementById('dashListVarExp').innerText = mExpSum.toFixed(2) + ' ብር';
+  if(document.getElementById('dashListFixExp')) document.getElementById('dashListFixExp').innerText = fixedTotal.toFixed(2) + ' ብር';
+  if(document.getElementById('dashListProfit')) document.getElementById('dashListProfit').innerText = (mRev - mExpSum - fixedTotal).toFixed(2) + ' ብር';
+  
+  if(document.getElementById('dashNetProfit')) document.getElementById('dashNetProfit').innerText = netProfit.toFixed(2) + ' ብር';
 
   renderBranchReport();
   renderCharts();
@@ -1198,7 +1195,6 @@ async function loadSettings() {
         const data = d.data();
         document.getElementById('settingPharmacyName').value = data.name || '';
         
-        // 👇 አዲስ (Admin የፈቀደው እና ተጠቃሚው የመረጠው)
         allowedBizType = data.bizType || 'retail'; 
         currentBizType = data.userBizType || allowedBizType; 
         
@@ -1207,7 +1203,6 @@ async function loadSettings() {
         const bizSelect = document.getElementById('settingBizType');
         const infoBanner = document.getElementById('bizTypeInfo');
 
-        // 👇 በ Admin በተፈቀደው መሰረት አማራጮችን ማሳየት
         if (allowedBizType === 'retail') {
           bizSelect.innerHTML = '<option value="retail" selected>🛒 Retail (ችርቻሮ)</option>';
           bizSelect.disabled = true;
@@ -1217,7 +1212,6 @@ async function loadSettings() {
           bizSelect.disabled = true;
           infoBanner.innerHTML = '⚠️ ይህ ፋርማሲ በ Admin የተፈቀደው Wholesale ብቻ ነው።';
         } else {
-          // Both - ሶስቱም አማራጮች ይታያሉ
           bizSelect.innerHTML = `
             <option value="retail">🛒 Retail (ችርቻሮ)</option>
             <option value="wholesale">🚚 Wholesale (አከፋፋይ)</option>
@@ -1234,8 +1228,10 @@ async function loadSettings() {
   applyBizTypeUI();
   
   const qc = document.getElementById('quickCat');
-  qc.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
-  allCategories.forEach(c => { qc.innerHTML += `<option value="${c}">${c}</option>`; });
+  if(qc) {
+    qc.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
+    allCategories.forEach(c => { qc.innerHTML += `<option value="${c}">${c}</option>`; });
+  }
   renderCreditList();
 
   // Load permissions if owner
@@ -1272,15 +1268,17 @@ async function loadSettings() {
   try {
     const supportDoc = await getDoc(doc(db, 'settings', 'support'));
     const supportDiv = document.getElementById('supportInfoDisplay');
-    if (supportDoc.exists()) {
-      const s = supportDoc.data();
-      supportDiv.innerHTML = `
-        <div class="list-item"><div class="info"><div class="name">📞 ስልክ</div></div><div class="amount" style="font-size:13px;">${s.phone || '-'}</div></div>
-        <div class="list-item"><div class="info"><div class="name">📧 ኢሜይል</div></div><div class="amount" style="font-size:13px;">${s.email || '-'}</div></div>
-        <div class="list-item"><div class="info"><div class="name">✈️ ቴሌግራም</div></div><div class="amount" style="font-size:13px;">${s.telegram || '-'}</div></div>
-      `;
-    } else {
-      supportDiv.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">መረጃ አልተገኘም።</p>';
+    if (supportDiv) {
+      if (supportDoc.exists()) {
+        const s = supportDoc.data();
+        supportDiv.innerHTML = `
+          <div class="list-item"><div class="info"><div class="name">📞 ስልክ</div></div><div class="amount" style="font-size:13px;">${s.phone || '-'}</div></div>
+          <div class="list-item"><div class="info"><div class="name">📧 ኢሜይል</div></div><div class="amount" style="font-size:13px;">${s.email || '-'}</div></div>
+          <div class="list-item"><div class="info"><div class="name">✈️ ቴሌግራም</div></div><div class="amount" style="font-size:13px;">${s.telegram || '-'}</div></div>
+        `;
+      } else {
+        supportDiv.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">መረጃ አልተገኘም።</p>';
+      }
     }
   } catch(e) { console.error(e); }
 }
@@ -1296,7 +1294,6 @@ window.savePharmacyName = async function() {
 };
 
 window.saveBizType = async function() {
-  // Admin Retail/Wholesale ብቻ ካረገ መቀየር አይፈቀድም
   if (allowedBizType !== 'both') {
     alert('⚠️ የድርጅት ዓይነትን መቀየር የሚቻለው በ Admin ሁሉም አማራጮች ሲፈቀዱ ብቻ ነው።');
     return;
@@ -1528,19 +1525,19 @@ function checkExpiryAlerts() {
     banner.style.display = 'none';
   }
 
-  // 👇 አዲስ - የስቶክ ማሳወቂያ
   const stockBanner = document.getElementById('stockAlertBanner');
   const stockText = document.getElementById('stockAlertText');
   const lowStockMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold);
   
-  if (lowStockMeds.length > 0) {
-    stockBanner.style.display = 'block';
-    stockText.innerText = `${lowStockMeds.length} ምርት ክምችቱ እያለቀ ነው! እባክዎ ይሙሉ።`;
-  } else {
-    stockBanner.style.display = 'none';
+  if (stockBanner) {
+    if (lowStockMeds.length > 0) {
+      stockBanner.style.display = 'block';
+      stockText.innerText = `${lowStockMeds.length} ምርት ክምችቱ እያለቀ ነው! እባክዎ ይሙሉ።`;
+    } else {
+      stockBanner.style.display = 'none';
+    }
   }
 
-  // 👇 አዲስ - የዱቤ ማሳወቂያ
   const creditBanner = document.getElementById('creditAlertBanner');
   const creditText = document.getElementById('creditAlertText');
   const todayStr = new Date().toISOString().split('T')[0];
@@ -1554,11 +1551,13 @@ function checkExpiryAlerts() {
     }
   });
 
-  if (overdueCustomers.length > 0) {
-    creditBanner.style.display = 'block';
-    creditText.innerText = `${overdueCustomers.length} ደንበኛ የዱቤ ክፍያ ጊዜው አልፎበታል! (${overdueCustomers.join(', ')})`;
-  } else {
-    creditBanner.style.display = 'none';
+  if (creditBanner) {
+    if (overdueCustomers.length > 0) {
+      creditBanner.style.display = 'block';
+      creditText.innerText = `${overdueCustomers.length} ደንበኛ የዱቤ ክፍያ ጊዜው አልፎበታል! (${overdueCustomers.join(', ')})`;
+    } else {
+      creditBanner.style.display = 'none';
+    }
   }
 }
 
