@@ -189,6 +189,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 
     .panel { padding: 0; } 
 
+    /* ሁሉም ታቦች በGrid እንዲሆኑ - ለሁለት አምድ (2 columns) */
     #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 {
         display: grid; 
         grid-template-columns: repeat(2, 1fr); 
@@ -782,7 +783,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 
     <div class="section-collapsible">
         <div class="section-header" id="hdrExpLimit" onclick="toggleSection('hdrExpLimit','bodyExpLimit')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የስታክ ማሳወቂያ ገደብ</span></div>
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የማለቂያ ቀን ማሳወቂያ ገደብ</span></div>
         </div>
         <div class="section-body" id="bodyExpLimit">
             <label class="field-label">ከማለቂያ ቀን በፊት ማሳወቂያ የሚሰጥበት የቀን ገደብ</label>
@@ -906,6 +907,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         <div class="section-body" id="bodyPerms">
             <div class="info-banner">💡 ለማናጀር እና ለአካውንታንት የሚሰጡ ፈቃዶችን እዚህ ማስተካከል ይችላሉ።</div>
             <div id="permSectionDisplay"></div>
+            <button class="btn btn-success" style="margin-top:15px;" onclick="savePermissions()">💾 ፈቃዶችን አስቀምጥ</button>
         </div>
     </div>
 
@@ -1059,7 +1061,7 @@ async function loadUserHeader(user) {
                 currentBizType = phData.userBizType || allowedBizType; 
                 lowStockThreshold = phData.lowStockThreshold || 10; 
                 
-                checkUserPaymentStatus(phData); // የክፍያ ማሳወቂያ ማረጋገጫ
+                checkUserPaymentStatus(phData);
 
                 if (phData.isSuspended) {
                     document.getElementById('mainApp').classList.remove('show');
@@ -1073,17 +1075,13 @@ async function loadUserHeader(user) {
     } catch (err) { console.error('loadUserHeader error:', err); }
 } 
 
-// አዲስ የተጨመረ ተግባር
 function checkUserPaymentStatus(phData) {
     const alertBanner = document.getElementById('userPaymentAlert');
     const alertText = document.getElementById('userPaymentAlertText');
     if (!alertBanner) return;
 
     const expiryDate = phData.expiryDate;
-    if (!expiryDate) {
-        alertBanner.style.display = 'none';
-        return;
-    }
+    if (!expiryDate) { alertBanner.style.display = 'none'; return; }
 
     const today = new Date();
     today.setHours(0,0,0,0);
@@ -1178,26 +1176,41 @@ onAuthStateChanged(auth, async (user) => {
 }); 
 
 async function applyPermissionsUI() {
-    if (currentUserRole === 'owner') return; 
+    if (currentUserRole === 'owner') {
+        // ባለቤት ሁሉንም ታቦች ያያል
+        return;
+    }
+    
     let perms = null;
     try {
         const permDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'));
         if (permDoc.exists()) perms = permDoc.data();
     } catch(e) { console.error(e); } 
+    
     if (!perms) return; 
+    
     const rolePerms = currentUserRole === 'manager' ? perms.manager : perms.accountant;
     if (!rolePerms) return; 
+    
     const tabMap = { 'tab1': rolePerms.med, 'tab2': rolePerms.sell, 'tab3': rolePerms.exp, 'tab4': rolePerms.inv, 'tab5': rolePerms.daily, 'tab6': rolePerms.monthly, 'tab7': rolePerms.dash, 'tab8': rolePerms.settings, 'tab9': true }; 
+    
     let firstAvailableTab = null; 
     for (const [tabId, isAllowed] of Object.entries(tabMap)) {
         const inputEl = document.getElementById(tabId);
         if (inputEl && inputEl.parentElement.tagName === 'DIV') {
             const labelEl = document.querySelector(`.tabs label[for="${tabId}"]`); 
-            if (!isAllowed) { if(inputEl) inputEl.style.display = 'none'; if(labelEl) labelEl.style.display = 'none'; } 
-            else if (!firstAvailableTab) { firstAvailableTab = tabId; }
+            if (!isAllowed) { 
+                if(inputEl) inputEl.style.display = 'none'; 
+                if(labelEl) labelEl.style.display = 'none'; 
+            } 
+            else if (!firstAvailableTab) { 
+                firstAvailableTab = tabId; 
+            }
         }
     } 
-    if (firstAvailableTab && !document.getElementById(firstAvailableTab).checked) { document.getElementById(firstAvailableTab).checked = true; }
+    if (firstAvailableTab && !document.getElementById(firstAvailableTab).checked) { 
+        document.getElementById(firstAvailableTab).checked = true; 
+    }
 } 
 
 // ==========================================
@@ -1209,7 +1222,7 @@ async function loadAllData() {
     await loadMedicines(); await loadSales(); await loadExpenses(); await loadFixed(); await loadCreditPayments();
     loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); checkExpiryAlerts(); loadDarkMode(); applyBizTypeUI();
     renderSalesHistory(); 
-    renderUnpaidCredits(); // አዲስ የተጨመረ ለዱቤ
+    renderUnpaidCredits(); 
 } 
 
 function applyBizTypeUI() {
@@ -1498,7 +1511,6 @@ window.addQuickSale = async function() {
     const branch = document.getElementById('quickBranch').value;
     const date = document.getElementById('quickDate').value;
     const amount = parseFloat(document.getElementById('quickAmount').value);
-    // ምድብ አያስፈልግም
     if(!date || isNaN(amount) || amount <= 0) { alert('ሁሉንም መረጃዎች ሙላ'); return; } 
 
     try {
@@ -1558,7 +1570,7 @@ function loadInventory() {
     const filter = document.getElementById('filterTypeInv').value;
     let filtered = allMedicines;
     
-    // ማስተካከያ፡ የተመረጠውን ብቻ ማሳየት
+    // የተስተካከለ ማጣሪያ
     if (filter === 'medicine') filtered = allMedicines.filter(m => m.type === 'medicine');
     else if (filter === 'cosmetic') filtered = allMedicines.filter(m => m.type === 'cosmetic'); 
 
@@ -1723,7 +1735,6 @@ async function loadMonthlyReport() {
     document.getElementById('monthlyFixedExpense').innerHTML = totalFixed.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('monthlyNetProfit').innerHTML = (totalRev - totalExp - totalFixed).toFixed(2) + ' <small>ብር</small>';
     
-    // ማስተካከያ፡ የወሩ ሽያጮች እና የክፍያ ዓይነት ማሳያ
     document.getElementById('monthlySalesList').innerHTML = salesHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
     document.getElementById('monthlyPaymentSummary').innerHTML = `<div class="list-item"><div class="info"><div class="name">💵 Cash</div></div><div class="amount">${cashRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">🏦 Transfer</div></div><div class="amount">${transferRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">📝 Credit</div></div><div class="amount">${creditRev.toFixed(2)} ብር</div></div>`;
 }
@@ -1862,28 +1873,55 @@ window.resetDailyData = async function() {
     alert('ለጊዜው ይህ ተግባር አልተገኘም። (ዳታቤዝ ላይ ማጽዳት ይፈልጋል)');
 };
 
+// ==========================================
+// 🆕 አዲስ የተጨመረ: Permissions Save
+// ==========================================
+let currentPermissionsData = { manager: {}, accountant: {} };
+
 function renderPermissionsUI(perms) {
+    currentPermissionsData = perms; // ዳታውን ማስቀመጥ
+    
     const displayEl = document.getElementById('permSectionDisplay');
     if(!displayEl) return;
     let html = '';
     const sections = [{ key: 'med', label: '💊 መድሃኒቶች' }, { key: 'sell', label: '🛒 ሽያጭ' }, { key: 'exp', label: '💸 ወጪ' }, { key: 'inv', label: '📦 ክምችት' }, { key: 'daily', label: '📅 የቀን ገቢ' }, { key: 'monthly', label: '📆 የወር ገቢ' }, { key: 'dash', label: '📊 Dashboard' }, { key: 'settings', label: '⚙️ Settings' }];
     
     html += `<h4 style="font-size:13px; margin:15px 0 10px; color:#2c5282;">🎯 ማናጀር (Manager)</h4>`;
-    sections.forEach(sec => { html += `<div style="display:flex; justify-content:space-between; padding:8px; background:#f7fafc; border-radius:8px; margin-bottom:5px;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" ${perms.manager && perms.manager[sec.key] ? 'checked' : ''} onchange="updatePerm('manager', '${sec.key}', this.checked)"></div>`; });
+    sections.forEach(sec => { 
+        const checked = perms.manager && perms.manager[sec.key] ? 'checked' : '';
+        html += `<div style="display:flex; justify-content:space-between; padding:8px; background:#f7fafc; border-radius:8px; margin-bottom:5px;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" id="perm_mgr_${sec.key}" ${checked}></div>`; 
+    });
+    
     html += `<h4 style="font-size:13px; margin:15px 0 10px; color:#2c5282;">💼 አካውንታንት (Accountant)</h4>`;
-    sections.forEach(sec => { html += `<div style="display:flex; justify-content:space-between; padding:8px; background:#f7fafc; border-radius:8px; margin-bottom:5px;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" ${perms.accountant && perms.accountant[sec.key] ? 'checked' : ''} onchange="updatePerm('accountant', '${sec.key}', this.checked)"></div>`; });
+    sections.forEach(sec => { 
+        const checked = perms.accountant && perms.accountant[sec.key] ? 'checked' : '';
+        html += `<div style="display:flex; justify-content:space-between; padding:8px; background:#f7fafc; border-radius:8px; margin-bottom:5px;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" id="perm_acc_${sec.key}" ${checked}></div>`; 
+    });
+    
     displayEl.innerHTML = html;
 }
 
-window.updatePerm = async function(role, key, isChecked) {
+window.savePermissions = async function() {
+    const sections = ['med', 'sell', 'exp', 'inv', 'daily', 'monthly', 'dash', 'settings'];
+    let newData = { manager: {}, accountant: {} };
+
+    sections.forEach(key => {
+        newData.manager[key] = document.getElementById(`perm_mgr_${key}`).checked;
+        newData.accountant[key] = document.getElementById(`perm_acc_${key}`).checked;
+    });
+
     try {
-        const permDocRef = doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions');
-        const permDoc = await getDoc(permDocRef);
-        let data = permDoc.exists() ? permDoc.data() : { manager: {}, accountant: {} };
-        if(!data[role]) data[role] = {};
-        data[role][key] = isChecked;
-        await setDoc(permDocRef, data);
-    } catch(e) { console.error("Error updating permission:", e); alert('ፈቃዱን ማስቀመጥ አልተቻለም!'); }
+        await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), newData);
+        alert('✅ ፈቃዶች በተሳካ ሁኔታ ተቀምጠዋል!');
+        applyPermissionsUI(); // ወዲያውኑ ተግባራዊ ማድረግ
+    } catch(e) {
+        alert('⚠️ ስህተት: ' + e.message);
+    }
+};
+
+window.updatePerm = async function(role, key, isChecked) {
+    // ይህ ተግባር አሁን አያስፈልግም ምክንያቱም savePermissions ስለሚጠቀም
+    // ግን ለአሮጌ ኮድ ተኳሽነት እንተወው
 };
 
 function populateCreditCustomerSelect() {
@@ -1916,10 +1954,8 @@ function renderUnpaidCredits() {
     const listEl = document.getElementById('unpaidCreditList');
     if(!listEl) return;
 
-    // በዱቤ የተሸጡ እና ሙሉ በሙሉ ያልተከፈሉ ሽያጮችን መለየት
     const creditSales = allSales.filter(s => s.paymentMethod === 'credit');
     
-    // ለእያንዳንዱ ደንበኛ ያለውን ጠቅላላ ዕዳ ማስላት
     const customerDebts = {};
     creditSales.forEach(sale => {
         const customer = sale.customer || 'ያልታወቀ ደንበኛ';
@@ -1930,12 +1966,11 @@ function renderUnpaidCredits() {
         }
     });
 
-    // ከተመዘገቡ የዱቤ ክፍያዎች መቀነስ (ከተመዘገቡ)
     allCreditPayments.forEach(payment => {
         const customer = payment.customer;
         if(customerDebts[customer]) {
             customerDebts[customer] -= payment.amount;
-            if(customerDebts[customer] <= 0) delete customerDebts[customer]; // ከተከፈለ አጥፋ
+            if(customerDebts[customer] <= 0) delete customerDebts[customer];
         }
     });
 
