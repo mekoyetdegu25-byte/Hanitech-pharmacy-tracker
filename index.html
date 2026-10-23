@@ -140,7 +140,7 @@
     grid-template-columns: 260px 1fr; 
     grid-template-rows: auto 1fr;
     min-height: 100vh;
-    max-width: 1400px; /* ገጹ በኮምፒውተር ላይ እንዲሰፋ */
+    max-width: 1400px;
     margin: 0 auto;
   }
 
@@ -150,14 +150,15 @@
     border-radius: 0; 
     margin-bottom: 0; 
     padding: 16px 24px; 
-    position: static; /* ስክሪኑ ሲንቀሳቀስ ከላይ እንዳይጣበቅ */
+    position: static; 
   }
 
-  /* የታቦች መጠቅለያ በግራ በኩል ቋሚ ይሆናል */
+  /* 👇 የታቦች መጠቅለያ (Sidebar) ማስተካከያ */
   .tabs-wrapper { 
+    grid-column: 1; /* በግራ በኩል እንዲሆን */
     position: sticky; 
     top: 0; 
-    height: calc(100vh - 75px); 
+    height: calc(100vh - 70px); /* ከራስጌው በታች ያለውን ቦታ ሙሉ እንዲይዝ */
     background: #fff; 
     border-right: 1px solid #e2e8f0; 
     padding-top: 20px; 
@@ -166,7 +167,6 @@
   }
   body.dark .tabs-wrapper { background: #2d3748; border-right: 1px solid #4a5568; }
 
-  /* ታቦቹ በአቀባዊ እንዲደረደሩ */
   .tabs { 
     flex-direction: column; 
     padding: 0 15px; 
@@ -185,7 +185,6 @@
   
   .tabs label i { margin-bottom: 0; margin-right: 12px; font-size: 22px;}
 
-  /* የተመረጠው ታብ ስታይል (በግራ በኩል የጎን መስመር ይኖረዋል) */
   #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { 
     background: #ebf4ff; 
     border-color: #90cdf4; 
@@ -198,18 +197,18 @@
     border-left: 4px solid #63b3ed; 
   }
 
-  /* የይዘት አካባቢ (Panels) */
+  /* 👇 የይዘት አካባቢ (Panels) በቀኝ በኩል እንዲሆን */
   .panels { 
+    grid-column: 2; 
     padding: 24px; 
     background: #f0f4f8;
-    height: calc(100vh - 75px);
+    height: calc(100vh - 70px);
     overflow-y: auto;
   }
   body.dark .panels { background: #1a202c; }
   
   .panel { padding: 0; }
   
-  /* በዴስክቶፕ ላይ ይዘቱ በ 2 ወይም 3 አምዶች እንዲሆን */
   #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { 
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
@@ -217,7 +216,6 @@
     align-items: start; 
   }
   
-  /* ሙሉ ስፋት ያለባቸው ክፍሎች (ለምሳሌ የሽያጭ ገጽ) */
   .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings { 
     grid-column: 1 / -1; 
   }
