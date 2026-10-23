@@ -1334,7 +1334,6 @@ async function loadMedicines() {
         const q = query(
             collection(db, 'medicines'), 
             where('pharmacyId', '==', currentUserPharmacyId), 
-            orderBy('createdAt', 'desc')
         );
         const snapshot = await getDocs(q);
         allMedicines = [];
