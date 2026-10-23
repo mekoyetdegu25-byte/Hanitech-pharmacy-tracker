@@ -74,6 +74,11 @@
   </header>
 
   <div class="container">
+    <!-- Payment Alert Banner -->
+    <div id="paymentAlertBanner" style="display:none; background:#fff5f5; color:#c53030; padding:15px; border-radius:12px; border:1px solid #fed7d7; margin-bottom:16px; font-weight:bold; font-size:14px; text-align:center;">
+      ⚠️ <span id="paymentAlertText"></span>
+    </div>
+
     <div class="stats-grid">
       <div class="stat-card"><div class="value val-blue" id="statTotalTenants">0</div><div class="label">📊 ጠቅላላ ፋርማሲዎች</div></div>
       <div class="stat-card"><div class="value val-green" id="statActiveTenants">0</div><div class="label">✅ ተከፋዮች</div></div>
@@ -119,6 +124,13 @@
       <div class="section-body">
         <div class="form-group"><label>የድርጅት ስም</label><input type="text" id="newTenantName" placeholder="ለምሳሌ: Addis Pharmacy"></div>
         <div class="form-group"><label>ድረ-ገጽ (Website)</label><input type="text" id="newTenantWebsite" placeholder="example.com"></div>
+        <div class="form-group">
+          <label>🏢 የድርጅት ዓይነት (Admin የሚፈቅደው)</label>
+          <select id="newTenantBizType">
+            <option value="retail">🛒 Retail (ችርቻሮ ብቻ)</option>
+            <option value="wholesale">🚚 Wholesale (አከፋፋይ ብቻ)</option>
+          </select>
+        </div>
         <div class="form-group"><label>የባለቤት ኢሜይል (Owner)</label><input type="email" id="newTenantOwnerEmail" placeholder="owner@example.com"></div>
         <div class="form-group"><label>የማናጀር ኢሜይል (Manager)</label><input type="email" id="newTenantManagerEmail" placeholder="manager@example.com"></div>
         <div class="form-group"><label>የአካውንታንት ኢሜይል (Accountant)</label><input type="email" id="newTenantAccountantEmail" placeholder="accountant@example.com"></div>
@@ -272,6 +284,7 @@
 
   function renderStats() {
     let active = 0, expired = 0, suspended = 0, totalPaid = 0, totalUnpaid = 0;
+    let expiredNames = [];
     const today = new Date().toISOString().split('T')[0];
 
     allTenants.forEach(t => {
@@ -284,6 +297,7 @@
       } else if (expiry && expiry < today) {
         expired++;
         totalUnpaid += paid;
+        expiredNames.push(t.name);
       } else {
         active++;
         totalPaid += paid;
@@ -297,6 +311,15 @@
     document.getElementById('statTotalPaid').innerText = totalPaid.toLocaleString('en-US', {minimumFractionDigits:2});
     document.getElementById('statTotalUnpaid').innerText = totalUnpaid.toLocaleString('en-US', {minimumFractionDigits:2});
     document.getElementById('tenantListBadge').innerText = allTenants.length;
+
+    const banner = document.getElementById('paymentAlertBanner');
+    const textEl = document.getElementById('paymentAlertText');
+    if (expiredNames.length > 0) {
+      banner.style.display = 'block';
+      textEl.innerText = `${expiredNames.length} ፋርማሲ የክፍያ ጊዜው አልፎበታል! (${expiredNames.join(', ')})`;
+    } else {
+      banner.style.display = 'none';
+    }
   }
 
   function renderPasswordRequests() {
@@ -369,6 +392,7 @@
           <a href="https://${t.website || '#'}" target="_blank" class="tenant-website">🌐 ${t.website || 'ድረ-ገጽ የለም'}</a>
         </div>
         
+        <div class="tenant-info">🏢 <strong>ዓይነት:</strong> ${t.bizType === 'wholesale' ? '🚚 Wholesale' : '🛒 Retail'}</div>
         <div class="tenant-info">👑 <strong>Owner:</strong> ${t.ownerEmail || 'አልተጠቀሰም'}</div>
         <div class="tenant-info">🎯 <strong>Manager:</strong> ${t.managerEmail || 'አልተጠቀሰም'} • 🧰 <strong>Accountant:</strong> ${t.accountantEmail || 'አልተጠቀሰም'}</div>
         <div class="tenant-info">💰 <strong>ክፍያ:</strong> ${t.amount || 0} ብር/ወር</div>
@@ -390,6 +414,7 @@
   window.addTenant = async function() {
     const name = document.getElementById('newTenantName').value.trim();
     const website = document.getElementById('newTenantWebsite').value.trim();
+    const bizType = document.getElementById('newTenantBizType').value;
     const ownerEmail = document.getElementById('newTenantOwnerEmail').value.trim();
     const managerEmail = document.getElementById('newTenantManagerEmail').value.trim();
     const accountantEmail = document.getElementById('newTenantAccountantEmail').value.trim();
@@ -410,6 +435,7 @@
       const newPharmacyRef = await addDoc(collection(db, 'pharmacies'), {
         name: name,
         website: website,
+        bizType: bizType,
         ownerEmail: ownerEmail,
         managerEmail: managerEmail,
         accountantEmail: accountantEmail,
@@ -506,10 +532,22 @@
   };
 
   window.toggleSuspend = async function(id, currentStatus) {
+    if(!confirm('እርግጠኛ ነህ? ይህን ፋርማሲ ማቆም/ማንቃት ትፈልጋለህ?')) return;
+    
     try {
       await updateDoc(doc(db, 'pharmacies', id), { isSuspended: !currentStatus });
+      
+      const usersQuery = query(collection(db, 'users'), where('pharmacyId', '==', id));
+      const usersSnap = await getDocs(usersQuery);
+      
+      if (!currentStatus) {
+        alert(`✅ ፋርማሲው ተቆልፏል! ${usersSnap.size} ተጠቃሚዎች ወደ ውጭ ይወጣሉ።`);
+      } else {
+        alert('✅ ፋርማሲው እንደገና ንቁ ሆኗል!');
+      }
+      
       loadAdminData();
-    } catch(e) { alert(e.message); }
+    } catch(e) { alert('ስህተት: ' + e.message); }
   };
 
   window.deleteTenant = async function(id) {
@@ -552,10 +590,11 @@
 
   window.exportExcel = function() {
     if (allTenants.length === 0) { alert('ውሂብ የለም'); return; }
-    let csv = '\uFEFFስም,ድረ-ገጽ,ባለቤት,ማናጀር,አካውንታንት,የክፍያ መጠን,የማብቂያ ቀን,ሁኔታ\n';
+    let csv = '\uFEFFስም,ድረ-ገጽ,ዓይነት,ባለቤት,ማናጀር,አካውንታንት,የክፍያ መጠን,የማብቂያ ቀን,ሁኔታ\n';
     allTenants.forEach(t => {
       const status = t.isSuspended ? 'የታገደ' : 'ንቁ';
-      csv += `"${t.name}","${t.website||''}","${t.ownerEmail||''}","${t.managerEmail||''}","${t.accountantEmail||''}",${t.amount || 0},"${t.expiryDate || ''}","${status}"\n`;
+      const bType = t.bizType === 'wholesale' ? 'Wholesale' : 'Retail';
+      csv += `"${t.name}","${t.website||''}","${bType}","${t.ownerEmail||''}","${t.managerEmail||''}","${t.accountantEmail||''}",${t.amount || 0},"${t.expiryDate || ''}","${status}"\n`;
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
