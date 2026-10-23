@@ -87,6 +87,20 @@
 
     <button class="btn btn-success" style="margin-bottom: 16px;" onclick="exportExcel()">📊 Excel (CSV) አውጣ</button>
 
+    <!-- Support Info Section -->
+    <div class="section-collapsible">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="sec-left">📞 የድጋፍ መረጃ (Support Info)</div>
+        <span class="sec-arrow">▶</span>
+      </div>
+      <div class="section-body">
+        <div class="form-group"><label>ስልክ ቁጥር</label><input type="text" id="supportPhone" placeholder="+251 9XX XXX XXX"></div>
+        <div class="form-group"><label>ኢሜይል</label><input type="email" id="supportEmail" placeholder="support@hanitech.com"></div>
+        <div class="form-group"><label>ቴሌግራም (Username)</label><input type="text" id="supportTelegram" placeholder="@hanitech_support"></div>
+        <button class="btn btn-primary" onclick="saveSupportInfo()">💾 አስቀምጥ</button>
+      </div>
+    </div>
+
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">🔔 የፓስወርድ ማስተካከያ ጥያቄዎች <span class="badge" id="passReqBadge">0</span></div>
@@ -156,7 +170,7 @@
 <script type="module">
   import { initializeApp, initializeApp as initSecondaryApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, getDocs, query, doc, updateDoc, getDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, query, doc, updateDoc, getDoc, setDoc, deleteDoc, writeBatch, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB3bQkI8scEHg36kkxlAalbbCtE4R0Vv8U",
@@ -175,6 +189,7 @@
 
   let allTenants = [];
   let allPasswordRequests = [];
+  let currentSupportInfo = { phone: '', email: '', telegram: '' };
 
   window.toggleSection = function(header) {
     const body = header.nextElementSibling;
@@ -230,7 +245,30 @@
       snap.forEach(d => allPasswordRequests.push({ id: d.id, ...d.data() }));
       renderPasswordRequests();
     } catch(e) { console.error(e); }
+
+    try {
+      const supportDoc = await getDoc(doc(db, 'settings', 'support'));
+      if (supportDoc.exists()) {
+        currentSupportInfo = supportDoc.data();
+        document.getElementById('supportPhone').value = currentSupportInfo.phone || '';
+        document.getElementById('supportEmail').value = currentSupportInfo.email || '';
+        document.getElementById('supportTelegram').value = currentSupportInfo.telegram || '';
+      }
+    } catch(e) { console.error("Error loading support info:", e); }
   }
+
+  window.saveSupportInfo = async function() {
+    const phone = document.getElementById('supportPhone').value.trim();
+    const email = document.getElementById('supportEmail').value.trim();
+    const telegram = document.getElementById('supportTelegram').value.trim();
+
+    try {
+      await setDoc(doc(db, 'settings', 'support'), { phone, email, telegram }, { merge: true });
+      alert('✅ የድጋፍ መረጃ ተቀምጧል!');
+    } catch(e) {
+      alert('⚠️ ስህተት: ' + e.message);
+    }
+  };
 
   function renderStats() {
     let active = 0, expired = 0, suspended = 0, totalPaid = 0, totalUnpaid = 0;
