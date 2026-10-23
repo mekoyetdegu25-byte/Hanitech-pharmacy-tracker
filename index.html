@@ -1329,13 +1329,24 @@ window.addMedicine = async function() {
 
 async function loadMedicines() {
     try {
-        const q = query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId), orderBy('createdAt', 'desc'));
+        console.log("Loading medicines for Pharmacy ID:", currentUserPharmacyId); // ለማረጋገጥ
+        
+        const q = query(
+            collection(db, 'medicines'), 
+            where('pharmacyId', '==', currentUserPharmacyId), 
+            orderBy('createdAt', 'desc')
+        );
         const snapshot = await getDocs(q);
         allMedicines = [];
         snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
+        
+        console.log("Medicines found:", allMedicines.length); // ስንት ምርት እንደተገኘ ለማየት
         renderMedList();
-    } catch (err) { console.error("Error loading medicines:", err); }
-} 
+    } catch (err) { 
+        console.error("Error loading medicines:", err); 
+        alert("ስህተት አጋጥሟል: " + err.message);
+    }
+}
 
 window.renderMedList = function() {
     const listEl = document.getElementById('medListDisplay');
