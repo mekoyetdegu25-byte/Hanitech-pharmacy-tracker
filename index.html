@@ -115,6 +115,8 @@
   .low-stock { color: #dd6b20; font-weight: bold; font-size: 11.5px; }
 
   #expiryBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fed7d7; font-weight: bold; font-size: 13px; text-align: center; }
+  #stockAlertBanner { display: none; background: #fffaf0; color: #dd6b20; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fbd38d; font-weight: bold; font-size: 13px; text-align: center; }
+  #creditAlertBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fed7d7; font-weight: bold; font-size: 13px; text-align: center; }
 
   .cat-section { margin-bottom: 10px; }
   .cat-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: linear-gradient(135deg, #ebf4ff, #bee3f8); border-radius: 10px; cursor: pointer; border: 1px solid #90cdf4; }
@@ -196,6 +198,11 @@
 </header>
 
   <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
+  <div id="stockAlertBanner">🚨 <span id="stockAlertText"></span></div>
+  <div id="creditAlertBanner">💳 <span id="creditAlertText"></span></div>
+  <div id="suspendedWarningBanner" style="display:none; background:#fed7d7; color:#822727; padding:12px; margin: 0 14px 10px; border-radius:10px; font-weight:bold; font-size:13px; text-align:center;">
+    🚫 ይህ ፋርማሲ በአድሚን ተቆልፏል! እባክዎ አድሚኑን ያግኙ።
+  </div>
 
   <div class="tabs-wrapper">
     <input type="radio" name="tabs" id="tab1" checked>
@@ -621,6 +628,31 @@
             </div>
           </div>
         </div>
+        
+        <!-- አዲስ የተጨመረ - የተጣራ ትርፍ -->
+        <div class="section-collapsible full-width">
+          <div class="section-header open" id="hdrProfit" onclick="toggleSection('hdrProfit','bodyProfit')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💵</span><span class="sec-title">የተጣራ ትርፍ (Net Profit)</span></div>
+          </div>
+          <div class="section-body open" id="bodyProfit">
+            <div class="summary-box" style="background:linear-gradient(135deg,#276749,#22543d);">
+              <div class="label">የዚህ ወር የተጣራ ትርፍ</div>
+              <div class="value" id="dashNetProfit">0.00 <small>ብር</small></div>
+            </div>
+            <div class="info-banner" style="margin-top:10px;">💡 ትርፍ = ጠቅላላ ሽያጭ - (የተሸጡ እቃዎች የግዢ ዋጋ + ወጪዎች)</div>
+          </div>
+        </div>
+
+        <!-- አዲስ የተጨመረ - የቅርንጫፍ ሪፖርት -->
+        <div class="section-collapsible full-width">
+          <div class="section-header open" id="hdrBranchReport" onclick="toggleSection('hdrBranchReport','bodyBranchReport')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">የቅርንጫፍ ሪፖርት</span></div>
+          </div>
+          <div class="section-body open" id="bodyBranchReport">
+            <div id="branchReportList"></div>
+          </div>
+        </div>
+
         <div class="section-collapsible full-width">
           <div class="section-header open" id="hdrCharts" onclick="toggleSection('hdrCharts','bodyCharts')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📈</span><span class="sec-title">ግራፎች</span></div>
@@ -657,10 +689,12 @@
               <div class="section-body" id="bodyBizType">
                 <label class="field-label">ዓይነት ምረጥ</label>
                 <select id="settingBizType" onchange="saveBizType()">
-                  <option value="retail">🛒 Retail (ፋርማሲ)</option>
+                  <option value="retail">🛒 Retail (ችርቻሮ)</option>
                   <option value="wholesale">🚚 Wholesale (አከፋፋይ)</option>
                 </select>
-                <div class="info-banner" style="margin-top:10px;">💡 Wholesale ከመረጡ በሽያጭ ገጹ ላይ "ደንበኛ" እና "Credit" ይታያሉ።</div>
+                <div class="info-banner" style="margin-top:10px;" id="bizTypeInfo">
+                  💡 ከሁለቱ ውስጥ አንዱን መርጠው ይጠቀሙ።
+                </div>
               </div>
             </div>
 
