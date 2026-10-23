@@ -171,10 +171,8 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
     body.dark .tabs { background: #2d3748; border-right: 1px solid #4a5568; } 
 
     .tabs label { flex-direction: row; justify-content: flex-start; padding: 14px 20px; min-width: 100%; font-size: 15px; box-shadow: none; border: none; border-radius: 10px; transition: all 0.2s; } 
-
     .tabs label:hover { background: #edf2f7; }
     body.dark .tabs label:hover { background: #4a5568; } 
-
     .tabs label i { margin-bottom: 0; margin-right: 15px; font-size: 24px; } 
 
     #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] {
@@ -190,14 +188,25 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 
     .panel { padding: 0; } 
 
+    /* የGrid አቀማመጥ ማስተካከያ - ካርዶች እንዲለያዩ */
     #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 {
         display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; align-items: start;
     } 
 
-    /* ሙሉ ስፋት የሚይዙት ካርዶች ብቻ */
-    #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings, .true-full-width {
-        grid-column: 1 / -1;
+    /* ሙሉ ስፋት የሚይዙት ዋና ዋና ካርዶች (በSettings ውስጥ ያሉትን ሳይጨምር) */
+    #hdrDaily, #hdrMonthly, #hdrDash, #hdrAddMed, #hdrSell, #hdrAddExp, .true-full-width {
+        grid-column: 1 / -1 !important;
     } 
+
+    /* የSettings ዋና ካርድ ሙሉ ስፋት እንዲይዝ */
+    #panel8 > .section-collapsible {
+        grid-column: 1 / -1;
+    }
+
+    /* በSettings ውስጥ ያሉት የውስጥ ካርዶች ራሳቸውን የቻሉ እንዲሆኑ */
+    #bodySettings > .section-collapsible {
+        grid-column: auto !important;
+    }
 
     .section-collapsible { margin-bottom: 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid #edf2f7; background: #fff; border-radius: 12px; height: 100%; }
     body.dark .section-collapsible { background: #2d3748; border-color: #4a5568; }
@@ -934,7 +943,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyB3bQkI8scEHg36kkxlAalbbCtE4R0Vv8U",
@@ -976,12 +985,20 @@ setTimeout(() => {
     }
 }, 1500); 
 
+// የተሻሻለው የ toggleSection ፈንክሽን
 window.toggleSection = function(h, b) {
     const hd = document.getElementById(h);
     const bd = document.getElementById(b);
-    if (!hd || !bd) return;
-    const o = bd.classList.toggle('open');
-    hd.classList.toggle('open', o);
+    if (!hd || !bd) return; // የID ስሞቹ ከሌሉ ወዲያውኑ ይውጣ
+    
+    const isOpen = bd.classList.contains('open');
+    if (isOpen) {
+        bd.classList.remove('open');
+        hd.classList.remove('open');
+    } else {
+        bd.classList.add('open');
+        hd.classList.add('open');
+    }
 }; 
 
 window.onMedTypeChange = function() {
