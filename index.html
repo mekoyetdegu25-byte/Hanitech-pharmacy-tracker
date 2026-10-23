@@ -50,7 +50,6 @@
 
   #mainApp { display: none; }
   #mainApp.show { display: block; }
-  
   header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 0 0 16px 16px; margin-bottom: 10px; }
   header .h-title { font-size: 15px; font-weight: 800; }
   header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spacing: 0.5px; }
@@ -131,7 +130,7 @@
 
   .chart-container { position: relative; height: 250px; margin-bottom: 15px; }
 
-  /* Dashboard Grid Layout */
+  /* Dashboard Grid Layout (አዲስ) */
   .dash-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
   .dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: space-between; }
   body.dark .dash-card { background: #2d3748; border-color: #4a5568; }
@@ -152,52 +151,117 @@
   body.dark .dash-list li { border-bottom-color: #4a5568; }
   .dash-list li:last-child { border-bottom: none; padding-bottom: 0; }
 
-  /* DESKTOP LAYOUT (Fixed Sidebar) */
   @media (min-width: 768px) {
-    body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; overflow: hidden; }
+    /* ገጹ ሙሉ ስክሪኑን እንዲይዝ */
+    body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; }
     
-    #mainApp.show { display: block; height: 100vh; width: 100%; }
-
-    header { 
-      width: 100%; height: 70px; border-radius: 0; margin-bottom: 0; padding: 0 24px; 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;
-      display: flex; align-items: center; justify-content: space-between;
-      position: fixed; top: 0; left: 0;
+    #mainApp.show { 
+      display: grid; 
+      grid-template-columns: 260px 1fr; /* 260px ለግራ ታቦች፣ ቀሪው ለቀኝ ይዘት */
+      grid-template-rows: 70px 1fr; 
+      height: 100vh; 
+      width: 100%; 
+      max-width: 100%;
+      margin: 0;
     }
 
+    /* ራስጌው (Header) */
+    header { 
+      grid-column: 1 / -1; 
+      grid-row: 1;
+      border-radius: 0; 
+      margin-bottom: 0; 
+      padding: 0 24px; 
+      position: static; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 101;
+      display: flex;
+      align-items: center;
+    }
+
+    /* የቀኝ በኩል ይዘት */
+    .main-content-wrapper {
+      grid-column: 2;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 70px);
+      overflow: hidden;
+      background: #f0f4f8;
+    }
+    body.dark .main-content-wrapper { background: #1a202c; }
+
     #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner {
-      margin: 10px 24px 0 284px; position: relative; z-index: 500;
+      margin: 15px 24px 0 24px;
     }
 
     .tabs-wrapper { 
-      position: fixed; top: 70px; left: 0; width: 260px; height: calc(100vh - 70px); 
-      background: #fff; border-right: 1px solid #e2e8f0; padding-top: 20px; 
-      overflow-y: auto; z-index: 900;
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      background: transparent;
+      position: static;
     }
-    body.dark .tabs-wrapper { background: #2d3748; border-right: 1px solid #4a5568; }
 
-    .tabs { display: flex; flex-direction: column; padding: 0 16px; gap: 8px; width: 100%; }
-    .tabs label { 
-      flex-direction: row; justify-content: flex-start; padding: 14px 20px; min-width: 100%; 
-      font-size: 15px; box-shadow: none; border: none; border-radius: 10px; background: transparent;
+    /* 👈 የግራ በኩል ታቦች (Sidebar) */
+    .tabs { 
+      flex-direction: column; 
+      width: 260px; 
+      background: #fff;
+      border-right: 1px solid #e2e8f0;
+      padding: 24px 16px;
+      gap: 8px; 
+      overflow-y: auto;
+      flex-shrink: 0;
+      height: 100%; 
     }
+    body.dark .tabs { background: #2d3748; border-right: 1px solid #4a5568; }
+    
+    .tabs label { 
+      flex-direction: row; 
+      justify-content: flex-start; 
+      padding: 14px 20px; 
+      min-width: 100%; 
+      font-size: 15px;
+      box-shadow: none;
+      border: none;
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+    
     .tabs label:hover { background: #edf2f7; }
     body.dark .tabs label:hover { background: #4a5568; }
+    
     .tabs label i { margin-bottom: 0; margin-right: 15px; font-size: 24px;}
 
     #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { 
-      background: #ebf4ff; color: #2c5282; border-left: 4px solid #2c5282; font-weight: 800;
+      background: #ebf4ff; 
+      color: #2c5282;
+      border-left: 4px solid #2c5282; 
+      font-weight: 800;
+    }
+    body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"] { 
+      background: #4a5568; 
+      color: #63b3ed;
+      border-left: 4px solid #63b3ed; 
     }
 
+    /* የይዘት አካባቢ (Panels) በቀኝ */
     .panels { 
-      margin-left: 260px; margin-top: 70px; padding: 24px; 
-      background: #f0f4f8; overflow-y: auto; height: calc(100vh - 70px);
+      flex: 1;
+      padding: 24px; 
+      background: #f0f4f8;
+      overflow-y: auto;
     }
     body.dark .panels { background: #1a202c; }
+    
     .panel { padding: 0; }
     
     #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { 
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; align-items: start; 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+      gap: 20px; 
+      align-items: start; 
     }
     
     .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings { 
@@ -205,16 +269,19 @@
     }
     
     .section-collapsible { 
-      margin-bottom: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #edf2f7; background: #fff; border-radius: 12px;
+      margin-bottom: 0; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      border: 1px solid #edf2f7;
     }
-    body.dark .section-collapsible { background: #2d3748; border-color: #4a5568; }
 
+    /* Dashboard Grid Layout (Desktop) */
     .dash-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
 <body>
 
+<!-- የሎጎ መግቢያ ገጽ (Splash Screen) -->
 <div id="splashScreen">
   <div class="logo-text">HaniTech <span>Digital</span></div>
   <div class="sub-text">Pharmacy Tracker</div>
@@ -223,6 +290,7 @@
 <div id="loginScreen" class="hidden">
   <div class="login-box">
     <h1>💊 Hanitech Pharmacy</h1>
+    
     <div id="loginForm">
       <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
       <div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
@@ -230,6 +298,7 @@
       <button class="btn-login" onclick="login()">🔓 ግባ</button>
       <button class="btn-login" style="background:#e2e8f0; color:#4a5568; margin-top:8px; font-size:14px;" onclick="showResetRequest()">🔑 ፓስወርድ ረሳሁ?</button>
     </div>
+
     <div id="resetRequestForm" style="display:none;">
       <h2 style="font-size:16px; text-align:center; margin-bottom:10px; color:#2c5282;">🔑 ፓስወርድ ማስተካከያ ጥያቄ</h2>
       <div id="resetRequestMsg" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
@@ -237,6 +306,7 @@
       <button class="btn-login" onclick="submitPasswordRequest()">📩 ጥያቄ ላክ</button>
       <button class="btn-login" style="background:#a0aec0; margin-top:8px; font-size:14px;" onclick="backToLogin()">⬅️ ተመለስ</button>
     </div>
+
     <div id="changePassForm" style="display:none;">
       <div style="background:#fffaf0; color:#dd6b20; padding:10px; border-radius:8px; font-size:13px; margin-bottom:15px; border:1px solid #fbd38d;">
         ⚠️ እንኳን ደህና መጡ! እባክዎ መጀመሪያ የጊዜያዊ ፓስወርድዎን ወደ አዲስ ይቀይሩ።
@@ -267,14 +337,14 @@
     </div>
   </header>
 
-  <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
-  <div id="stockAlertBanner">🚨 <span id="stockAlertText"></span></div>
-  <div id="creditAlertBanner">💳 <span id="creditAlertText"></span></div>
-  <div id="suspendedWarningBanner" style="display:none; background:#fed7d7; color:#822727; padding:12px; margin: 0 14px 10px; border-radius:10px; font-weight:bold; font-size:13px; text-align:center;">
-    🚫 ይህ ፋርማሲ በአድሚን ተቆልፏል! እባክዎ አድሚኑን ያግኙ።
-  </div>
-
   <div class="main-content-wrapper">
+    <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
+    <div id="stockAlertBanner">🚨 <span id="stockAlertText"></span></div>
+    <div id="creditAlertBanner">💳 <span id="creditAlertText"></span></div>
+    <div id="suspendedWarningBanner" style="display:none; background:#fed7d7; color:#822727; padding:12px; margin: 0 14px 10px; border-radius:10px; font-weight:bold; font-size:13px; text-align:center;">
+      🚫 ይህ ፋርማሲ በአድሚን ተቆልፏል! እባክዎ አድሚኑን ያግኙ።
+    </div>
+
     <div class="tabs-wrapper">
       <input type="radio" name="tabs" id="tab1" checked>
       <input type="radio" name="tabs" id="tab2">
