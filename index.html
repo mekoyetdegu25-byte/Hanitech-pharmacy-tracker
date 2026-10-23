@@ -31,6 +31,13 @@
   body.dark .perm-title { color: #63b3ed; }
   body.dark .toggle-row label { color: #e2e8f0; }
 
+  /* Splash Screen */
+  #splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
+  #splashScreen.fade-out { opacity: 0; pointer-events: none; }
+  .logo-text { font-size: 32px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+  .logo-text span { color: #63b3ed; }
+  .sub-text { font-size: 14px; margin-top: 10px; color: #a0aec0; font-weight: 600; letter-spacing: 2px;}
+
   #loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
   #loginScreen.hidden { display: none; }
   .login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
@@ -44,7 +51,8 @@
   #mainApp { display: none; }
   #mainApp.show { display: block; }
   header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 0 0 16px 16px; margin-bottom: 10px; }
-  header .h-title { font-size: 16px; font-weight: 700; }
+  header .h-title { font-size: 15px; font-weight: 800; }
+  header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spacing: 0.5px; }
   .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
 
   .tabs-wrapper { position: sticky; top: 60px; z-index: 99; background: #f0f4f8; }
@@ -131,19 +139,32 @@
 </head>
 <body>
 
+<!-- የሎጎ መግቢያ ገጽ (Splash Screen) -->
+<div id="splashScreen">
+  <div class="logo-text">HaniTech <span>Digital</span></div>
+  <div class="sub-text">Pharmacy Tracker</div>
+</div>
+
 <div id="loginScreen" class="hidden">
   <div class="login-box">
     <h1>💊 Hanitech Pharmacy</h1>
     
-    <!-- መደበኛ የመግቢያ ፎርም -->
     <div id="loginForm">
       <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
       <div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
       <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="Password"></div>
       <button class="btn-login" onclick="login()">🔓 ግባ</button>
+      <button class="btn-login" style="background:#e2e8f0; color:#4a5568; margin-top:8px; font-size:14px;" onclick="showResetRequest()">🔑 ፓስወርድ ረሳሁ?</button>
     </div>
 
-    <!-- የጊዜያዊ ፓስወርድ መቀየሪያ ፎርም -->
+    <div id="resetRequestForm" style="display:none;">
+      <h2 style="font-size:16px; text-align:center; margin-bottom:10px; color:#2c5282;">🔑 ፓስወርድ ማስተካከያ ጥያቄ</h2>
+      <div id="resetRequestMsg" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
+      <div class="form-group"><label>📧 ኢሜይልዎን ያስገቡ</label><input type="email" id="resetEmail" placeholder="Email"></div>
+      <button class="btn-login" onclick="submitPasswordRequest()">📩 ጥያቄ ላክ</button>
+      <button class="btn-login" style="background:#a0aec0; margin-top:8px; font-size:14px;" onclick="backToLogin()">⬅️ ተመለስ</button>
+    </div>
+
     <div id="changePassForm" style="display:none;">
       <div style="background:#fffaf0; color:#dd6b20; padding:10px; border-radius:8px; font-size:13px; margin-bottom:15px; border:1px solid #fbd38d;">
         ⚠️ እንኳን ደህና መጡ! እባክዎ መጀመሪያ የጊዜያዊ ፓስወርድዎን ወደ አዲስ ይቀይሩ።
@@ -164,6 +185,7 @@
     </div>
     <div style="display: flex; flex-direction: column; line-height: 1.2;">
       <div class="h-title" id="hdrPharmacyName" style="font-size: 15px; font-weight: 800;">Pharmacy Name</div>
+      <div class="h-brand">HaniTech Digital</div>
       <div id="hdrUserEmail" style="font-size: 11px; opacity: 0.8; margin-top: 2px;">email@example.com</div>
     </div>
   </div>
@@ -739,6 +761,20 @@
               <div class="section-body" id="bodyReset">
                 <p style="font-size:12.5px; color:#718096; margin-bottom:10px;">የተመረጠውን ቀን ሽያጭ እና ወጪ ብቻ ያጠፋል።</p>
                 <button class="btn btn-danger" onclick="resetSelectedDate()">🔄 የተመረጠውን ቀን አጥፋ</button>
+                <div style="height:1px; background:#edf2f7; margin:15px 0;"></div>
+                <p style="font-size:12.5px; color:#c53030; font-weight:bold; margin-bottom:10px;">⚠️ ሁሉንም ዳታ ማጥፋት (Factory Reset)</p>
+                <button class="btn btn-danger" onclick="factoryReset()">🚨 ሁሉንም ዳታ አጥፋ</button>
+              </div>
+            </div>
+
+            <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+              <div class="section-header" id="hdrSupport" onclick="toggleSection('hdrSupport','bodySupport')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📞</span><span class="sec-title">የድጋፍ መረጃ (Support)</span></div>
+              </div>
+              <div class="section-body" id="bodySupport">
+                <div id="supportInfoDisplay">
+                  <p style="text-align:center; color:#a0aec0; font-size:13px;">በመጫን ላይ...</p>
+                </div>
               </div>
             </div>
 
@@ -752,6 +788,7 @@
               </div>
             </div>
 
+            <!-- Permissions Section -->
             <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
               <div class="section-header" id="hdrPermissions" onclick="toggleSection('hdrPermissions','bodyPermissions')">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">የተጠቃሚዎች ፈቃዶች (Permissions)</span></div>
