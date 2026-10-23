@@ -131,12 +131,102 @@
   .chart-container { position: relative; height: 250px; margin-bottom: 15px; }
 
   @media (min-width: 768px) {
-    .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .panel { padding: 20px; }
-    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-    .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings { grid-column: span 2; }
-    .section-collapsible { margin-bottom: 0; }
+  /* --- የዴስክቶፕ አቀማመጥ (Sidebar Layout) --- */
+  body { padding-bottom: 0; max-width: 100%; }
+  
+  #mainApp { display: none; }
+  #mainApp.show { 
+    display: grid; 
+    grid-template-columns: 260px 1fr; 
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+    max-width: 1400px; /* ገጹ በኮምፒውተር ላይ እንዲሰፋ */
+    margin: 0 auto;
   }
+
+  /* ራስጌው ሁለቱንም አምዶች ይይዛል */
+  header { 
+    grid-column: 1 / -1; 
+    border-radius: 0; 
+    margin-bottom: 0; 
+    padding: 16px 24px; 
+    position: static; /* ስክሪኑ ሲንቀሳቀስ ከላይ እንዳይጣበቅ */
+  }
+
+  /* የታቦች መጠቅለያ በግራ በኩል ቋሚ ይሆናል */
+  .tabs-wrapper { 
+    position: sticky; 
+    top: 0; 
+    height: calc(100vh - 75px); 
+    background: #fff; 
+    border-right: 1px solid #e2e8f0; 
+    padding-top: 20px; 
+    overflow-y: auto;
+    z-index: 99;
+  }
+  body.dark .tabs-wrapper { background: #2d3748; border-right: 1px solid #4a5568; }
+
+  /* ታቦቹ በአቀባዊ እንዲደረደሩ */
+  .tabs { 
+    flex-direction: column; 
+    padding: 0 15px; 
+    gap: 10px; 
+  }
+  
+  .tabs label { 
+    flex-direction: row; 
+    justify-content: flex-start; 
+    padding: 14px 20px; 
+    min-width: 100%; 
+    font-size: 14px;
+    box-shadow: none;
+    border: 1px solid transparent;
+  }
+  
+  .tabs label i { margin-bottom: 0; margin-right: 12px; font-size: 22px;}
+
+  /* የተመረጠው ታብ ስታይል (በግራ በኩል የጎን መስመር ይኖረዋል) */
+  #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { 
+    background: #ebf4ff; 
+    border-color: #90cdf4; 
+    border-left: 4px solid #2c5282; 
+    box-shadow: none;
+  }
+  body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"] { 
+    background: #4a5568; 
+    border-color: #63b3ed; 
+    border-left: 4px solid #63b3ed; 
+  }
+
+  /* የይዘት አካባቢ (Panels) */
+  .panels { 
+    padding: 24px; 
+    background: #f0f4f8;
+    height: calc(100vh - 75px);
+    overflow-y: auto;
+  }
+  body.dark .panels { background: #1a202c; }
+  
+  .panel { padding: 0; }
+  
+  /* በዴስክቶፕ ላይ ይዘቱ በ 2 ወይም 3 አምዶች እንዲሆን */
+  #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9 { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+    gap: 20px; 
+    align-items: start; 
+  }
+  
+  /* ሙሉ ስፋት ያለባቸው ክፍሎች (ለምሳሌ የሽያጭ ገጽ) */
+  .section-collapsible.full-width, #hdrAddMed, #hdrSell, #hdrDaily, #hdrMonthly, #hdrDash, #hdrSettings { 
+    grid-column: 1 / -1; 
+  }
+  
+  .section-collapsible { 
+    margin-bottom: 0; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+  }
+}
 </style>
 </head>
 <body>
