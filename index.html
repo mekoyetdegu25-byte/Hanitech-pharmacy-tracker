@@ -436,6 +436,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <option value="medicine">💊 መድሃኒት</option>
 <option value="cosmetic">🧴 ኮስሞቲክስ</option>
 </select>
+<!-- ምድብ ተወግዷል -->
 <label class="field-label">🏢 ቅርንጫፍ</label>
 <select id="quickBranch"></select>
 <label class="field-label">📅 ቀን</label>
@@ -475,14 +476,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <label class="field-label">📅 ቀን</label>
 <input type="date" id="expDate">
 <button class="btn btn-danger" onclick="addExpense()">💾 አስቀምጥ</button>
-</div>
-</div>
-<div class="section-collapsible">
-<div class="section-header" id="hdrExpenseList" onclick="toggleSection('hdrExpenseList','bodyExpenseList')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የወጪ ታሪክ (የቀን)</span></div>
-</div>
-<div class="section-body" id="bodyExpenseList">
-<div id="expList"></div>
+<div id="expList" style="margin-top:14px;"></div>
 </div>
 </div>
 <div class="section-collapsible">
@@ -1308,7 +1302,7 @@ function setupRealtimeListeners() {
     unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         allFixed = [];
         snapshot.forEach(doc => allFixed.push({ id: doc.id, ...doc.data() }));
-        loadMonthlyReport(); loadDashboard(); generateReport();
+        loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory(); generateReport();
     });
 
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
@@ -1623,7 +1617,6 @@ function renderExpenseHistory() {
         listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ወጪ የለም።</p>';
         return;
     }
-    // Sort by date descending
     const sorted = [...allExpenses].sort((a,b) => (b.date || '').localeCompare(a.date || ''));
     let html = '';
     sorted.forEach(e => {
@@ -1651,13 +1644,33 @@ window.addFixedExpense = async function() {
     } catch(e) { alert(e.message); }
 }; 
 
+function renderFixedExpenseHistory() {
+    const listEl = document.getElementById('fixedExpList');
+    if(!listEl) return;
+    if(allFixed.length === 0) {
+        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ቋሚ ወጪ የለም።</p>';
+        return;
+    }
+    const sorted = [...allFixed].sort((a,b) => (b.month || '').localeCompare(a.month || ''));
+    let html = '';
+    sorted.forEach(e => {
+        html += `<div class="list-item">
+            <div class="info">
+                <div class="name">${e.category}</div>
+                <div class="meta">📅 ${e.month} | ${e.note || ''}</div>
+            </div>
+            <div class="amount red">${e.amount.toFixed(2)} ብር</div>
+        </div>`;
+    });
+    listEl.innerHTML = html;
+}
+
 // ---- Inventory & Stock ----
 window.loadInventory = function() {
     const listEl = document.getElementById('inventoryList');
     const filter = document.getElementById('filterTypeInv').value;
     let filtered = allMedicines;
     
-    // የተስተካከለ ማጣሪያ
     if (filter === 'medicine') filtered = allMedicines.filter(m => m.type === 'medicine');
     else if (filter === 'cosmetic') filtered = allMedicines.filter(m => m.type === 'cosmetic'); 
 
@@ -1882,19 +1895,29 @@ async function loadSettings() {
             const btnSave = document.getElementById('btnSaveBizType');
             const banner = document.getElementById('bizTypeBanner');
 
-            if (adminAllowedType === 'both') {
+            // የድርጅት አይነት መቆለፍ
+            if (adminAllowedType === 'retail') {
+                bizTypeSelect.value = 'retail';
+                bizTypeSelect.disabled = true;
+                btnSave.style.display = 'none';
+                banner.innerText = "⚠️ ይህ ፋርማሲ በአድሚን የተፈቀደው ችርቻሮ (Retail) ብቻ ነው። መቀየር አይችሉም።";
+                banner.style.background = '#fffaf0';
+                banner.style.color = '#dd6b20';
+            } else if (adminAllowedType === 'wholesale') {
+                bizTypeSelect.value = 'wholesale';
+                bizTypeSelect.disabled = true;
+                btnSave.style.display = 'none';
+                banner.innerText = "⚠️ ይህ ፋርማሲ በአድሚን የተፈቀደው ጅምላ (Wholesale) ብቻ ነው። መቀየር አይችሉም።";
+                banner.style.background = '#fffaf0';
+                banner.style.color = '#dd6b20';
+            } else {
+                // አድሚኑ 'both' ካደረገ
                 bizTypeSelect.value = userSelectedType;
                 bizTypeSelect.disabled = false;
                 btnSave.style.display = 'block';
                 banner.innerText = "💡 አድሚኑ ሁለቱንም ዓይነቶች ፈቅዷል። እርስዎ የሚፈልጉትን መርጠው ይጠቀሙ።";
                 banner.style.background = '#ebf8ff';
-            } else {
-                bizTypeSelect.value = adminAllowedType;
-                bizTypeSelect.disabled = true; 
-                btnSave.style.display = 'none'; 
-                banner.innerText = `⚠️ ይህ ፋርማሲ በአድሚን የተፈቀደው ${adminAllowedType === 'retail' ? 'ችርቻሮ (Retail)' : 'ጅምላ (Wholesale)'} ብቻ ነው። መቀየር አይችሉም።`;
-                banner.style.background = '#fffaf0';
-                banner.style.color = '#dd6b20';
+                banner.style.color = '#2c5282';
             }
         }
     } catch(e) { console.error(e); }
