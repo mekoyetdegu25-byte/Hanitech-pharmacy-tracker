@@ -246,6 +246,62 @@
     flex-shrink: 0;
   }
   body.dark .tabs-wrapper { background: #2d3748; border-right: 1px solid #4a5568; }
+/* DESKTOP LAYOUT */
+@media (min-width: 768px) {
+  body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; }
+  
+  /* ገጹ ሙሉ ስክሪኑን እንዲይዝ */
+  #mainApp.show { 
+    display: flex; 
+    flex-direction: column;
+    height: 100vh; 
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  header { 
+    width: 100%;
+    height: 70px;
+    border-radius: 0; 
+    margin-bottom: 0; 
+    padding: 0 24px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 101;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  /* ባነሮቹ ከራስጌው በታች በራሳቸው ረድፍ ይቀመጣሉ */
+  #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner {
+    margin: 10px 24px 0 284px; /* 260px (ታቦች) + 24px (ክፍተት) */
+    flex-shrink: 0;
+  }
+
+  /* ታቦቹን እና ይዘቱን በጎን ለጎን የሚያደርግ */
+  .main-content-wrapper {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    width: 100%;
+  }
+  body.dark .main-content-wrapper { background: #1a202c; }
+
+  /* 👈 የግራ በኩል ታቦች (Sidebar) */
+  .tabs-wrapper { 
+    width: 260px; 
+    height: 100%; 
+    background: #fff; 
+    border-right: 1px solid #e2e8f0; 
+    padding-top: 20px; 
+    overflow-y: auto;
+    flex-shrink: 0;
+    position: static;
+  }
+  body.dark .tabs-wrapper { background: #2d3748; border-right: 1px solid #4a5568; }
 
   input[type="radio"][name="tabs"] { display: none !important; }
 
@@ -280,8 +336,13 @@
     border-left: 4px solid #2c5282; 
     font-weight: 800;
   }
+  body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"] { 
+    background: #4a5568; 
+    color: #63b3ed;
+    border-left: 4px solid #63b3ed; 
+  }
 
-  /* የቀኝ በኩል ይዘት (Panels) */
+  /* 👉 የቀኝ በኩል ይዘት (Panels) */
   .panels { 
     flex: 1;
     padding: 24px; 
@@ -312,7 +373,8 @@
     background: #fff;
     border-radius: 12px;
   }
-  
+  body.dark .section-collapsible { background: #2d3748; border-color: #4a5568; }
+
   .dash-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
