@@ -35,10 +35,17 @@
   .btn { display: block; width: 100%; padding: 12px; font-size: 14px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; text-align: center; text-decoration: none; color: #fff; margin-bottom: 6px;}
   .btn-sm { padding: 8px; font-size: 12px; border-radius: 6px; }
   .btn-success { background: #276749; } .btn-primary { background: #2c5282; } .btn-danger { background: #c53030; } .btn-warning { background: #dd6b20; } .btn-info { background: #3182ce; } .btn-outline { background: transparent; border: 1.5px solid #cbd5e0; color: #4a5568; }
+  
   .tenant-card { background: #fff; border: 1px solid #edf2f7; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.03); }
   .tenant-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #edf2f7; padding-bottom: 10px; margin-bottom: 10px; }
   .tenant-title { font-size: 16px; font-weight: 800; color: #2c5282; display: flex; align-items: center; gap: 6px; }
   .tenant-website { font-size: 12px; color: #3182ce; text-decoration: none; }
+  
+  /* የተስተካከለው የኢሜይል አቀማመጥ */
+  .tenant-emails { display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 10px; background: #f7fafc; padding: 10px; border-radius: 8px; }
+  .tenant-email-item { font-size: 12px; color: #4a5568; display: flex; align-items: center; gap: 6px; word-break: break-all; }
+  .tenant-email-item strong { color: #2d3748; width: 85px; flex-shrink: 0; display: inline-block; }
+  
   .tenant-info { font-size: 13px; margin-bottom: 6px; color: #4a5568; display: flex; align-items: center; gap: 6px; }
   .tenant-info strong { color: #2d3748; }
   .badge-status { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-top: 6px; }
@@ -74,7 +81,6 @@
   </header>
 
   <div class="container">
-    <!-- Payment Alert Banner -->
     <div id="paymentAlertBanner" style="display:none; background:#fff5f5; color:#c53030; padding:15px; border-radius:12px; border:1px solid #fed7d7; margin-bottom:16px; font-weight:bold; font-size:14px; text-align:center;">
       ⚠️ <span id="paymentAlertText"></span>
     </div>
@@ -92,7 +98,6 @@
 
     <button class="btn btn-success" style="margin-bottom: 16px;" onclick="exportExcel()">📊 Excel (CSV) አውጣ</button>
 
-    <!-- Support Info Section -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">📞 የድጋፍ መረጃ (Support Info)</div>
@@ -106,7 +111,6 @@
       </div>
     </div>
 
-    <!-- Password Requests Section -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">🔔 የፓስወርድ ማስተካከያ ጥያቄዎች <span class="badge" id="passReqBadge">0</span></div>
@@ -117,7 +121,6 @@
       </div>
     </div>
 
-    <!-- Add New Tenant Section -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">➕ አዲስ ፋርማሲ ጨምር</div>
@@ -148,7 +151,6 @@
       </div>
     </div>
 
-    <!-- Tenant List Section -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">📋 የፋርማሲዎች ዝርዝር <span class="badge" style="background:#2b6cb0;" id="tenantListBadge">0</span></div>
@@ -168,7 +170,6 @@
       </div>
     </div>
 
-    <!-- Backup Section -->
     <div class="section-collapsible">
       <div class="section-header" onclick="toggleSection(this)">
         <div class="sec-left">💾 ዳታ ማስቀመጥ እና መመለስ (Backup / Restore)</div>
@@ -202,7 +203,6 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // ⚠️ እባክዎ ይህንን ወደ እርስዎ የአድሚን ኢሜይል ይቀይሩት
   const SUPER_ADMIN_EMAIL = "admin@hanitech.com"; 
 
   let allTenants = [];
@@ -413,8 +413,13 @@
         </div>
         
         <div class="tenant-info">🏢 <strong>ዓይነት:</strong> ${bizTypeLabel}</div>
-        <div class="tenant-info">👑 <strong>Owner:</strong> ${t.ownerEmail || 'አልተጠቀሰም'}</div>
-        <div class="tenant-info">🎯 <strong>Manager:</strong> ${t.managerEmail || 'አልተጠቀሰም'} • 🧰 <strong>Accountant:</strong> ${t.accountantEmail || 'አልተጠቀሰም'}</div>
+        
+        <div class="tenant-emails">
+            <div class="tenant-email-item">👑 <strong>Owner:</strong> ${t.ownerEmail || 'አልተጠቀሰም'}</div>
+            <div class="tenant-email-item">🎯 <strong>Manager:</strong> ${t.managerEmail || 'አልተጠቀሰም'}</div>
+            <div class="tenant-email-item">🧰 <strong>Accountant:</strong> ${t.accountantEmail || 'አልተጠቀሰም'}</div>
+        </div>
+
         <div class="tenant-info">💰 <strong>ክፍያ:</strong> ${t.amount || 0} ብር/ወር</div>
         
         <div class="badge-status ${statusClass}">${statusBadge} ${t.expiryDate ? `(${t.expiryDate})` : ''}</div>
@@ -573,14 +578,12 @@
   window.deleteTenant = async function(id) {
     if(!confirm('🚨 እርግጠኛ ነዎት? ይህን ፋርማሲ እና ተጠቃሚዎቹን ማጥፋት ትፈልጋለህ? ይህ ተግባር አይመለስም!')) return;
     try {
-      // 1. Delete Users associated with the pharmacy
       const usersQuery = query(collection(db, 'users'), where('pharmacyId', '==', id));
       const usersSnap = await getDocs(usersQuery);
       for (const userDoc of usersSnap.docs) {
         await deleteDoc(doc(db, 'users', userDoc.id));
       }
       
-      // 2. Delete Pharmacy
       await deleteDoc(doc(db, 'pharmacies', id));
       
       loadAdminData();
