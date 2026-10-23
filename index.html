@@ -1282,30 +1282,32 @@ function setupRealtimeListeners() {
     if(unsubCredit) unsubCredit();
 
     // መድሃኒቶች
-unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-    allMedicines = [];
-    snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
-    
-    // በ JavaScript በኩል መደርደር (አዲሱ መጀመሪያ)
-    allMedicines.sort((a, b) => {
-        const timeA = a.createdAt?.seconds || 0;
-        const timeB = b.createdAt?.seconds || 0;
-        return timeB - timeA;
-    });
+    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
+        let tempMedicines = [];
+        snapshot.forEach(doc => tempMedicines.push({ id: doc.id, ...doc.data() }));
+        
+        // በ JavaScript በኩል መደርደር
+        tempMedicines.sort((a, b) => {
+            const timeA = a.createdAt?.seconds || 0;
+            const timeB = b.createdAt?.seconds || 0;
+            return timeB - timeA;
+        });
 
-    renderMedList(); 
-    loadInventory(); 
-    renderSellProducts(); 
-    checkExpiryAlerts();
-}, (error) => {
-    console.error("Error in medicines listener: ", error);
-    // alert ተወግዷል (ተጠቃሚው ስህተት እንዳያይ)
-});
+        allMedicines = tempMedicines; // ዳታው ሲመጣ ብቻ ነው የሚቀየረው
+        renderMedList(); 
+        loadInventory(); 
+        renderSellProducts(); 
+        checkExpiryAlerts();
+    }, (error) => {
+        console.error("Error in medicines listener: ", error);
+        alert("የመድሃኒት ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
+    });
 
     // ሽያጮች
     unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        allSales = [];
-        snapshot.forEach(doc => allSales.push({ id: doc.id, ...doc.data() }));
+        let tempSales = [];
+        snapshot.forEach(doc => tempSales.push({ id: doc.id, ...doc.data() }));
+        allSales = tempSales;
         loadDailyReport(); 
         loadMonthlyReport(); 
         loadDashboard(); 
@@ -1314,12 +1316,14 @@ unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId
         generateReport();
     }, (error) => {
         console.error("Error in sales listener: ", error);
+        alert("የሽያጭ ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 
     // ወጪዎች
     unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        allExpenses = [];
-        snapshot.forEach(doc => allExpenses.push({ id: doc.id, ...doc.data() }));
+        let tempExpenses = [];
+        snapshot.forEach(doc => tempExpenses.push({ id: doc.id, ...doc.data() }));
+        allExpenses = tempExpenses;
         loadDailyReport(); 
         loadMonthlyReport(); 
         loadDashboard(); 
@@ -1327,28 +1331,33 @@ unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId
         generateReport();
     }, (error) => {
         console.error("Error in expenses listener: ", error);
+        alert("የወጪ ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 
     // ቋሚ ወጪዎች
     unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        allFixed = [];
-        snapshot.forEach(doc => allFixed.push({ id: doc.id, ...doc.data() }));
+        let tempFixed = [];
+        snapshot.forEach(doc => tempFixed.push({ id: doc.id, ...doc.data() }));
+        allFixed = tempFixed;
         loadMonthlyReport(); 
         loadDashboard(); 
         renderFixedExpenseHistory(); 
         generateReport();
     }, (error) => {
         console.error("Error in fixed expenses listener: ", error);
+        alert("የቋሚ ወጪ ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 
     // የዱቤ ክፍያዎች
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        allCreditPayments = [];
-        snapshot.forEach(doc => allCreditPayments.push({ id: doc.id, ...doc.data() }));
+        let tempCredit = [];
+        snapshot.forEach(doc => tempCredit.push({ id: doc.id, ...doc.data() }));
+        allCreditPayments = tempCredit;
         loadCreditPaymentHistory(); 
         renderUnpaidCredits();
     }, (error) => {
         console.error("Error in credit payments listener: ", error);
+        alert("የዱቤ ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 }
 
