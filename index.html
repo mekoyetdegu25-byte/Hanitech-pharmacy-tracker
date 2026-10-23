@@ -475,7 +475,14 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <label class="field-label">📅 ቀን</label>
 <input type="date" id="expDate">
 <button class="btn btn-danger" onclick="addExpense()">💾 አስቀምጥ</button>
-<div id="expList" style="margin-top:14px;"></div>
+</div>
+</div>
+<div class="section-collapsible">
+<div class="section-header" id="hdrExpenseList" onclick="toggleSection('hdrExpenseList','bodyExpenseList')">
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የወጪ ታሪክ (የቀን)</span></div>
+</div>
+<div class="section-body" id="bodyExpenseList">
+<div id="expList"></div>
 </div>
 </div>
 <div class="section-collapsible">
@@ -903,15 +910,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <div class="section-collapsible">
-        <div class="section-header" id="hdrReports" onclick="toggleSection('hdrReports','bodyReports')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🖨️</span><span class="sec-title">ሪፖርት ማውጫ</span></div>
-        </div>
-        <div class="section-body" id="bodyReports">
-            <div class="info-banner">💡 የተለያዩ ሪፖርቶችን እዚህ ማውረድ ይችላሉ።</div>
-            <button class="btn btn-primary" onclick="window.print()">🖨️ የአሁኑን ገጽ አትም</button>
-        </div>
-    </div>
+    <!-- Removed Reports from here as requested -->
 
     <div class="section-collapsible">
         <div class="section-header" id="hdrPerms" onclick="toggleSection('hdrPerms','bodyPerms')">
@@ -1269,6 +1268,8 @@ async function applyPermissionsUI() {
 async function loadAllData() {
     if (!currentUserPharmacyId) return; 
     await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
+    
+    // Initial loads before snapshot takes over
     await loadMedicines(); await loadSales(); await loadExpenses(); await loadFixed(); await loadCreditPayments();
     
     loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); checkExpiryAlerts(); loadDarkMode(); applyBizTypeUI();
@@ -1289,7 +1290,7 @@ function setupRealtimeListeners() {
     unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         allMedicines = [];
         snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
-        renderMedList(); loadInventory(); renderSellProducts();
+        renderMedList(); loadInventory(); renderSellProducts(); checkExpiryAlerts();
     });
 
     unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
@@ -1301,7 +1302,7 @@ function setupRealtimeListeners() {
     unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         allExpenses = [];
         snapshot.forEach(doc => allExpenses.push({ id: doc.id, ...doc.data() }));
-        loadDailyReport(); loadMonthlyReport(); loadDashboard(); generateReport();
+        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); generateReport();
     });
 
     unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
@@ -1615,6 +1616,28 @@ window.addExpense = async function() {
     } catch(e) { alert(e.message); }
 }; 
 
+function renderExpenseHistory() {
+    const listEl = document.getElementById('expList');
+    if(!listEl) return;
+    if(allExpenses.length === 0) {
+        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ወጪ የለም።</p>';
+        return;
+    }
+    // Sort by date descending
+    const sorted = [...allExpenses].sort((a,b) => (b.date || '').localeCompare(a.date || ''));
+    let html = '';
+    sorted.forEach(e => {
+        html += `<div class="list-item">
+            <div class="info">
+                <div class="name">${e.category}</div>
+                <div class="meta">📅 ${e.date} | ${e.note || ''}</div>
+            </div>
+            <div class="amount red">${e.amount.toFixed(2)} ብር</div>
+        </div>`;
+    });
+    listEl.innerHTML = html;
+}
+
 window.addFixedExpense = async function() {
     const cat = document.getElementById('fixCat').value;
     const note = document.getElementById('fixNote').value.trim();
@@ -1634,10 +1657,15 @@ window.loadInventory = function() {
     const filter = document.getElementById('filterTypeInv').value;
     let filtered = allMedicines;
     
+    // የተስተካከለ ማጣሪያ
     if (filter === 'medicine') filtered = allMedicines.filter(m => m.type === 'medicine');
     else if (filter === 'cosmetic') filtered = allMedicines.filter(m => m.type === 'cosmetic'); 
 
-    if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; document.getElementById('invTotalValue').innerHTML = '0.00 <small>ብር</small>'; return; } 
+    if (filtered.length === 0) { 
+        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; 
+        document.getElementById('invTotalValue').innerHTML = '0.00 <small>ብር</small>'; 
+        return; 
+    } 
 
     const grouped = {};
     filtered.forEach(med => {
