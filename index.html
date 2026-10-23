@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Hanitech Pharmacy Tracker</title>
+<title>Hanitech Digital Pharmacy Tracker</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -246,7 +246,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 
 <div id="loginScreen" class="hidden">
 <div class="login-box">
-<h1>💊 Hanitech Pharmacy</h1> 
+<h1>💊 HaniTech Digital Pharmacy Tracker</h1> 
 <div id="loginForm">
 <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
 <div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
@@ -453,6 +453,15 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <button class="btn btn-success" onclick="addQuickSale()">+ ጨምር</button>
 <div id="quickSaleList" style="margin-top:14px;"></div>
 </div>
+</div>
+<!-- አዲስ የተጨመረ: የሽያጭ ታሪክ -->
+<div class="section-collapsible true-full-width">
+    <div class="section-header" id="hdrSalesHistory" onclick="toggleSection('hdrSalesHistory','bodySalesHistory')">
+        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">የሽያጭ ታሪክ (Sales History)</span></div>
+    </div>
+    <div class="section-body" id="bodySalesHistory">
+        <div id="salesHistoryList"></div>
+    </div>
 </div>
 </div> 
 
@@ -743,7 +752,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 <div class="section-body open" id="bodySettings">
     
-    <!-- 1. የፋርማሲ ስም -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrPhName" onclick="toggleSection('hdrPhName','bodyPhName')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">የፋርማሲ ስም</span></div>
@@ -755,7 +763,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 2. የድርጅት አይነት (Business Type) -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrBizType" onclick="toggleSection('hdrBizType','bodyBizType')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">የድርጅት አይነት</span></div>
@@ -771,7 +778,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 3. የዕቃ ክምችት ገደብ -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrStockLimit" onclick="toggleSection('hdrStockLimit','bodyStockLimit')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">የዕቃ ክምችት ገደብ</span></div>
@@ -783,7 +789,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 4. የስታክ ማሳወቂያ ገደብ -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrExpLimit" onclick="toggleSection('hdrExpLimit','bodyExpLimit')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የስታክ ማሳወቂያ ገደብ</span></div>
@@ -795,7 +800,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 5. ቅርንጫፎች -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrBranchMgr" onclick="toggleSection('hdrBranchMgr','bodyBranchMgr')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">ቅርንጫፎች</span></div>
@@ -809,7 +813,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 6. ደንበኞች -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrCustMgr" onclick="toggleSection('hdrCustMgr','bodyCustMgr')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">ደንበኞች (የጅምላ)</span></div>
@@ -823,7 +826,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 7. የይለፍ ቃል ቀይር -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrPassChange" onclick="toggleSection('hdrPassChange','bodyPassChange')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔐</span><span class="sec-title">የይለፍ ቃል ቀይር</span></div>
@@ -837,7 +839,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 8. Dark Mode -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrDarkMode" onclick="toggleSection('hdrDarkMode','bodyDarkMode')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🌙</span><span class="sec-title">Dark Mode</span></div>
@@ -850,7 +851,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 9. Notification -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrNotif" onclick="toggleSection('hdrNotif','bodyNotif')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔔</span><span class="sec-title">Notification</span></div>
@@ -867,7 +867,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 10. ስርዓቱን አስተካክል -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrSysUpdate" onclick="toggleSection('hdrSysUpdate','bodySysUpdate')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔄</span><span class="sec-title">ስርዓቱን አስተካክል</span></div>
@@ -878,7 +877,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 11. Reset -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrReset" onclick="toggleSection('hdrReset','bodyReset')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗑️</span><span class="sec-title">አዲስ ቀን ጀምር (Reset)</span></div>
@@ -889,23 +887,17 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 12. Support -->
+    <!-- 12. Support (ተስተካክሏል) -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrSupport" onclick="toggleSection('hdrSupport','bodySupport')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📞</span><span class="sec-title">የድጋፍ መስመር (Support)</span></div>
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📞</span><span class="sec-title">የድጋፍ መረጃ (Support Info)</span></div>
         </div>
         <div class="section-body" id="bodySupport">
             <div class="info-banner">💡 ለማንኛውም ችግር ወይም ጥያቄ እዚህ ያግኙን።</div>
-            <div class="list-item">
-                <div class="info"><div class="name">📞 ስልክ ቁጥር</div><div class="meta">+251 900 000 000</div></div>
-            </div>
-            <div class="list-item">
-                <div class="info"><div class="name">📧 ኢሜይል</div><div class="meta">support@hanitech.com</div></div>
-            </div>
+            <div id="supportDisplay"></div>
         </div>
     </div>
 
-    <!-- 13. ሪፖርት ማውጫ -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrReports" onclick="toggleSection('hdrReports','bodyReports')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🖨️</span><span class="sec-title">ሪፖርት ማውጫ</span></div>
@@ -916,7 +908,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 14. Permissions -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrPerms" onclick="toggleSection('hdrPerms','bodyPerms')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">የሰራተኞች ፈቃድ</span></div>
@@ -958,9 +949,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div> <!-- End of main-content-wrapper -->
 </div> <!-- End of mainApp -->
 
-<!-- ========================================== -->
-<!-- JAVASCRIPT ኮድ ከ app.js የተዋሃደ -->
-<!-- ========================================== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
@@ -1006,14 +994,10 @@ setTimeout(() => {
     }
 }, 1500); 
 
-// የተሻሻለው የ toggleSection ፈንክሽን
 window.toggleSection = function(h, b) {
     const hd = document.getElementById(h);
     const bd = document.getElementById(b);
-    if (!hd || !bd) {
-        console.warn(`Missing ID: ${h} or ${b}`);
-        return; 
-    }
+    if (!hd || !bd) return; 
     const isOpen = bd.classList.contains('open');
     if (isOpen) {
         bd.classList.remove('open');
@@ -1184,6 +1168,7 @@ async function loadAllData() {
     await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
     await loadMedicines(); await loadSales(); await loadExpenses(); await loadFixed(); await loadCreditPayments();
     loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); checkExpiryAlerts(); loadDarkMode(); applyBizTypeUI();
+    renderSalesHistory(); // አዲስ የተጨመረ
 } 
 
 function applyBizTypeUI() {
@@ -1715,7 +1700,7 @@ function renderCharts() {
     }
 }
 
-// ---- Settings ----
+// ---- Settings & Support Info ----
 async function loadSettings() {
     try {
         const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
@@ -1755,6 +1740,27 @@ async function loadSettings() {
     } catch(e) { console.error(e); }
 
     loadCreditPaymentHistory();
+    loadSupportInfo(); // አዲስ የተጨመረ
+}
+
+// አዲስ የተጨመረ
+async function loadSupportInfo() {
+    try {
+        const supportDoc = await getDoc(doc(db, 'settings', 'support'));
+        const displayDiv = document.getElementById('supportDisplay');
+        if (supportDoc.exists()) {
+            const data = supportDoc.data();
+            let html = '';
+            if(data.phone) html += `<div class="list-item"><div class="info"><div class="name">📞 ስልክ ቁጥር</div><div class="meta">${data.phone}</div></div></div>`;
+            if(data.email) html += `<div class="list-item"><div class="info"><div class="name">📧 ኢሜይል</div><div class="meta">${data.email}</div></div></div>`;
+            if(data.telegram) html += `<div class="list-item"><div class="info"><div class="name">✈️ ቴሌግራም</div><div class="meta">${data.telegram}</div></div></div>`;
+            
+            if (html) displayDiv.innerHTML = html;
+            else displayDiv.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የድጋፍ መረጃ አልተመዘገበም።</p>';
+        } else {
+             displayDiv.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የድጋፍ መረጃ አልተመዘገበም።</p>';
+        }
+    } catch(e) { console.error("Error loading support:", e); }
 }
 
 window.savePharmacyName = async function() {
@@ -1871,6 +1877,81 @@ window.changeCurrentPassword = async function() {
         alert('✅ ፓስወርድዎ በተሳካ ሁኔታ ተቀይሯል!');
         document.getElementById('currentPassword').value = ''; document.getElementById('newPassword').value = '';
     } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
+};
+
+// ==========================================
+// 🆕 አዲስ የተጨመረ: የሽያጭ ታሪክ (Sales History)
+// ==========================================
+function renderSalesHistory() {
+    const listEl = document.getElementById('salesHistoryList');
+    if (!listEl) return;
+
+    if (allSales.length === 0) {
+        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የሽያጭ ታሪክ የለም።</p>';
+        return;
+    }
+
+    // ከአዲስ ወደ አሮጌ መደርደር
+    const sortedSales = [...allSales].sort((a, b) => {
+        const dateA = a.date || '';
+        const dateB = b.date || '';
+        if (dateA !== dateB) return dateB.localeCompare(dateA);
+        return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0);
+    });
+
+    let html = '';
+    sortedSales.forEach(sale => {
+        const dateStr = sale.date || 'ቀን የለም';
+        const total = sale.total || 0;
+        const paid = sale.paidAmount !== undefined ? sale.paidAmount : total;
+        const pmLabel = sale.paymentMethod === 'transfer' ? '🏦' : (sale.paymentMethod === 'credit' ? '📝' : '💵');
+        
+        html += `
+        <div class="list-item" style="flex-direction: column; align-items: stretch; padding: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <div style="flex: 1;">
+                    <div class="name" style="font-size: 15px;">${sale.medicineName}</div>
+                    <div class="meta" style="font-size: 12px; margin-top: 4px;">
+                        📅 ${dateStr} | 📦 ብዛት: ${sale.quantity} | 🏷️ ዋጋ: ${sale.unitPrice} ብር
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="amount" style="font-size: 16px; color: #276749;">${paid.toFixed(2)} ብር</div>
+                    <div style="font-size: 11px; color: #718096;">${pmLabel} ${sale.paymentMethod || 'cash'}</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #718096; border-top: 1px dashed #e2e8f0; padding-top: 8px;">
+                <div>
+                    ${sale.branch ? `🏢 ${sale.branch}` : ''} 
+                    ${sale.customer ? `| 🏪 ${sale.customer}` : ''}
+                    ${sale.receipt ? `| 🧾 ${sale.receipt}` : ''}
+                </div>
+                <button onclick="deleteSale('${sale.id}', '${sale.medicineId}', ${sale.quantity})" style="background: #fed7d7; color: #c53030; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                    🗑️ ሰርዝ
+                </button>
+            </div>
+        </div>`;
+    });
+    listEl.innerHTML = html;
+}
+
+window.deleteSale = async function(saleId, medicineId, quantity) {
+    if (!confirm('🚨 እርግጠኛ ነዎት? ይህን ሽያጭ መሰረዝ ትፈልጋለህ? (ክምችቱ ወደነበረበት ይመለሳል)')) return;
+    
+    try {
+        // 1. የተሸጠውን ብዛት ወደ ክምችት መመለስ
+        if (medicineId) {
+            await updateDoc(doc(db, 'medicines', medicineId), { quantity: increment(quantity) });
+        }
+        
+        // 2. የሽያጩን መዝገብ መሰረዝ
+        await deleteDoc(doc(db, 'sales', saleId));
+        
+        alert('✅ ሽያጩ ተሰርዟል እና ክምችቱ ተመልሷል!');
+        loadAllData(); // ገጹን ማደስ
+    } catch(e) {
+        alert('⚠️ ስህተት: ' + e.message);
+    }
 };
 
 </script>
