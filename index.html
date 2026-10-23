@@ -1264,7 +1264,6 @@ async function loadAllData() {
     await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
     
     // Initial loads before snapshot takes over
-    await loadMedicines(); await loadSales(); await loadExpenses(); await loadFixed(); await loadCreditPayments();
     
     loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); checkExpiryAlerts(); loadDarkMode(); applyBizTypeUI();
     renderSalesHistory(); 
@@ -1286,7 +1285,7 @@ function setupRealtimeListeners() {
         let tempMedicines = [];
         snapshot.forEach(doc => tempMedicines.push({ id: doc.id, ...doc.data() }));
         
-        // በ JavaScript በኩል መደርደር
+        // በ JavaScript በኩል መደርደር (ዳታው ሰዓት ከሌለው ሳይሰበር)
         tempMedicines.sort((a, b) => {
             const timeA = a.createdAt?.seconds || 0;
             const timeB = b.createdAt?.seconds || 0;
@@ -1300,7 +1299,6 @@ function setupRealtimeListeners() {
         checkExpiryAlerts();
     }, (error) => {
         console.error("Error in medicines listener: ", error);
-        alert("የመድሃኒት ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 
     // ሽያጮች
@@ -1316,7 +1314,6 @@ function setupRealtimeListeners() {
         generateReport();
     }, (error) => {
         console.error("Error in sales listener: ", error);
-        alert("የሽያጭ ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 
     // ወጪዎች
@@ -1331,7 +1328,6 @@ function setupRealtimeListeners() {
         generateReport();
     }, (error) => {
         console.error("Error in expenses listener: ", error);
-        alert("የወጪ ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 
     // ቋሚ ወጪዎች
@@ -1345,7 +1341,6 @@ function setupRealtimeListeners() {
         generateReport();
     }, (error) => {
         console.error("Error in fixed expenses listener: ", error);
-        alert("የቋሚ ወጪ ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 
     // የዱቤ ክፍያዎች
@@ -1357,7 +1352,6 @@ function setupRealtimeListeners() {
         renderUnpaidCredits();
     }, (error) => {
         console.error("Error in credit payments listener: ", error);
-        alert("የዱቤ ዳታ ማመሳሰል ላይ ስህተት: " + error.message);
     });
 }
 
