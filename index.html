@@ -130,37 +130,69 @@
 
   .chart-container { position: relative; height: 250px; margin-bottom: 15px; }
 
+  /* Dashboard Grid Layout (አዲስ) */
+  .dash-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  .dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: space-between; }
+  body.dark .dash-card { background: #2d3748; border-color: #4a5568; }
+  
+  .dash-header { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 700; color: #4a5568; margin-bottom: 12px; }
+  body.dark .dash-header { color: #a0aec0; }
+  
+  .dash-badge { background: #ebf8ff; color: #2b6cb0; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
+  .dash-badge.green { background: #c6f6d5; color: #22543d; }
+  .dash-badge.red { background: #fed7d7; color: #822727; }
+  
+  .dash-val-box { border-radius: 8px; padding: 16px; text-align: center; color: #fff; }
+  .dash-val-label { font-size: 12px; opacity: 0.9; margin-bottom: 4px; }
+  .dash-val-number { font-size: 24px; font-weight: 800; }
+  
+  .dash-list { list-style: none; padding: 0; margin: 0; }
+  .dash-list li { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed #edf2f7; }
+  body.dark .dash-list li { border-bottom-color: #4a5568; }
+  .dash-list li:last-child { border-bottom: none; padding-bottom: 0; }
+
   @media (min-width: 768px) {
-    body { padding-bottom: 0; max-width: 100%; }
+    /* ገጹ ሙሉ ስክሪኑን እንዲይዝ */
+    body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; }
     
-    #mainApp { display: none; }
     #mainApp.show { 
       display: grid; 
-      grid-template-columns: 260px 1fr; 
-      grid-template-rows: auto 1fr;
-      min-height: 100vh;
-      max-width: 1400px;
-      margin: 0 auto;
+      grid-template-columns: 260px 1fr; /* 260px ለግራ ታቦች፣ ቀሪው ለቀኝ ይዘት */
+      grid-template-rows: 70px 1fr; 
+      height: 100vh; 
+      width: 100%; 
+      max-width: 100%;
+      margin: 0;
     }
 
+    /* ራስጌው (Header) */
     header { 
       grid-column: 1 / -1; 
+      grid-row: 1;
       border-radius: 0; 
       margin-bottom: 0; 
-      padding: 16px 24px; 
+      padding: 0 24px; 
       position: static; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 101;
+      display: flex;
+      align-items: center;
     }
 
+    /* የቀኝ በኩል ይዘት */
     .main-content-wrapper {
       grid-column: 2;
+      grid-row: 2;
       display: flex;
       flex-direction: column;
       height: calc(100vh - 70px);
       overflow: hidden;
+      background: #f0f4f8;
     }
+    body.dark .main-content-wrapper { background: #1a202c; }
 
     #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner {
-      margin: 10px 24px 0 24px;
+      margin: 15px 24px 0 24px;
     }
 
     .tabs-wrapper { 
@@ -169,18 +201,19 @@
       overflow: hidden;
       background: transparent;
       position: static;
-      top: auto;
     }
 
+    /* 👈 የግራ በኩል ታቦች (Sidebar) */
     .tabs { 
       flex-direction: column; 
-      width: 240px;
+      width: 260px; 
       background: #fff;
       border-right: 1px solid #e2e8f0;
-      padding: 20px 15px;
-      gap: 10px; 
+      padding: 24px 16px;
+      gap: 8px; 
       overflow-y: auto;
       flex-shrink: 0;
+      height: 100%; 
     }
     body.dark .tabs { background: #2d3748; border-right: 1px solid #4a5568; }
     
@@ -189,25 +222,31 @@
       justify-content: flex-start; 
       padding: 14px 20px; 
       min-width: 100%; 
-      font-size: 14px;
+      font-size: 15px;
       box-shadow: none;
-      border: 1px solid transparent;
+      border: none;
+      border-radius: 10px;
+      transition: all 0.2s;
     }
     
-    .tabs label i { margin-bottom: 0; margin-right: 12px; font-size: 22px;}
+    .tabs label:hover { background: #edf2f7; }
+    body.dark .tabs label:hover { background: #4a5568; }
+    
+    .tabs label i { margin-bottom: 0; margin-right: 15px; font-size: 24px;}
 
     #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"] { 
       background: #ebf4ff; 
-      border-color: #90cdf4; 
+      color: #2c5282;
       border-left: 4px solid #2c5282; 
-      box-shadow: none;
+      font-weight: 800;
     }
     body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"] { 
       background: #4a5568; 
-      border-color: #63b3ed; 
+      color: #63b3ed;
       border-left: 4px solid #63b3ed; 
     }
 
+    /* የይዘት አካባቢ (Panels) በቀኝ */
     .panels { 
       flex: 1;
       padding: 24px; 
@@ -231,8 +270,12 @@
     
     .section-collapsible { 
       margin-bottom: 0; 
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+      border: 1px solid #edf2f7;
     }
+
+    /* Dashboard Grid Layout (Desktop) */
+    .dash-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
@@ -294,7 +337,6 @@
     </div>
   </header>
 
-  <!-- 👇 አዲስ የተጨመረ መጠቅለያ (Desktop Sidebar Layout) -->
   <div class="main-content-wrapper">
     <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
     <div id="stockAlertBanner">🚨 <span id="stockAlertText"></span></div>
@@ -327,6 +369,7 @@
       </div>
 
       <div class="panels">
+        <!-- PANEL 1 -->
         <div class="panel" id="panel1">
           <div class="section-collapsible">
             <div class="section-header" id="hdrCatMgr" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
@@ -390,6 +433,7 @@
           </div>
         </div>
 
+        <!-- PANEL 2 -->
         <div class="panel" id="panel2">
           <div class="section-collapsible full-width">
             <div class="section-header open" id="hdrSell" onclick="toggleSection('hdrSell','bodySell')">
@@ -463,6 +507,7 @@
           </div>
         </div>
 
+        <!-- PANEL 3 -->
         <div class="panel" id="panel3">
           <div class="section-collapsible">
             <div class="section-header open" id="hdrAddExp" onclick="toggleSection('hdrAddExp','bodyAddExp')">
@@ -515,6 +560,7 @@
           </div>
         </div>
 
+        <!-- PANEL 4 -->
         <div class="panel" id="panel4">
           <div class="section-collapsible full-width">
             <div class="section-header open" id="hdrInventory" onclick="toggleSection('hdrInventory','bodyInventory')">
@@ -566,6 +612,7 @@
           </div>
         </div>
 
+        <!-- PANEL 5 -->
         <div class="panel" id="panel5">
           <div class="section-collapsible full-width">
             <div class="section-header open" id="hdrDaily" onclick="toggleSection('hdrDaily','bodyDaily')">
@@ -625,6 +672,7 @@
           </div>
         </div>
 
+        <!-- PANEL 6 -->
         <div class="panel" id="panel6">
           <div class="section-collapsible full-width">
             <div class="section-header open" id="hdrMonthly" onclick="toggleSection('hdrMonthly','bodyMonthly')">
@@ -688,81 +736,87 @@
           </div>
         </div>
 
+        <!-- PANEL 7 (Dashboard) -->
         <div class="panel" id="panel7">
-          <div class="section-collapsible">
-            <div class="section-header open" id="hdrDash" onclick="toggleSection('hdrDash','bodyDash')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard (ዛሬ)</span></div>
-            </div>
-            <div class="section-body open" id="bodyDash">
-              <div class="summary-box green">
-                <div class="label">የዛሬ ገቢ</div>
-                <div class="value" id="dashTodayRevenue">0.00 <small>ብር</small></div>
+          <div class="dash-grid">
+            
+            <!-- 1. የወር ምርጫ -->
+            <div class="dash-card">
+              <div class="dash-header">
+                <span>📅 ወር ምርጫ</span>
+                <span class="dash-badge" id="dashCurrentMonthLabel">...</span>
               </div>
-              <div class="summary-box red" style="margin-top:10px;">
-                <div class="label">የዛሬ ወጪ</div>
-                <div class="value" id="dashTodayExpense">0.00 <small>ብር</small></div>
-              </div>
-              <div class="summary-box" style="margin-top:10px;">
-                <div class="label">የዛሬ ትርፍ</div>
-                <div class="value" id="dashTodayProfit">0.00 <small>ብር</small></div>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <button class="btn btn-primary" style="width: 40px; height: 40px; padding: 0; border-radius: 8px;" onclick="changeDashMonth(-1)">◀</button>
+                <div style="font-size: 18px; font-weight: 800;" id="dashMonthTitle">...</div>
+                <button class="btn btn-primary" style="width: 40px; height: 40px; padding: 0; border-radius: 8px;" onclick="changeDashMonth(1)">▶</button>
               </div>
             </div>
-          </div>
-          <div class="section-collapsible">
-            <div class="section-header open" id="hdrDashMonth" onclick="toggleSection('hdrDashMonth','bodyDashMonth')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard (ወር)</span></div>
-            </div>
-            <div class="section-body open" id="bodyDashMonth">
-              <div class="summary-box" style="background:linear-gradient(135deg,#2c5282,#1a365d);">
-                <div class="label">የዚህ ወር ገቢ</div>
-                <div class="value" id="dashMonthRevenue">0.00 <small>ብር</small></div>
-              </div>
-              <div class="summary-box red" style="margin-top:10px;">
-                <div class="label">የዚህ ወር ወጪ</div>
-                <div class="value" id="dashMonthExpense">0.00 <small>ብር</small></div>
-              </div>
-              <div class="summary-box green" style="margin-top:10px;">
-                <div class="label">የዚህ ወር ትርፍ</div>
-                <div class="value" id="dashMonthProfit">0.00 <small>ብር</small></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="section-collapsible full-width">
-            <div class="section-header open" id="hdrProfit" onclick="toggleSection('hdrProfit','bodyProfit')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💵</span><span class="sec-title">የተጣራ ትርፍ (Net Profit)</span></div>
-            </div>
-            <div class="section-body open" id="bodyProfit">
-              <div class="summary-box" style="background:linear-gradient(135deg,#276749,#22543d);">
-                <div class="label">የዚህ ወር የተጣራ ትርፍ</div>
-                <div class="value" id="dashNetProfit">0.00 <small>ብር</small></div>
-              </div>
-              <div class="info-banner" style="margin-top:10px;">💡 ትርፍ = ጠቅላላ ሽያጭ - (የተሸጡ እቃዎች የግዢ ዋጋ + ወጪዎች)</div>
-            </div>
-          </div>
 
-          <div class="section-collapsible full-width">
-            <div class="section-header open" id="hdrBranchReport" onclick="toggleSection('hdrBranchReport','bodyBranchReport')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">የቅርንጫፍ ሪፖርት</span></div>
+            <!-- 2. የወር ጠቅላላ ገቢ -->
+            <div class="dash-card">
+              <div class="dash-header">
+                <span>💰 የወር ጠቅላላ ገቢ</span>
+                <span class="dash-badge green" id="dashRevBadge">0.00 ብር</span>
+              </div>
+              <div class="dash-val-box" style="background: linear-gradient(135deg, #1a365d, #2c5282);">
+                <div class="dash-val-label">የወር ጠቅላላ ገቢ</div>
+                <div class="dash-val-number" id="dashMonthRevenue">0.00 ብር</div>
+              </div>
             </div>
-            <div class="section-body open" id="bodyBranchReport">
-              <div id="branchReportList"></div>
-            </div>
-          </div>
 
-          <div class="section-collapsible full-width">
-            <div class="section-header open" id="hdrCharts" onclick="toggleSection('hdrCharts','bodyCharts')">
-              <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📈</span><span class="sec-title">ግራፎች</span></div>
+            <!-- 3. የወር ማጠቃለያ -->
+            <div class="dash-card">
+              <div class="dash-header"><span>📊 የወር ማጠቃለያ</span></div>
+              <ul class="dash-list">
+                <li><span>📅 የወር ጠቅላላ ገቢ</span><strong id="dashListRev" style="color:#2b6cb0;">0.00 ብር</strong></li>
+                <li><span>💸 የተለዋዋጭ ወጪዎች</span><strong id="dashListVarExp" style="color:#c53030;">0.00 ብር</strong></li>
+                <li><span>🏢 ቋሚ ወጪዎች</span><strong id="dashListFixExp" style="color:#c53030;">0.00 ብር</strong></li>
+                <li style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #edf2f7;"><span>💰 ትርፍ (Profit)</span><strong id="dashListProfit" style="color:#276749;">0.00 ብር</strong></li>
+              </ul>
             </div>
-            <div class="section-body open" id="bodyCharts">
+
+            <!-- 4. የወር ትርፍ -->
+            <div class="dash-card">
+              <div class="dash-header">
+                <span>💰 የወር ትርፍ</span>
+                <span class="dash-badge green">Net</span>
+              </div>
+              <div class="dash-val-box" style="background: linear-gradient(135deg, #22543d, #276749);">
+                <div class="dash-val-label">የወር ትርፍ</div>
+                <div class="dash-val-number" id="dashNetProfit">0.00 ብር</div>
+              </div>
+            </div>
+
+            <!-- 5. ተጨማሪ ሪፖርቶች -->
+            <div class="dash-card" style="grid-column: 1 / -1;">
+              <div class="dash-header" style="margin-bottom: 0;">
+                <span>📈 ተጨማሪ መረጃዎች</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                <button class="btn btn-outline" style="background:#f7fafc; border:1px solid #e2e8f0; color:#2c5282; text-align:left; display:flex; justify-content:space-between; align-items:center;">
+                  <span>🏆 የምርት ብዛት</span>
+                  <span class="dash-badge">0</span>
+                </button>
+                <button class="btn btn-outline" style="background:#f7fafc; border:1px solid #e2e8f0; color:#2c5282; text-align:left; display:flex; justify-content:space-between; align-items:center;">
+                  <span>📉 ያልተሸጡ ምርቶች</span>
+                  <span class="dash-badge red">0</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="dash-card" style="grid-column: 1 / -1;">
               <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px;">📈 የ30 ቀን ሽያጭ ግራፍ</h3>
               <div class="chart-container"><canvas id="dailyChart"></canvas></div>
               <h3 style="font-size:14px; color:#4a5568; margin-bottom:10px; margin-top:15px;">🥧 የወሩ ወጪ ግራፍ</h3>
               <div class="chart-container"><canvas id="expensePieChart"></canvas></div>
             </div>
+
           </div>
         </div>
 
+        <!-- PANEL 8 -->
         <div class="panel" id="panel8">
           <div class="section-collapsible">
             <div class="section-header open" id="hdrSettings" onclick="toggleSection('hdrSettings','bodySettings')">
@@ -954,6 +1008,7 @@
           </div>
         </div>
 
+        <!-- PANEL 9 -->
         <div class="panel" id="panel9">
           <div class="section-collapsible full-width">
             <div class="section-header open" id="hdrCreditList" onclick="toggleSection('hdrCreditList','bodyCreditList')">
