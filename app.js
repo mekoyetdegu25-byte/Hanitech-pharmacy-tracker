@@ -28,6 +28,7 @@ let cart = [];
 let currentUserPharmacyId = null;
 let currentUserRole = 'employee';
 let currentBizType = 'retail';
+let allowedBizType = 'retail';
 let lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
 
@@ -98,8 +99,21 @@ async function loadUserHeader(user) {
       if (phDoc.exists()) {
         const phData = phDoc.data();
         document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phData.name || 'Pharmacy Tracker');
-        currentBizType = phData.bizType || 'retail';
+        
+        // 👇 አዲስ (Admin የፈቀደው እና ተጠቃሚው የመረጠው)
+        allowedBizType = phData.bizType || 'retail'; 
+        currentBizType = phData.userBizType || allowedBizType; 
+        
         lowStockThreshold = phData.lowStockThreshold || 10;
+
+        // 👇 የተጠቃሚውን መግቢያ ለመከልከል (Suspended)
+        if (phData.isSuspended) {
+          document.getElementById('mainApp').classList.remove('show');
+          document.getElementById('loginScreen').classList.remove('hidden');
+          document.getElementById('suspendedWarningBanner').style.display = 'block';
+          await signOut(auth);
+          return;
+        }
       } else {
         document.getElementById('hdrPharmacyName').innerText = '💊 Pharmacy Tracker';
       }
@@ -263,18 +277,6 @@ async function applyPermissionsUI() {
     'tab9': true 
   };
 
-  const labelMap = {
-    'tab1': 'መድሃኒቶች',
-    'tab2': 'ሽያጭ',
-    'tab3': 'ወጪ',
-    'tab4': 'ክምችት',
-    'tab5': 'የቀን ገቢ',
-    'tab6': 'የወር ገቢ',
-    'tab7': 'Dashboard',
-    'tab8': 'Settings',
-    'tab9': 'ዱቤ'
-  };
-
   let firstAvailableTab = null;
 
   for (const [tabId, isAllowed] of Object.entries(tabMap)) {
@@ -329,17 +331,39 @@ function applyBizTypeUI() {
   const tabCreditLabel = document.getElementById('tabCreditLabel');
   const wholesaleFields = document.getElementById('wholesaleSaleFields');
   const retailFields = document.getElementById('retailSaleFields');
+  const tab3Label = document.querySelector('label[for="tab3"]');
+  const tab4Label = document.querySelector('label[for="tab4"]');
+  const tab5Label = document.querySelector('label[for="tab5"]');
+  const tab6Label = document.querySelector('label[for="tab6"]');
+  const tab7Label = document.querySelector('label[for="tab7"]');
+  const tab8Label = document.querySelector('label[for="tab8"]');
+
+  // መጀመሪያ ሁሉንም አሳይ
+  if (tab3Label) tab3Label.style.display = 'flex';
+  if (tab4Label) tab4Label.style.display = 'flex';
+  if (tab5Label) tab5Label.style.display = 'flex';
+  if (tab6Label) tab6Label.style.display = 'flex';
+  if (tab7Label) tab7Label.style.display = 'flex';
+  if (tab8Label) tab8Label.style.display = 'flex';
 
   if (currentBizType === 'wholesale') {
     if (creditOpt) creditOpt.style.display = 'block';
     if (tabCreditLabel) tabCreditLabel.style.display = 'flex';
     if (wholesaleFields) wholesaleFields.style.display = 'block';
     if (retailFields) retailFields.style.display = 'none';
+    
+    if (tab4Label) tab4Label.style.display = 'none';
+    if (tab5Label) tab5Label.style.display = 'none';
+    if (tab6Label) tab6Label.style.display = 'none';
+    if (tab7Label) tab7Label.style.display = 'none';
+
   } else {
+    // Retail
     if (creditOpt) creditOpt.style.display = 'none';
     if (tabCreditLabel) tabCreditLabel.style.display = 'none';
     if (wholesaleFields) wholesaleFields.style.display = 'none';
     if (retailFields) retailFields.style.display = 'block';
+    
     const pm = document.getElementById('sellPaymentMethod');
     if (pm && pm.value === 'credit') { pm.value = 'cash'; togglePaymentDetails(); }
   }
@@ -1016,8 +1040,13 @@ async function loadDashboard() {
   const today = new Date().toISOString().split('T')[0];
   const month = today.substring(0,7);
 
-  const tSales = allSales.filter(s => s.date === today); let tRev = 0; tSales.forEach(s => tRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
-  const tExp = allExpenses.filter(e => e.date === today); let tExpSum = 0; tExp.forEach(e => tExpSum += e.amount);
+  // --- የዛሬ ---
+  const tSales = allSales.filter(s => s.date === today); 
+  let tRev = 0; 
+  tSales.forEach(s => tRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
+  const tExp = allExpenses.filter(e => e.date === today); 
+  let tExpSum = 0; 
+  tExp.forEach(e => tExpSum += e.amount);
   
   const qTQuick = query(collection(db, 'quickSales'), where('date', '==', today), where('pharmacyId', '==', currentUserPharmacyId));
   const tQuickSnap = await getDocs(qTQuick);
@@ -1027,18 +1056,64 @@ async function loadDashboard() {
   document.getElementById('dashTodayExpense').innerHTML = tExpSum.toFixed(2) + ' <small>ብር</small>';
   document.getElementById('dashTodayProfit').innerHTML = (tRev - tExpSum).toFixed(2) + ' <small>ብር</small>';
 
-  const mSales = allSales.filter(s => s.date && s.date.startsWith(month)); let mRev = 0; mSales.forEach(s => mRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
-  const mExp = allExpenses.filter(e => e.date && e.date.startsWith(month)); let mExpSum = 0; mExp.forEach(e => mExpSum += e.amount);
+  // --- የወር ---
+  const mSales = allSales.filter(s => s.date && s.date.startsWith(month)); 
+  let mRev = 0; 
+  mSales.forEach(s => mRev += (s.paidAmount !== undefined ? s.paidAmount : s.total));
+  const mExp = allExpenses.filter(e => e.date && e.date.startsWith(month)); 
+  let mExpSum = 0; 
+  mExp.forEach(e => mExpSum += e.amount);
   
   const qMQuick = query(collection(db, 'quickSales'), where('date', '>=', month + '-01'), where('date', '<=', month + '-31'), where('pharmacyId', '==', currentUserPharmacyId));
   const mQuickSnap = await getDocs(qMQuick);
   mQuickSnap.forEach(d => mRev += d.data().amount);
 
+  // 👇 አዲስ - የተጣራ ትርፍ (ጠቅላላ ሽያጭ - የእቃዎች የግዢ ዋጋ - ወጪዎች)
+  let costOfGoodsSold = 0;
+  mSales.forEach(s => {
+    const med = allMedicines.find(m => m.id === s.medicineId);
+    if (med && med.cost) {
+      costOfGoodsSold += (med.cost * s.quantity);
+    }
+  });
+  const netProfit = mRev - costOfGoodsSold - mExpSum;
+
   document.getElementById('dashMonthRevenue').innerHTML = mRev.toFixed(2) + ' <small>ብር</small>';
   document.getElementById('dashMonthExpense').innerHTML = mExpSum.toFixed(2) + ' <small>ብር</small>';
   document.getElementById('dashMonthProfit').innerHTML = (mRev - mExpSum).toFixed(2) + ' <small>ብር</small>';
+  
+  // 👇 አዲስ የተጨመረ
+  if (document.getElementById('dashNetProfit')) {
+    document.getElementById('dashNetProfit').innerHTML = netProfit.toFixed(2) + ' <small>ብር</small>';
+  }
 
+  renderBranchReport();
   renderCharts();
+}
+
+function renderBranchReport() {
+  const listEl = document.getElementById('branchReportList');
+  if (!listEl) return;
+
+  const month = new Date().toISOString().substring(0,7);
+  const monthSales = allSales.filter(s => s.date && s.date.startsWith(month));
+  
+  const branchTotals = {};
+  monthSales.forEach(s => {
+    const b = s.branch || 'ሌላ';
+    branchTotals[b] = (branchTotals[b] || 0) + (s.paidAmount !== undefined ? s.paidAmount : s.total);
+  });
+
+  if (Object.keys(branchTotals).length === 0) {
+    listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
+    return;
+  }
+
+  let html = '';
+  Object.keys(branchTotals).forEach(b => {
+    html += `<div class="list-item"><div class="info"><div class="name">🏢 ${b}</div></div><div class="amount">${branchTotals[b].toFixed(2)} ብር</div></div>`;
+  });
+  listEl.innerHTML = html;
 }
 
 function renderCharts() {
@@ -1122,10 +1197,36 @@ async function loadSettings() {
       if(d.exists()) {
         const data = d.data();
         document.getElementById('settingPharmacyName').value = data.name || '';
-        currentBizType = data.bizType || 'retail';
-        lowStockThreshold = data.lowStockThreshold || 10;
         
-        document.getElementById('settingBizType').value = currentBizType;
+        // 👇 አዲስ (Admin የፈቀደው እና ተጠቃሚው የመረጠው)
+        allowedBizType = data.bizType || 'retail'; 
+        currentBizType = data.userBizType || allowedBizType; 
+        
+        lowStockThreshold = data.lowStockThreshold || 10;
+
+        const bizSelect = document.getElementById('settingBizType');
+        const infoBanner = document.getElementById('bizTypeInfo');
+
+        // 👇 በ Admin በተፈቀደው መሰረት አማራጮችን ማሳየት
+        if (allowedBizType === 'retail') {
+          bizSelect.innerHTML = '<option value="retail" selected>🛒 Retail (ችርቻሮ)</option>';
+          bizSelect.disabled = true;
+          infoBanner.innerHTML = '⚠️ ይህ ፋርማሲ በ Admin የተፈቀደው Retail ብቻ ነው።';
+        } else if (allowedBizType === 'wholesale') {
+          bizSelect.innerHTML = '<option value="wholesale" selected>🚚 Wholesale (አከፋፋይ)</option>';
+          bizSelect.disabled = true;
+          infoBanner.innerHTML = '⚠️ ይህ ፋርማሲ በ Admin የተፈቀደው Wholesale ብቻ ነው።';
+        } else {
+          // Both - ሶስቱም አማራጮች ይታያሉ
+          bizSelect.innerHTML = `
+            <option value="retail">🛒 Retail (ችርቻሮ)</option>
+            <option value="wholesale">🚚 Wholesale (አከፋፋይ)</option>
+          `;
+          bizSelect.value = currentBizType;
+          bizSelect.disabled = false;
+          infoBanner.innerHTML = '💡 በ Admin ሁሉም አማራጮች ተፈቅደዋል። ከሁለቱ የፈለጉትን ይምረጡ።';
+        }
+
         document.getElementById('settingLowStockThreshold').value = lowStockThreshold;
       }
     } catch(e) { console.error("Error loading settings:", e); }
@@ -1195,12 +1296,22 @@ window.savePharmacyName = async function() {
 };
 
 window.saveBizType = async function() {
+  // Admin Retail/Wholesale ብቻ ካረገ መቀየር አይፈቀድም
+  if (allowedBizType !== 'both') {
+    alert('⚠️ የድርጅት ዓይነትን መቀየር የሚቻለው በ Admin ሁሉም አማራጮች ሲፈቀዱ ብቻ ነው።');
+    return;
+  }
+
   const type = document.getElementById('settingBizType').value;
   currentBizType = type;
+  
   if (currentUserPharmacyId) {
-    try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { bizType: type }); } catch(e) { console.error(e); }
+    try { 
+      await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { userBizType: type }); 
+    } catch(e) { console.error(e); }
   }
   applyBizTypeUI();
+  alert('✅ ተቀይሯል!');
 };
 
 window.saveLowStockThreshold = async function() {
@@ -1415,6 +1526,39 @@ function checkExpiryAlerts() {
     bannerText.textContent = msg;
   } else {
     banner.style.display = 'none';
+  }
+
+  // 👇 አዲስ - የስቶክ ማሳወቂያ
+  const stockBanner = document.getElementById('stockAlertBanner');
+  const stockText = document.getElementById('stockAlertText');
+  const lowStockMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold);
+  
+  if (lowStockMeds.length > 0) {
+    stockBanner.style.display = 'block';
+    stockText.innerText = `${lowStockMeds.length} ምርት ክምችቱ እያለቀ ነው! እባክዎ ይሙሉ።`;
+  } else {
+    stockBanner.style.display = 'none';
+  }
+
+  // 👇 አዲስ - የዱቤ ማሳወቂያ
+  const creditBanner = document.getElementById('creditAlertBanner');
+  const creditText = document.getElementById('creditAlertText');
+  const todayStr = new Date().toISOString().split('T')[0];
+  
+  let overdueCustomers = [];
+  allCustomers.forEach(c => {
+    const { balance } = calculateCustomerDebt(c);
+    if (balance > 0) {
+      const hasOverdue = allSales.some(s => s.customer === c && s.paymentMethod === 'credit' && s.date < todayStr && (s.paidAmount || 0) < s.total);
+      if (hasOverdue) overdueCustomers.push(c);
+    }
+  });
+
+  if (overdueCustomers.length > 0) {
+    creditBanner.style.display = 'block';
+    creditText.innerText = `${overdueCustomers.length} ደንበኛ የዱቤ ክፍያ ጊዜው አልፎበታል! (${overdueCustomers.join(', ')})`;
+  } else {
+    creditBanner.style.display = 'none';
   }
 }
 
