@@ -29,7 +29,6 @@ body.dark .low-stock { color: #fbd38d; }
 body.dark .cat-tag { background: #2d3748; border-color: #2c5282; color: #63b3ed; }
 body.dark .toggle-row label { color: #e2e8f0; } 
 
-/* Splash Screen */
 #splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
 #splashScreen.fade-out { opacity: 0; pointer-events: none; }
 .logo-text { font-size: 32px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
@@ -150,6 +149,13 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 .dash-list li:last-child { border-bottom: none; padding-bottom: 0; } 
 
 .search-box { margin-bottom: 10px; width: 100%; }
+
+@media print {
+    body * { visibility: hidden; }
+    #panel10, #panel10 * { visibility: visible; }
+    #panel10 { position: absolute; left: 0; top: 0; width: 100%; }
+    .no-print { display: none !important; }
+}
 
 @media (min-width: 768px) {
     body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; overflow: hidden; } 
@@ -289,7 +295,10 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <input type="text" id="newCat" placeholder="አዲስ ዋና ምድብ" autocomplete="off">
 <button onclick="addCategory()">+ ጨምር</button>
 </div>
-<div class="cat-tags" id="catListDisplay" style="margin-top:10px;"></div>
+<div style="margin-top:10px;">
+    <input type="text" class="search-box" id="searchCategory" placeholder="🔍 ምድብ ፈልግ..." oninput="renderCategoryList()">
+</div>
+<div class="cat-tags" id="catListDisplay"></div>
 </div>
 </div>
 <div class="section-collapsible">
@@ -303,9 +312,10 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <option value="cosmetic">🧴 ኮስሞቲክስ</option>
 </select>
 <label class="field-label">📁 ዋና ምድብ</label>
-<select id="medCategory"></select>
+<select id="medCategory" onchange="loadSubcategoriesForSelectedCategory()"></select>
 <label class="field-label">📂 ንዑስ ምድብ</label>
-<input type="text" id="medSubcategory" placeholder="ለምሳሌ: ታብሌት" autocomplete="off">
+<select id="medSubcategory" onchange="onSubcategoryChange()"></select>
+<input type="text" id="medNewSubcategory" placeholder="አዲስ ንዑስ ምድብ ስም ካለ እዚህ ጻፍ" autocomplete="off" style="margin-top:5px; display:none;">
 <label class="field-label">💊 የምርት ስም</label>
 <input type="text" id="medName" placeholder="ለምሳሌ: Paracetamol" autocomplete="off"> 
 <div id="medicineOnlyFields">
@@ -413,7 +423,14 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">የሽያጭ ታሪክ (Sales History)</span></div>
     </div>
     <div class="section-body" id="bodySalesHistory">
-        <button class="btn btn-danger" style="margin-bottom:10px; background:#c53030;" onclick="clearAllSales()">🗑️ ሁሉንም የሽያጭ ታሪክ ሰርዝ</button>
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <select id="filterSalesHistory" onchange="renderSalesHistory()" style="flex:1;">
+                <option value="all">ሁሉም ሽያጮች</option>
+                <option value="detail">🛒 ዝርዝር ሽያጭ</option>
+                <option value="quick">⚡ Quick Sale</option>
+            </select>
+            <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 15px; font-size:13px; background:#c53030;" onclick="clearAllSales()">🗑️ ሁሉንም ሰርዝ</button>
+        </div>
         <div id="salesHistoryList"></div>
     </div>
 </div>
@@ -571,6 +588,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የቀኑ ሽያጮች (ዝርዝር)</span></div>
 </div>
 <div class="section-body" id="bodyDailySales">
+    <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 የተሸጠ ምርት ፈልግ..." oninput="loadDailyReport()">
     <h4 style="margin: 10px 0 5px; font-size: 13px; color: #4a5568;">🛒 የተሸጡ ምርቶች (Details)</h4>
     <div id="dailySalesList"></div>
     <div style="height:1px; background:#edf2f7; margin:15px 0;"></div>
@@ -644,14 +662,14 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 </div>
 </div>
-   <!-- PANEL 7 -->
+<!-- PANEL 7 -->
 <div class="panel" id="panel7">
 <div class="section-collapsible true-full-width">
 <div class="section-header open" id="hdrDash" onclick="toggleSection('hdrDash','bodyDash')">
 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
 </div>
 <div class="section-body open" id="bodyDash">
-    <div style="margin-bottom:15px; background:#fff; padding:10px; border-radius:10px; border:1px solid #edf2f7;">
+    <div class="no-print" style="margin-bottom:15px; background:#fff; padding:10px; border-radius:10px; border:1px solid #edf2f7;">
         <label class="field-label" style="margin-top:0;">📅 የሪፖርት ወር ምረጥ</label>
         <input type="month" id="dashMonthPicker" onchange="loadDashboard()">
     </div>
@@ -933,10 +951,10 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 <div class="section-body open" id="bodyRepMain">
     
-    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7; margin-bottom:12px;">
+    <div class="section-collapsible no-print" style="box-shadow:none; border:1px solid #edf2f7; margin-bottom:12px;">
         <div class="section-body open">
             <label class="field-label">የሪፖርት ዓይነት ምረጥ</label>
-            <select id="reportTypeSelect" onchange="generateReport()">
+            <select id="reportTypeSelect" onchange="toggleReportDatePickers()">
                 <option value="daily">📅 የቀን ሪፖርት</option>
                 <option value="weekly">📅 የሳምንት ሪፖርት</option>
                 <option value="monthly">📆 የወር ሪፖርት</option>
@@ -944,7 +962,18 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
                 <option value="6months">📆 የ6 ወር ሪፖርት</option>
                 <option value="yearly">🗓️ የአመት ሪፖርት</option>
             </select>
-            <button class="btn btn-primary" style="margin-top:15px;" onclick="window.print()">🖨️ ሪፖርቱን አትም</button>
+            
+            <div id="repDateDiv" style="display:none; margin-top:10px;">
+                <label class="field-label">ቀን ምረጥ</label>
+                <input type="date" id="repDateInput" onchange="generateReport()">
+            </div>
+            <div id="repMonthDiv" style="display:none; margin-top:10px;">
+                <label class="field-label">ወር ምረጥ</label>
+                <input type="month" id="repMonthInput" onchange="generateReport()">
+            </div>
+
+            <button class="btn btn-primary" style="margin-top:15px;" onclick="generateReport()">👁️ ሪፖርት አሳይ</button>
+            <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ ሪፖርቱን አትም</button>
         </div>
     </div>
 
@@ -978,6 +1007,7 @@ const db = getFirestore(app);
 
 let allMedicines = [];
 let allCategories = [];
+let allSubcategories = {};
 let allExpCategories = [];
 let allBranches = [];
 let allCustomers = [];
@@ -1187,9 +1217,7 @@ onAuthStateChanged(auth, async (user) => {
 }); 
 
 async function applyPermissionsUI() {
-    if (currentUserRole === 'owner') {
-        return;
-    }
+    if (currentUserRole === 'owner') return;
     
     let perms = null;
     try {
@@ -1227,18 +1255,17 @@ async function loadAllData() {
     if (!currentUserPharmacyId) return; 
     await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
     
-    if(!document.getElementById('dashMonthPicker').value) {
-        document.getElementById('dashMonthPicker').value = new Date().toISOString().slice(0, 7);
-    }
-    
+    if(!document.getElementById('dashMonthPicker').value) document.getElementById('dashMonthPicker').value = new Date().toISOString().slice(0, 7);
     if(!document.getElementById('sellDate').value) document.getElementById('sellDate').value = new Date().toISOString().split('T')[0];
     if(!document.getElementById('quickDate').value) document.getElementById('quickDate').value = new Date().toISOString().split('T')[0];
     if(!document.getElementById('expDate').value) document.getElementById('expDate').value = new Date().toISOString().split('T')[0];
     if(!document.getElementById('creditDate').value) document.getElementById('creditDate').value = new Date().toISOString().split('T')[0];
     if(!document.getElementById('fixMonth').value) document.getElementById('fixMonth').value = new Date().toISOString().slice(0, 7);
+    if(!document.getElementById('repDateInput').value) document.getElementById('repDateInput').value = new Date().toISOString().split('T')[0];
+    if(!document.getElementById('repMonthInput').value) document.getElementById('repMonthInput').value = new Date().toISOString().slice(0, 7);
 
     loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); checkExpiryAlerts(); loadDarkMode(); applyBizTypeUI();
-    renderSalesHistory(); renderUnpaidCredits(); generateReport();
+    renderSalesHistory(); renderUnpaidCredits(); toggleReportDatePickers();
 
     setupRealtimeListeners();
 } 
@@ -1263,28 +1290,28 @@ function setupRealtimeListeners() {
         let tempSales = [];
         snapshot.forEach(doc => tempSales.push({ id: doc.id, ...doc.data() }));
         allSales = tempSales;
-        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); generateReport();
+        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits();
     });
 
     unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         let tempQuick = [];
         snapshot.forEach(doc => tempQuick.push({ id: doc.id, ...doc.data() }));
         allQuickSales = tempQuick;
-        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); generateReport();
+        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory();
     });
 
     unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         let tempExpenses = [];
         snapshot.forEach(doc => tempExpenses.push({ id: doc.id, ...doc.data() }));
         allExpenses = tempExpenses;
-        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); generateReport();
+        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory();
     });
 
     unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         let tempFixed = [];
         snapshot.forEach(doc => tempFixed.push({ id: doc.id, ...doc.data() }));
         allFixed = tempFixed;
-        loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory(); generateReport();
+        loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory();
     });
 
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
@@ -1325,25 +1352,123 @@ window.togglePaymentDetails = function() {
 async function loadCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId)));
-        allCategories = []; const select = document.getElementById('medCategory'); select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
-        snap.forEach(doc => { const catName = doc.data().name; allCategories.push(catName); select.innerHTML += `<option value="${catName}">${catName}</option>`; });
+        allCategories = []; allSubcategories = {}; 
+        const select = document.getElementById('medCategory'); select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
+        
+        const catPromises = [];
+        snap.forEach(doc => { 
+            const catName = doc.data().name; 
+            allCategories.push(catName); 
+            select.innerHTML += `<option value="${catName}">${catName}</option>`; 
+            catPromises.push(loadSubcategoriesForCategory(catName));
+        });
+        
+        await Promise.all(catPromises);
         renderCategoryList();
+        loadSubcategoriesForSelectedCategory();
     } catch(e) { console.error(e); }
 } 
+
+async function loadSubcategoriesForCategory(catName) {
+    try {
+        const snap = await getDocs(query(collection(db, 'subcategories'), where('pharmacyId', '==', currentUserPharmacyId), where('categoryName', '==', catName)));
+        allSubcategories[catName] = [];
+        snap.forEach(doc => { allSubcategories[catName].push({ id: doc.id, ...doc.data() }); });
+    } catch(e) { console.error(e); }
+}
+
+window.loadSubcategoriesForSelectedCategory = function() {
+    const catName = document.getElementById('medCategory').value;
+    const subSelect = document.getElementById('medSubcategory');
+    const newSubInput = document.getElementById('medNewSubcategory');
+    
+    subSelect.innerHTML = '<option value="">-- ንዑስ ምድብ ምረጥ --</option>';
+    if (catName && allSubcategories[catName]) {
+        allSubcategories[catName].forEach(sub => {
+            subSelect.innerHTML += `<option value="${sub.name}">${sub.name}</option>`;
+        });
+    }
+    subSelect.innerHTML += `<option value="NEW">+ አዲስ ንዑስ ምድብ ጨምር</option>`;
+    newSubInput.style.display = 'none';
+    newSubInput.value = '';
+};
+
+window.onSubcategoryChange = function() {
+    const subVal = document.getElementById('medSubcategory').value;
+    const newSubInput = document.getElementById('medNewSubcategory');
+    if (subVal === 'NEW') {
+        newSubInput.style.display = 'block';
+        newSubInput.focus();
+    } else {
+        newSubInput.style.display = 'none';
+        newSubInput.value = '';
+    }
+};
+
 function renderCategoryList() {
     const listEl = document.getElementById('catListDisplay');
-    if(allCategories.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:#a0aec0;">ምንም ምድብ የለም።</p>'; return; }
-    listEl.innerHTML = allCategories.map(c => `<span class="cat-tag">${c} <span class="del" onclick="deleteCategory('${c}')">×</span></span>`).join('');
+    const search = (document.getElementById('searchCategory')?.value || '').toLowerCase();
+    
+    let filteredCats = allCategories;
+    if(search) filteredCats = allCategories.filter(c => c.toLowerCase().includes(search));
+
+    if(filteredCats.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:#a0aec0;">ምንም ምድብ የለም።</p>'; return; }
+    
+    let html = '';
+    filteredCats.forEach(c => {
+        html += `<div style="margin-bottom:10px; background:#f7fafc; padding:10px; border-radius:8px; border:1px solid #edf2f7;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <strong style="font-size:14px; color:#2c5282;">📁 ${c}</strong>
+                <span class="del" onclick="deleteCategory('${c}')" style="cursor:pointer; color:#c53030; font-weight:bold;">×</span>
+            </div>
+            <div class="cat-tags" style="margin-bottom:5px;">
+                ${(allSubcategories[c] || []).map(sub => `<span class="cat-tag" style="font-size:11px;">${sub.name} <span class="del" onclick="deleteSubcategory('${c}', '${sub.id}', '${sub.name}')">×</span></span>`).join('')}
+            </div>
+            <div class="cat-add-row">
+                <input type="text" id="newSub_${c}" placeholder="አዲስ ንዑስ ምድብ" style="padding:6px; font-size:12px;">
+                <button onclick="addSubcategory('${c}')" style="padding:6px 10px; font-size:12px;">+</button>
+            </div>
+        </div>`;
+    });
+    listEl.innerHTML = html;
 } 
+
 window.addCategory = async function() {
     const name = document.getElementById('newCat').value.trim();
     if(!name) return alert('ስም አስገባ');
-    try { await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newCat').value = ''; loadCategories(); } catch(e) { alert(e.message); }
+    try { 
+        await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); 
+        document.getElementById('newCat').value = ''; loadCategories(); 
+    } catch(e) { alert(e.message); }
 }; 
+
 window.deleteCategory = async function(name) {
-    if(!confirm('ይህን ምድብ ማጥፋት ትፈልጋለህ?')) return;
-    try { await deleteDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name)); loadCategories(); } catch(e) { alert(e.message); }
+    if(!confirm('ይህን ምድብ እና ንዑስ ምድቦቹን ማጥፋት ትፈልጋለህ?')) return;
+    try { 
+        await deleteDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name)); 
+        const subs = allSubcategories[name] || [];
+        for(let s of subs) { await deleteDoc(doc(db, 'subcategories', s.id)); }
+        loadCategories(); 
+    } catch(e) { alert(e.message); }
 }; 
+
+window.addSubcategory = async function(catName) {
+    const inputId = 'newSub_' + catName;
+    const name = document.getElementById(inputId).value.trim();
+    if(!name) return alert('ስም አስገባ');
+    try {
+        await addDoc(collection(db, 'subcategories'), { name, categoryName: catName, pharmacyId: currentUserPharmacyId });
+        loadCategories();
+    } catch(e) { alert(e.message); }
+};
+
+window.deleteSubcategory = async function(catName, subId, subName) {
+    if(!confirm('ይህን ንዑስ ምድብ ማጥፋት ትፈልጋለህ?')) return;
+    try {
+        await deleteDoc(doc(db, 'subcategories', subId));
+        loadCategories();
+    } catch(e) { alert(e.message); }
+};
 
 async function loadExpCategories() {
     try {
@@ -1359,16 +1484,19 @@ async function loadExpCategories() {
         renderExpCatList();
     } catch(e) { console.error(e); }
 } 
+
 function renderExpCatList() {
     const listEl = document.getElementById('expCatListDisplay');
     if(allExpCategories.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:#a0aec0;">ምንም ምድብ የለም።</p>'; return; }
     listEl.innerHTML = allExpCategories.map(c => `<span class="cat-tag">${c} <span class="del" onclick="deleteExpCategory('${c}')">×</span></span>`).join('');
 } 
+
 window.addExpCategory = async function() {
     const name = document.getElementById('newExpCat').value.trim();
     if(!name) return alert('ስም አስገባ');
     try { await setDoc(doc(db, 'expenseCategories', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newExpCat').value = ''; loadExpCategories(); } catch(e) { alert(e.message); }
 }; 
+
 window.deleteExpCategory = async function(name) {
     if(!confirm('ይህን ምድብ ማጥፋት ትፈልጋለህ?')) return;
     try { await deleteDoc(doc(db, 'expenseCategories', currentUserPharmacyId + '_' + name)); loadExpCategories(); } catch(e) { alert(e.message); }
@@ -1387,16 +1515,19 @@ async function loadBranches() {
         renderBranchList();
     } catch(e) { console.error(e); }
 } 
+
 function renderBranchList() {
     const listEl = document.getElementById('branchListDisplay');
     if(allBranches.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:#a0aec0;">ምንም ቅርንጫፍ የለም።</p>'; return; }
     listEl.innerHTML = allBranches.map(c => `<span class="cat-tag">${c} <span class="del" onclick="deleteBranch('${c}')">×</span></span>`).join('');
 } 
+
 window.addBranch = async function() {
     const name = document.getElementById('newBranch').value.trim();
     if(!name) return alert('ስም አስገባ');
     try { await setDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newBranch').value = ''; loadBranches(); } catch(e) { alert(e.message); }
 }; 
+
 window.deleteBranch = async function(name) {
     if(!confirm('ይህን ቅርንጫፍ ማጥፋት ትፈልጋለህ?')) return;
     try { await deleteDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name)); loadBranches(); } catch(e) { alert(e.message); }
@@ -1410,17 +1541,20 @@ async function loadCustomers() {
         renderCustomerList(); populateCreditCustomerSelect();
     } catch(e) { console.error(e); }
 } 
+
 function renderCustomerList() {
     const listEl = document.getElementById('customerListDisplay');
     if(!listEl) return;
     if(allCustomers.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:#a0aec0;">ምንም ደንበኛ የለም።</p>'; return; }
     listEl.innerHTML = allCustomers.map(c => `<span class="cat-tag">${c} <span class="del" onclick="deleteCustomer('${c}')">×</span></span>`).join('');
 } 
+
 window.addCustomer = async function() {
     const name = document.getElementById('newCustomer').value.trim();
     if(!name) return alert('ስም አስገባ');
     try { await setDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newCustomer').value = ''; loadCustomers(); } catch(e) { alert(e.message); }
 }; 
+
 window.deleteCustomer = async function(name) {
     if(!confirm('ይህን ደንበኛ ማጥፋት ትፈልጋለህ?')) return;
     try { await deleteDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name)); loadCustomers(); } catch(e) { alert(e.message); }
@@ -1430,7 +1564,16 @@ window.deleteCustomer = async function(name) {
 window.addMedicine = async function() {
     const type = document.getElementById('medType').value;
     const category = document.getElementById('medCategory').value;
-    const subcategory = document.getElementById('medSubcategory').value.trim();
+    let subcategory = document.getElementById('medSubcategory').value;
+    const newSubVal = document.getElementById('medNewSubcategory').value.trim();
+    
+    if (subcategory === 'NEW') {
+        if (!newSubVal) { alert('⚠️ እባክህ አዲሱን ንዑስ ምድብ ስም ሙላ!'); return; }
+        subcategory = newSubVal;
+    } else if (!subcategory) {
+        alert('⚠️ እባክህ ንዑስ ምድብ ምረጥ!'); return;
+    }
+
     const name = document.getElementById('medName').value.trim();
     const cost = parseFloat(document.getElementById('medCost').value);
     const price = parseFloat(document.getElementById('medPrice').value);
@@ -1452,11 +1595,15 @@ window.addMedicine = async function() {
     } 
 
     try {
+        if (subcategory === newSubVal) {
+             await addDoc(collection(db, 'subcategories'), { name: subcategory, categoryName: category, pharmacyId: currentUserPharmacyId });
+        }
         await addDoc(collection(db, 'medicines'), {
             type, category, subcategory, name, batch, expiry, supplier, cost, price, quantity: qty, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId
         });
         alert('✅ ምርቱ ተመዝግቧል!');
-        document.getElementById('medSubcategory').value = ''; document.getElementById('medName').value = ''; document.getElementById('medBatch').value = ''; document.getElementById('medExpiry').value = ''; document.getElementById('medSupplier').value = ''; document.getElementById('medCost').value = ''; document.getElementById('medPrice').value = ''; document.getElementById('medQty').value = '';
+        document.getElementById('medSubcategory').value = ''; document.getElementById('medNewSubcategory').value = ''; document.getElementById('medName').value = ''; document.getElementById('medBatch').value = ''; document.getElementById('medExpiry').value = ''; document.getElementById('medSupplier').value = ''; document.getElementById('medCost').value = ''; document.getElementById('medPrice').value = ''; document.getElementById('medQty').value = '';
+        loadCategories();
     } catch (err) { alert('⚠️ ስህተት: ' + err.message); }
 }; 
 
@@ -1583,7 +1730,7 @@ window.addQuickSale = async function() {
         document.getElementById('quickAmount').value = '';
     } catch(e) { alert(e.message); }
 }; 
-   // ---- Expenses ----
+  // ---- Expenses ----
 window.addExpense = async function() {
     const cat = document.getElementById('expCat').value;
     const branch = document.getElementById('expBranch').value;
@@ -1666,7 +1813,6 @@ window.loadInventory = function() {
     if (filter === 'medicine') filtered = allMedicines.filter(m => m.type === 'medicine');
     else if (filter === 'cosmetic') filtered = allMedicines.filter(m => m.type === 'cosmetic'); 
 
-    // Search filter for main inventory
     let displayFiltered = filtered;
     if (searchInv) {
         displayFiltered = filtered.filter(m => 
@@ -1772,6 +1918,7 @@ async function loadDailyReport() {
     if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
     const selDate = dateInput.value;
     const branch = document.getElementById('dailyReportBranch').value; 
+    const searchDaily = (document.getElementById('searchDailySales')?.value || '').toLowerCase();
 
     let daySales = allSales.filter(s => s.date === selDate);
     let dayQuick = allQuickSales.filter(q => q.date === selDate);
@@ -1795,12 +1942,19 @@ async function loadDailyReport() {
 
         soldIds.add(s.medicineId);
         const pmLabel = s.paymentMethod === 'transfer' ? '🏦' : (s.paymentMethod === 'credit' ? '📝' : '💵');
-        salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር ${pmLabel} ${s.customer ? '| 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? '| 🏢 '+s.branch : '')} ${s.receipt ? '| 🧾 '+s.receipt : ''}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`;
+        
+        const matchesSearch = !searchDaily || (s.medicineName||'').toLowerCase().includes(searchDaily);
+        if (matchesSearch) {
+            salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር ${pmLabel} ${s.customer ? '| 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? '| 🏢 '+s.branch : '')} ${s.receipt ? '| 🧾 '+s.receipt : ''}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`;
+        }
     }); 
 
     dayQuick.forEach(q => {
         totalRev += q.amount; cashRev += q.amount;
-        quickHtml += `<div class="list-item"><div class="info"><div class="name">⚡ ${q.category} (${q.type})</div><div class="meta">${q.branch && q.branch !== 'all' ? '🏢 '+q.branch : ''}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`;
+        const matchesSearch = !searchDaily || 'quick'.includes(searchDaily) || (q.type||'').toLowerCase().includes(searchDaily);
+        if (matchesSearch) {
+            quickHtml += `<div class="list-item"><div class="info"><div class="name">⚡ ${q.category} (${q.type})</div><div class="meta">${q.branch && q.branch !== 'all' ? '🏢 '+q.branch : ''}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`;
+        }
     });
 
     dayExp.forEach(e => {
@@ -1916,9 +2070,11 @@ function renderCharts(selectedMonth) {
     const ctx = document.getElementById('dailyChartCanvas');
     if(ctx) {
         let labels = []; let data = [];
-        for (let i = 1; i <= 30; i++) {
-            let d = new Date(selectedMonth + '-' + (i<10?'0'+i:i));
-            if (d.getMonth() !== new Date(selectedMonth + '-01').getMonth()) break;
+        let year = parseInt(selectedMonth.split('-')[0]);
+        let month = parseInt(selectedMonth.split('-')[1]) - 1;
+        let daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 1; i <= daysInMonth; i++) {
             labels.push(i);
             let dateStr = selectedMonth + '-' + (i<10?'0'+i:i);
             let dayS = allSales.filter(s => s.date === dateStr).reduce((sum, s) => sum + (s.paidAmount !== undefined ? s.paidAmount : s.total), 0);
@@ -1968,21 +2124,15 @@ async function loadSettings() {
             const banner = document.getElementById('bizTypeBanner');
 
             if (adminAllowedType === 'retail') {
-                bizTypeSelect.value = 'retail';
-                bizTypeSelect.disabled = true;
-                btnSave.style.display = 'none';
+                bizTypeSelect.value = 'retail'; bizTypeSelect.disabled = true; btnSave.style.display = 'none';
                 banner.innerText = "⚠️ ይህ ፋርማሲ በአድሚን የተፈቀደው ችርቻሮ (Retail) ብቻ ነው። መቀየር አይችሉም።";
                 banner.style.background = '#fffaf0'; banner.style.color = '#dd6b20';
             } else if (adminAllowedType === 'wholesale') {
-                bizTypeSelect.value = 'wholesale';
-                bizTypeSelect.disabled = true;
-                btnSave.style.display = 'none';
+                bizTypeSelect.value = 'wholesale'; bizTypeSelect.disabled = true; btnSave.style.display = 'none';
                 banner.innerText = "⚠️ ይህ ፋርማሲ በአድሚን የተፈቀደው ጅምላ (Wholesale) ብቻ ነው። መቀየር አይችሉም።";
                 banner.style.background = '#fffaf0'; banner.style.color = '#dd6b20';
             } else {
-                bizTypeSelect.value = userSelectedType;
-                bizTypeSelect.disabled = false;
-                btnSave.style.display = 'block';
+                bizTypeSelect.value = userSelectedType; bizTypeSelect.disabled = false; btnSave.style.display = 'block';
                 banner.innerText = "💡 አድሚኑ ሁለቱንም ዓይነቶች ፈቅዷል። እርስዎ የሚፈልጉትን መርጠው ይጠቀሙ።";
                 banner.style.background = '#ebf8ff'; banner.style.color = '#2c5282';
             }
@@ -2083,20 +2233,56 @@ window.restoreData = function(event) {
 };
 
 // ---- Reports & Print ----
+window.toggleReportDatePickers = function() {
+    const type = document.getElementById('reportTypeSelect').value;
+    const dateDiv = document.getElementById('repDateDiv');
+    const monthDiv = document.getElementById('repMonthDiv');
+    
+    if (type === 'daily' || type === 'weekly') {
+        dateDiv.style.display = 'block'; monthDiv.style.display = 'none';
+    } else {
+        dateDiv.style.display = 'none'; monthDiv.style.display = 'block';
+    }
+    generateReport();
+};
+
 window.generateReport = function() {
     const type = document.getElementById('reportTypeSelect').value;
     const displayArea = document.getElementById('reportDisplayArea');
     
-    let startDate = new Date(); let endDate = new Date(); let title = '';
-    const today = new Date(); today.setHours(0,0,0,0);
-
-    if (type === 'daily') { startDate = today; endDate = today; title = 'የቀን ሪፖርት (' + today.toLocaleDateString() + ')'; } 
-    else if (type === 'weekly') { startDate.setDate(today.getDate() - 7); title = 'የሳምንት ሪፖርት'; } 
-    else if (type === 'monthly') { startDate.setMonth(today.getMonth() - 1); title = 'የወር ሪፖርት'; } 
-    else if (type === '3months') { startDate.setMonth(today.getMonth() - 3); title = 'የ3 ወር ሪፖርት'; } 
-    else if (type === '6months') { startDate.setMonth(today.getMonth() - 6); title = 'የ6 ወር ሪፖርት'; } 
-    else if (type === 'yearly') { startDate.setFullYear(today.getFullYear() - 1); title = 'የአመት ሪፖርት'; }
-    startDate.setHours(0,0,0,0);
+    let startDate, endDate, title = '';
+    
+    if (type === 'daily') {
+        let d = document.getElementById('repDateInput').value;
+        if(!d) d = new Date().toISOString().split('T')[0];
+        startDate = new Date(d); endDate = new Date(d);
+        title = `የቀን ሪፖርት (${d})`;
+    } else if (type === 'weekly') {
+        let d = document.getElementById('repDateInput').value;
+        if(!d) d = new Date().toISOString().split('T')[0];
+        endDate = new Date(d);
+        startDate = new Date(d); startDate.setDate(startDate.getDate() - 7);
+        title = `የሳምንት ሪፖርት (${startDate.toISOString().split('T')[0]} - ${d})`;
+    } else {
+        let m = document.getElementById('repMonthInput').value;
+        if(!m) m = new Date().toISOString().slice(0, 7);
+        if (type === 'monthly') {
+            startDate = new Date(m + '-01'); endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
+            title = `የወር ሪፖርት (${m})`;
+        } else if (type === '3months') {
+            endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
+            startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 2, 1);
+            title = `የ3 ወር ሪፖርት (${startDate.toISOString().slice(0,7)} - ${m})`;
+        } else if (type === '6months') {
+            endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
+            startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 5, 1);
+            title = `የ6 ወር ሪፖርት (${startDate.toISOString().slice(0,7)} - ${m})`;
+        } else if (type === 'yearly') {
+            endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
+            startDate = new Date(new Date(m + '-01').getFullYear() - 1, new Date(m + '-01').getMonth() + 1, 1);
+            title = `የአመት ሪፖርት (${startDate.toISOString().slice(0,7)} - ${m})`;
+        }
+    }
 
     const sDateStr = startDate.toISOString().split('T')[0];
     const eDateStr = endDate.toISOString().split('T')[0];
@@ -2104,17 +2290,20 @@ window.generateReport = function() {
     const filteredSales = allSales.filter(s => s.date >= sDateStr && s.date <= eDateStr);
     const filteredQuick = allQuickSales.filter(q => q.date >= sDateStr && q.date <= eDateStr);
     const filteredExpenses = allExpenses.filter(e => e.date >= sDateStr && e.date <= eDateStr);
+    const filteredFixed = allFixed.filter(f => f.month >= sDateStr.slice(0,7) && f.month <= eDateStr.slice(0,7));
 
-    let totalSales = 0; let totalQuick = 0; let totalExpenses = 0;
+    let totalSales = 0; let totalQuick = 0; let totalExpenses = 0; let totalFixed = 0;
     filteredSales.forEach(s => totalSales += (s.paidAmount !== undefined ? s.paidAmount : s.total));
     filteredQuick.forEach(q => totalQuick += q.amount);
     filteredExpenses.forEach(e => totalExpenses += e.amount);
+    filteredFixed.forEach(f => totalFixed += f.amount);
 
     let grandTotal = totalSales + totalQuick;
+    let grandExp = totalExpenses + totalFixed;
 
     let salesListHtml = '';
     if(filteredSales.length === 0) salesListHtml = '<p>ምንም ዝርዝር ሽያጭ የለም።</p>';
-    else filteredSales.forEach(s => { salesListHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">${s.date} | ብዛት: ${s.quantity}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`; });
+    else filteredSales.forEach(s => { salesListHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">${s.date} | ብዛት: ${s.quantity} | ዋጋ: ${s.unitPrice} ብር</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`; });
 
     let quickListHtml = '';
     if(filteredQuick.length === 0) quickListHtml = '<p>ምንም ፈጣን ሽያጭ የለም።</p>';
@@ -2140,11 +2329,11 @@ window.generateReport = function() {
         </div>
         <div class="summary-box red">
             <div class="label">${title} - ጠቅላላ ወጪ</div>
-            <div class="value">${totalExpenses.toFixed(2)} ብር</div>
+            <div class="value">${grandExp.toFixed(2)} ብር</div>
         </div>
         <div class="summary-box">
             <div class="label">${title} - ትርፍ</div>
-            <div class="value">${(grandTotal - totalExpenses).toFixed(2)} ብር</div>
+            <div class="value">${(grandTotal - grandExp).toFixed(2)} ብር</div>
         </div>
         
         <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">📋 የዝርዝር ሽያጭ ዝርዝር</h3>
@@ -2314,6 +2503,10 @@ function renderSalesHistory() {
     allSales.forEach(s => combined.push({ ...s, _type: 'sale' }));
     allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
 
+    const filter = document.getElementById('filterSalesHistory')?.value || 'all';
+    if (filter === 'detail') combined = combined.filter(c => c._type === 'sale');
+    if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
+
     if (combined.length === 0) {
         listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የሽያጭ ታሪክ የለም።</p>';
         return;
@@ -2409,7 +2602,6 @@ window.clearAllSales = async function() {
             await batch.commit();
         }
         
-        // Delete credit payments associated with customers
         let creditBatch = writeBatch(db);
         let cCount = 0;
         for (let c of allCreditPayments) {
@@ -2426,4 +2618,4 @@ window.clearAllSales = async function() {
 
 </script>
 </body>
-</html>
+</html>  
