@@ -99,6 +99,7 @@ input:focus, select:focus { border-color: #3182ce; background: #fff; }
 .list-item .meta { font-size: 11.5px; color: #718096; margin-top: 2px; }
 .list-item .amount { font-size: 14px; font-weight: 700; color: #2c5282; margin-left: 10px; white-space: nowrap; }
 .list-item .amount.red { color: #c53030; }
+.list-item .amount.green { color: #276749; }
 .list-item .qty-input { width: 65px; padding: 8px; font-size: 15px; text-align: center; border: 1.5px solid #cbd5e0; border-radius: 8px; margin-left: 8px; font-weight: 700; color: #2c5282; background: #fff; } 
 
 .cat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
@@ -128,7 +129,6 @@ input:focus, select:focus { border-color: #3182ce; background: #fff; }
 
 .chart-container { position: relative; height: 250px; margin-bottom: 15px; } 
 
-/* Dashboard Grid Layout */
 .dash-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
 .dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: space-between; }
 body.dark .dash-card { background: #2d3748; border-color: #4a5568; } 
@@ -149,75 +149,35 @@ body.dark .dash-header { color: #a0aec0; }
 body.dark .dash-list li { border-bottom-color: #4a5568; }
 .dash-list li:last-child { border-bottom: none; padding-bottom: 0; } 
 
-/* ==========================================
-   የዴስክቶፕ (Desktop) እና የታብሌት አቀማመጥ 
-   ========================================== */
+.search-box { margin-bottom: 10px; width: 100%; }
+
 @media (min-width: 768px) {
     body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; overflow: hidden; } 
-
     #mainApp.show { display: flex; flex-direction: column; height: 100vh; width: 100%; } 
-
     header { flex-shrink: 0; height: 70px; border-radius: 0; margin-bottom: 0; padding: 0 24px; position: static; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 101; display: flex; align-items: center; justify-content: space-between; } 
-
     .main-content-wrapper { display: flex; flex-direction: column; flex: 1; overflow: hidden; background: #f0f4f8; }
     body.dark .main-content-wrapper { background: #1a202c; } 
-
     #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner { margin: 15px 24px 0 24px; flex-shrink: 0; }
     #userPaymentAlert { margin: 15px 24px 0 24px !important; flex-shrink: 0; }
-
     .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: transparent; position: static; width: 100%; } 
-
-    /* የግራ በኩል ታቦች (Sidebar) */
     .tabs { flex-direction: column; width: 260px; background: #fff; border-right: 1px solid #e2e8f0; padding: 24px 16px; gap: 8px; overflow-y: auto; flex-shrink: 0; height: 100%; }
     body.dark .tabs { background: #2d3748; border-right: 1px solid #4a5568; } 
-
     .tabs label { flex-direction: row; justify-content: flex-start; padding: 14px 20px; min-width: 100%; font-size: 15px; box-shadow: none; border: none; border-radius: 10px; transition: all 0.2s; } 
     .tabs label:hover { background: #edf2f7; }
     body.dark .tabs label:hover { background: #4a5568; } 
     .tabs label i { margin-bottom: 0; margin-right: 15px; font-size: 24px; } 
-
-    #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"], #tab10:checked ~ .tabs label[for="tab10"] {
-        background: #ebf4ff; color: #2c5282; border-left: 4px solid #2c5282; font-weight: 800;
-    }
-    body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"], body.dark #tab10:checked ~ .tabs label[for="tab10"] {
-        background: #4a5568; color: #63b3ed; border-left: 4px solid #63b3ed;
-    } 
-
-    /* የቀኝ በኩል ይዘቶች (Panels) */
+    #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"], #tab10:checked ~ .tabs label[for="tab10"] { background: #ebf4ff; color: #2c5282; border-left: 4px solid #2c5282; font-weight: 800; }
+    body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"], body.dark #tab10:checked ~ .tabs label[for="tab10"] { background: #4a5568; color: #63b3ed; border-left: 4px solid #63b3ed; } 
     .panels { flex: 1; padding: 24px; background: #f0f4f8; overflow-y: auto; width: calc(100% - 260px); }
     body.dark .panels { background: #1a202c; } 
-
     .panel { padding: 0; } 
-
-    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9, #tab10:checked ~ .panels #panel10 {
-        display: grid; 
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 20px; 
-        align-items: start;
-    } 
-
-    #panel8 > .section-collapsible {
-        grid-column: 1 / -1;
-    }
-
-    #bodySettings {
-        display: grid; 
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 16px;
-        padding-top: 15px;
-    }
-    #bodySettings > .section-collapsible {
-        margin-bottom: 0;
-        background: #f7fafc; 
-    }
-
-    #hdrDaily, #hdrMonthly, #hdrDash, .true-full-width {
-        grid-column: 1 / -1 !important;
-    }
-
+    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9, #tab10:checked ~ .panels #panel10 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: start; } 
+    #panel8 > .section-collapsible { grid-column: 1 / -1; }
+    #bodySettings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding-top: 15px; }
+    #bodySettings > .section-collapsible { margin-bottom: 0; background: #f7fafc; } 
+    #hdrDaily, #hdrMonthly, #hdrDash, .true-full-width { grid-column: 1 / -1 !important; }
     .section-collapsible { margin-bottom: 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid #edf2f7; background: #fff; border-radius: 12px; height: 100%; }
     body.dark .section-collapsible { background: #2d3748; border-color: #4a5568; }
-
     .dash-grid { grid-template-columns: repeat(2, 1fr); }
     .dash-card[style*="grid-column: 1 / -1"] { grid-column: 1 / -1 !important; }
 }
@@ -231,6 +191,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div class="sub-text">Pharmacy Tracker</div>
 </div> 
 
+<!-- Login Screen -->
 <div id="loginScreen" class="hidden">
 <div class="login-box">
 <h1>💊 HaniTech Digital Pharmacy Tracker</h1> 
@@ -260,6 +221,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 </div> 
 
+<!-- Main App -->
 <div id="mainApp">
 <header>
 <div class="h-left" style="display: flex; align-items: center; gap: 10px;">
@@ -278,7 +240,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 </header> 
 
-<!-- Payment Expiry Alert Banner for User -->
 <div id="userPaymentAlert" style="display:none; background:#fffaf0; color:#dd6b20; padding:12px; margin: 10px 14px; border-radius:10px; border:1px solid #fbd38d; font-weight:bold; font-size:13px; text-align:center; z-index: 102;">
   ⚠️ <span id="userPaymentAlertText"></span>
 </div>
@@ -369,6 +330,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የምርት ዝርዝር</span></div>
 </div>
 <div class="section-body" id="bodyMedList">
+<input type="text" class="search-box" id="searchMedList" placeholder="🔍 ምርት ፈልግ..." oninput="renderMedList()">
 <select id="filterTypeMed" onchange="renderMedList()" style="margin-bottom:10px;">
 <option value="all">ሁሉም ዓይነት</option>
 <option value="medicine">💊 መድሃኒት ብቻ</option>
@@ -436,7 +398,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <option value="medicine">💊 መድሃኒት</option>
 <option value="cosmetic">🧴 ኮስሞቲክስ</option>
 </select>
-<!-- ምድብ ተወግዷል -->
 <label class="field-label">🏢 ቅርንጫፍ</label>
 <select id="quickBranch"></select>
 <label class="field-label">📅 ቀን</label>
@@ -447,12 +408,12 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div id="quickSaleList" style="margin-top:14px;"></div>
 </div>
 </div>
-<!-- አዲስ የተጨመረ: የሽያጭ ታሪክ -->
 <div class="section-collapsible true-full-width">
     <div class="section-header" id="hdrSalesHistory" onclick="toggleSection('hdrSalesHistory','bodySalesHistory')">
         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">የሽያጭ ታሪክ (Sales History)</span></div>
     </div>
     <div class="section-body" id="bodySalesHistory">
+        <button class="btn btn-danger" style="margin-bottom:10px; background:#c53030;" onclick="clearAllSales()">🗑️ ሁሉንም የሽያጭ ታሪክ ሰርዝ</button>
         <div id="salesHistoryList"></div>
     </div>
 </div>
@@ -518,6 +479,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">የእቃ ክምችት</span></div>
 </div>
 <div class="section-body open" id="bodyInventory">
+<input type="text" class="search-box" id="searchInventory" placeholder="🔍 በስም፣ በባች ወይም በምድብ ፈልግ..." oninput="loadInventory()">
 <select id="filterTypeInv" onchange="loadInventory()" style="margin-bottom:10px;">
 <option value="all">ሁሉም ዓይነት</option>
 <option value="medicine">💊 መድሃኒት ብቻ</option>
@@ -550,6 +512,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">የማለቂያ ቀን ማሳወቂያ</span></div>
 </div>
 <div class="section-body" id="bodyExpiryList">
+<input type="text" class="search-box" id="searchExpiry" placeholder="🔍 ፈልግ..." oninput="loadInventory()">
 <div id="expiryListDisplay"></div>
 </div>
 </div>
@@ -558,6 +521,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የሚያልቅ ክምችት</span></div>
 </div>
 <div class="section-body" id="bodyLowStock">
+<input type="text" class="search-box" id="searchLowStock" placeholder="🔍 ፈልግ..." oninput="loadInventory()">
 <div id="lowStockListDisplay"></div>
 </div>
 </div>
@@ -602,12 +566,17 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div id="dailyPaymentSummary"></div>
 </div>
 </div> 
-<div style="height:1px; background:#edf2f7; margin:12px 0;"></div> 
 <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
 <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የቀኑ ሽያጮች</span></div>
+<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የቀኑ ሽያጮች (ዝርዝር)</span></div>
 </div>
-<div class="section-body" id="bodyDailySales"><div id="dailySalesList"></div></div>
+<div class="section-body" id="bodyDailySales">
+    <h4 style="margin: 10px 0 5px; font-size: 13px; color: #4a5568;">🛒 የተሸጡ ምርቶች (Details)</h4>
+    <div id="dailySalesList"></div>
+    <div style="height:1px; background:#edf2f7; margin:15px 0;"></div>
+    <h4 style="margin: 10px 0 5px; font-size: 13px; color: #4a5568;">⚡ ፈጣን ሽያጮች (Quick Sales)</h4>
+    <div id="dailyQuickSalesList"></div>
+</div>
 </div> 
 <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
 <div class="section-header" id="hdrDailyUnsold" onclick="toggleSection('hdrDailyUnsold','bodyDailyUnsold')">
@@ -667,19 +636,26 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')">
 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">የወሩ ሽያጮች</span></div>
 </div>
-<div class="section-body" id="bodyMonthlySales"><div id="monthlySalesList"></div></div>
+<div class="section-body" id="bodyMonthlySales">
+    <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 ሽያጭ ፈልግ..." oninput="loadMonthlyReport()">
+    <div id="monthlySalesList"></div>
+</div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- PANEL 7 -->
+   <!-- PANEL 7 -->
 <div class="panel" id="panel7">
 <div class="section-collapsible true-full-width">
 <div class="section-header open" id="hdrDash" onclick="toggleSection('hdrDash','bodyDash')">
 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
 </div>
 <div class="section-body open" id="bodyDash">
+    <div style="margin-bottom:15px; background:#fff; padding:10px; border-radius:10px; border:1px solid #edf2f7;">
+        <label class="field-label" style="margin-top:0;">📅 የሪፖርት ወር ምረጥ</label>
+        <input type="month" id="dashMonthPicker" onchange="loadDashboard()">
+    </div>
     <div class="dash-grid">
         <div class="dash-card">
             <div class="dash-header">የወር ጠቅላላ ገቢ <span class="dash-badge green">የወር ጠቅላላ ገቢ</span></div>
@@ -880,7 +856,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 12. Support -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrSupport" onclick="toggleSection('hdrSupport','bodySupport')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📞</span><span class="sec-title">የድጋፍ መረጃ (Support Info)</span></div>
@@ -891,7 +866,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
     </div>
 
-    <!-- 13. Backup / Restore -->
     <div class="section-collapsible">
         <div class="section-header" id="hdrBackup" onclick="toggleSection('hdrBackup','bodyBackup')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💾</span><span class="sec-title">ዳታ ማስቀመጥ እና መመለስ</span></div>
@@ -903,8 +877,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
             <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="restoreData(event)">
         </div>
     </div>
-
-    <!-- Removed Reports from here as requested -->
 
     <div class="section-collapsible">
         <div class="section-header" id="hdrPerms" onclick="toggleSection('hdrPerms','bodyPerms')">
@@ -929,12 +901,12 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 <div class="section-body open" id="bodyCredit">
     
-    <!-- ያልተከፈሉ ዕዳዎች ማጠቃለያ -->
     <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7; margin-bottom:12px;">
         <div class="section-header open" id="hdrCreditList" onclick="toggleSection('hdrCreditList','bodyCreditList')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">በዱቤ የተሸጡ (ያልተከፈሉ)</span></div>
         </div>
         <div class="section-body open" id="bodyCreditList">
+            <input type="text" class="search-box" id="searchUnpaidCredit" placeholder="🔍 በደንበኛ ስም ፈልግ..." oninput="renderUnpaidCredits()">
             <div id="unpaidCreditList"></div>
         </div>
     </div>
@@ -990,7 +962,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyB3bQkI8scEHg36kkxlAalbbCtE4R0Vv8U",
@@ -1005,13 +977,13 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app); 
 
-// ግሎባል ተለዋዋጮች
 let allMedicines = [];
 let allCategories = [];
 let allExpCategories = [];
 let allBranches = [];
 let allCustomers = [];
 let allSales = [];
+let allQuickSales = [];
 let allExpenses = [];
 let allFixed = [];
 let allCreditPayments = [];
@@ -1023,10 +995,8 @@ let allowedBizType = 'retail';
 let lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
 
-// Real-time Listeners
-let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null;
+let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null, unsubQuickSales = null;
 
-// Splash Screen Logic
 setTimeout(() => {
     const splash = document.getElementById('splashScreen');
     if(splash) {
@@ -1055,9 +1025,6 @@ window.onMedTypeChange = function() {
     medFields.style.display = type === 'cosmetic' ? 'none' : 'block';
 }; 
 
-// ==========================================
-// 🔐 LOGIN & HEADER LOADING
-// ========================================== 
 async function loadUserHeader(user) {
     try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
@@ -1189,6 +1156,7 @@ window.logout = function() {
     if(unsubExpenses) unsubExpenses();
     if(unsubFixed) unsubFixed();
     if(unsubCredit) unsubCredit();
+    if(unsubQuickSales) unsubQuickSales();
     signOut(auth); 
 }; 
 
@@ -1256,19 +1224,22 @@ async function applyPermissionsUI() {
     }
 } 
 
-// ==========================================
-// 📦 DATA LOADING & UI
-// ========================================== 
 async function loadAllData() {
     if (!currentUserPharmacyId) return; 
     await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
     
-    // Initial loads before snapshot takes over
+    if(!document.getElementById('dashMonthPicker').value) {
+        document.getElementById('dashMonthPicker').value = new Date().toISOString().slice(0, 7);
+    }
     
+    if(!document.getElementById('sellDate').value) document.getElementById('sellDate').value = new Date().toISOString().split('T')[0];
+    if(!document.getElementById('quickDate').value) document.getElementById('quickDate').value = new Date().toISOString().split('T')[0];
+    if(!document.getElementById('expDate').value) document.getElementById('expDate').value = new Date().toISOString().split('T')[0];
+    if(!document.getElementById('creditDate').value) document.getElementById('creditDate').value = new Date().toISOString().split('T')[0];
+    if(!document.getElementById('fixMonth').value) document.getElementById('fixMonth').value = new Date().toISOString().slice(0, 7);
+
     loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); checkExpiryAlerts(); loadDarkMode(); applyBizTypeUI();
-    renderSalesHistory(); 
-    renderUnpaidCredits(); 
-    generateReport();
+    renderSalesHistory(); renderUnpaidCredits(); generateReport();
 
     setupRealtimeListeners();
 } 
@@ -1279,79 +1250,49 @@ function setupRealtimeListeners() {
     if(unsubExpenses) unsubExpenses();
     if(unsubFixed) unsubFixed();
     if(unsubCredit) unsubCredit();
+    if(unsubQuickSales) unsubQuickSales();
 
-    // መድሃኒቶች
     unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         let tempMedicines = [];
         snapshot.forEach(doc => tempMedicines.push({ id: doc.id, ...doc.data() }));
-        
-        // በ JavaScript በኩል መደርደር (ዳታው ሰዓት ከሌለው ሳይሰበር)
-        tempMedicines.sort((a, b) => {
-            const timeA = a.createdAt?.seconds || 0;
-            const timeB = b.createdAt?.seconds || 0;
-            return timeB - timeA;
-        });
-
-        allMedicines = tempMedicines; // ዳታው ሲመጣ ብቻ ነው የሚቀየረው
-        renderMedList(); 
-        loadInventory(); 
-        renderSellProducts(); 
-        checkExpiryAlerts();
-    }, (error) => {
-        console.error("Error in medicines listener: ", error);
+        tempMedicines.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        allMedicines = tempMedicines; 
+        renderMedList(); loadInventory(); renderSellProducts(); checkExpiryAlerts();
     });
 
-    // ሽያጮች
     unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         let tempSales = [];
         snapshot.forEach(doc => tempSales.push({ id: doc.id, ...doc.data() }));
         allSales = tempSales;
-        loadDailyReport(); 
-        loadMonthlyReport(); 
-        loadDashboard(); 
-        renderSalesHistory(); 
-        renderUnpaidCredits(); 
-        generateReport();
-    }, (error) => {
-        console.error("Error in sales listener: ", error);
+        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); generateReport();
     });
 
-    // ወጪዎች
+    unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
+        let tempQuick = [];
+        snapshot.forEach(doc => tempQuick.push({ id: doc.id, ...doc.data() }));
+        allQuickSales = tempQuick;
+        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); generateReport();
+    });
+
     unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         let tempExpenses = [];
         snapshot.forEach(doc => tempExpenses.push({ id: doc.id, ...doc.data() }));
         allExpenses = tempExpenses;
-        loadDailyReport(); 
-        loadMonthlyReport(); 
-        loadDashboard(); 
-        renderExpenseHistory(); 
-        generateReport();
-    }, (error) => {
-        console.error("Error in expenses listener: ", error);
+        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); generateReport();
     });
 
-    // ቋሚ ወጪዎች
     unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         let tempFixed = [];
         snapshot.forEach(doc => tempFixed.push({ id: doc.id, ...doc.data() }));
         allFixed = tempFixed;
-        loadMonthlyReport(); 
-        loadDashboard(); 
-        renderFixedExpenseHistory(); 
-        generateReport();
-    }, (error) => {
-        console.error("Error in fixed expenses listener: ", error);
+        loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory(); generateReport();
     });
 
-    // የዱቤ ክፍያዎች
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
         let tempCredit = [];
         snapshot.forEach(doc => tempCredit.push({ id: doc.id, ...doc.data() }));
         allCreditPayments = tempCredit;
-        loadCreditPaymentHistory(); 
-        renderUnpaidCredits();
-    }, (error) => {
-        console.error("Error in credit payments listener: ", error);
+        loadCreditPaymentHistory(); renderUnpaidCredits();
     });
 }
 
@@ -1382,7 +1323,6 @@ window.togglePaymentDetails = function() {
     if (details) details.style.display = method === 'credit' ? 'block' : 'none';
 }; 
 
-// ---- Load Categories, Expenses, Branches, Customers ----
 async function loadCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId)));
@@ -1497,11 +1437,16 @@ window.addMedicine = async function() {
     const price = parseFloat(document.getElementById('medPrice').value);
     const qty = parseInt(document.getElementById('medQty').value); 
 
-    const batch = document.getElementById('medBatch').value.trim();
-    const expiry = document.getElementById('medExpiry').value;
-    const supplier = document.getElementById('medSupplier').value.trim(); 
+    let batch = document.getElementById('medBatch').value.trim();
+    let expiry = document.getElementById('medExpiry').value;
+    let supplier = document.getElementById('medSupplier').value.trim(); 
 
-    if (!batch || !expiry) { alert('⚠️ እባክህ የባች ቁጥር እና የማለቂያ ቀን ሙላ!'); return; }
+    if (type === 'medicine') {
+        if (!batch || !expiry) { alert('⚠️ እባክህ የባች ቁጥር እና የማለቂያ ቀን ሙላ!'); return; }
+    } else {
+        batch = batch || '-'; expiry = expiry || '-'; supplier = supplier || '-';
+    }
+
     if (!category || !subcategory || !name || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) {
         alert('⚠️ እባክህ ሁሉንም መረጃዎች በትክክል ሙላ!');
         return;
@@ -1516,53 +1461,32 @@ window.addMedicine = async function() {
     } catch (err) { alert('⚠️ ስህተት: ' + err.message); }
 }; 
 
-async function loadMedicines() {
-    try {
-        const q = query(
-            collection(db, 'medicines'), 
-            where('pharmacyId', '==', currentUserPharmacyId)
-        );
-        const snapshot = await getDocs(q);
-        allMedicines = [];
-        snapshot.forEach(doc => allMedicines.push({ id: doc.id, ...doc.data() }));
-        
-        // በ JavaScript በኩል አዲሱ መጀመሪያ እንዲሆን መደርደር
-        allMedicines.sort((a, b) => {
-            const timeA = a.createdAt?.seconds || 0;
-            const timeB = b.createdAt?.seconds || 0;
-            return timeB - timeA;
-        });
-
-        renderMedList();
-    } catch (err) { 
-        console.error("Error loading medicines:", err); 
-    }
-}
-   
 window.renderMedList = function() {
     const listEl = document.getElementById('medListDisplay');
     const filter = document.getElementById('filterTypeMed').value;
+    const search = (document.getElementById('searchMedList')?.value || '').toLowerCase();
+    
     let filtered = allMedicines;
-    if (filter !== 'all') filtered = allMedicines.filter(m => m.type === filter); 
+    if (filter !== 'all') filtered = filtered.filter(m => m.type === filter); 
+    if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search) || (m.subcategory||'').toLowerCase().includes(search));
 
     if(filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
     let html = '';
     filtered.forEach(m => {
         const typeLabel = m.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
-        const extra = `| 📦 ${m.batch || '-'} | 📅 ${m.expiry || '-'}`;
+        const extra = m.type === 'medicine' ? `| 📦 ${m.batch || '-'} | 📅 ${m.expiry || '-'}` : '';
         html += `<div class="list-item"><div class="info"><div class="name">${typeLabel}: ${m.name}</div><div class="meta">${m.category} → ${m.subcategory} ${extra}</div></div><div class="amount">${m.price} ብር</div></div>`;
     });
     listEl.innerHTML = html;
 }; 
 
-// ---- Sales & POS ----
 function renderSellProducts() {
     const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase();
     const listEl = document.getElementById('sellProductList');
     if(!listEl) return; 
 
     let filtered = allMedicines.filter(m => m.quantity > 0);
-    if (search) filtered = filtered.filter(m => m.name.toLowerCase().includes(search)); 
+    if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search)); 
 
     if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት አልተገኘም።</p>'; return; } 
 
@@ -1661,7 +1585,7 @@ window.addQuickSale = async function() {
     } catch(e) { alert(e.message); }
 }; 
 
-// ---- Expenses ----
+   // ---- Expenses ----
 window.addExpense = async function() {
     const cat = document.getElementById('expCat').value;
     const branch = document.getElementById('expBranch').value;
@@ -1735,62 +1659,81 @@ function renderFixedExpenseHistory() {
 window.loadInventory = function() {
     const listEl = document.getElementById('inventoryList');
     const filter = document.getElementById('filterTypeInv').value;
+    const searchInv = (document.getElementById('searchInventory')?.value || '').toLowerCase();
+    const searchExpiry = (document.getElementById('searchExpiry')?.value || '').toLowerCase();
+    const searchLow = (document.getElementById('searchLowStock')?.value || '').toLowerCase();
+    
     let filtered = allMedicines;
     
     if (filter === 'medicine') filtered = allMedicines.filter(m => m.type === 'medicine');
     else if (filter === 'cosmetic') filtered = allMedicines.filter(m => m.type === 'cosmetic'); 
 
-    if (filtered.length === 0) { 
+    // Search filter for main inventory
+    let displayFiltered = filtered;
+    if (searchInv) {
+        displayFiltered = filtered.filter(m => 
+            (m.name||'').toLowerCase().includes(searchInv) || 
+            (m.category||'').toLowerCase().includes(searchInv) ||
+            (m.batch||'').toLowerCase().includes(searchInv)
+        );
+    }
+
+    if (displayFiltered.length === 0) { 
         listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; 
         document.getElementById('invTotalValue').innerHTML = '0.00 <small>ብር</small>'; 
-        return; 
-    } 
+    } else { 
+        const grouped = {};
+        displayFiltered.forEach(med => {
+            const typeKey = med.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
+            const cat = med.category || 'ሌላ'; const sub = med.subcategory || 'ሌላ';
+            const key = typeKey + ' - ' + cat;
+            if(!grouped[key]) grouped[key] = {};
+            if(!grouped[key][sub]) grouped[key][sub] = [];
+            grouped[key][sub].push(med);
+        }); 
 
-    const grouped = {};
-    filtered.forEach(med => {
-        const typeKey = med.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
-        const cat = med.category || 'ሌላ'; const sub = med.subcategory || 'ሌላ';
-        const key = typeKey + ' - ' + cat;
-        if(!grouped[key]) grouped[key] = {};
-        if(!grouped[key][sub]) grouped[key][sub] = [];
-        grouped[key][sub].push(med);
-    }); 
+        let html = ''; let grandTotal = 0;
+        Object.keys(grouped).forEach(catName => {
+            let catTotalQty = 0, catTotalValue = 0;
+            html += `<div class="cat-section"><div class="cat-header open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')"><div class="cat-left"><span class="cat-arrow">▶</span><span class="cat-name">📁 ${catName}</span></div></div><div class="cat-body open">`; 
+            Object.keys(grouped[catName]).forEach(subName => { 
+                html += `<div style="font-size:13px; font-weight:bold; color:#4a5568; margin:8px 0 5px 5px;">↳ ${subName}</div>`; 
+                grouped[catName][subName].forEach(med => { 
+                    catTotalQty += med.quantity; catTotalValue += med.quantity * (med.price || 0); 
+                    const today = new Date(); today.setHours(0,0,0,0); 
+                    let alertHtml = ''; let rowStyle = ''; 
+                    if (med.expiry && med.expiry !== '-') { 
+                        const expiryDate = new Date(med.expiry); const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24)); 
+                        if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border:1px solid #fed7d7;'; } 
+                        else if (diffDays <= 30) { alertHtml = `<span class="expiry-alert" style="color:#dd6b20;">⚠️ ${diffDays} ቀን ቀርቷል</span>`; rowStyle = 'background:#fffaf0; border:1px solid #fbd38d;'; }
+                    }
+                    if (med.quantity <= lowStockThreshold && !alertHtml) { alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>'; } 
 
-    let html = ''; let grandTotal = 0;
-    Object.keys(grouped).forEach(catName => {
-        let catTotalQty = 0, catTotalValue = 0;
-        html += `<div class="cat-section"><div class="cat-header open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')"><div class="cat-left"><span class="cat-arrow">▶</span><span class="cat-name">📁 ${catName}</span></div></div><div class="cat-body open">`; 
-        Object.keys(grouped[catName]).forEach(subName => { 
-            html += `<div style="font-size:13px; font-weight:bold; color:#4a5568; margin:8px 0 5px 5px;">↳ ${subName}</div>`; 
-            grouped[catName][subName].forEach(med => { 
-                catTotalQty += med.quantity; catTotalValue += med.quantity * (med.price || 0); 
-                const today = new Date(); today.setHours(0,0,0,0); 
-                let alertHtml = ''; let rowStyle = ''; 
-                if (med.expiry) { 
-                    const expiryDate = new Date(med.expiry); const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24)); 
-                    if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border:1px solid #fed7d7;'; } 
-                    else if (diffDays <= 30) { alertHtml = `<span class="expiry-alert" style="color:#dd6b20;">⚠️ ${diffDays} ቀን ቀርቷል</span>`; rowStyle = 'background:#fffaf0; border:1px solid #fbd38d;'; }
-                }
-                if (med.quantity <= lowStockThreshold && !alertHtml) { alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>'; } 
-
-                const extra = `<br>📦 ${med.batch || '-'} | 📅 ${med.expiry || '-'}`;
-                html += `<div class="list-item" style="${rowStyle}"><div class="info"><div class="name">${med.name}</div><div class="meta">${extra} ${alertHtml}</div></div><div class="amount">${med.quantity} <small style="font-size:10px;color:#718096;">ብዛት</small><br><small style="font-size:11px;color:#276749;">${med.price} ብር</small></div></div>`;
+                    const extra = med.type === 'medicine' ? `<br>📦 ${med.batch || '-'} | 📅 ${med.expiry || '-'}` : '';
+                    html += `<div class="list-item" style="${rowStyle}"><div class="info"><div class="name">${med.name}</div><div class="meta">${extra} ${alertHtml}</div></div><div class="amount">${med.quantity} <small style="font-size:10px;color:#718096;">ብዛት</small><br><small style="font-size:11px;color:#276749;">${med.price} ብር</small></div></div>`;
+                });
             });
+            grandTotal += catTotalValue;
+            html += `<div style="padding:8px; background:#ebf4ff; border-radius:6px; margin-top:8px; font-size:12.5px; font-weight:700; color:#2c5282;">📊 የዚህ ምድብ ድምር: ${catTotalQty} ብዛት | ${catTotalValue.toFixed(2)} ብር</div>`;
+            html += `</div></div>`;
         });
-        grandTotal += catTotalValue;
-        html += `<div style="padding:8px; background:#ebf4ff; border-radius:6px; margin-top:8px; font-size:12.5px; font-weight:700; color:#2c5282;">📊 የዚህ ምድብ ድምር: ${catTotalQty} ብዛት | ${catTotalValue.toFixed(2)} ብር</div>`;
-        html += `</div></div>`;
-    });
-    listEl.innerHTML = html; document.getElementById('invTotalValue').innerHTML = grandTotal.toFixed(2) + ' <small>ብር</small>'; 
+        listEl.innerHTML = html; 
+        document.getElementById('invTotalValue').innerHTML = grandTotal.toFixed(2) + ' <small>ብር</small>'; 
+    }
 
-    const adjSel = document.getElementById('adjustMedId'); adjSel.innerHTML = '<option value="">-- ምርት ምረጥ --</option>';
+    const adjSel = document.getElementById('adjustMedId'); 
+    adjSel.innerHTML = '<option value="">-- ምርት ምረጥ --</option>';
     allMedicines.forEach(m => { adjSel.innerHTML += `<option value="${m.id}">${m.name} (ቀሪ: ${m.quantity})</option>`; }); 
 
+    // Expiry List
     const expListEl = document.getElementById('expiryListDisplay');
-    const expMeds = allMedicines.filter(m => m.expiry).map(m => { const diffDays = Math.ceil((new Date(m.expiry) - new Date()) / (1000 * 60 * 60 * 24)); return { ...m, diffDays }; }).filter(m => m.diffDays <= 30).sort((a,b) => a.diffDays - b.diffDays); 
+    let expMeds = allMedicines.filter(m => m.expiry && m.expiry !== '-').map(m => { const diffDays = Math.ceil((new Date(m.expiry) - new Date()) / (1000 * 60 * 60 * 24)); return { ...m, diffDays }; }).filter(m => m.diffDays <= 30).sort((a,b) => a.diffDays - b.diffDays); 
+    
+    if (searchExpiry) expMeds = expMeds.filter(m => (m.name||'').toLowerCase().includes(searchExpiry) || (m.batch||'').toLowerCase().includes(searchExpiry));
 
-    if (expMeds.length === 0) { expListEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የማለቂያ ቀን ማሳወቂያ የለም።</p>'; } 
-    else {
+    if (expMeds.length === 0) { 
+        expListEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የማለቂያ ቀን ማሳወቂያ የለም።</p>'; 
+    } else {
         let expHtml = '';
         expMeds.forEach(m => {
             const isExpired = m.diffDays < 0;
@@ -1799,10 +1742,15 @@ window.loadInventory = function() {
         expListEl.innerHTML = expHtml;
     } 
 
+    // Low Stock List
     const lowStockEl = document.getElementById('lowStockListDisplay');
-    const lowMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold).sort((a,b) => a.quantity - b.quantity);
-    if (lowMeds.length === 0) { lowStockEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የሚያልቅ ክምችት የለም።</p>'; } 
-    else {
+    let lowMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold).sort((a,b) => a.quantity - b.quantity);
+    
+    if (searchLow) lowMeds = lowMeds.filter(m => (m.name||'').toLowerCase().includes(searchLow) || (m.category||'').toLowerCase().includes(searchLow));
+
+    if (lowMeds.length === 0) { 
+        lowStockEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የሚያልቅ ክምችት የለም።</p>'; 
+    } else {
         let lowHtml = '';
         lowMeds.forEach(m => { lowHtml += `<div class="list-item" style="background:#fffaf0; border:1px solid #fbd38d;"><div class="info"><div class="name">${m.name}</div><div class="meta">📁 ${m.category} → ${m.subcategory}</div></div><div class="amount red" style="font-size:13px;">${m.quantity} ቀሪ</div></div>`; });
         lowStockEl.innerHTML = lowHtml;
@@ -1828,17 +1776,23 @@ async function loadDailyReport() {
     const branch = document.getElementById('dailyReportBranch').value; 
 
     let daySales = allSales.filter(s => s.date === selDate);
+    let dayQuick = allQuickSales.filter(q => q.date === selDate);
     let dayExp = allExpenses.filter(e => e.date === selDate);
-    if (branch !== 'all') { daySales = daySales.filter(s => s.branch === branch); dayExp = dayExp.filter(e => e.branch === branch); } 
+    
+    if (branch !== 'all') { 
+        daySales = daySales.filter(s => s.branch === branch); 
+        dayQuick = dayQuick.filter(q => q.branch === branch);
+        dayExp = dayExp.filter(e => e.branch === branch); 
+    } 
 
-    let totalRev = 0, totalExp = 0; let cashRev = 0, transferRev = 0, creditRev = 0, creditTotal = 0;
+    let totalRev = 0, totalExp = 0; let cashRev = 0, transferRev = 0, creditRev = 0;
     let salesHtml = '', quickHtml = '', expHtml = '', unsoldHtml = '';
     const soldIds = new Set(); 
 
     daySales.forEach(s => {
         totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total;
         if (s.paymentMethod === 'transfer') transferRev += (s.paidAmount !== undefined ? s.paidAmount : s.total);
-        else if (s.paymentMethod === 'credit') { creditRev += (s.paidAmount || 0); creditTotal += s.total; }
+        else if (s.paymentMethod === 'credit') creditRev += (s.paidAmount || 0);
         else cashRev += (s.paidAmount !== undefined ? s.paidAmount : s.total); 
 
         soldIds.add(s.medicineId);
@@ -1846,25 +1800,23 @@ async function loadDailyReport() {
         salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር ${pmLabel} ${s.customer ? '| 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? '| 🏢 '+s.branch : '')} ${s.receipt ? '| 🧾 '+s.receipt : ''}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`;
     }); 
 
-    const qQuick = query(collection(db, 'quickSales'), where('date', '==', selDate), where('pharmacyId', '==', currentUserPharmacyId));
-    const dayQuick = await getDocs(qQuick);
-    dayQuick.forEach(d => {
-        const q = d.data(); if (branch !== 'all' && q.branch !== branch) return;
+    dayQuick.forEach(q => {
         totalRev += q.amount; cashRev += q.amount;
-        quickHtml += `<div class="list-item"><div class="info"><div class="name">⚡ ${q.category}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`;
-    }); 
+        quickHtml += `<div class="list-item"><div class="info"><div class="name">⚡ ${q.category} (${q.type})</div><div class="meta">${q.branch && q.branch !== 'all' ? '🏢 '+q.branch : ''}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`;
+    });
 
     dayExp.forEach(e => {
         totalExp += e.amount;
         expHtml += `<div class="list-item"><div class="info"><div class="name">${e.category}</div><div class="meta">${e.note || ''}</div></div><div class="amount red">${e.amount.toFixed(2)} ብር</div></div>`;
     }); 
 
-    allMedicines.forEach(m => { if(!soldIds.has(m.id)) unsoldHtml += `<div class="list-item"><div class="info"><div class="name">${m.name}</div><div class="meta">ቀሪ: ${m.quantity}</div></div></div>`; }); 
+    allMedicines.forEach(m => { if(!soldIds.has(m.id) && m.quantity > 0) unsoldHtml += `<div class="list-item"><div class="info"><div class="name">${m.name}</div><div class="meta">ቀሪ: ${m.quantity}</div></div></div>`; }); 
 
     document.getElementById('dailyTotalRevenue').innerHTML = totalRev.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('dailyTotalExpense').innerHTML = totalExp.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('dailyNetProfit').innerHTML = (totalRev - totalExp).toFixed(2) + ' <small>ብር</small>';
-    document.getElementById('dailySalesList').innerHTML = salesHtml + quickHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
+    document.getElementById('dailySalesList').innerHTML = salesHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ዝርዝር ሽያጭ የለም።</p>';
+    document.getElementById('dailyQuickSalesList').innerHTML = quickHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ፈጣን ሽያጭ የለም።</p>';
     document.getElementById('dailyUnsoldList').innerHTML = unsoldHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ሁሉም ተሽጠዋል።</p>'; 
 
     document.getElementById('dailyPaymentSummary').innerHTML = `<div class="list-item"><div class="info"><div class="name">💵 Cash</div></div><div class="amount">${cashRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">🏦 Transfer</div></div><div class="amount">${transferRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">📝 Credit</div></div><div class="amount">${creditRev.toFixed(2)} ብር</div></div>`;
@@ -1875,16 +1827,22 @@ async function loadMonthlyReport() {
     if(!monthInput.value) monthInput.value = new Date().toISOString().slice(0, 7);
     const selMonth = monthInput.value;
     const branch = document.getElementById('monthlyReportBranch').value;
+    const searchMonthly = (document.getElementById('searchMonthlySales')?.value || '').toLowerCase();
 
     let monthSales = allSales.filter(s => s.date.startsWith(selMonth));
+    let monthQuick = allQuickSales.filter(q => q.date.startsWith(selMonth));
     let monthExp = allExpenses.filter(e => e.date.startsWith(selMonth));
     let monthFixed = allFixed.filter(f => f.month === selMonth);
 
-    if (branch !== 'all') { monthSales = monthSales.filter(s => s.branch === branch); monthExp = monthExp.filter(e => e.branch === branch); }
+    if (branch !== 'all') { 
+        monthSales = monthSales.filter(s => s.branch === branch); 
+        monthQuick = monthQuick.filter(q => q.branch === branch);
+        monthExp = monthExp.filter(e => e.branch === branch); 
+    }
 
     let totalRev = 0, totalExp = 0, totalFixed = 0;
     let cashRev = 0, transferRev = 0, creditRev = 0;
-    let salesHtml = '';
+    let salesHtml = '', quickHtml = '';
 
     monthSales.forEach(s => { 
         totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total; 
@@ -1893,7 +1851,19 @@ async function loadMonthlyReport() {
         else cashRev += (s.paidAmount !== undefined ? s.paidAmount : s.total); 
 
         const pmLabel = s.paymentMethod === 'transfer' ? '🏦' : (s.paymentMethod === 'credit' ? '📝' : '💵');
-        salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር ${pmLabel} ${s.customer ? '| 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? '| 🏢 '+s.branch : '')} | 📅 ${s.date}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`;
+        const matchesSearch = !searchMonthly || (s.medicineName||'').toLowerCase().includes(searchMonthly) || (s.customer||'').toLowerCase().includes(searchMonthly);
+        
+        if (matchesSearch) {
+            salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር ${pmLabel} ${s.customer ? '| 🏪 '+s.customer : (s.branch && s.branch !== 'all' ? '| 🏢 '+s.branch : '')} | 📅 ${s.date}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`;
+        }
+    });
+
+    monthQuick.forEach(q => {
+        totalRev += q.amount; cashRev += q.amount;
+        const matchesSearch = !searchMonthly || 'quick'.includes(searchMonthly) || (q.type||'').toLowerCase().includes(searchMonthly);
+        if (matchesSearch) {
+            quickHtml += `<div class="list-item"><div class="info"><div class="name">⚡ Quick (${q.type})</div><div class="meta">📅 ${q.date} ${q.branch && q.branch !== 'all' ? '| 🏢 '+q.branch : ''}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`;
+        }
     });
     
     monthExp.forEach(e => { totalExp += e.amount; });
@@ -1904,19 +1874,29 @@ async function loadMonthlyReport() {
     document.getElementById('monthlyFixedExpense').innerHTML = totalFixed.toFixed(2) + ' <small>ብር</small>';
     document.getElementById('monthlyNetProfit').innerHTML = (totalRev - totalExp - totalFixed).toFixed(2) + ' <small>ብር</small>';
     
-    document.getElementById('monthlySalesList').innerHTML = salesHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
+    let finalHtml = salesHtml + quickHtml;
+    document.getElementById('monthlySalesList').innerHTML = finalHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
     document.getElementById('monthlyPaymentSummary').innerHTML = `<div class="list-item"><div class="info"><div class="name">💵 Cash</div></div><div class="amount">${cashRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">🏦 Transfer</div></div><div class="amount">${transferRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">📝 Credit</div></div><div class="amount">${creditRev.toFixed(2)} ብር</div></div>`;
 }
 
 async function loadDashboard() {
     if (!currentUserPharmacyId) return;
-    const now = new Date(); const currentMonth = now.toISOString().slice(0, 7);
-    let monthSales = allSales.filter(s => s.date.startsWith(currentMonth));
-    let monthExp = allExpenses.filter(e => e.date.startsWith(currentMonth));
-    let monthFixed = allFixed.filter(f => f.month === currentMonth);
+    
+    let selectedMonth = document.getElementById('dashMonthPicker')?.value;
+    if (!selectedMonth) {
+        selectedMonth = new Date().toISOString().slice(0, 7);
+        if (document.getElementById('dashMonthPicker')) document.getElementById('dashMonthPicker').value = selectedMonth;
+    }
+
+    let monthSales = allSales.filter(s => s.date.startsWith(selectedMonth));
+    let monthQuick = allQuickSales.filter(q => q.date.startsWith(selectedMonth));
+    let monthExp = allExpenses.filter(e => e.date.startsWith(selectedMonth));
+    let monthFixed = allFixed.filter(f => f.month === selectedMonth);
 
     let totalRev = 0, totalExp = 0, totalFixed = 0; let itemsSold = 0;
+    
     monthSales.forEach(s => { totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total; itemsSold += s.quantity || 0; });
+    monthQuick.forEach(q => { totalRev += q.amount; });
     monthExp.forEach(e => { totalExp += e.amount; });
     monthFixed.forEach(f => { totalFixed += f.amount; });
 
@@ -1928,20 +1908,48 @@ async function loadDashboard() {
     document.getElementById('dashPaidExpenses').innerText = (totalExp + totalFixed).toFixed(2) + ' ብር';
     document.getElementById('dashProfit').innerText = netProfit.toFixed(2) + ' ብር';
     document.getElementById('dashNetProfit').innerText = netProfit.toFixed(2) + ' ብር';
-    document.getElementById('dashTotalSalesCount').innerText = monthSales.length;
+    document.getElementById('dashTotalSalesCount').innerText = monthSales.length + monthQuick.length;
     document.getElementById('dashTotalItemsSold').innerText = itemsSold;
 
-    renderCharts();
+    renderCharts(selectedMonth);
 }
 
-function renderCharts() {
+function renderCharts(selectedMonth) {
     const ctx = document.getElementById('dailyChartCanvas');
-    if(ctx && !dailyChartInstance) {
-        dailyChartInstance = new Chart(ctx, { type: 'line', data: { labels: ['1', '5', '10', '15', '20', '25', '30'], datasets: [{ label: 'ሽያጭ', data: [0, 0, 0, 0, 0, 0, 0], borderColor: '#2b6cb0', tension: 0.3, fill: false }] }, options: { responsive: true, maintainAspectRatio: false } });
+    if(ctx) {
+        let labels = []; let data = [];
+        for (let i = 1; i <= 30; i++) {
+            let d = new Date(selectedMonth + '-' + (i<10?'0'+i:i));
+            if (d.getMonth() !== new Date(selectedMonth + '-01').getMonth()) break;
+            labels.push(i);
+            let dateStr = selectedMonth + '-' + (i<10?'0'+i:i);
+            let dayS = allSales.filter(s => s.date === dateStr).reduce((sum, s) => sum + (s.paidAmount !== undefined ? s.paidAmount : s.total), 0);
+            let dayQ = allQuickSales.filter(q => q.date === dateStr).reduce((sum, q) => sum + q.amount, 0);
+            data.push(dayS + dayQ);
+        }
+        if(dailyChartInstance) dailyChartInstance.destroy();
+        dailyChartInstance = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'ሽያጭ', data: data, borderColor: '#2b6cb0', backgroundColor: 'rgba(43,108,176,0.1)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false } });
     }
+    
     const pieCtx = document.getElementById('expensePieChartCanvas');
-    if(pieCtx && !expensePieChartInstance) {
-        expensePieChartInstance = new Chart(pieCtx, { type: 'doughnut', data: { labels: ['ወጪ 1', 'ወጪ 2'], datasets: [{ data: [10, 20], backgroundColor: ['#c53030', '#dd6b20'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+    if(pieCtx) {
+        let expenseCats = {};
+        allExpenses.filter(e => e.date.startsWith(selectedMonth)).forEach(e => {
+            if(!expenseCats[e.category]) expenseCats[e.category] = 0;
+            expenseCats[e.category] += e.amount;
+        });
+        allFixed.filter(f => f.month === selectedMonth).forEach(f => {
+            let catName = 'Fixed: ' + f.category;
+            if(!expenseCats[catName]) expenseCats[catName] = 0;
+            expenseCats[catName] += f.amount;
+        });
+        
+        let pieLabels = Object.keys(expenseCats);
+        let pieData = Object.values(expenseCats);
+        if(pieLabels.length === 0) { pieLabels = ['ምንም ወጪ የለም']; pieData = [1]; }
+
+        if(expensePieChartInstance) expensePieChartInstance.destroy();
+        expensePieChartInstance = new Chart(pieCtx, { type: 'doughnut', data: { labels: pieLabels, datasets: [{ data: pieData, backgroundColor: ['#c53030', '#dd6b20', '#2b6cb0', '#276749', '#805ad5', '#d53f8c'] }] }, options: { responsive: true, maintainAspectRatio: false } });
     }
 }
 
@@ -1961,29 +1969,24 @@ async function loadSettings() {
             const btnSave = document.getElementById('btnSaveBizType');
             const banner = document.getElementById('bizTypeBanner');
 
-            // የድርጅት አይነት መቆለፍ
             if (adminAllowedType === 'retail') {
                 bizTypeSelect.value = 'retail';
                 bizTypeSelect.disabled = true;
                 btnSave.style.display = 'none';
                 banner.innerText = "⚠️ ይህ ፋርማሲ በአድሚን የተፈቀደው ችርቻሮ (Retail) ብቻ ነው። መቀየር አይችሉም።";
-                banner.style.background = '#fffaf0';
-                banner.style.color = '#dd6b20';
+                banner.style.background = '#fffaf0'; banner.style.color = '#dd6b20';
             } else if (adminAllowedType === 'wholesale') {
                 bizTypeSelect.value = 'wholesale';
                 bizTypeSelect.disabled = true;
                 btnSave.style.display = 'none';
                 banner.innerText = "⚠️ ይህ ፋርማሲ በአድሚን የተፈቀደው ጅምላ (Wholesale) ብቻ ነው። መቀየር አይችሉም።";
-                banner.style.background = '#fffaf0';
-                banner.style.color = '#dd6b20';
+                banner.style.background = '#fffaf0'; banner.style.color = '#dd6b20';
             } else {
-                // አድሚኑ 'both' ካደረገ
                 bizTypeSelect.value = userSelectedType;
                 bizTypeSelect.disabled = false;
                 btnSave.style.display = 'block';
                 banner.innerText = "💡 አድሚኑ ሁለቱንም ዓይነቶች ፈቅዷል። እርስዎ የሚፈልጉትን መርጠው ይጠቀሙ።";
-                banner.style.background = '#ebf8ff';
-                banner.style.color = '#2c5282';
+                banner.style.background = '#ebf8ff'; banner.style.color = '#2c5282';
             }
         }
     } catch(e) { console.error(e); }
@@ -2052,31 +2055,18 @@ window.resetDailyData = async function() {
     alert('ለጊዜው ይህ ተግባር አልተገኘም። (ዳታቤዝ ላይ ማጽዳት ይፈልጋል)');
 };
 
-// ==========================================
-// 🆕 አዲስ የተጨመረ: Backup / Restore
-// ==========================================
 window.backupData = function() {
     const data = {
-        medicines: allMedicines,
-        categories: allCategories,
-        expCategories: allExpCategories,
-        branches: allBranches,
-        customers: allCustomers,
-        sales: allSales,
-        expenses: allExpenses,
-        fixed: allFixed,
-        creditPayments: allCreditPayments,
+        medicines: allMedicines, categories: allCategories, expCategories: allExpCategories,
+        branches: allBranches, customers: allCustomers, sales: allSales, quickSales: allQuickSales,
+        expenses: allExpenses, fixed: allFixed, creditPayments: allCreditPayments,
         exportDate: new Date().toISOString()
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `pharmacy_backup_${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    a.href = url; a.download = `pharmacy_backup_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
     alert('✅ ዳታው በተሳካ ሁኔታ ወርዷል!');
 };
 
@@ -2084,80 +2074,71 @@ window.restoreData = function(event) {
     const file = event.target.files[0];
     if (!file) return;
     if(!confirm('🚨 እርግጠኛ ነዎት? ይህ አሁን ያለውን ዳታ ሙሉ በሙሉ ይተካል!')) { event.target.value = ''; return; }
-    
     const reader = new FileReader();
     reader.onload = async (e) => {
         try {
             const data = JSON.parse(e.target.result);
-            // Here you would write logic to push data back to Firestore
-            // For safety, we'll just show an alert for now
             alert('⚠️ ዳታ መመለስ ለጊዜው አልተፈቀደም። (ይህ ተግባር በተጨማሪ ስራ ይፈልጋል)');
-        } catch (err) {
-            alert('⚠️ ስህተት: ፋይሉ ትክክል አይደለም');
-        }
+        } catch (err) { alert('⚠️ ስህተት: ፋይሉ ትክክል አይደለም'); }
     };
-    reader.readAsText(file);
-    event.target.value = '';
+    reader.readAsText(file); event.target.value = '';
 };
 
-// ==========================================
-// 🆕 አዲስ የተጨመረ: Reports Tab
-// ==========================================
+// ---- Reports & Print ----
 window.generateReport = function() {
     const type = document.getElementById('reportTypeSelect').value;
     const displayArea = document.getElementById('reportDisplayArea');
     
-    let startDate = new Date();
-    let endDate = new Date();
-    let title = '';
+    let startDate = new Date(); let endDate = new Date(); let title = '';
+    const today = new Date(); today.setHours(0,0,0,0);
 
-    const today = new Date();
-    today.setHours(0,0,0,0);
-
-    if (type === 'daily') {
-        startDate = today;
-        endDate = today;
-        title = 'የቀን ሪፖርት (' + today.toLocaleDateString() + ')';
-    } else if (type === 'weekly') {
-        startDate.setDate(today.getDate() - 7);
-        title = 'የሳምንት ሪፖርት';
-    } else if (type === 'monthly') {
-        startDate.setMonth(today.getMonth() - 1);
-        title = 'የወር ሪፖርት';
-    } else if (type === '3months') {
-        startDate.setMonth(today.getMonth() - 3);
-        title = 'የ3 ወር ሪፖርት';
-    } else if (type === '6months') {
-        startDate.setMonth(today.getMonth() - 6);
-        title = 'የ6 ወር ሪፖርት';
-    } else if (type === 'yearly') {
-        startDate.setFullYear(today.getFullYear() - 1);
-        title = 'የአመት ሪፖርት';
-    }
-
+    if (type === 'daily') { startDate = today; endDate = today; title = 'የቀን ሪፖርት (' + today.toLocaleDateString() + ')'; } 
+    else if (type === 'weekly') { startDate.setDate(today.getDate() - 7); title = 'የሳምንት ሪፖርት'; } 
+    else if (type === 'monthly') { startDate.setMonth(today.getMonth() - 1); title = 'የወር ሪፖርት'; } 
+    else if (type === '3months') { startDate.setMonth(today.getMonth() - 3); title = 'የ3 ወር ሪፖርት'; } 
+    else if (type === '6months') { startDate.setMonth(today.getMonth() - 6); title = 'የ6 ወር ሪፖርት'; } 
+    else if (type === 'yearly') { startDate.setFullYear(today.getFullYear() - 1); title = 'የአመት ሪፖርት'; }
     startDate.setHours(0,0,0,0);
 
-    // Filter data
-    const filteredSales = allSales.filter(s => {
-        const sDate = new Date(s.date);
-        return sDate >= startDate && sDate <= endDate;
-    });
+    const sDateStr = startDate.toISOString().split('T')[0];
+    const eDateStr = endDate.toISOString().split('T')[0];
 
-    const filteredExpenses = allExpenses.filter(e => {
-        const eDate = new Date(e.date);
-        return eDate >= startDate && eDate <= endDate;
-    });
+    const filteredSales = allSales.filter(s => s.date >= sDateStr && s.date <= eDateStr);
+    const filteredQuick = allQuickSales.filter(q => q.date >= sDateStr && q.date <= eDateStr);
+    const filteredExpenses = allExpenses.filter(e => e.date >= sDateStr && e.date <= eDateStr);
 
-    let totalSales = 0;
-    let totalExpenses = 0;
-    
+    let totalSales = 0; let totalQuick = 0; let totalExpenses = 0;
     filteredSales.forEach(s => totalSales += (s.paidAmount !== undefined ? s.paidAmount : s.total));
+    filteredQuick.forEach(q => totalQuick += q.amount);
     filteredExpenses.forEach(e => totalExpenses += e.amount);
 
+    let grandTotal = totalSales + totalQuick;
+
+    let salesListHtml = '';
+    if(filteredSales.length === 0) salesListHtml = '<p>ምንም ዝርዝር ሽያጭ የለም።</p>';
+    else filteredSales.forEach(s => { salesListHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">${s.date} | ብዛት: ${s.quantity}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`; });
+
+    let quickListHtml = '';
+    if(filteredQuick.length === 0) quickListHtml = '<p>ምንም ፈጣን ሽያጭ የለም።</p>';
+    else filteredQuick.forEach(q => { quickListHtml += `<div class="list-item"><div class="info"><div class="name">⚡ Quick (${q.type})</div><div class="meta">${q.date}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`; });
+
+    // Category breakdown
+    let catBreakdown = {};
+    filteredSales.forEach(s => { if(!catBreakdown[s.medicineName]) catBreakdown[s.medicineName] = 0; catBreakdown[s.medicineName] += (s.paidAmount !== undefined ? s.paidAmount : s.total); });
+    let catHtml = '';
+    Object.keys(catBreakdown).forEach(k => {
+        catHtml += `<div class="list-item"><div class="info"><div class="name">${k}</div></div><div class="amount">${catBreakdown[k].toFixed(2)} ብር</div></div>`;
+    });
+    if(!catHtml) catHtml = '<p>ምንም የካቴጎሪ መረጃ የለም።</p>';
+
     let html = `
+        <div style="text-align:center; margin-bottom:20px;">
+            <h2 style="color:#1a365d; font-size:20px;">💊 HaniTech Digital Pharmacy</h2>
+            <h3 style="color:#4a5568; font-size:16px; margin-top:5px;">${title}</h3>
+        </div>
         <div class="summary-box green">
             <div class="label">${title} - ጠቅላላ ገቢ</div>
-            <div class="value">${totalSales.toFixed(2)} ብር</div>
+            <div class="value">${grandTotal.toFixed(2)} ብር</div>
         </div>
         <div class="summary-box red">
             <div class="label">${title} - ጠቅላላ ወጪ</div>
@@ -2165,34 +2146,23 @@ window.generateReport = function() {
         </div>
         <div class="summary-box">
             <div class="label">${title} - ትርፍ</div>
-            <div class="value">${(totalSales - totalExpenses).toFixed(2)} ብር</div>
+            <div class="value">${(grandTotal - totalExpenses).toFixed(2)} ብር</div>
         </div>
         
-        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">📋 የሽያጭ ዝርዝር</h3>
-        <div style="max-height:300px; overflow-y:auto; margin-top:10px;">
-    `;
+        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">📋 የዝርዝር ሽያጭ ዝርዝር</h3>
+        <div style="margin-top:10px;">${salesListHtml}</div>
 
-    if (filteredSales.length === 0) {
-        html += '<p style="text-align:center; color:#a0aec0;">ምንም ሽያጭ የለም።</p>';
-    } else {
-        filteredSales.forEach(s => {
-            html += `<div class="list-item">
-                <div class="info">
-                    <div class="name">${s.medicineName}</div>
-                    <div class="meta">${s.date} | ብዛት: ${s.quantity}</div>
-                </div>
-                <div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div>
-            </div>`;
-        });
-    }
-    html += `</div>`;
+        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">⚡ የፈጣን ሽያጭ ዝርዝር</h3>
+        <div style="margin-top:10px;">${quickListHtml}</div>
+
+        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">📊 በምርት ስም የተከፋፈለ ገቢ</h3>
+        <div style="margin-top:10px;">${catHtml}</div>
+    `;
 
     displayArea.innerHTML = html;
 };
 
 function renderPermissionsUI(perms) {
-    currentPermissionsData = perms; 
-    
     const displayEl = document.getElementById('permSectionDisplay');
     if(!displayEl) return;
     let html = '';
@@ -2226,13 +2196,7 @@ window.savePermissions = async function() {
         await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), newData);
         alert('✅ ፈቃዶች በተሳካ ሁኔታ ተቀምጠዋል!');
         applyPermissionsUI(); 
-    } catch(e) {
-        alert('⚠️ ስህተት: ' + e.message);
-    }
-};
-
-window.updatePerm = async function(role, key, isChecked) {
-    // አያስፈልግም ነገር ግን እንተወው
+    } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
 };
 
 function populateCreditCustomerSelect() {
@@ -2240,6 +2204,7 @@ function populateCreditCustomerSelect() {
     sel.innerHTML = '<option value="">-- ደንበኛ ምረጥ --</option>';
     allCustomers.forEach(c => { sel.innerHTML += `<option value="${c}">${c}</option>`; });
 }
+
 window.addCreditPayment = async function() {
     const customer = document.getElementById('creditCustomerSelect').value;
     const amount = parseFloat(document.getElementById('creditAmount').value);
@@ -2251,6 +2216,7 @@ window.addCreditPayment = async function() {
         document.getElementById('creditAmount').value = '';
     } catch(e) { alert(e.message); }
 };
+
 function loadCreditPaymentHistory() {
     const listEl = document.getElementById('creditPaymentList'); if(!listEl) return;
     if(allCreditPayments.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ክፍያ የለም።</p>'; return; }
@@ -2262,6 +2228,8 @@ function loadCreditPaymentHistory() {
 function renderUnpaidCredits() {
     const listEl = document.getElementById('unpaidCreditList');
     if(!listEl) return;
+
+    const searchVal = (document.getElementById('searchUnpaidCredit')?.value || '').toLowerCase();
 
     const creditSales = allSales.filter(s => s.paymentMethod === 'credit');
     
@@ -2283,7 +2251,8 @@ function renderUnpaidCredits() {
         }
     });
 
-    const customersWithDebt = Object.keys(customerDebts);
+    let customersWithDebt = Object.keys(customerDebts);
+    if (searchVal) customersWithDebt = customersWithDebt.filter(c => c.toLowerCase().includes(searchVal));
 
     if(customersWithDebt.length === 0) {
         listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ያልተከፈለ ዕዳ የለም።</p>';
@@ -2308,9 +2277,10 @@ function renderUnpaidCredits() {
 
 function checkExpiryAlerts() {
     const today = new Date(); let expiredCount = 0;
-    allMedicines.forEach(m => { if(m.expiry && new Date(m.expiry) < today) expiredCount++; });
+    allMedicines.forEach(m => { if(m.expiry && m.expiry !== '-' && new Date(m.expiry) < today) expiredCount++; });
     const banner = document.getElementById('expiryBanner');
     if(expiredCount > 0 && banner) { document.getElementById('expiryBannerText').innerText = `${expiredCount} የሚያልቁ እቃዎች አሉ! እባክዎ ይመልከቱ።`; banner.style.display = 'block'; }
+    else if (banner) banner.style.display = 'none';
 }
 
 function loadDarkMode() {
@@ -2338,19 +2308,20 @@ window.changeCurrentPassword = async function() {
     } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
 };
 
-// ==========================================
-// 🆕 አዲስ የተጨመረ: የሽያጭ ታሪክ (Sales History)
-// ==========================================
 function renderSalesHistory() {
     const listEl = document.getElementById('salesHistoryList');
     if (!listEl) return;
 
-    if (allSales.length === 0) {
+    let combined = [];
+    allSales.forEach(s => combined.push({ ...s, _type: 'sale' }));
+    allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
+
+    if (combined.length === 0) {
         listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የሽያጭ ታሪክ የለም።</p>';
         return;
     }
 
-    const sortedSales = [...allSales].sort((a, b) => {
+    combined.sort((a, b) => {
         const dateA = a.date || '';
         const dateB = b.date || '';
         if (dateA !== dateB) return dateB.localeCompare(dateA);
@@ -2358,50 +2329,98 @@ function renderSalesHistory() {
     });
 
     let html = '';
-    sortedSales.forEach(sale => {
-        const dateStr = sale.date || 'ቀን የለም';
-        const total = sale.total || 0;
-        const paid = sale.paidAmount !== undefined ? sale.paidAmount : total;
-        const pmLabel = sale.paymentMethod === 'transfer' ? '🏦' : (sale.paymentMethod === 'credit' ? '📝' : '💵');
-        
-        html += `
-        <div class="list-item" style="flex-direction: column; align-items: stretch; padding: 12px;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                <div style="flex: 1;">
-                    <div class="name" style="font-size: 15px;">${sale.medicineName}</div>
-                    <div class="meta" style="font-size: 12px; margin-top: 4px;">
-                        📅 ${dateStr} | 📦 ብዛት: ${sale.quantity} | 🏷️ ዋጋ: ${sale.unitPrice} ብር
+    combined.forEach(item => {
+        const dateStr = item.date || 'ቀን የለም';
+        if (item._type === 'quick') {
+            html += `
+            <div class="list-item" style="flex-direction: column; align-items: stretch; padding: 12px; border-left: 4px solid #dd6b20;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="flex: 1;">
+                        <div class="name" style="font-size: 15px; color: #dd6b20;">⚡ Quick Sale (${item.type})</div>
+                        <div class="meta" style="font-size: 12px; margin-top: 4px;">📅 ${dateStr} ${item.branch ? '| 🏢 '+item.branch : ''}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="amount" style="font-size: 16px; color: #276749;">${item.amount.toFixed(2)} ብር</div>
                     </div>
                 </div>
-                <div style="text-align: right;">
-                    <div class="amount" style="font-size: 16px; color: #276749;">${paid.toFixed(2)} ብር</div>
-                    <div style="font-size: 11px; color: #718096;">${pmLabel} ${sale.paymentMethod || 'cash'}</div>
+            </div>`;
+        } else {
+            const total = item.total || 0;
+            const paid = item.paidAmount !== undefined ? item.paidAmount : total;
+            const pmLabel = item.paymentMethod === 'transfer' ? '🏦' : (item.paymentMethod === 'credit' ? '📝' : '💵');
+            
+            html += `
+            <div class="list-item" style="flex-direction: column; align-items: stretch; padding: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                    <div style="flex: 1;">
+                        <div class="name" style="font-size: 15px;">${item.medicineName}</div>
+                        <div class="meta" style="font-size: 12px; margin-top: 4px;">
+                            📅 ${dateStr} | 📦 ብዛት: ${item.quantity} | 🏷️ ዋጋ: ${item.unitPrice} ብር
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="amount" style="font-size: 16px; color: #276749;">${paid.toFixed(2)} ብር</div>
+                        <div style="font-size: 11px; color: #718096;">${pmLabel} ${item.paymentMethod || 'cash'}</div>
+                    </div>
                 </div>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #718096; border-top: 1px dashed #e2e8f0; padding-top: 8px;">
-                <div>
-                    ${sale.branch ? `🏢 ${sale.branch}` : ''} 
-                    ${sale.customer ? `| 🏪 ${sale.customer}` : ''}
-                    ${sale.receipt ? `| 🧾 ${sale.receipt}` : ''}
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #718096; border-top: 1px dashed #e2e8f0; padding-top: 8px;">
+                    <div>
+                        ${item.branch ? `🏢 ${item.branch}` : ''} 
+                        ${item.customer ? `| 🏪 ${item.customer}` : ''}
+                        ${item.receipt ? `| 🧾 ${item.receipt}` : ''}
+                    </div>
+                    <button onclick="deleteSale('${item.id}', '${item.medicineId}', ${item.quantity})" style="background: #fed7d7; color: #c53030; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                        🗑️ ሰርዝ
+                    </button>
                 </div>
-                <button onclick="deleteSale('${sale.id}', '${sale.medicineId}', ${sale.quantity})" style="background: #fed7d7; color: #c53030; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-                    🗑️ ሰርዝ
-                </button>
-            </div>
-        </div>`;
+            </div>`;
+        }
     });
     listEl.innerHTML = html;
 }
 
 window.deleteSale = async function(saleId, medicineId, quantity) {
     if (!confirm('🚨 እርግጠኛ ነዎት? ይህን ሽያጭ መሰረዝ ትፈልጋለህ? (ክምችቱ ወደነበረበት ይመለሳል)')) return;
-    
     try {
-        if (medicineId) {
+        if (medicineId && medicineId !== 'undefined') {
             await updateDoc(doc(db, 'medicines', medicineId), { quantity: increment(quantity) });
         }
         await deleteDoc(doc(db, 'sales', saleId));
         alert('✅ ሽያጩ ተሰርዟል እና ክምችቱ ተመልሷል!');
+    } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
+};
+
+window.clearAllSales = async function() {
+    if (!confirm('🚨 እርግጠኛ ነዎት? ሁሉንም የሽያጭ ታሪክ ማጥፋት ትፈልጋለህ? (ይህ ተግባር ክምችቱን አይመልስም)')) return;
+    if (!confirm('⚠️ እርግጠኛ ነዎት? ይህ ተግባር አይመለስም!')) return;
+    
+    try {
+        let batch = writeBatch(db);
+        let count = 0;
+        
+        for (let s of allSales) {
+            batch.delete(doc(db, 'sales', s.id));
+            count++;
+        }
+        for (let q of allQuickSales) {
+            batch.delete(doc(db, 'quickSales', q.id));
+            count++;
+        }
+        
+        if (count > 0) {
+            await batch.commit();
+        }
+        
+        // Delete credit payments associated with customers
+        let creditBatch = writeBatch(db);
+        let cCount = 0;
+        for (let c of allCreditPayments) {
+            creditBatch.delete(doc(db, 'creditPayments', c.id));
+            cCount++;
+        }
+        if (cCount > 0) await creditBatch.commit();
+
+        alert(`✅ ${count} የሽያጭ ታሪኮች እና ${cCount} የዱቤ ክፍያዎች ተሰርዘዋል!`);
     } catch(e) {
         alert('⚠️ ስህተት: ' + e.message);
     }
