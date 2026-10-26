@@ -119,9 +119,9 @@ input:focus, select:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16
 /* POS (Point of Sale) Specific Layout */
 .pos-layout { display: grid; grid-template-columns: 350px 1fr; gap: 20px; height: calc(100vh - 160px); }
 .pos-cart { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
-.pos-cart-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
+.pos-cart-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; flex-shrink: 0; }
 .pos-cart-items { flex: 1; overflow-y: auto; padding: 16px; }
-.pos-cart-footer { padding: 16px; border-top: 1px solid #e5e7eb; background: #fff; }
+.pos-cart-footer { padding: 16px; border-top: 1px solid #e5e7eb; background: #fff; flex-shrink: 0; }
 .pos-products { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
 .pos-products-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
 .pos-products-grid { flex: 1; overflow-y: auto; padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; align-content: start; }
@@ -291,11 +291,11 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyMedList">
                         <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
-                            <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search by name or batch..." oninput="renderMedList()" style="flex: 1; min-width: 200px;">
-                            <select id="filterTypeMed" onchange="renderMedList()" style="width: 180px;">
+                            <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search by name or batch..." oninput="medPage=1; renderMedList()" style="flex: 1; min-width: 200px;">
+                            <select id="filterTypeMed" onchange="medPage=1; renderMedList()" style="width: 180px;">
                                 <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
                             </select>
-                            <select id="filterBranchMed" onchange="renderMedList()" style="width: 180px;">
+                            <select id="filterBranchMed" onchange="medPage=1; renderMedList()" style="width: 180px;">
                                 <option value="all">All Branches</option>
                             </select>
                         </div>
@@ -577,10 +577,13 @@ input:checked + .slider:before { transform: translateX(20px); }
                     <div class="section-body open" id="bodyInventory">
                         <div class="no-print" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
                             <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name or batch..." oninput="invPage=1; loadInventory()" style="flex:1;">
-                            <select id="filterTypeInv" onchange="invPage=1; loadInventory()" style="width:180px;">
+                            <select id="filterTypeInv" onchange="invPage=1; loadInventory()" style="width:160px;">
                                 <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
                             </select>
-                            <select id="filterBranchInv" onchange="invPage=1; loadInventory()" style="width:180px;">
+                            <select id="filterCategoryInv" onchange="invPage=1; loadInventory()" style="width:160px;">
+                                <option value="all">All Categories</option>
+                            </select>
+                            <select id="filterBranchInv" onchange="invPage=1; loadInventory()" style="width:160px;">
                                 <option value="all">All Branches</option>
                             </select>
                         </div>
@@ -1173,9 +1176,16 @@ async function loadCategories() {
         const snap = await getDocs(query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId)));
         allCategories = []; allSubcategories = {}; 
         const catList = document.getElementById('categoryList'); if(catList) catList.innerHTML = '';
+        const invCatList = document.getElementById('filterCategoryInv'); if(invCatList) invCatList.innerHTML = '<option value="all">All Categories</option>';
         
         const catPromises = [];
-        snap.forEach(doc => { const catName = doc.data().name; allCategories.push(catName); if(catList) catList.innerHTML += `<option value="${catName}">`; catPromises.push(loadSubcategoriesForCategory(catName)); });
+        snap.forEach(doc => { 
+            const catName = doc.data().name; 
+            allCategories.push(catName); 
+            if(catList) catList.innerHTML += `<option value="${catName}">`; 
+            if(invCatList) invCatList.innerHTML += `<option value="${catName}">${catName}</option>`;
+            catPromises.push(loadSubcategoriesForCategory(catName)); 
+        });
         await Promise.all(catPromises); renderCategoryList(); loadSubcategoriesForSelectedCategory();
     } catch(e) { console.error(e); }
 } 
@@ -1547,42 +1557,75 @@ window.addFixedExpense = async function() {
     try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
+// --- EXPENSE HISTORY RENDERING ---
+function renderExpenseHistory() {
+    const expListEl = document.getElementById('expList'); 
+    if(expListEl) {
+        if(allExpenses.length === 0) { expListEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No expenses yet.</p>'; }
+        else {
+            let expHtml = '<h4 style="margin-bottom:10px; font-size:14px;">Recent Daily Expenses</h4>';
+            allExpenses.slice(0, 10).forEach(e => { expHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${e.category} - ${e.branch}</span><strong>${e.amount.toFixed(2)} ETB</strong></div>`; });
+            expListEl.innerHTML = expHtml;
+        }
+    }
+
+    const fixedListEl = document.getElementById('fixedExpList');
+    if(fixedListEl) {
+        if(allFixed.length === 0) { fixedListEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No fixed expenses yet.</p>'; }
+        else {
+            let fixHtml = '<h4 style="margin-bottom:10px; font-size:14px;">Recent Fixed Expenses</h4>';
+            allFixed.slice(0, 10).forEach(e => { fixHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${e.category} (${e.month})</span><strong>${e.amount.toFixed(2)} ETB</strong></div>`; });
+            fixedListEl.innerHTML = fixHtml;
+        }
+    }
+}
+
 window.loadInventory = function() {
     const listEl = document.getElementById('inventoryList');
     const filter = document.getElementById('filterTypeInv').value;
+    const catFilter = document.getElementById('filterCategoryInv').value;
     const branchFilter = document.getElementById('filterBranchInv').value;
     const search = (document.getElementById('searchInventory')?.value || '').toLowerCase();
     const rowsPerPage = parseInt(document.getElementById('invRowsPerPage').value) || 10;
     
     let filtered = allMedicines;
     if (filter !== 'all') filtered = filtered.filter(m => m.type === filter);
+    if (catFilter !== 'all') filtered = filtered.filter(m => m.category === catFilter);
     if (branchFilter !== 'all') filtered = filtered.filter(m => m.branch === branchFilter);
     if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.batch||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search));
 
     if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No inventory items found.</p>'; document.getElementById('invTotalValue').innerHTML = '0.00 <small>ETB</small>'; document.getElementById('invPageInfo').innerText = `Page 1 of 1`; return; }
     
-    const totalPages = Math.ceil(filtered.length / rowsPerPage);
-    if(invPage > totalPages) invPage = totalPages;
-    if(invPage < 1) invPage = 1;
-    const start = (invPage - 1) * rowsPerPage;
-    const paginated = filtered.slice(start, start + rowsPerPage);
-
-    let tableHtml = `<table class="data-table"><thead><tr><th>Item Name</th><th>Category</th><th>Branch</th><th>Batch</th><th>Qty</th><th>Price</th><th>Total Value</th></tr></thead><tbody>`;
-    let grandTotal = 0;
-    paginated.forEach(med => {
-        let totalValue = med.quantity * (med.price || 0);
-        grandTotal += totalValue;
-        tableHtml += `<tr><td><strong>${med.name}</strong></td><td>${med.category}</td><td>${med.branch || 'Main'}</td><td>${med.batch || '-'}</td><td>${med.quantity}</td><td>${med.price} ETB</td><td><strong>${totalValue.toFixed(2)} ETB</strong></td></tr>`;
+    // Group by Category
+    const grouped = {};
+    filtered.forEach(m => {
+        if(!grouped[m.category]) grouped[m.category] = [];
+        grouped[m.category].push(m);
     });
-    tableHtml += `</tbody></table>`;
-    listEl.innerHTML = tableHtml;
-    // Note: Grand Total here is only for paginated page, but usually inventory total is for all. I'll keep it as page total for now or compute over all filtered.
-    let fullTotal = filtered.reduce((sum, med) => sum + (med.quantity * (med.price || 0)), 0);
+
+    let catHtml = '';
+    let fullTotal = 0;
+    Object.keys(grouped).forEach(cat => {
+        let catQty = 0; let catVal = 0;
+        grouped[cat].forEach(m => { catQty += m.quantity; catVal += m.quantity * (m.price||0); });
+        fullTotal += catVal;
+        catHtml += `<div style="margin-bottom:20px;">
+            <div style="background:#f3f4f6; padding:10px; border-radius:8px 8px 0 0; display:flex; justify-content:space-between; font-weight:bold;">
+                <span>📁 ${cat}</span>
+                <span>Value: ${catVal.toFixed(2)} ETB</span>
+            </div>
+            <table class="data-table" style="border-radius:0 0 8px 8px;">
+                <thead><tr><th>Item Name</th><th>Branch</th><th>Batch</th><th>Qty</th><th>Price</th><th>Total Value</th></tr></thead>
+                <tbody>
+                    ${grouped[cat].map(med => `<tr><td><strong>${med.name}</strong></td><td>${med.branch||'Main'}</td><td>${med.batch||'-'}</td><td>${med.quantity}</td><td>${med.price} ETB</td><td>${(med.quantity*(med.price||0)).toFixed(2)} ETB</td></tr>`).join('')}
+                </tbody>
+            </table>
+        </div>`;
+    });
+
+    listEl.innerHTML = catHtml;
     document.getElementById('invTotalValue').innerHTML = fullTotal.toFixed(2) + ' <small>ETB</small>';
-    
-    document.getElementById('invPageInfo').innerText = `Page ${invPage} of ${totalPages}`;
-    document.getElementById('btnPrevInv').disabled = invPage === 1;
-    document.getElementById('btnNextInv').disabled = invPage === totalPages;
+    document.getElementById('invPageInfo').innerText = `Showing all items`; // No pagination for grouped view
 
     // Expiry & Low stock lists
     const searchExpiry = (document.getElementById('searchExpiry')?.value || '').toLowerCase();
