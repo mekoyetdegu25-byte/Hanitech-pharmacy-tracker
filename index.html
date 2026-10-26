@@ -1066,6 +1066,7 @@ window.switchPage = function(panelId, subPanelId, element) {
     }
 
     document.querySelectorAll('.sub-menu label, .menu-header').forEach(el => el.classList.remove('active'));
+    
     if(element) {
         element.classList.add('active');
         const parentMenu = element.closest('.menu-group');
@@ -1073,6 +1074,14 @@ window.switchPage = function(panelId, subPanelId, element) {
             const header = parentMenu.querySelector('.menu-header');
             if(header) header.classList.add('active');
         }
+    } else {
+        // Settings ወይም Dashboard ላይ ሲጫኑ ሜኑ ራሱ እንዲያበራ
+        const menuItems = document.querySelectorAll('.menu-header');
+        menuItems.forEach(item => {
+            if(item.innerText.includes(panelId === 'panel9' ? 'Settings' : panelId === 'panel7' ? 'Dashboard' : '')) {
+                item.classList.add('active');
+            }
+        });
     }
 };
 
@@ -1081,7 +1090,7 @@ window.toggleSection = function(h, b) {
     const bd = document.getElementById(b); 
     if (!hd || !bd) return; 
     
-    // Toggle ማድረግ
+    // ክላሱ ካለው አስወግድ፣ ከሌለው ጨምር
     if (bd.classList.contains('open')) {
         bd.classList.remove('open');
         hd.classList.remove('open');
@@ -1089,8 +1098,7 @@ window.toggleSection = function(h, b) {
         bd.classList.add('open');
         hd.classList.add('open');
     }
-}; 
-
+};
 window.toggleMenu = function(element) {
     const allHeaders = document.querySelectorAll('.menu-header');
     const allSubMenus = document.querySelectorAll('.sub-menu');
