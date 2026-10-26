@@ -42,24 +42,12 @@ header .h-title { font-size: 15px; font-weight: 800; }
 header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spacing: 0.5px; }
 .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; } 
 
-/* Sidebar & Tabs */
 .tabs-wrapper { position: sticky; top: 60px; z-index: 99; background: #f4f7f6; }
-body.dark .tabs-wrapper { background: #1a202c; }
 .tabs { display: flex; background: transparent; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
 .tabs::-webkit-scrollbar { display: none; }
 input[type="radio"][name="tabs"] { display: none !important; }
 .tabs label { flex: 0 0 auto; min-width: 75px; text-align: center; padding: 10px 6px; font-size: 12px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
 body.dark .tabs label { background: #2d3748; color: #a0aec0; }
-.tabs label i { font-size: 20px; font-style: normal; line-height: 1; margin-bottom: 2px;} 
-
-#tab1_1:checked ~ .tabs label[for="tab1_1"], #tab1_2:checked ~ .tabs label[for="tab1_2"], #tab1_3:checked ~ .tabs label[for="tab1_3"],
-#tab2_1:checked ~ .tabs label[for="tab2_1"], #tab2_2:checked ~ .tabs label[for="tab2_2"], #tab2_3:checked ~ .tabs label[for="tab2_3"],
-#tab3_1:checked ~ .tabs label[for="tab3_1"], #tab3_2:checked ~ .tabs label[for="tab3_2"], #tab3_3:checked ~ .tabs label[for="tab3_3"],
-#tab4_1:checked ~ .tabs label[for="tab4_1"], #tab4_2:checked ~ .tabs label[for="tab4_2"], #tab4_3:checked ~ .tabs label[for="tab4_3"],
-#tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"],
-#tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"], #tab10:checked ~ .tabs label[for="tab10"] { 
-    background: #ebf4ff; color: #2c5282; border-color: #90cdf4; 
-}
 
 /* Forms & Buttons */
 label.field-label { display: block; font-size: 12.5px; font-weight: 600; color: #4a5568; margin-bottom: 5px; margin-top: 10px; }
@@ -108,6 +96,14 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 .dash-val-label { font-size: 12px; opacity: 0.9; margin-bottom: 4px; }
 .dash-val-number { font-size: 24px; font-weight: 800; } 
 
+/* Toggles */
+.toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #276749; }
+input:checked + .slider:before { transform: translateX(18px); }
+
 /* Modern Desktop Overrides */
 @media (min-width: 768px) {
     body { padding-bottom: 0; max-width: 100%; background: #f4f7f6; margin: 0; overflow: hidden; } 
@@ -119,54 +115,78 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
     
     /* Sidebar */
     .tabs { flex-direction: column; width: 260px; background: #1a202c; padding: 20px 10px; gap: 5px; overflow-y: auto; flex-shrink: 0; height: 100%; border-right: none; }
-    .tabs label { flex-direction: row; justify-content: flex-start; padding: 12px 15px; min-width: 100%; font-size: 14px; box-shadow: none; border: none; border-radius: 8px; background: transparent; color: #a0aec0; font-weight: 600; } 
-    .tabs label:hover { background: #2d3748; color: #fff; }
-    .tabs label i { margin-bottom: 0; margin-right: 12px; font-size: 18px; } 
-    #tab1_1:checked ~ .tabs label[for="tab1_1"], #tab1_2:checked ~ .tabs label[for="tab1_2"], #tab1_3:checked ~ .tabs label[for="tab1_3"],
-    #tab2_1:checked ~ .tabs label[for="tab2_1"], #tab2_2:checked ~ .tabs label[for="tab2_2"], #tab2_3:checked ~ .tabs label[for="tab2_3"],
-    #tab3_1:checked ~ .tabs label[for="tab3_1"], #tab3_2:checked ~ .tabs label[for="tab3_2"], #tab3_3:checked ~ .tabs label[for="tab3_3"],
-    #tab4_1:checked ~ .tabs label[for="tab4_1"], #tab4_2:checked ~ .tabs label[for="tab4_2"], #tab4_3:checked ~ .tabs label[for="tab4_3"],
-    #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"],
-    #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"], #tab10:checked ~ .tabs label[for="tab10"] { 
-        background: #2b6cb0; color: #fff; border-left: 4px solid #63b3ed; 
-    }
+    
+    .menu-group { width: 100%; margin-bottom: 5px; }
+    .menu-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; font-size: 14px; font-weight: 700; color: #a0aec0; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+    .menu-header:hover { background: #2d3748; color: #fff; }
+    .menu-header.active { background: #2b6cb0; color: #fff; }
+    .menu-header .m-left { display: flex; align-items: center; gap: 12px; }
+    .menu-header .m-left i { font-size: 18px; font-style: normal; }
+    .menu-header .m-arrow { font-size: 10px; transition: transform 0.3s; }
+    .menu-header.open .m-arrow { transform: rotate(90deg); }
+
+    .sub-menu { display: none; flex-direction: column; padding-left: 20px; margin-top: 5px; margin-bottom: 5px; gap: 2px; }
+    .sub-menu.open { display: flex; }
+    .sub-menu label { padding: 8px 15px; font-size: 13px; font-weight: 600; color: #a0aec0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0; transition: background 0.2s; }
+    .sub-menu label:hover { background: #2d3748; color: #fff; }
+    
+    #tab1_1:checked ~ .tabs label[for="tab1_1"], 
+    #tab1_2:checked ~ .tabs label[for="tab1_2"], 
+    #tab1_3:checked ~ .tabs label[for="tab1_3"],
+    #tab2_1:checked ~ .tabs label[for="tab2_1"],
+    #tab2_2:checked ~ .tabs label[for="tab2_2"],
+    #tab2_3:checked ~ .tabs label[for="tab2_3"],
+    #tab3_1:checked ~ .tabs label[for="tab3_1"],
+    #tab3_2:checked ~ .tabs label[for="tab3_2"],
+    #tab3_3:checked ~ .tabs label[for="tab3_3"],
+    #tab4_1:checked ~ .tabs label[for="tab4_1"],
+    #tab4_2:checked ~ .tabs label[for="tab4_2"],
+    #tab4_3:checked ~ .tabs label[for="tab4_3"],
+    #tab5:checked ~ .tabs label[for="tab5"],
+    #tab6:checked ~ .tabs label[for="tab6"],
+    #tab7:checked ~ .tabs label[for="tab7"],
+    #tab8:checked ~ .tabs label[for="tab8"],
+    #tab9:checked ~ .tabs label[for="tab9"],
+    #tab10:checked ~ .tabs label[for="tab10"] { background: #4a5568; color: #63b3ed; }
 
     .panels { flex: 1; padding: 24px; background: #f4f7f6; overflow-y: auto; width: calc(100% - 260px); }
     .panel { padding: 0; display: none; } 
+    
     .mobile-tabs { display: none !important; }
-
-    /* Panel Display Logic */
-    #tab1_1:checked ~ .panels #panel1 .sub1_1, #tab1_2:checked ~ .panels #panel1 .sub1_2, #tab1_3:checked ~ .panels #panel1 .sub1_3,
-    #tab2_1:checked ~ .panels #panel2 .sub2_1, #tab2_2:checked ~ .panels #panel2 .sub2_2, #tab2_3:checked ~ .panels #panel2 .sub2_3,
-    #tab3_1:checked ~ .panels #panel3 .sub3_1, #tab3_2:checked ~ .panels #panel3 .sub3_2, #tab3_3:checked ~ .panels #panel3 .sub3_3,
-    #tab4_1:checked ~ .panels #panel4 .sub4_1, #tab4_2:checked ~ .panels #panel4 .sub4_2, #tab4_3:checked ~ .panels #panel4 .sub4_3,
-    #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7,
-    #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9, #tab10:checked ~ .panels #panel10 { 
-        display: block; 
-    }
-
-    .mobile-only { display: none !important; }
     .desktop-only { display: block !important; }
-    .dash-grid { grid-template-columns: repeat(2, 1fr); }
-}
 
-@media print {
-    body * { visibility: hidden; }
-    #panel8, #panel8 * { visibility: visible; }
-    #panel8 { position: absolute; left: 0; top: 0; width: 100%; }
-    .no-print { display: none !important; }
+    /* Panel Display */
+    #tab1_1:checked ~ .panels #panel1 .sub1_1,
+    #tab1_2:checked ~ .panels #panel1 .sub1_2,
+    #tab1_3:checked ~ .panels #panel1 .sub1_3,
+    #tab2_1:checked ~ .panels #panel2 .sub2_1,
+    #tab2_2:checked ~ .panels #panel2 .sub2_2,
+    #tab2_3:checked ~ .panels #panel2 .sub2_3,
+    #tab3_1:checked ~ .panels #panel3 .sub3_1,
+    #tab3_2:checked ~ .panels #panel3 .sub3_2,
+    #tab3_3:checked ~ .panels #panel3 .sub3_3,
+    #tab4_1:checked ~ .panels #panel4 .sub4_1,
+    #tab4_2:checked ~ .panels #panel4 .sub4_2,
+    #tab4_3:checked ~ .panels #panel4 .sub4_3,
+    #tab5:checked ~ .panels #panel5,
+    #tab6:checked ~ .panels #panel6,
+    #tab7:checked ~ .panels #panel7,
+    #tab8:checked ~ .panels #panel8,
+    #tab9:checked ~ .panels #panel9,
+    #tab10:checked ~ .panels #panel10 { display: block !important; }
+
+    .dash-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
 <body> 
 
-<!-- Splash Screen -->
+<!-- Splash & Login (Unchanged) -->
 <div id="splashScreen">
 <div class="logo-text">HaniTech <span>Digital</span></div>
 <div class="sub-text">Pharmacy Tracker</div>
 </div> 
 
-<!-- Login Screen -->
 <div id="loginScreen" class="hidden">
 <div class="login-box">
 <h1>💊 HaniTech Digital Pharmacy Tracker</h1> 
@@ -175,28 +195,10 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 <div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
 <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="Password"></div>
 <button class="btn-login" onclick="login()">🔓 ግባ</button>
-<button class="btn-login" style="background:#e2e8f0; color:#4a5568; margin-top:8px; font-size:14px;" onclick="showResetRequest()">🔑 ፓስወርድ ረሳሁ?</button>
 </div> 
-<div id="resetRequestForm" style="display:none;">
-<h2 style="font-size:16px; text-align:center; margin-bottom:10px; color:#2c5282;">🔑 ፓስወርድ ማስተካከያ ጥያቄ</h2>
-<div id="resetRequestMsg" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-<div class="form-group"><label>📧 ኢሜይልዎን ያስገቡ</label><input type="email" id="resetEmail" placeholder="Email"></div>
-<button class="btn-login" onclick="submitPasswordRequest()">📩 ጥያቄ ላክ</button>
-<button class="btn-login" style="background:#a0aec0; margin-top:8px; font-size:14px;" onclick="backToLogin()">⬅️ ተመለስ</button>
-</div> 
-<div id="changePassForm" style="display:none;">
-<div style="background:#fffaf0; color:#dd6b20; padding:10px; border-radius:8px; font-size:13px; margin-bottom:15px; border:1px solid #fbd38d;">
-⚠️ እንኳን ደህና መጡ! እባክዎ መጀመሪያ የጊዜያዊ ፓስወርድዎን ወደ አዲስ ይቀይሩ።
-</div>
-<div id="changePassError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-<div class="form-group"><label>🔐 አዲስ ፓስወርድ</label><input type="password" id="firstTimeNewPass" placeholder="ቢያንስ 6 ፊደል"></div>
-<button class="btn-login" onclick="saveFirstTimePassword()">💾 ፓስወርድ ቀይር እና ግባ</button>
-<button class="btn-login" style="background:#a0aec0; margin-top:8px; font-size:14px;" onclick="logout()">🚪 ውጣ</button>
-</div>
 </div>
 </div> 
 
-<!-- Main App -->
 <div id="mainApp">
 <header>
 <div class="h-left" style="display: flex; align-items: center; gap: 10px;">
@@ -216,624 +218,576 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 </header> 
 
 <div class="main-content-wrapper">
-<div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
-<div id="suspendedWarningBanner" style="display:none; background:#fed7d7; color:#822727; padding:12px; margin: 0 14px 10px; border-radius:10px; font-weight:bold; font-size:13px; text-align:center;">
-🚫 ይህ ፋርማሲ በአድሚን ተቆልፏል! እባክዎ አድሚኑን ያግኙ።
-</div> 
+<div id="expiryBanner" style="display:none;">⚠️ <span id="expiryBannerText"></span></div>
 
 <div class="tabs-wrapper">
-<input type="radio" name="tabs" id="tab1_1" checked>
-<input type="radio" name="tabs" id="tab1_2">
-<input type="radio" name="tabs" id="tab1_3">
-<input type="radio" name="tabs" id="tab2_1">
-<input type="radio" name="tabs" id="tab2_2">
-<input type="radio" name="tabs" id="tab2_3">
-<input type="radio" name="tabs" id="tab3_1">
-<input type="radio" name="tabs" id="tab3_2">
-<input type="radio" name="tabs" id="tab3_3">
-<input type="radio" name="tabs" id="tab4_1">
-<input type="radio" name="tabs" id="tab4_2">
-<input type="radio" name="tabs" id="tab4_3">
-<input type="radio" name="tabs" id="tab5">
-<input type="radio" name="tabs" id="tab6">
-<input type="radio" name="tabs" id="tab7">
-<input type="radio" name="tabs" id="tab8">
-<input type="radio" name="tabs" id="tab9">
-<input type="radio" name="tabs" id="tab10"> 
+    <!-- Radio Inputs -->
+    <input type="radio" name="tabs" id="tab1_1" checked>
+    <input type="radio" name="tabs" id="tab1_2">
+    <input type="radio" name="tabs" id="tab1_3">
+    <input type="radio" name="tabs" id="tab2_1">
+    <input type="radio" name="tabs" id="tab2_2">
+    <input type="radio" name="tabs" id="tab2_3">
+    <input type="radio" name="tabs" id="tab3_1">
+    <input type="radio" name="tabs" id="tab3_2">
+    <input type="radio" name="tabs" id="tab3_3">
+    <input type="radio" name="tabs" id="tab4_1">
+    <input type="radio" name="tabs" id="tab4_2">
+    <input type="radio" name="tabs" id="tab4_3">
+    <input type="radio" name="tabs" id="tab5">
+    <input type="radio" name="tabs" id="tab6">
+    <input type="radio" name="tabs" id="tab7">
+    <input type="radio" name="tabs" id="tab8">
+    <input type="radio" name="tabs" id="tab9">
+    <input type="radio" name="tabs" id="tab10"> 
 
-<div class="tabs">
-    <!-- Desktop Sidebar Menu -->
-    <div class="menu-group desktop-only">
-        <div class="menu-header open" onclick="toggleMenu(this)">
-            <div class="m-left"><i>💊</i> Medicine</div>
-            <span class="m-arrow">▶</span>
-        </div>
-        <div class="sub-menu open">
-            <label for="tab1_1">📋 Medicine List</label>
-            <label for="tab1_2">➕ Add Medicine</label>
-            <label for="tab1_3">🗂️ Medicine Category</label>
-        </div>
-    </div>
-
-    <div class="menu-group desktop-only">
-        <div class="menu-header" onclick="toggleMenu(this)">
-            <div class="m-left"><i>🛒</i> Sales</div>
-            <span class="m-arrow">▶</span>
-        </div>
-        <div class="sub-menu">
-            <label for="tab2_1">🛒 New Sale</label>
-            <label for="tab2_2">⚡ Quick Sale</label>
-            <label for="tab2_3">📜 Sales History</label>
-        </div>
-    </div>
-
-    <div class="menu-group desktop-only">
-        <div class="menu-header" onclick="toggleMenu(this)">
-            <div class="m-left"><i>💸</i> Expenses</div>
-            <span class="m-arrow">▶</span>
-        </div>
-        <div class="sub-menu">
-            <label for="tab3_1">💸 Daily Expense</label>
-            <label for="tab3_2">🏢 Fixed Expense</label>
-            <label for="tab3_3">🗂️ Expense Category</label>
-        </div>
-    </div>
-
-    <div class="menu-group desktop-only">
-        <div class="menu-header" onclick="toggleMenu(this)">
-            <div class="m-left"><i>📦</i> Inventory</div>
-            <span class="m-arrow">▶</span>
-        </div>
-        <div class="sub-menu">
-            <label for="tab4_1">📦 Inventory List</label>
-            <label for="tab4_2">⚠️ Expiry & Low Stock</label>
-            <label for="tab4_3">🔧 Stock Adjust</label>
-        </div>
-    </div>
-
-    <div class="menu-group desktop-only">
-        <label class="menu-header" for="tab5" style="margin-bottom:0;">
-            <div class="m-left"><i>📅</i> Daily Report</div>
-        </label>
-    </div>
-
-    <div class="menu-group desktop-only">
-        <label class="menu-header" for="tab6" style="margin-bottom:0;">
-            <div class="m-left"><i>📆</i> Monthly Report</div>
-        </label>
-    </div>
-
-    <div class="menu-group desktop-only">
-        <label class="menu-header" for="tab7" style="margin-bottom:0;">
-            <div class="m-left"><i>📊</i> Dashboard</div>
-        </label>
-    </div>
-
-    <div class="menu-group desktop-only">
-        <label class="menu-header" for="tab8" style="margin-bottom:0;">
-            <div class="m-left"><i>📄</i> Reports</div>
-        </label>
-    </div>
-
-    <div class="menu-group desktop-only">
-        <label class="menu-header" for="tab9" style="margin-bottom:0;">
-            <div class="m-left"><i>⚙️</i> Settings</div>
-        </label>
-    </div>
-
-    <div class="menu-group desktop-only" id="menuGroupCredit" style="display:none;">
-        <label class="menu-header" for="tab10" style="margin-bottom:0;">
-            <div class="m-left"><i>💳</i> Credit</div>
-        </label>
-    </div>
-
-    <!-- Mobile View Tabs -->
-    <div class="mobile-tabs" style="display: flex; width: 100%; overflow-x: auto; gap: 8px;">
-        <label for="tab1_1" style="display:flex; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">💊</i>መድሃኒቶች</label>
-        <label for="tab2_1" style="display:flex; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">🛒</i>ሽያጭ</label>
-        <label for="tab3_1" style="display:flex; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">💸</i>ወጪ</label>
-        <label for="tab4_1" style="display:flex; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">📦</i>ክምችት</label>
-        <label for="tab5" style="display:flex; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">📅</i>የቀን ገቢ</label>
-        <label for="tab6" style="display:flex; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">📆</i>የወር ገቢ</label>
-        <label for="tab7" style="display:flex; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">📊</i>Dashboard</label>
-        <label for="tab8" style="display:flex; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">📄</i>ሪፖርቶች</label>
-        <label for="tab9" style="display:flex; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">⚙️</i>Settings</label>
-        <label for="tab10" id="tabCreditLabelMobile" style="display:none; flex-direction:column; align-items:center; padding:10px; background:#fff; border-radius:12px; font-size:12px; font-weight:700; min-width:75px;"><i style="font-size:20px; margin-bottom:5px;">💳</i>ዱቤ</label>
-    </div>
-</div> 
-
-<div class="panels">
-    <!-- PANEL 1 (Medicine) -->
-    <div class="panel" id="panel1">
-        <div class="sub-panel sub1_1 active">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrMedList','bodyMedList')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">Medicine List</span></div>
-                </div>
-                <div class="section-body open" id="bodyMedList">
-                    <div class="no-print" style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
-                        <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search Medicine..." oninput="renderMedList()" style="flex: 1; min-width: 150px;">
-                        <select id="filterTypeMed" onchange="renderMedList()" style="flex: 1; min-width: 120px;">
-                            <option value="all">All Types</option>
-                            <option value="medicine">💊 Medicine</option>
-                            <option value="cosmetic">🧴 Cosmetics</option>
-                        </select>
-                        <button class="btn btn-primary" onclick="window.print()" style="width: auto; margin-top: 0; padding: 10px 15px; font-size: 13px;">🖨️ Print</button>
-                    </div>
-                    <div class="mobile-only" id="medListDisplayMobile"></div>
-                    <div class="desktop-only" style="overflow-x: auto;">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Branch</th><th>Item</th><th>Category</th><th>Sub Category</th>
-                                    <th>Batch No</th><th>Exp Date</th><th>Item Name</th><th>Supplier</th>
-                                    <th>Purchase Price</th><th>Sell Price</th><th>Qty</th><th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="medTableBody"></tbody>
-                        </table>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                            <div id="medPageInfo" style="font-size: 13px; color: #718096;">Page 1 of 1</div>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-outline" id="btnPrevMed" onclick="changeMedPage(-1)" style="width: auto; margin-top: 0; padding: 8px 15px;">⬅️ Prev</button>
-                                <button class="btn btn-outline" id="btnNextMed" onclick="changeMedPage(1)" style="width: auto; margin-top: 0; padding: 8px 15px;">Next ➡️</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="tabs">
+        <!-- DESKTOP MAIN MENU -->
+        <div class="menu-group desktop-only">
+            <div class="menu-header open" onclick="toggleMenu(this)">
+                <div class="m-left"><i>💊</i> Medicine</div>
+                <span class="m-arrow">▶</span>
+            </div>
+            <div class="sub-menu open">
+                <label for="tab1_1">📋 Medicine List</label>
+                <label for="tab1_2">➕ Add Medicine</label>
+                <label for="tab1_3">🗂️ Medicine Category</label>
             </div>
         </div>
 
-        <div class="sub-panel sub1_2">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrAddMed','bodyAddMed')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">Add Medicine</span></div>
-                </div>
-                <div class="section-body open" id="bodyAddMed">
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
-                        <div>
-                            <label class="field-label">📦 Type</label>
-                            <select id="medType" onchange="onMedTypeChange()">
+        <div class="menu-group desktop-only">
+            <div class="menu-header" onclick="toggleMenu(this)">
+                <div class="m-left"><i>🛒</i> Sales</div>
+                <span class="m-arrow">▶</span>
+            </div>
+            <div class="sub-menu">
+                <label for="tab2_1">🛒 New Sale</label>
+                <label for="tab2_2">⚡ Quick Sale</label>
+                <label for="tab2_3">📜 Sales History</label>
+            </div>
+        </div>
+
+        <div class="menu-group desktop-only">
+            <div class="menu-header" onclick="toggleMenu(this)">
+                <div class="m-left"><i>💸</i> Expenses</div>
+                <span class="m-arrow">▶</span>
+            </div>
+            <div class="sub-menu">
+                <label for="tab3_1">💸 Daily Expense</label>
+                <label for="tab3_2">🏢 Fixed Expense</label>
+                <label for="tab3_3">🗂️ Expense Category</label>
+            </div>
+        </div>
+
+        <div class="menu-group desktop-only">
+            <div class="menu-header" onclick="toggleMenu(this)">
+                <div class="m-left"><i>📦</i> Inventory</div>
+                <span class="m-arrow">▶</span>
+            </div>
+            <div class="sub-menu">
+                <label for="tab4_1">📦 Inventory List</label>
+                <label for="tab4_2">⚠️ Expiry & Low Stock</label>
+                <label for="tab4_3">🔧 Stock Adjust</label>
+            </div>
+        </div>
+
+        <div class="menu-group desktop-only">
+            <label class="menu-header" for="tab5" style="margin-bottom:0;">
+                <div class="m-left"><i>📅</i> Daily Report</div>
+            </label>
+        </div>
+
+        <div class="menu-group desktop-only">
+            <label class="menu-header" for="tab6" style="margin-bottom:0;">
+                <div class="m-left"><i>📆</i> Monthly Report</div>
+            </label>
+        </div>
+
+        <div class="menu-group desktop-only">
+            <label class="menu-header" for="tab7" style="margin-bottom:0;">
+                <div class="m-left"><i>📊</i> Dashboard</div>
+            </label>
+        </div>
+
+        <div class="menu-group desktop-only">
+            <label class="menu-header" for="tab8" style="margin-bottom:0;">
+                <div class="m-left"><i>📄</i> Reports</div>
+            </label>
+        </div>
+
+        <div class="menu-group desktop-only">
+            <label class="menu-header" for="tab9" style="margin-bottom:0;">
+                <div class="m-left"><i>⚙️</i> Settings</div>
+            </label>
+        </div>
+
+        <!-- MOBILE MENU -->
+        <div class="mobile-tabs">
+            <label for="tab1_1"><i>💊</i>መድሃኒቶች</label>
+            <label for="tab2_1"><i>🛒</i>ሽያጭ</label>
+            <label for="tab3_1"><i>💸</i>ወጪ</label>
+            <label for="tab4_1"><i>📦</i>ክምችት</label>
+            <label for="tab5"><i>📅</i>የቀን ገቢ</label>
+            <label for="tab6"><i>📆</i>የወር ገቢ</label>
+            <label for="tab7"><i>📊</i>Dashboard</label>
+            <label for="tab8"><i>📄</i>ሪፖርቶች</label>
+            <label for="tab9"><i>⚙️</i>Settings</label>
+        </div>
+    </div> 
+
+    <div class="panels">
+        <!-- PANEL 1 (Medicine) -->
+        <div class="panel" id="panel1">
+            <div class="sub-panel sub1_1 active">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrMedList','bodyMedList')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">Medicine List</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyMedList">
+                        <div class="no-print" style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                            <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search Medicine..." oninput="renderMedList()" style="flex: 1; min-width: 150px;">
+                            <select id="filterTypeMed" onchange="renderMedList()" style="flex: 1; min-width: 120px;">
+                                <option value="all">All Types</option>
                                 <option value="medicine">💊 Medicine</option>
                                 <option value="cosmetic">🧴 Cosmetics</option>
                             </select>
-                            <label class="field-label">🏢 Branch</label>
-                            <select id="medBranch"></select>
-                            <label class="field-label">📁 Category</label>
-                            <select id="medCategory" onchange="loadSubcategoriesForSelectedCategory()"></select>
-                            <label class="field-label">📂 Sub Category</label>
-                            <select id="medSubcategory" onchange="onSubcategoryChange()"></select>
-                            <input type="text" id="medNewSubcategory" placeholder="New Subcategory Name" autocomplete="off" style="margin-top:5px; display:none;">
-                            <label class="field-label">💊 Item Name</label>
-                            <input type="text" id="medName" placeholder="e.g. Paracetamol" autocomplete="off"> 
+                            <button class="btn btn-primary" onclick="window.print()" style="width: auto; margin-top: 0; padding: 10px 15px; font-size: 13px;">🖨️ Print</button>
                         </div>
-                        <div id="medicineOnlyFields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <div>
-                                <label class="field-label">🔢 Batch No</label>
-                                <input type="text" id="medBatch" placeholder="BATCH-001" autocomplete="off">
+                        <div class="mobile-only" id="medListDisplayMobile"></div>
+                        <div class="desktop-only" style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>Branch</th><th>Item</th><th>Category</th><th>Sub Cat</th><th>Batch</th><th>Exp Date</th><th>Item Name</th><th>Supplier</th><th>Cost</th><th>Price</th><th>Qty</th><th>Action</th></tr>
+                                </thead>
+                                <tbody id="medTableBody"></tbody>
+                            </table>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                                <div id="medPageInfo" style="font-size: 13px; color: #718096;">Page 1 of 1</div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-outline" id="btnPrevMed" onclick="changeMedPage(-1)" style="width: auto; margin-top: 0; padding: 8px 15px;">⬅️ Prev</button>
+                                    <button class="btn btn-outline" id="btnNextMed" onclick="changeMedPage(1)" style="width: auto; margin-top: 0; padding: 8px 15px;">Next ➡️</button>
+                                </div>
                             </div>
-                            <div>
-                                <label class="field-label">📅 Exp Date</label>
-                                <input type="date" id="medExpiry">
-                            </div>
-                            <div style="grid-column: 1 / -1;">
-                                <label class="field-label">🏭 Supplier</label>
-                                <input type="text" id="medSupplier" placeholder="e.g. Addis Pharma" autocomplete="off">
-                            </div>
-                        </div> 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                            <div>
-                                <label class="field-label">💰 Purchase Price</label>
-                                <input type="number" id="medCost" placeholder="0.00">
-                            </div>
-                            <div>
-                                <label class="field-label">🏷️ Sell Price</label>
-                                <input type="number" id="medPrice" placeholder="0.00">
-                            </div>
-                            <div>
-                                <label class="field-label">📦 Qty</label>
-                                <input type="number" id="medQty" placeholder="0">
-                            </div>
-                        </div>
-                        <button class="btn btn-success" style="margin-top:10px;" onclick="addMedicine()">💾 Save Medicine</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="sub-panel sub1_3">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Medicine Category</span></div>
-                </div>
-                <div class="section-body open" id="bodyCatMgr">
-                    <div class="cat-add-row" style="margin-bottom:15px;">
-                        <input type="text" id="newCat" placeholder="New Category Name" autocomplete="off">
-                        <button onclick="addCategory()">+ Add</button>
-                    </div>
-                    <div class="desktop-only" style="overflow-x: auto;">
-                        <table class="data-table">
-                            <thead><tr><th>Category Name</th><th>Sub Categories</th><th>Action</th></tr></thead>
-                            <tbody id="catTableBody"></tbody>
-                        </table>
-                    </div>
-                    <div class="mobile-only" id="catListDisplay"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PANEL 2 (Sales) -->
-    <div class="panel" id="panel2">
-        <div class="sub-panel sub2_1 active">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrSell','bodySell')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">New Sale</span></div>
-                </div>
-                <div class="section-body open" id="bodySell">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <div><label class="field-label">📅 Date</label><input type="date" id="sellDate"></div>
-                        <div><label class="field-label">🏢 Branch</label><select id="sellBranch"></select></div>
-                    </div>
-                    <div id="wholesaleSaleFields" style="display:none;"><label class="field-label">🏪 Customer</label><select id="sellCustomer"></select></div>
-                    <label class="field-label">💳 Payment Method</label>
-                    <select id="sellPaymentMethod" onchange="togglePaymentDetails()">
-                        <option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit" id="creditOption" style="display:none;">📝 Credit</option>
-                    </select> 
-                    <div id="creditPaymentDetails" style="display:none; margin-top:10px; padding:10px; background:#fffaf0; border:1px solid #fbd38d; border-radius:8px;">
-                        <label class="field-label" style="margin-top:0;">💰 Paid Amount</label>
-                        <input type="number" id="sellPaidAmount" placeholder="0.00" value="0">
-                    </div> 
-                    <label class="field-label">🧾 Receipt No</label><input type="text" id="sellReceipt" placeholder="REC-001">
-                    <div style="margin-top:10px;"><input type="text" id="searchSellInput" placeholder="🔍 Search Product..." oninput="renderSellProducts()"></div>
-                    <div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
-                    <div style="border-top:2px solid #edf2f7; margin-top:15px; padding-top:10px;">
-                        <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛍️ Selected Items</h3>
-                        <div id="cartList" style="margin-bottom:10px;"></div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                            <span style="font-weight:700; color:#2d3748;">Total:</span>
-                            <span id="cartTotal" style="font-weight:800; color:#276749; font-size:18px;">0.00 ETB</span>
-                        </div>
-                        <button class="btn btn-success" onclick="completeSale()">💸 Complete Sale</button>
-                        <button class="btn btn-danger" style="margin-top:8px; background:#a0aec0;" onclick="clearCart()">🗑️ Clear Cart</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="sub-panel sub2_2">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">Quick Sale</span></div>
-                </div>
-                <div class="section-body open" id="bodyQuickSale">
-                    <div class="info-banner">💡 Record total income directly without selecting items.</div>
-                    <label class="field-label">📦 Type</label><select id="quickType"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
-                    <label class="field-label">🏢 Branch</label><select id="quickBranch"></select>
-                    <label class="field-label">📅 Date</label><input type="date" id="quickDate">
-                    <label class="field-label">💰 Amount</label><input type="number" id="quickAmount" placeholder="0.00">
-                    <button class="btn btn-success" onclick="addQuickSale()">+ Add</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="sub-panel sub2_3">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrSalesHistory','bodySalesHistory')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Sales History</span></div>
-                </div>
-                <div class="section-body open" id="bodySalesHistory">
-                    <div style="display:flex; gap:10px; margin-bottom:10px;">
-                        <select id="filterSalesHistory" onchange="renderSalesHistory()" style="flex:1;">
-                            <option value="all">All Sales</option><option value="detail">🛒 Detail Sales</option><option value="quick">⚡ Quick Sales</option>
-                        </select>
-                        <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 15px; font-size:13px; background:#c53030;" onclick="clearAllSales()">🗑️ Clear All</button>
-                    </div>
-                    <div id="salesHistoryList"></div>
-                </div>
-            </div>
-        </div>
-    </div> 
-
-    <!-- PANEL 3 (Expenses) -->
-    <div class="panel" id="panel3">
-        <div class="sub-panel sub3_1 active">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrAddExp','bodyAddExp')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">Daily Expense</span></div>
-                </div>
-                <div class="section-body open" id="bodyAddExp">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <div><label class="field-label">📁 Category</label><select id="expCat"></select></div>
-                        <div><label class="field-label">🏢 Branch</label><select id="expBranch"></select></div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <div><label class="field-label">💰 Amount</label><input type="number" id="expAmount" placeholder="0.00"></div>
-                        <div><label class="field-label">📅 Date</label><input type="date" id="expDate"></div>
-                    </div>
-                    <label class="field-label">📝 Note</label><input type="text" id="expNote" placeholder="e.g. Transport">
-                    <button class="btn btn-danger" onclick="addExpense()">💾 Save</button>
-                    <div id="expList" style="margin-top:14px;"></div>
-                </div>
-            </div>
-        </div>
-        <div class="sub-panel sub3_2">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Fixed Expense</span></div>
-                </div>
-                <div class="section-body open" id="bodyFixedExp">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <div><label class="field-label">📁 Category</label><select id="fixCat"></select></div>
-                        <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                        <div><label class="field-label">💰 Amount</label><input type="number" id="fixAmount" placeholder="0.00"></div>
-                        <div><label class="field-label">📝 Note</label><input type="text" id="fixNote" placeholder="e.g. October Salary"></div>
-                    </div>
-                    <button class="btn btn-warning" onclick="addFixedExpense()">💾 Save</button>
-                    <div id="fixedExpList" style="margin-top:14px;"></div>
-                </div>
-            </div>
-        </div>
-        <div class="sub-panel sub3_3">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Expense Category</span></div>
-                </div>
-                <div class="section-body open" id="bodyExpCatMgr">
-                    <div class="cat-add-row">
-                        <input type="text" id="newExpCat" placeholder="New Expense Category" autocomplete="off">
-                        <button onclick="addExpCategory()">+ Add</button>
-                    </div>
-                    <div class="cat-tags" id="expCatListDisplay" style="margin-top:10px;"></div>
-                </div>
-            </div>
-        </div>
-    </div> 
-
-    <!-- PANEL 4 (Inventory) -->
-    <div class="panel" id="panel4">
-        <div class="sub-panel sub4_1 active">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrInventory','bodyInventory')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory List</span></div>
-                </div>
-                <div class="section-body open" id="bodyInventory">
-                    <div class="no-print" style="display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
-                        <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search Inventory..." oninput="loadInventory()" style="flex:1;">
-                        <select id="filterTypeInv" onchange="loadInventory()" style="flex:1;">
-                            <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
-                        </select>
-                        <select id="filterBranchInv" onchange="loadInventory()" style="flex:1;">
-                            <option value="all">All Branches</option>
-                        </select>
-                    </div>
-                    <div id="inventoryList"></div>
-                    <div class="summary-box green" style="margin-top:14px;">
-                        <div class="label">Total Inventory Value</div>
-                        <div class="value" id="invTotalValue">0.00 <small>ETB</small></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="sub-panel sub4_2">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Expiry & Low Stock Alerts</span></div>
-                </div>
-                <div class="section-body open" id="bodyExpiryList">
-                    <input type="text" class="search-box" id="searchExpiry" placeholder="🔍 Search..." oninput="loadInventory()">
-                    <h4 style="margin:10px 0 5px; color:#dd6b20;">Expiring Soon / Expired</h4>
-                    <div id="expiryListDisplay"></div>
-                    <h4 style="margin:20px 0 5px; color:#c53030;">Low Stock</h4>
-                    <div id="lowStockListDisplay"></div>
-                </div>
-            </div>
-        </div>
-        <div class="sub-panel sub4_3">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">Stock Adjust</span></div>
-                </div>
-                <div class="section-body open" id="bodyStockAdjust">
-                    <label class="field-label">📦 Select Item</label><select id="adjustMedId"></select>
-                    <label class="field-label">🔢 New Qty</label><input type="number" id="adjustQty" placeholder="0">
-                    <label class="field-label">📝 Reason</label><input type="text" id="adjustReason" placeholder="e.g. Damaged">
-                    <button class="btn btn-warning" onclick="adjustStock()">🔧 Adjust</button>
-                </div>
-            </div>
-        </div>
-    </div> 
-
-    <!-- PANEL 5 (Daily Report) -->
-    <div class="panel" id="panel5">
-        <div class="section-collapsible true-full-width">
-            <div class="section-header open" onclick="toggleSection('hdrDaily','bodyDaily')">
-                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">Daily Report</span></div>
-            </div>
-            <div class="section-body open" id="bodyDaily">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
-                    <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="loadDailyReport()"></div>
-                    <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="loadDailyReport()"><option value="all">All Branches</option></select></div>
-                </div>
-                <div class="dash-grid" style="margin-bottom:15px;">
-                    <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="dailyTotalRevenue">0.00</div></div>
-                    <div class="summary-box red"><div class="label">Expense</div><div class="value" id="dailyTotalExpense">0.00</div></div>
-                    <div class="summary-box"><div class="label">Profit</div><div class="value" id="dailyNetProfit">0.00</div></div>
-                    <div class="summary-box" style="background:#2b6cb0;"><div class="label">Transactions</div><div class="value" id="dailyTransCount">0</div></div>
-                </div>
-                <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
-                    <div class="section-header" id="hdrDailyPayments" onclick="toggleSection('hdrDailyPayments','bodyDailyPayments')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">Payment Breakdown</span></div></div>
-                    <div class="section-body" id="bodyDailyPayments"><div id="dailyPaymentSummary"></div></div>
-                </div> 
-                <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
-                    <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
-                    <div class="section-body" id="bodyDailySales">
-                        <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="loadDailyReport()">
-                        <h4 style="margin: 10px 0 5px; font-size: 13px; color: #4a5568;">Detail Sales</h4>
-                        <div id="dailySalesList"></div>
-                        <h4 style="margin: 15px 0 5px; font-size: 13px; color: #4a5568;">Quick Sales</h4>
-                        <div id="dailyQuickSalesList"></div>
-                    </div>
-                </div> 
-            </div>
-        </div>
-    </div> 
-
-    <!-- PANEL 6 (Monthly Report) -->
-    <div class="panel" id="panel6">
-        <div class="section-collapsible true-full-width">
-            <div class="section-header open" onclick="toggleSection('hdrMonthly','bodyMonthly')">
-                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">Monthly Report</span></div>
-            </div>
-            <div class="section-body open" id="bodyMonthly">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
-                    <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()"></div>
-                    <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="loadMonthlyReport()"><option value="all">All Branches</option></select></div>
-                </div>
-                <div class="dash-grid" style="margin-bottom:15px;">
-                    <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="monthlyTotalRevenue">0.00</div></div>
-                    <div class="summary-box red"><div class="label">Expenses</div><div class="value" id="monthlyTotalExpense">0.00</div></div>
-                    <div class="summary-box"><div class="label">Profit</div><div class="value" id="monthlyNetProfit">0.00</div></div>
-                    <div class="summary-box" style="background:#2b6cb0;"><div class="label">Transactions</div><div class="value" id="monthlyTransCount">0</div></div>
-                </div>
-                <div class="section-collapsible full-width" style="box-shadow:none; border:1px solid #edf2f7;">
-                    <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
-                    <div class="section-body" id="bodyMonthlySales">
-                        <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="loadMonthlyReport()">
-                        <div id="monthlySalesList"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PANEL 7 (Dashboard) -->
-    <div class="panel" id="panel7">
-        <div class="section-collapsible true-full-width">
-            <div class="section-header open" onclick="toggleSection('hdrDash','bodyDash')">
-                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
-            </div>
-            <div class="section-body open" id="bodyDash">
-                <div class="no-print" style="margin-bottom:15px; background:#fff; padding:10px; border-radius:10px; border:1px solid #edf2f7;">
-                    <label class="field-label" style="margin-top:0;">📅 Select Month</label>
-                    <input type="month" id="dashMonthPicker" onchange="loadDashboard()">
-                </div>
-                <div class="dash-grid">
-                    <div class="dash-card"><div class="dash-header">Revenue</div><div class="dash-val-box" style="background: linear-gradient(135deg, #2b6cb0, #2c5282);"><div class="dash-val-number" id="dashGrossIncome">0.00</div></div></div>
-                    <div class="dash-card"><div class="dash-header">Expenses</div><div class="dash-val-box" style="background: linear-gradient(135deg, #276749, #22543d);"><div class="dash-val-number" id="dashTotalExpense">0.00</div></div></div>
-                    <div class="dash-card"><div class="dash-header">Net Profit</div><div class="dash-val-box" style="background: linear-gradient(135deg, #2f855a, #276749);"><div class="dash-val-number" id="dashNetProfit">0.00</div></div></div>
-                    <div class="dash-card"><div class="dash-header">Transactions</div><div class="dash-val-box" style="background: linear-gradient(135deg, #dd6b20, #c05621);"><div class="dash-val-number" id="dashTotalSalesCount">0</div></div></div>
-                    
-                    <div class="dash-card" style="grid-column: 1 / -1;">
-                        <div class="dash-header">📈 30-Day Sales Chart</div>
-                        <div class="chart-container" style="height: 300px;"><canvas id="dailyChartCanvas"></canvas></div>
-                    </div>
-                    <div class="dash-card" style="grid-column: 1 / -1;">
-                        <div class="dash-header">🥧 Expense Breakdown Chart</div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
-                            <div style="flex: 1; min-width: 200px; height: 200px;"><canvas id="expensePieChartCanvas"></canvas></div>
-                            <div id="expenseLegend" style="flex: 1; min-width: 200px;"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- PANEL 8 (Reports) -->
-    <div class="panel" id="panel8">
-        <div class="section-collapsible true-full-width">
-            <div class="section-header open no-print" onclick="toggleSection('hdrRepMain','bodyRepMain')">
-                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📄</span><span class="sec-title">Reports</span></div>
-            </div>
-            <div class="section-body open" id="bodyRepMain">
-                <div class="no-print" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #edf2f7; margin-bottom:20px;">
-                    <label class="field-label">Report Type</label>
-                    <select id="reportTypeSelect" onchange="toggleReportDatePickers()">
-                        <option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option>
-                    </select>
-                    <div id="repDateDiv" style="display:none; margin-top:10px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
-                    <div id="repMonthDiv" style="display:none; margin-top:10px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
-                    <button class="btn btn-primary" style="margin-top:15px;" onclick="generateReport()">👁️ Generate</button>
-                    <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ Print</button>
-                </div>
-                <div id="reportDisplayArea" style="background:#fff; padding:20px; border-radius:10px; border:1px solid #edf2f7;"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PANEL 9 (Settings) -->
-    <div class="panel" id="panel9">
-        <div class="section-collapsible true-full-width">
-            <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
-                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
-            </div>
-            <div class="section-body open" id="bodySettings">
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:15px;">
-                    <div class="section-collapsible" style="margin-bottom:0;">
-                        <div class="section-header" onclick="toggleSection('hdrPhName','bodyPhName')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">Pharmacy Name</span></div></div>
-                        <div class="section-body" id="bodyPhName"><input type="text" id="settingPhName"><button class="btn btn-primary" onclick="savePharmacyName()">💾 Save</button></div>
+            <div class="sub-panel sub1_2">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrAddMed','bodyAddMed')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">Add Medicine</span></div>
                     </div>
-                    <div class="section-collapsible" style="margin-bottom:0;">
-                        <div class="section-header" onclick="toggleSection('hdrStockLimit','bodyStockLimit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Stock Limit</span></div></div>
-                        <div class="section-body" id="bodyStockLimit"><input type="number" id="settingStockLimit"><button class="btn btn-primary" onclick="saveStockLimit()">💾 Save</button></div>
-                    </div>
-                    <div class="section-collapsible" style="margin-bottom:0;">
-                        <div class="section-header" onclick="toggleSection('hdrBranchMgr','bodyBranchMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div></div>
-                        <div class="section-body" id="bodyBranchMgr"><div class="cat-add-row"><input type="text" id="newBranch" placeholder="New Branch"><button onclick="addBranch()">+ Add</button></div><div class="cat-tags" id="branchListDisplay" style="margin-top:10px;"></div></div>
-                    </div>
-                    <div class="section-collapsible" style="margin-bottom:0;">
-                        <div class="section-header" onclick="toggleSection('hdrCustMgr','bodyCustMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">Customers</span></div></div>
-                        <div class="section-body" id="bodyCustMgr"><div class="cat-add-row"><input type="text" id="newCustomer" placeholder="New Customer"><button onclick="addCustomer()">+ Add</button></div><div class="cat-tags" id="customerListDisplay" style="margin-top:10px;"></div></div>
-                    </div>
-                    <div class="section-collapsible" style="margin-bottom:0; grid-column: 1 / -1;">
-                        <div class="section-header" onclick="toggleSection('hdrPerms','bodyPerms')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">Employee Permissions</span></div></div>
-                        <div class="section-body" id="bodyPerms">
-                            <div id="permSectionDisplay" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
-                            <button class="btn btn-success" style="margin-top:15px; grid-column:1/-1;" onclick="savePermissions()">💾 Save Permissions</button>
+                    <div class="section-body open" id="bodyAddMed">
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                            <div>
+                                <label class="field-label">📦 Type</label>
+                                <select id="medType" onchange="onMedTypeChange()"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
+                                <label class="field-label">🏢 Branch</label><select id="medBranch"></select>
+                                <label class="field-label">📁 Category</label><select id="medCategory" onchange="loadSubcategoriesForSelectedCategory()"></select>
+                                <label class="field-label">📂 Sub Category</label><select id="medSubcategory" onchange="onSubcategoryChange()"></select>
+                                <input type="text" id="medNewSubcategory" placeholder="New Subcategory Name" style="margin-top:5px; display:none;">
+                                <label class="field-label">💊 Item Name</label><input type="text" id="medName" placeholder="e.g. Paracetamol"> 
+                            </div>
+                            <div id="medicineOnlyFields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div><label class="field-label">🔢 Batch No</label><input type="text" id="medBatch"></div>
+                                <div><label class="field-label">📅 Exp Date</label><input type="date" id="medExpiry"></div>
+                                <div style="grid-column: 1 / -1;"><label class="field-label">🏭 Supplier</label><input type="text" id="medSupplier"></div>
+                            </div> 
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                                <div><label class="field-label">💰 Purchase Price</label><input type="number" id="medCost"></div>
+                                <div><label class="field-label">🏷️ Sell Price</label><input type="number" id="medPrice"></div>
+                                <div><label class="field-label">📦 Qty</label><input type="number" id="medQty"></div>
+                            </div>
+                            <button class="btn btn-success" id="btnSaveMed" style="margin-top:10px;" onclick="addMedicine()">💾 Save Medicine</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- PANEL 10 (Credit) -->
-    <div class="panel" id="panel10">
-        <div class="section-collapsible true-full-width">
-            <div class="section-header open" onclick="toggleSection('hdrCredit','bodyCredit')">
-                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">Credit</span></div>
-            </div>
-            <div class="section-body open" id="bodyCredit">
-                <div class="summary-box red" style="margin-bottom:15px;"><div class="label">Total Unpaid Debt</div><div class="value" id="totalUnpaidDebt">0.00</div></div>
-                <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                    <div class="section-header open" onclick="toggleSection('hdrCreditList','bodyCreditList')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">Unpaid Credits</span></div></div>
-                    <div class="section-body open" id="bodyCreditList"><input type="text" class="search-box" id="searchUnpaidCredit" placeholder="🔍 Search..." oninput="renderUnpaidCredits()"><div id="unpaidCreditList"></div></div>
+            <div class="sub-panel sub1_3">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Medicine Category</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyCatMgr">
+                        <div class="cat-add-row" style="margin-bottom:15px;">
+                            <input type="text" id="newCat" placeholder="New Category Name">
+                            <button onclick="addCategory()">+ Add</button>
+                        </div>
+                        <div class="desktop-only" style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead><tr><th>Category Name</th><th>Sub Categories</th><th>Action</th></tr></thead>
+                                <tbody id="catTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="mobile-only" id="catListDisplay"></div>
+                    </div>
                 </div>
-                <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7; margin-top:15px;">
-                    <div class="section-header open" onclick="toggleSection('hdrAddCredit','bodyAddCredit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💵</span><span class="sec-title">Add Credit Payment</span></div></div>
-                    <div class="section-body open" id="bodyAddCredit">
+            </div>
+        </div>
+
+        <!-- PANEL 2 (Sales) -->
+        <div class="panel" id="panel2">
+            <div class="sub-panel sub2_1 active">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrSell','bodySell')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">New Sale</span></div>
+                    </div>
+                    <div class="section-body open" id="bodySell">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <div><label class="field-label">🏪 Customer</label><select id="creditCustomerSelect"></select></div>
-                            <div><label class="field-label">📅 Date</label><input type="date" id="creditDate"></div>
+                            <div><label class="field-label">📅 Date</label><input type="date" id="sellDate"></div>
+                            <div><label class="field-label">🏢 Branch</label><select id="sellBranch"></select></div>
                         </div>
-                        <label class="field-label">💰 Amount</label><input type="number" id="creditAmount" placeholder="0.00">
-                        <button class="btn btn-success" onclick="addCreditPayment()">💾 Record Payment</button>
+                        <div id="wholesaleSaleFields" style="display:none;"><label class="field-label">🏪 Customer</label><select id="sellCustomer"></select></div>
+                        <label class="field-label">💳 Payment Method</label>
+                        <select id="sellPaymentMethod" onchange="togglePaymentDetails()">
+                            <option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit" id="creditOption" style="display:none;">📝 Credit</option>
+                        </select> 
+                        <div id="creditPaymentDetails" style="display:none; margin-top:10px; padding:10px; background:#fffaf0; border:1px solid #fbd38d; border-radius:8px;">
+                            <label class="field-label" style="margin-top:0;">💰 Paid Amount</label>
+                            <input type="number" id="sellPaidAmount" value="0">
+                        </div> 
+                        <label class="field-label">🧾 Receipt No</label><input type="text" id="sellReceipt">
+                        <div style="margin-top:10px;"><input type="text" id="searchSellInput" placeholder="🔍 Search Product..." oninput="renderSellProducts()"></div>
+                        <div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
+                        <div style="border-top:2px solid #edf2f7; margin-top:15px; padding-top:10px;">
+                            <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛍️ Selected Items</h3>
+                            <div id="cartList" style="margin-bottom:10px;"></div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <span style="font-weight:700; color:#2d3748;">Total:</span>
+                                <span id="cartTotal" style="font-weight:800; color:#276749; font-size:18px;">0.00 ETB</span>
+                            </div>
+                            <button class="btn btn-success" onclick="completeSale()">💸 Complete Sale</button>
+                            <button class="btn btn-danger" style="margin-top:8px; background:#a0aec0;" onclick="clearCart()">🗑️ Clear Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-panel sub2_2">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">Quick Sale</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyQuickSale">
+                        <div class="info-banner">💡 Record total income directly.</div>
+                        <label class="field-label">📦 Type</label><select id="quickType"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
+                        <label class="field-label">🏢 Branch</label><select id="quickBranch"></select>
+                        <label class="field-label">📅 Date</label><input type="date" id="quickDate">
+                        <label class="field-label">💰 Amount</label><input type="number" id="quickAmount">
+                        <button class="btn btn-success" onclick="addQuickSale()">+ Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-panel sub2_3">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrSalesHistory','bodySalesHistory')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Sales History</span></div>
+                    </div>
+                    <div class="section-body open" id="bodySalesHistory">
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <select id="filterSalesHistory" onchange="renderSalesHistory()" style="flex:1;">
+                                <option value="all">All Sales</option><option value="detail">🛒 Detail Sales</option><option value="quick">⚡ Quick Sales</option>
+                            </select>
+                            <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 15px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
+                        </div>
+                        <div id="salesHistoryList"></div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <!-- PANEL 3 (Expenses) -->
+        <div class="panel" id="panel3">
+            <div class="sub-panel sub3_1 active">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrAddExp','bodyAddExp')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">Daily Expense</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyAddExp">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <div><label class="field-label">📁 Category</label><select id="expCat"></select></div>
+                            <div><label class="field-label">🏢 Branch</label><select id="expBranch"></select></div>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <div><label class="field-label">💰 Amount</label><input type="number" id="expAmount"></div>
+                            <div><label class="field-label">📅 Date</label><input type="date" id="expDate"></div>
+                        </div>
+                        <label class="field-label">📝 Note</label><input type="text" id="expNote">
+                        <button class="btn btn-danger" onclick="addExpense()">💾 Save</button>
+                        <div id="expList" style="margin-top:14px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-panel sub3_2">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Fixed Expense</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyFixedExp">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <div><label class="field-label">📁 Category</label><select id="fixCat"></select></div>
+                            <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <div><label class="field-label">💰 Amount</label><input type="number" id="fixAmount"></div>
+                            <div><label class="field-label">📝 Note</label><input type="text" id="fixNote"></div>
+                        </div>
+                        <button class="btn btn-warning" onclick="addFixedExpense()">💾 Save</button>
+                        <div id="fixedExpList" style="margin-top:14px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-panel sub3_3">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Expense Category</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyExpCatMgr">
+                        <div class="cat-add-row">
+                            <input type="text" id="newExpCat" placeholder="New Expense Category">
+                            <button onclick="addExpCategory()">+ Add</button>
+                        </div>
+                        <div class="cat-tags" id="expCatListDisplay" style="margin-top:10px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <!-- PANEL 4 (Inventory) -->
+        <div class="panel" id="panel4">
+            <div class="sub-panel sub4_1 active">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrInventory','bodyInventory')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory List</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyInventory">
+                        <div class="no-print" style="display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+                            <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search Inventory..." oninput="loadInventory()" style="flex:1;">
+                            <select id="filterTypeInv" onchange="loadInventory()" style="flex:1;">
+                                <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
+                            </select>
+                            <select id="filterBranchInv" onchange="loadInventory()" style="flex:1;">
+                                <option value="all">All Branches</option>
+                            </select>
+                        </div>
+                        <div id="inventoryList"></div>
+                        <div class="summary-box green" style="margin-top:14px;">
+                            <div class="label">Total Inventory Value</div>
+                            <div class="value" id="invTotalValue">0.00 <small>ETB</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-panel sub4_2">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Expiry & Low Stock Alerts</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyExpiryList">
+                        <input type="text" class="search-box" id="searchExpiry" placeholder="🔍 Search..." oninput="loadInventory()">
+                        <h4 style="margin:10px 0 5px; color:#dd6b20;">Expiring Soon / Expired</h4>
+                        <div id="expiryListDisplay"></div>
+                        <h4 style="margin:20px 0 5px; color:#c53030;">Low Stock</h4>
+                        <div id="lowStockListDisplay"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-panel sub4_3">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">Stock Adjust</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyStockAdjust">
+                        <label class="field-label">📦 Select Item</label><select id="adjustMedId"></select>
+                        <label class="field-label">🔢 New Qty</label><input type="number" id="adjustQty">
+                        <label class="field-label">📝 Reason</label><input type="text" id="adjustReason">
+                        <button class="btn btn-warning" onclick="adjustStock()">🔧 Adjust</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <!-- PANEL 5 (Daily) -->
+        <div class="panel" id="panel5">
+            <div class="section-collapsible true-full-width">
+                <div class="section-header open" onclick="toggleSection('hdrDaily','bodyDaily')">
+                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">Daily Report</span></div>
+                </div>
+                <div class="section-body open" id="bodyDaily">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+                        <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="loadDailyReport()"></div>
+                        <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="loadDailyReport()"><option value="all">All Branches</option></select></div>
+                    </div>
+                    <div class="dash-grid" style="margin-bottom:15px;">
+                        <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="dailyTotalRevenue">0.00</div></div>
+                        <div class="summary-box red"><div class="label">Expense</div><div class="value" id="dailyTotalExpense">0.00</div></div>
+                        <div class="summary-box"><div class="label">Profit</div><div class="value" id="dailyNetProfit">0.00</div></div>
+                    </div>
+                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+                        <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
+                        <div class="section-body" id="bodyDailySales">
+                            <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="loadDailyReport()">
+                            <div id="dailySalesList"></div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div> 
+
+        <!-- PANEL 6 (Monthly) -->
+        <div class="panel" id="panel6">
+            <div class="section-collapsible true-full-width">
+                <div class="section-header open" onclick="toggleSection('hdrMonthly','bodyMonthly')">
+                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">Monthly Report</span></div>
+                </div>
+                <div class="section-body open" id="bodyMonthly">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+                        <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()"></div>
+                        <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="loadMonthlyReport()"><option value="all">All Branches</option></select></div>
+                    </div>
+                    <div class="dash-grid" style="margin-bottom:15px;">
+                        <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="monthlyTotalRevenue">0.00</div></div>
+                        <div class="summary-box red"><div class="label">Expenses</div><div class="value" id="monthlyTotalExpense">0.00</div></div>
+                        <div class="summary-box"><div class="label">Profit</div><div class="value" id="monthlyNetProfit">0.00</div></div>
+                    </div>
+                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+                        <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
+                        <div class="section-body" id="bodyMonthlySales">
+                            <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="loadMonthlyReport()">
+                            <div id="monthlySalesList"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div> <!-- End Panels -->
+
+        <!-- PANEL 7 (Dashboard) -->
+        <div class="panel" id="panel7">
+            <div class="section-collapsible true-full-width">
+                <div class="section-header open" onclick="toggleSection('hdrDash','bodyDash')">
+                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
+                </div>
+                <div class="section-body open" id="bodyDash">
+                    <div class="no-print" style="margin-bottom:15px; background:#fff; padding:10px; border-radius:10px; border:1px solid #edf2f7;">
+                        <label class="field-label" style="margin-top:0;">📅 Select Month</label>
+                        <input type="month" id="dashMonthPicker" onchange="loadDashboard()">
+                    </div>
+                    <div class="dash-grid">
+                        <div class="dash-card"><div class="dash-header">Revenue</div><div class="dash-val-box" style="background: linear-gradient(135deg, #2b6cb0, #2c5282);"><div class="dash-val-number" id="dashGrossIncome">0.00</div></div></div>
+                        <div class="dash-card"><div class="dash-header">Expenses</div><div class="dash-val-box" style="background: linear-gradient(135deg, #276749, #22543d);"><div class="dash-val-number" id="dashTotalExpense">0.00</div></div></div>
+                        <div class="dash-card"><div class="dash-header">Net Profit</div><div class="dash-val-box" style="background: linear-gradient(135deg, #2f855a, #276749);"><div class="dash-val-number" id="dashNetProfit">0.00</div></div></div>
+                        <div class="dash-card"><div class="dash-header">Transactions</div><div class="dash-val-box" style="background: linear-gradient(135deg, #dd6b20, #c05621);"><div class="dash-val-number" id="dashTotalSalesCount">0</div></div></div>
+                        
+                        <div class="dash-card" style="grid-column: 1 / -1;">
+                            <div class="dash-header">📈 30-Day Sales Chart</div>
+                            <div class="chart-container" style="height: 300px;"><canvas id="dailyChartCanvas"></canvas></div>
+                        </div>
+                        <div class="dash-card" style="grid-column: 1 / -1;">
+                            <div class="dash-header">🥧 Expense Breakdown Chart</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
+                                <div style="flex: 1; min-width: 200px; height: 200px;"><canvas id="expensePieChartCanvas"></canvas></div>
+                                <div id="expenseLegend" style="flex: 1; min-width: 200px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 8 (Reports) -->
+        <div class="panel" id="panel8">
+            <div class="section-collapsible true-full-width">
+                <div class="section-header open no-print" onclick="toggleSection('hdrRepMain','bodyRepMain')">
+                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📄</span><span class="sec-title">Reports</span></div>
+                </div>
+                <div class="section-body open" id="bodyRepMain">
+                    <div class="no-print" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #edf2f7; margin-bottom:20px;">
+                        <label class="field-label">Report Type</label>
+                        <select id="reportTypeSelect" onchange="toggleReportDatePickers()">
+                            <option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option>
+                        </select>
+                        <div id="repDateDiv" style="display:none; margin-top:10px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
+                        <div id="repMonthDiv" style="display:none; margin-top:10px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
+                        <button class="btn btn-primary" style="margin-top:15px;" onclick="generateReport()">👁️ Generate</button>
+                        <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ Print</button>
+                    </div>
+                    <div id="reportDisplayArea" style="background:#fff; padding:20px; border-radius:10px; border:1px solid #edf2f7;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 9 (Settings) -->
+        <div class="panel" id="panel9">
+            <div class="section-collapsible true-full-width">
+                <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
+                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
+                </div>
+                <div class="section-body open" id="bodySettings">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:15px;">
+                        <div class="section-collapsible" style="margin-bottom:0;">
+                            <div class="section-header" onclick="toggleSection('hdrPhName','bodyPhName')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">Pharmacy Name</span></div></div>
+                            <div class="section-body" id="bodyPhName"><input type="text" id="settingPhName"><button class="btn btn-primary" onclick="savePharmacyName()">💾 Save</button></div>
+                        </div>
+                        <div class="section-collapsible" style="margin-bottom:0;">
+                            <div class="section-header" onclick="toggleSection('hdrStockLimit','bodyStockLimit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Stock Limit</span></div></div>
+                            <div class="section-body" id="bodyStockLimit"><input type="number" id="settingStockLimit"><button class="btn btn-primary" onclick="saveStockLimit()">💾 Save</button></div>
+                        </div>
+                        <div class="section-collapsible" style="margin-bottom:0;">
+                            <div class="section-header" onclick="toggleSection('hdrBranchMgr','bodyBranchMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div></div>
+                            <div class="section-body" id="bodyBranchMgr"><div class="cat-add-row"><input type="text" id="newBranch" placeholder="New Branch"><button onclick="addBranch()">+ Add</button></div><div class="cat-tags" id="branchListDisplay" style="margin-top:10px;"></div></div>
+                        </div>
+                        <div class="section-collapsible" style="margin-bottom:0;">
+                            <div class="section-header" onclick="toggleSection('hdrCustMgr','bodyCustMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">Customers</span></div></div>
+                            <div class="section-body" id="bodyCustMgr"><div class="cat-add-row"><input type="text" id="newCustomer" placeholder="New Customer"><button onclick="addCustomer()">+ Add</button></div><div class="cat-tags" id="customerListDisplay" style="margin-top:10px;"></div></div>
+                        </div>
+                        <div class="section-collapsible" style="margin-bottom:0; grid-column: 1 / -1;">
+                            <div class="section-header" onclick="toggleSection('hdrPerms','bodyPerms')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">Employee Permissions</span></div></div>
+                            <div class="section-body" id="bodyPerms">
+                                <div id="permSectionDisplay" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+                                <button class="btn btn-success" style="margin-top:15px; grid-column:1/-1;" onclick="savePermissions()">💾 Save Permissions</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 10 (Credit) -->
+        <div class="panel" id="panel10">
+            <div class="section-collapsible true-full-width">
+                <div class="section-header open" onclick="toggleSection('hdrCredit','bodyCredit')">
+                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">Credit</span></div>
+                </div>
+                <div class="section-body open" id="bodyCredit">
+                    <div class="summary-box red" style="margin-bottom:15px;"><div class="label">Total Unpaid Debt</div><div class="value" id="totalUnpaidDebt">0.00</div></div>
+                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+                        <div class="section-header open" onclick="toggleSection('hdrCreditList','bodyCreditList')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">Unpaid Credits</span></div></div>
+                        <div class="section-body open" id="bodyCreditList"><input type="text" class="search-box" id="searchUnpaidCredit" placeholder="🔍 Search..." oninput="renderUnpaidCredits()"><div id="unpaidCreditList"></div></div>
+                    </div>
+                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7; margin-top:15px;">
+                        <div class="section-header open" onclick="toggleSection('hdrAddCredit','bodyAddCredit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💵</span><span class="sec-title">Add Credit Payment</span></div></div>
+                        <div class="section-body open" id="bodyAddCredit">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                                <div><label class="field-label">🏪 Customer</label><select id="creditCustomerSelect"></select></div>
+                                <div><label class="field-label">📅 Date</label><input type="date" id="creditDate"></div>
+                            </div>
+                            <label class="field-label">💰 Amount</label><input type="number" id="creditAmount">
+                            <button class="btn btn-success" onclick="addCreditPayment()">💾 Record Payment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End Panels -->
 </div> <!-- End Tabs wrapper -->
 </div> <!-- End main-content-wrapper -->
 </div> <!-- End mainApp -->
+
     <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
+import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyB3bQkI8scEHg36kkxlAalbbCtE4R0Vv8U",
@@ -848,46 +802,35 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app); 
 
-let allMedicines = [];
-let allCategories = [];
-let allSubcategories = {};
-let allExpCategories = [];
-let allBranches = [];
-let allCustomers = [];
-let allSales = [];
-let allQuickSales = [];
-let allExpenses = [];
-let allFixed = [];
-let allCreditPayments = [];
-let cart = [];
-let currentUserPharmacyId = null;
-let currentUserRole = 'employee';
-let currentBizType = 'retail';
-let allowedBizType = 'retail';
-let lowStockThreshold = 10;
+let allMedicines = [], allCategories = [], allSubcategories = {}, allExpCategories = [], allBranches = [], allCustomers = [], allSales = [], allQuickSales = [], allExpenses = [], allFixed = [], allCreditPayments = [], cart = [];
+let currentUserPharmacyId = null, currentUserRole = 'employee', currentBizType = 'retail', allowedBizType = 'retail', lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
-let medCurrentPage = 1;
-let medRowsPerPage = 15;
+let medCurrentPage = 1, medRowsPerPage = 15;
 
 let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null, unsubQuickSales = null;
 
-setTimeout(() => {
-    const splash = document.getElementById('splashScreen');
-    if(splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; }, 500); }
-}, 1500); 
+setTimeout(() => { const splash = document.getElementById('splashScreen'); if(splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; }, 500); } }, 1500); 
 
 window.toggleSection = function(h, b) {
-    const hd = document.getElementById(h);
-    const bd = document.getElementById(b);
-    if (!hd || !bd) return; 
-    bd.classList.toggle('open');
-    hd.classList.toggle('open');
+    const hd = document.getElementById(h); const bd = document.getElementById(b); if (!hd || !bd) return; 
+    bd.classList.toggle('open'); hd.classList.toggle('open');
 }; 
 
 window.toggleMenu = function(element) {
-    element.classList.toggle('open');
-    const subMenu = element.nextElementSibling;
-    if (subMenu) subMenu.classList.toggle('open');
+    const allHeaders = document.querySelectorAll('.menu-header');
+    const allSubMenus = document.querySelectorAll('.sub-menu');
+    const isCurrentlyOpen = element.classList.contains('open');
+
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allSubMenus.forEach(sm => sm.classList.remove('open'));
+
+    if (!isCurrentlyOpen) {
+        element.classList.add('open');
+        const subMenu = element.nextElementSibling;
+        if (subMenu && subMenu.classList.contains('sub-menu')) {
+            subMenu.classList.add('open');
+        }
+    }
 };
 
 window.onMedTypeChange = function() {
@@ -908,13 +851,9 @@ async function loadUserHeader(user) {
         document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase() || 'U'; 
 
         const roleElement = document.getElementById('hdrUserRole'); 
-        if (currentUserRole === 'owner') {
-            roleElement.innerText = '👑 ባለቤት'; roleElement.style.background = '#fefcbf'; roleElement.style.color = '#975a16';
-        } else if (currentUserRole === 'manager') {
-            roleElement.innerText = '🎯 ማናጀር'; roleElement.style.background = '#bee3f8'; roleElement.style.color = '#2c5282';
-        } else {
-            roleElement.innerText = '👤 ሠራተኛ'; roleElement.style.background = '#e2e8f0'; roleElement.style.color = '#4a5568';
-        } 
+        if (currentUserRole === 'owner') { roleElement.innerText = '👑 ባለቤት'; roleElement.style.background = '#fefcbf'; roleElement.style.color = '#975a16'; } 
+        else if (currentUserRole === 'manager') { roleElement.innerText = '🎯 ማናጀር'; roleElement.style.background = '#bee3f8'; roleElement.style.color = '#2c5282'; } 
+        else { roleElement.innerText = '👤 ሠራተኛ'; roleElement.style.background = '#e2e8f0'; roleElement.style.color = '#4a5568'; } 
 
         if (currentUserPharmacyId) {
             const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
@@ -924,56 +863,31 @@ async function loadUserHeader(user) {
                 allowedBizType = phData.bizType || 'retail';
                 currentBizType = phData.userBizType || allowedBizType; 
                 lowStockThreshold = phData.lowStockThreshold || 10; 
-                
-                if (phData.isSuspended) {
-                    document.getElementById('mainApp').classList.remove('show');
-                    document.getElementById('loginScreen').classList.remove('hidden');
-                    document.getElementById('suspendedWarningBanner').style.display = 'block';
-                    await signOut(auth);
-                    return;
-                }
+                if (phData.isSuspended) { document.getElementById('mainApp').classList.remove('show'); document.getElementById('loginScreen').classList.remove('hidden'); await signOut(auth); return; }
             }
         }
     } catch (err) { console.error('loadUserHeader error:', err); }
 } 
 
 window.login = async function() {
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const errorEl = document.getElementById('loginError');
-    errorEl.style.display = 'none'; 
+    const email = document.getElementById('email').value.trim(); const password = document.getElementById('password').value; const errorEl = document.getElementById('loginError'); errorEl.style.display = 'none'; 
     try { await signInWithEmailAndPassword(auth, email, password); } 
     catch (err) { errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም'; errorEl.style.display = 'block'; }
 }; 
 
 window.logout = function() { 
-    if(unsubMedicines) unsubMedicines();
-    if(unsubSales) unsubSales();
-    if(unsubExpenses) unsubExpenses();
-    if(unsubFixed) unsubFixed();
-    if(unsubCredit) unsubCredit();
-    if(unsubQuickSales) unsubQuickSales();
+    if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
     signOut(auth); 
 }; 
 
 onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        document.getElementById('loginScreen').classList.add('hidden');
-        document.getElementById('mainApp').classList.add('show'); 
-        await loadUserHeader(user);
-        await loadAllData();
-    } else {
-        document.getElementById('loginScreen').classList.remove('hidden');
-        document.getElementById('mainApp').classList.remove('show');
-        currentUserPharmacyId = null;
-        currentUserRole = 'employee';
-    }
+    if (user) { document.getElementById('loginScreen').classList.add('hidden'); document.getElementById('mainApp').classList.add('show'); await loadUserHeader(user); await loadAllData(); } 
+    else { document.getElementById('loginScreen').classList.remove('hidden'); document.getElementById('mainApp').classList.remove('show'); currentUserPharmacyId = null; currentUserRole = 'employee'; }
 }); 
 
 async function loadAllData() {
     if (!currentUserPharmacyId) return; 
     await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
-    
     if(!document.getElementById('dashMonthPicker').value) document.getElementById('dashMonthPicker').value = new Date().toISOString().slice(0, 7);
     if(!document.getElementById('sellDate').value) document.getElementById('sellDate').value = new Date().toISOString().split('T')[0];
     if(!document.getElementById('quickDate').value) document.getElementById('quickDate').value = new Date().toISOString().split('T')[0];
@@ -983,61 +897,27 @@ async function loadAllData() {
     if(!document.getElementById('repDateInput').value) document.getElementById('repDateInput').value = new Date().toISOString().split('T')[0];
     if(!document.getElementById('repMonthInput').value) document.getElementById('repMonthInput').value = new Date().toISOString().slice(0, 7);
 
-    renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); checkExpiryAlerts(); loadDarkMode(); applyBizTypeUI();
-    renderSalesHistory(); renderUnpaidCredits(); toggleReportDatePickers();
-
+    renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); toggleReportDatePickers();
     setupRealtimeListeners();
 } 
 
 function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
-
-    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() }));
-        temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-        allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); checkExpiryAlerts();
-    });
-
-    unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() }));
-        allSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits();
-    });
-
-    unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() }));
-        allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory();
-    });
-
-    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() }));
-        allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory();
-    });
-
-    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() }));
-        allFixed = temp; loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory();
-    });
-
-    unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => {
-        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() }));
-        allCreditPayments = temp; loadCreditPaymentHistory(); renderUnpaidCredits();
-    });
+    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); });
+    unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); });
+    unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
+    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); });
+    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory(); });
+    unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; loadCreditPaymentHistory(); renderUnpaidCredits(); });
 }
 
 async function loadCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId)));
-        allCategories = []; allSubcategories = {}; 
-        const select = document.getElementById('medCategory'); select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
+        allCategories = []; allSubcategories = {}; const select = document.getElementById('medCategory'); select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
         const catPromises = [];
-        snap.forEach(doc => { 
-            const catName = doc.data().name; allCategories.push(catName); 
-            select.innerHTML += `<option value="${catName}">${catName}</option>`; 
-            catPromises.push(loadSubcategoriesForCategory(catName));
-        });
-        await Promise.all(catPromises);
-        renderCategoryList();
-        loadSubcategoriesForSelectedCategory();
+        snap.forEach(doc => { const catName = doc.data().name; allCategories.push(catName); select.innerHTML += `<option value="${catName}">${catName}</option>`; catPromises.push(loadSubcategoriesForCategory(catName)); });
+        await Promise.all(catPromises); renderCategoryList(); loadSubcategoriesForSelectedCategory();
     } catch(e) { console.error(e); }
 } 
 
@@ -1049,8 +929,7 @@ async function loadSubcategoriesForCategory(catName) {
 }
 
 window.loadSubcategoriesForSelectedCategory = function() {
-    const catName = document.getElementById('medCategory').value;
-    const subSelect = document.getElementById('medSubcategory'); const newSubInput = document.getElementById('medNewSubcategory');
+    const catName = document.getElementById('medCategory').value; const subSelect = document.getElementById('medSubcategory'); const newSubInput = document.getElementById('medNewSubcategory');
     subSelect.innerHTML = '<option value="">-- ንዑስ ምድብ ምረጥ --</option>';
     if (catName && allSubcategories[catName]) { allSubcategories[catName].forEach(sub => { subSelect.innerHTML += `<option value="${sub.name}">${sub.name}</option>`; }); }
     subSelect.innerHTML += `<option value="NEW">+ አዲስ ንዑስ ምድብ ጨምር</option>`;
@@ -1059,13 +938,11 @@ window.loadSubcategoriesForSelectedCategory = function() {
 
 window.onSubcategoryChange = function() {
     const subVal = document.getElementById('medSubcategory').value; const newSubInput = document.getElementById('medNewSubcategory');
-    if (subVal === 'NEW') { newSubInput.style.display = 'block'; newSubInput.focus(); } 
-    else { newSubInput.style.display = 'none'; newSubInput.value = ''; }
+    if (subVal === 'NEW') { newSubInput.style.display = 'block'; newSubInput.focus(); } else { newSubInput.style.display = 'none'; newSubInput.value = ''; }
 };
 
 function renderCategoryList() {
-    const listEl = document.getElementById('catListDisplay'); const tableBody = document.getElementById('catTableBody');
-    let htmlTags = ''; let htmlTable = '';
+    const listEl = document.getElementById('catListDisplay'); const tableBody = document.getElementById('catTableBody'); let htmlTags = '', htmlTable = '';
     allCategories.forEach(c => {
         const subsHtml = (allSubcategories[c] || []).map(sub => `<span class="cat-tag" style="font-size:11px; margin:2px;">${sub.name} <span class="del" onclick="deleteSubcategory('${c}', '${sub.id}', '${sub.name}')">×</span></span>`).join('');
         htmlTags += `<div style="margin-bottom:10px; background:#f7fafc; padding:10px; border-radius:8px; border:1px solid #edf2f7;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;"><strong style="font-size:14px; color:#2c5282;">📁 ${c}</strong><span class="del" onclick="deleteCategory('${c}')" style="cursor:pointer; color:#c53030; font-weight:bold;">×</span></div><div class="cat-tags" style="margin-bottom:5px;">${subsHtml}</div><div class="cat-add-row"><input type="text" id="newSub_${c}" placeholder="አዲስ ንዑስ ምድብ" style="padding:6px; font-size:12px;"><button onclick="addSubcategory('${c}')" style="padding:6px 10px; font-size:12px;">+</button></div></div>`;
@@ -1079,17 +956,14 @@ window.addCategory = async function() {
     const name = document.getElementById('newCat').value.trim(); if(!name) return alert('ስም አስገባ');
     try { await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newCat').value = ''; loadCategories(); } catch(e) { alert(e.message); }
 }; 
-
 window.deleteCategory = async function(name) {
     if(!confirm('ይህን ምድብ እና ንዑስ ምድቦቹን ማጥፋት ትፈልጋለህ?')) return;
     try { await deleteDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name)); const subs = allSubcategories[name] || []; for(let s of subs) { await deleteDoc(doc(db, 'subcategories', s.id)); } loadCategories(); } catch(e) { alert(e.message); }
 }; 
-
 window.addSubcategory = async function(catName) {
     const inputId = 'newSub_' + catName; const name = document.getElementById(inputId).value.trim(); if(!name) return alert('ስም አስገባ');
     try { await addDoc(collection(db, 'subcategories'), { name, categoryName: catName, pharmacyId: currentUserPharmacyId }); loadCategories(); } catch(e) { alert(e.message); }
 };
-
 window.deleteSubcategory = async function(catName, subId, subName) {
     if(!confirm('ይህን ንዑስ ምድብ ማጥፋት ትፈልጋለህ?')) return;
     try { await deleteDoc(doc(db, 'subcategories', subId)); loadCategories(); } catch(e) { alert(e.message); }
@@ -1171,25 +1045,19 @@ window.deleteCustomer = async function(name) {
     if(!confirm('ይህን ደንበኛ ማጥፋት ትፈልጋለህ?')) return;
     try { await deleteDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name)); loadCustomers(); } catch(e) { alert(e.message); }
 }; 
+</script>
 
-// Medicines
-window.addMedicine = async function() {
+    window.addMedicine = async function() {
     const type = document.getElementById('medType').value; const category = document.getElementById('medCategory').value;
     let subcategory = document.getElementById('medSubcategory').value; const newSubVal = document.getElementById('medNewSubcategory').value.trim();
     const branch = document.getElementById('medBranch').value;
-    
     if (subcategory === 'NEW') { if (!newSubVal) { alert('⚠️ እባክህ አዲሱን ንዑስ ምድብ ስም ሙላ!'); return; } subcategory = newSubVal; } 
     else if (!subcategory) { alert('⚠️ እባክህ ንዑስ ምድብ ምረጥ!'); return; }
-
-    const name = document.getElementById('medName').value.trim(); const cost = parseFloat(document.getElementById('medCost').value);
-    const price = parseFloat(document.getElementById('medPrice').value); const qty = parseInt(document.getElementById('medQty').value); 
+    const name = document.getElementById('medName').value.trim(); const cost = parseFloat(document.getElementById('medCost').value); const price = parseFloat(document.getElementById('medPrice').value); const qty = parseInt(document.getElementById('medQty').value); 
     let batch = document.getElementById('medBatch').value.trim(); let expiry = document.getElementById('medExpiry').value; let supplier = document.getElementById('medSupplier').value.trim(); 
-
     if (type === 'medicine') { if (!batch || !expiry) { alert('⚠️ እባክህ የባች ቁጥር እና የማለቂያ ቀን ሙላ!'); return; } } 
     else { batch = batch || '-'; expiry = expiry || '-'; supplier = supplier || '-'; }
-
     if (!category || !subcategory || !name || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) { alert('⚠️ እባክህ ሁሉንም መረጃዎች በትክክል ሙላ!'); return; } 
-
     try {
         if (subcategory === newSubVal) { await addDoc(collection(db, 'subcategories'), { name: subcategory, categoryName: category, pharmacyId: currentUserPharmacyId }); }
         await addDoc(collection(db, 'medicines'), { type, category, subcategory, name, batch, expiry, supplier, cost, price, quantity: qty, branch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId });
@@ -1203,17 +1071,11 @@ window.renderMedList = function() {
     const filter = document.getElementById('filterTypeMed').value; const search = (document.getElementById('searchMedList')?.value || '').toLowerCase();
     let filtered = allMedicines; if (filter !== 'all') filtered = filtered.filter(m => m.type === filter); 
     if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search) || (m.subcategory||'').toLowerCase().includes(search));
-
     const mobileListEl = document.getElementById('medListDisplayMobile');
     if(mobileListEl) {
         if(filtered.length === 0) { mobileListEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; } 
-        else {
-            let mobileHtml = '';
-            filtered.forEach(m => { const typeLabel = m.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት'; const extra = m.type === 'medicine' ? `| 📦 ${m.batch || '-'} | 📅 ${m.expiry || '-'}` : ''; mobileHtml += `<div class="list-item"><div class="info"><div class="name">${typeLabel}: ${m.name}</div><div class="meta">${m.category} → ${m.subcategory} ${extra}</div></div><div class="amount">${m.price} ብር</div></div>`; });
-            mobileListEl.innerHTML = mobileHtml;
-        }
+        else { let mobileHtml = ''; filtered.forEach(m => { const typeLabel = m.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት'; const extra = m.type === 'medicine' ? `| 📦 ${m.batch || '-'} | 📅 ${m.expiry || '-'}` : ''; mobileHtml += `<div class="list-item"><div class="info"><div class="name">${typeLabel}: ${m.name}</div><div class="meta">${m.category} → ${m.subcategory} ${extra}</div></div><div class="amount">${m.price} ብር</div></div>`; }); mobileListEl.innerHTML = mobileHtml; }
     }
-
     const tableBody = document.getElementById('medTableBody'); if(!tableBody) return;
     if(filtered.length === 0) { tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#a0aec0;">ምንም ምርት የለም።</td></tr>'; document.getElementById('medPageInfo').innerText = `ገጽ 0 ከ 0`; return; }
     const totalPages = Math.ceil(filtered.length / medRowsPerPage); if (medCurrentPage > totalPages) medCurrentPage = totalPages; if (medCurrentPage < 1) medCurrentPage = 1;
@@ -1230,7 +1092,7 @@ window.changeMedPage = function(direction) { medCurrentPage += direction; render
 
 window.editMedicine = function(id) {
     const med = allMedicines.find(m => m.id === id); if(!med) return;
-    document.getElementById('tab1_2').checked = true; // Switch to Add Medicine sub-tab
+    document.getElementById('tab1_2').checked = true; 
     document.getElementById('medType').value = med.type; onMedTypeChange();
     document.getElementById('medBranch').value = med.branch || 'all';
     document.getElementById('medCategory').value = med.category || ''; loadSubcategoriesForSelectedCategory();
@@ -1238,7 +1100,7 @@ window.editMedicine = function(id) {
         document.getElementById('medSubcategory').value = med.subcategory || '';
         document.getElementById('medName').value = med.name || ''; document.getElementById('medBatch').value = med.batch || ''; document.getElementById('medExpiry').value = med.expiry || ''; document.getElementById('medSupplier').value = med.supplier || ''; document.getElementById('medCost').value = med.cost || ''; document.getElementById('medPrice').value = med.price || ''; document.getElementById('medQty').value = med.quantity || '';
     }, 200);
-    const saveBtn = document.querySelector('#bodyAddMed .btn-success'); saveBtn.innerText = '🔄 Update Medicine';
+    const saveBtn = document.getElementById('btnSaveMed'); saveBtn.innerText = '🔄 Update Medicine';
     saveBtn.onclick = async function() {
         try {
             await updateDoc(doc(db, 'medicines', id), { type: document.getElementById('medType').value, branch: document.getElementById('medBranch').value, category: document.getElementById('medCategory').value, subcategory: document.getElementById('medSubcategory').value, name: document.getElementById('medName').value.trim(), batch: document.getElementById('medBatch').value.trim(), expiry: document.getElementById('medExpiry').value, supplier: document.getElementById('medSupplier').value.trim(), cost: parseFloat(document.getElementById('medCost').value), price: parseFloat(document.getElementById('medPrice').value), quantity: parseInt(document.getElementById('medQty').value) });
@@ -1349,10 +1211,7 @@ async function loadDailyReport() {
     document.getElementById('dailyTotalRevenue').innerHTML = totalRev.toFixed(2);
     document.getElementById('dailyTotalExpense').innerHTML = totalExp.toFixed(2);
     document.getElementById('dailyNetProfit').innerHTML = (totalRev - totalExp).toFixed(2);
-    document.getElementById('dailyTransCount').innerHTML = daySales.length + dayQuick.length;
-    document.getElementById('dailySalesList').innerHTML = salesHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ዝርዝር ሽያጭ የለም።</p>';
-    document.getElementById('dailyQuickSalesList').innerHTML = quickHtml || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ፈጣን ሽያጭ የለም።</p>';
-    document.getElementById('dailyPaymentSummary').innerHTML = `<div class="list-item"><div class="info"><div class="name">💵 Cash</div></div><div class="amount">${cashRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">🏦 Transfer</div></div><div class="amount">${transferRev.toFixed(2)} ብር</div></div><div class="list-item"><div class="info"><div class="name">📝 Credit</div></div><div class="amount">${creditRev.toFixed(2)} ብር</div></div>`;
+    document.getElementById('dailySalesList').innerHTML = (salesHtml + quickHtml) || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
 }
 
 async function loadMonthlyReport() {
@@ -1371,12 +1230,8 @@ async function loadMonthlyReport() {
     document.getElementById('monthlyTotalRevenue').innerHTML = totalRev.toFixed(2);
     document.getElementById('monthlyTotalExpense').innerHTML = (totalExp + totalFixed).toFixed(2);
     document.getElementById('monthlyNetProfit').innerHTML = (totalRev - totalExp - totalFixed).toFixed(2);
-    document.getElementById('monthlyTransCount').innerHTML = monthSales.length + monthQuick.length;
     document.getElementById('monthlySalesList').innerHTML = (salesHtml + quickHtml) || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
 }
-</script>
-<script type="module">
-// (ይህን ክፍል ከላይ ከፓርት 2 ጋር አንድ አድርገህ ጻፈው - ማለትም በዚያው <script> ውስጥ ቀጥለው)
 
 async function loadDashboard() {
     if (!currentUserPharmacyId) return;
@@ -1402,7 +1257,7 @@ function renderCharts(selectedMonth) {
         let year = parseInt(selectedMonth.split('-')[0]); let month = parseInt(selectedMonth.split('-')[1]) - 1; let daysInMonth = new Date(year, month + 1, 0).getDate();
         for (let i = 1; i <= daysInMonth; i++) { labels.push(i); let dateStr = selectedMonth + '-' + (i<10?'0'+i:i); let dayS = allSales.filter(s => s.date === dateStr).reduce((sum, s) => sum + (s.paidAmount !== undefined ? s.paidAmount : s.total), 0); let dayQ = allQuickSales.filter(q => q.date === dateStr).reduce((sum, q) => sum + q.amount, 0); data.push(dayS + dayQ); }
         if(dailyChartInstance) dailyChartInstance.destroy();
-        dailyChartInstance = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Sales', data: data, borderColor: '#2b6cb0', backgroundColor: 'rgba(43,108,176,0.1)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: true, align: 'top', color: '#2b6cb0' } } } });
+        dailyChartInstance = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Sales', data: data, borderColor: '#2b6cb0', backgroundColor: 'rgba(43,108,176,0.1)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false } });
     }
     const pieCtx = document.getElementById('expensePieChartCanvas'); const legendEl = document.getElementById('expenseLegend');
     if(pieCtx) {
@@ -1486,7 +1341,7 @@ function renderUnpaidCredits() {
     allCreditPayments.forEach(payment => { const customer = payment.customer; if(customerDebts[customer]) { customerDebts[customer] -= payment.amount; if(customerDebts[customer] <= 0) delete customerDebts[customer]; } });
     let customersWithDebt = Object.keys(customerDebts); if (searchVal) customersWithDebt = customersWithDebt.filter(c => c.toLowerCase().includes(searchVal));
     let totalDebt = 0; let html = '';
-    if(customersWithDebt.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ያልተከፈለ ዕዳ የለም።</p>;'; document.getElementById('totalUnpaidDebt').innerText = '0.00'; return; }
+    if(customersWithDebt.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ያልተከፈለ ዕዳ የለም።</p>'; document.getElementById('totalUnpaidDebt').innerText = '0.00'; return; }
     customersWithDebt.forEach(customer => { const debt = customerDebts[customer]; if(debt > 0) { totalDebt += debt; html += `<div class="list-item" style="background:#fff5f5; border-color:#fed7d7;"><div class="info"><div class="name" style="color:#c53030;">🏪 ${customer}</div><div class="meta">ያልተከፈለ ዕዳ</div></div><div class="amount red" style="font-size:16px;">${debt.toFixed(2)} ብር</div></div>`; } });
     listEl.innerHTML = html; document.getElementById('totalUnpaidDebt').innerText = totalDebt.toFixed(2);
 }
@@ -1519,14 +1374,6 @@ window.clearAllSales = async function() {
     if (!confirm('⚠️ እርግጠኛ ነዎት? ይህ ተግባር አይመለስም!')) return;
     try { let batch = writeBatch(db); let count = 0; for (let s of allSales) { batch.delete(doc(db, 'sales', s.id)); count++; } for (let q of allQuickSales) { batch.delete(doc(db, 'quickSales', q.id)); count++; } if (count > 0) await batch.commit(); let creditBatch = writeBatch(db); let cCount = 0; for (let c of allCreditPayments) { creditBatch.delete(doc(db, 'creditPayments', c.id)); cCount++; } if (cCount > 0) await creditBatch.commit(); alert(`✅ ${count} የሽያጭ ታሪኮች ተሰርዘዋል!`); } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
 };
-
-function checkExpiryAlerts() {
-    const today = new Date(); let expiredCount = 0; allMedicines.forEach(m => { if(m.expiry && m.expiry !== '-' && new Date(m.expiry) < today) expiredCount++; });
-    const banner = document.getElementById('expiryBanner'); if(expiredCount > 0 && banner) { document.getElementById('expiryBannerText').innerText = `${expiredCount} የሚያልቁ እቃዎች አሉ! እባክዎ ይመልከቱ።`; banner.style.display = 'block'; } else if (banner) banner.style.display = 'none';
-}
-
-function loadDarkMode() { const isDark = localStorage.getItem('darkMode') === 'true'; if(isDark) document.body.classList.add('dark'); const toggle = document.getElementById('darkModeToggle'); if(toggle) toggle.checked = isDark; }
-window.toggleDarkMode = function() { const isDark = document.getElementById('darkModeToggle').checked; document.body.classList.toggle('dark', isDark); localStorage.setItem('darkMode', isDark); };
 
 window.toggleReportDatePickers = function() {
     const type = document.getElementById('reportTypeSelect').value; const dateDiv = document.getElementById('repDateDiv'); const monthDiv = document.getElementById('repMonthDiv');
