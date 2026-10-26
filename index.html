@@ -1090,15 +1090,16 @@ window.toggleSection = function(h, b) {
     const bd = document.getElementById(b); 
     if (!hd || !bd) return; 
     
-    // ክላሱ ካለው አስወግድ፣ ከሌለው ጨምር
-    if (bd.classList.contains('open')) {
-        bd.classList.remove('open');
+    // ቀላል እና አስተማማኝ የመክፈት/የመዝጋት ዘዴ (በቀጥታ display ላይ የሚሰራ)
+    if (bd.style.display === 'block') {
+        bd.style.display = 'none';
         hd.classList.remove('open');
     } else {
-        bd.classList.add('open');
+        bd.style.display = 'block';
         hd.classList.add('open');
     }
-};
+}; 
+
 window.toggleMenu = function(element) {
     const allHeaders = document.querySelectorAll('.menu-header');
     const allSubMenus = document.querySelectorAll('.sub-menu');
