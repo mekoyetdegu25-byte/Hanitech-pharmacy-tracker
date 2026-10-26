@@ -118,7 +118,7 @@ input:focus, select:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16
 
 /* POS (Point of Sale) Specific Layout */
 .pos-layout { display: grid; grid-template-columns: 350px 1fr; gap: 20px; height: calc(100vh - 160px); }
-.pos-cart { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow-y: auto; height: 100%; } /* ሙሉው እንዲንሸራተት */
+.pos-cart { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow-y: auto; height: 100%; }
 .pos-cart-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; flex-shrink: 0; } 
 .pos-cart-items { flex: 1; padding: 16px; }
 .pos-cart-footer { padding: 16px; border-top: 1px solid #e5e7eb; background: #fff; flex-shrink: 0; }
@@ -859,13 +859,15 @@ input:checked + .slider:before { transform: translateX(20px); }
                 <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
                 </div>
+                <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
                 <div class="section-body open" id="bodySettings">
                     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
                         
                         <!-- Pharmacy Name -->
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrPhName','bodyPhName')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">Pharmacy Name</span></div></div>
-                            <div class="section-body" id="bodyPhName">
+                            <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
+                            <div class="section-body open" id="bodyPhName">
                                 <input type="text" id="settingPhName" placeholder="Pharmacy Name">
                                 <button class="btn btn-primary" style="width:auto; padding:10px 20px; float:right;" onclick="savePharmacyName()">💾 Save</button>
                                 <div style="clear:both;"></div>
@@ -875,7 +877,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <!-- Business Type -->
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrBizType','bodyBizType')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Business Type</span></div></div>
-                            <div class="section-body" id="bodyBizType">
+                            <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
+                            <div class="section-body open" id="bodyBizType">
                                 <div class="info-banner" id="bizTypeBanner" style="margin-bottom:10px; font-size:12px;">Loading...</div>
                                 <select id="settingBizType" style="margin-bottom:10px;">
                                     <option value="retail">🛍️ Retail</option>
@@ -889,7 +892,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <!-- Stock Limit -->
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrStockLimit','bodyStockLimit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Stock Limit</span></div></div>
-                            <div class="section-body" id="bodyStockLimit">
+                            <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
+                            <div class="section-body open" id="bodyStockLimit">
                                 <input type="number" id="settingStockLimit">
                                 <button class="btn btn-primary" style="width:auto; padding:10px 20px; float:right;" onclick="saveStockLimit()">💾 Save</button>
                                 <div style="clear:both;"></div>
@@ -899,7 +903,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <!-- Expiry Limit -->
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrExpLimit','bodyExpLimit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">Expiry Alert Limit</span></div></div>
-                            <div class="section-body" id="bodyExpLimit">
+                            <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
+                            <div class="section-body open" id="bodyExpLimit">
                                 <input type="number" id="settingExpiryLimit">
                                 <button class="btn btn-primary" style="width:auto; padding:10px 20px; float:right;" onclick="saveExpiryLimit()">💾 Save</button>
                                 <div style="clear:both;"></div>
@@ -909,7 +914,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <!-- Branches -->
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrBranchMgr','bodyBranchMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div></div>
-                            <div class="section-body" id="bodyBranchMgr">
+                            <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
+                            <div class="section-body open" id="bodyBranchMgr">
                                 <div style="display:flex; gap:10px; margin-bottom:10px;">
                                     <input type="text" id="newBranch" placeholder="New Branch">
                                     <button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addBranch()">+ Add</button>
@@ -921,7 +927,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <!-- Customers -->
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrCustMgr','bodyCustMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">Customers</span></div></div>
-                            <div class="section-body" id="bodyCustMgr">
+                            <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
+                            <div class="section-body open" id="bodyCustMgr">
                                 <div style="display:flex; gap:10px; margin-bottom:10px;">
                                     <input type="text" id="newCustomer" placeholder="New Customer">
                                     <button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addCustomer()">+ Add</button>
@@ -933,7 +940,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <!-- Change Password -->
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrPassChange','bodyPassChange')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔐</span><span class="sec-title">Change Password</span></div></div>
-                            <div class="section-body" id="bodyPassChange">
+                            <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
+                            <div class="section-body open" id="bodyPassChange">
                                 <label class="field-label">Current Password</label>
                                 <input type="password" id="currentPassword" placeholder="********">
                                 <label class="field-label">New Password</label>
@@ -946,7 +954,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <!-- Backup / Restore -->
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrBackup','bodyBackup')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💾</span><span class="sec-title">Backup & Restore</span></div></div>
-                            <div class="section-body" id="bodyBackup">
+                            <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
+                            <div class="section-body open" id="bodyBackup">
                                 <p style="font-size:12px; color:#6b7280; margin-bottom:10px;">Download or restore system data.</p>
                                 <button class="btn btn-success" style="margin-bottom:8px;" onclick="backupData()">📥 Download Backup</button>
                                 <button class="btn btn-warning" onclick="document.getElementById('restoreFile').click()">📤 Restore Data</button>
@@ -957,7 +966,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <!-- Employee Permissions (Full Width) -->
                         <div class="section-collapsible" style="margin-bottom:0; grid-column: 1 / -1;">
                             <div class="section-header" onclick="toggleSection('hdrPerms','bodyPerms')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">Employee Permissions</span></div></div>
-                            <div class="section-body" id="bodyPerms">
+                            <!-- እዚህ ጋር 'open' የሚለው ቃል ተጨምሯል -->
+                            <div class="section-body open" id="bodyPerms">
                                 <div id="permSectionDisplay" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;"></div>
                                 <button class="btn btn-success" style="margin-top:20px; width:auto; padding:10px 20px; float:right;" onclick="savePermissions()">💾 Save Permissions</button>
                                 <div style="clear:both;"></div>
