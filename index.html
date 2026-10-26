@@ -8,7 +8,6 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: #f4f7f6; color: #1a202c; font-size: 15px; margin: 0; min-height: 100vh; overflow: hidden; }
-body.dark { background: #1a202c; color: #e2e8f0; }
 
 /* Splash & Login */
 #splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
@@ -61,8 +60,6 @@ header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spac
 .panels { flex: 1; padding: 24px; background: #f4f7f6; overflow-y: auto; width: calc(100% - 260px); }
 .panel { display: none; padding: 0; } 
 .sub-panel { display: none; padding: 0; }
-
-/* በ JavaScript የሚታዩት */
 .panel.active { display: block !important; }
 .sub-panel.active { display: block !important; }
 
@@ -103,14 +100,6 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 .dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; }
 .dash-val-box { border-radius: 8px; padding: 16px; text-align: center; color: #fff; }
 .dash-val-number { font-size: 24px; font-weight: 800; } 
-
-/* Toggles */
-.toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
-.toggle-switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
-.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-input:checked + .slider { background-color: #276749; }
-input:checked + .slider:before { transform: translateX(18px); }
 
 @media print {
     body * { visibility: hidden; }
@@ -240,10 +229,9 @@ input:checked + .slider:before { transform: translateX(18px); }
     </div> 
 
     <div class="panels">
-        <!-- PANEL 1 (Medicine) -->
+        <!-- PANEL 1 -->
         <div class="panel active" id="panel1">
             <div class="sub-panel active" id="sub1_1">
-                <!-- (ከቀድሞው ኮድህ የ Medicine List ክፍል እዚህ ይቀመጣል) -->
                 <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrMedList','bodyMedList')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">Medicine List</span></div>
@@ -254,7 +242,6 @@ input:checked + .slider:before { transform: translateX(18px); }
                             <select id="filterTypeMed" onchange="renderMedList()" style="flex: 1; min-width: 120px;">
                                 <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
                             </select>
-                            <button class="btn btn-primary" onclick="window.print()" style="width: auto; margin-top: 0; padding: 10px 15px; font-size: 13px;">🖨️ Print</button>
                         </div>
                         <div style="overflow-x: auto;">
                             <table class="data-table">
@@ -266,7 +253,6 @@ input:checked + .slider:before { transform: translateX(18px); }
                 </div>
             </div>
             <div class="sub-panel" id="sub1_2">
-                <!-- (ከቀድሞው ኮድህ የ Add Medicine ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrAddMed','bodyAddMed')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">Add Medicine</span></div>
@@ -297,15 +283,14 @@ input:checked + .slider:before { transform: translateX(18px); }
                 </div>
             </div>
             <div class="sub-panel" id="sub1_3">
-                 <!-- (ከቀድሞው ኮድህ የ Medicine Category ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Medicine Category</span></div>
                     </div>
                     <div class="section-body open" id="bodyCatMgr">
-                        <div class="cat-add-row" style="margin-bottom:15px;">
+                        <div style="margin-bottom:15px;">
                             <input type="text" id="newCat" placeholder="New Category Name">
-                            <button onclick="addCategory()">+ Add</button>
+                            <button class="btn btn-primary" style="margin-top:5px;" onclick="addCategory()">+ Add Category</button>
                         </div>
                         <div style="overflow-x: auto;">
                             <table class="data-table">
@@ -318,10 +303,9 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div>
 
-        <!-- PANEL 2 (Sales) -->
+        <!-- PANEL 2 -->
         <div class="panel" id="panel2">
             <div class="sub-panel active" id="sub2_1">
-                 <!-- (ከቀድሞው ኮድህ የ New Sale ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrSell','bodySell')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">New Sale</span></div>
@@ -333,11 +317,8 @@ input:checked + .slider:before { transform: translateX(18px); }
                         </div>
                         <label class="field-label">💳 Payment Method</label>
                         <select id="sellPaymentMethod" onchange="togglePaymentDetails()">
-                            <option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit" id="creditOption" style="display:none;">📝 Credit</option>
+                            <option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option>
                         </select> 
-                        <div id="creditPaymentDetails" style="display:none; margin-top:10px; padding:10px; background:#fffaf0; border:1px solid #fbd38d; border-radius:8px;">
-                            <label class="field-label" style="margin-top:0;">💰 Paid Amount</label><input type="number" id="sellPaidAmount" value="0">
-                        </div> 
                         <label class="field-label">🧾 Receipt No</label><input type="text" id="sellReceipt">
                         <div style="margin-top:10px;"><input type="text" id="searchSellInput" placeholder="🔍 Search Product..." oninput="renderSellProducts()"></div>
                         <div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
@@ -354,7 +335,6 @@ input:checked + .slider:before { transform: translateX(18px); }
                 </div>
             </div>
             <div class="sub-panel" id="sub2_2">
-                 <!-- (ከቀድሞው ኮድህ የ Quick Sale ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">Quick Sale</span></div>
@@ -370,7 +350,6 @@ input:checked + .slider:before { transform: translateX(18px); }
                 </div>
             </div>
             <div class="sub-panel" id="sub2_3">
-                 <!-- (ከቀድሞው ኮድህ የ Sales History ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrSalesHistory','bodySalesHistory')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Sales History</span></div>
@@ -388,10 +367,9 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div> 
 
-        <!-- PANEL 3 (Expenses) -->
+        <!-- PANEL 3 -->
         <div class="panel" id="panel3">
             <div class="sub-panel active" id="sub3_1">
-                 <!-- (ከቀድሞው ኮድህ የ Daily Expense ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrAddExp','bodyAddExp')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">Daily Expense</span></div>
@@ -412,7 +390,6 @@ input:checked + .slider:before { transform: translateX(18px); }
                 </div>
             </div>
             <div class="sub-panel" id="sub3_2">
-                 <!-- (ከቀድሞው ኮድህ የ Fixed Expense ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Fixed Expense</span></div>
@@ -432,15 +409,14 @@ input:checked + .slider:before { transform: translateX(18px); }
                 </div>
             </div>
             <div class="sub-panel" id="sub3_3">
-                 <!-- (ከቀድሞው ኮድህ የ Expense Category ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Expense Category</span></div>
                     </div>
                     <div class="section-body open" id="bodyExpCatMgr">
-                        <div class="cat-add-row">
+                        <div style="margin-bottom:10px;">
                             <input type="text" id="newExpCat" placeholder="New Expense Category">
-                            <button onclick="addExpCategory()">+ Add</button>
+                            <button class="btn btn-primary" style="margin-top:5px;" onclick="addExpCategory()">+ Add</button>
                         </div>
                         <div class="cat-tags" id="expCatListDisplay" style="margin-top:10px;"></div>
                     </div>
@@ -448,10 +424,9 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div> 
 
-        <!-- PANEL 4 (Inventory) -->
+        <!-- PANEL 4 -->
         <div class="panel" id="panel4">
             <div class="sub-panel active" id="sub4_1">
-                 <!-- (ከቀድሞው ኮድህ የ Inventory List ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrInventory','bodyInventory')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory List</span></div>
@@ -461,9 +436,6 @@ input:checked + .slider:before { transform: translateX(18px); }
                             <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search Inventory..." oninput="loadInventory()" style="flex:1;">
                             <select id="filterTypeInv" onchange="loadInventory()" style="flex:1;">
                                 <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
-                            </select>
-                            <select id="filterBranchInv" onchange="loadInventory()" style="flex:1;">
-                                <option value="all">All Branches</option>
                             </select>
                         </div>
                         <div id="inventoryList"></div>
@@ -475,7 +447,6 @@ input:checked + .slider:before { transform: translateX(18px); }
                 </div>
             </div>
             <div class="sub-panel" id="sub4_2">
-                 <!-- (ከቀድሞው ኮድህ የ Expiry & Low Stock ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Expiry & Low Stock Alerts</span></div>
@@ -490,7 +461,6 @@ input:checked + .slider:before { transform: translateX(18px); }
                 </div>
             </div>
             <div class="sub-panel" id="sub4_3">
-                 <!-- (ከቀድሞው ኮድህ የ Stock Adjust ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">Stock Adjust</span></div>
@@ -505,9 +475,8 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div> 
 
-        <!-- PANEL 7 (Dashboard) -->
+        <!-- PANEL 7 -->
         <div class="panel" id="panel7">
-            <!-- (ከቀድሞው ኮድህ የ Dashboard ክፍል እዚህ ይቀመጣል) -->
             <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrDash','bodyDash')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
@@ -539,10 +508,9 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div>
 
-        <!-- PANEL 8 (Reports) -->
+        <!-- PANEL 8 -->
         <div class="panel" id="panel8">
             <div class="sub-panel active" id="sub8_1">
-                 <!-- (ከቀድሞው ኮድህ የ General Report ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open no-print" onclick="toggleSection('hdrRepMain','bodyRepMain')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📄</span><span class="sec-title">Generate Report</span></div>
@@ -564,7 +532,6 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
 
             <div class="sub-panel" id="sub8_2">
-                 <!-- (ከቀድሞው ኮድህ የ Daily Report ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrDaily','bodyDaily')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">Daily Report</span></div>
@@ -591,7 +558,6 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
 
             <div class="sub-panel" id="sub8_3">
-                 <!-- (ከቀድሞው ኮድህ የ Monthly Report ክፍል እዚህ ይቀመጣል) -->
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrMonthly','bodyMonthly')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">Monthly Report</span></div>
@@ -617,9 +583,8 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div>
 
-        <!-- PANEL 9 (Settings) -->
+        <!-- PANEL 9 -->
         <div class="panel" id="panel9">
-            <!-- (ከቀድሞው ኮድህ የ Settings ክፍል እዚህ ይቀመጣል) -->
             <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
@@ -636,11 +601,11 @@ input:checked + .slider:before { transform: translateX(18px); }
                         </div>
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrBranchMgr','bodyBranchMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div></div>
-                            <div class="section-body" id="bodyBranchMgr"><div class="cat-add-row"><input type="text" id="newBranch" placeholder="New Branch"><button onclick="addBranch()">+ Add</button></div><div class="cat-tags" id="branchListDisplay" style="margin-top:10px;"></div></div>
+                            <div class="section-body" id="bodyBranchMgr"><div style="margin-bottom:10px;"><input type="text" id="newBranch" placeholder="New Branch"><button class="btn btn-primary" style="margin-top:5px;" onclick="addBranch()">+ Add</button></div><div class="cat-tags" id="branchListDisplay" style="margin-top:10px;"></div></div>
                         </div>
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrCustMgr','bodyCustMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">Customers</span></div></div>
-                            <div class="section-body" id="bodyCustMgr"><div class="cat-add-row"><input type="text" id="newCustomer" placeholder="New Customer"><button onclick="addCustomer()">+ Add</button></div><div class="cat-tags" id="customerListDisplay" style="margin-top:10px;"></div></div>
+                            <div class="section-body" id="bodyCustMgr"><div style="margin-bottom:10px;"><input type="text" id="newCustomer" placeholder="New Customer"><button class="btn btn-primary" style="margin-top:5px;" onclick="addCustomer()">+ Add</button></div><div class="cat-tags" id="customerListDisplay" style="margin-top:10px;"></div></div>
                         </div>
                         <div class="section-collapsible" style="margin-bottom:0; grid-column: 1 / -1;">
                             <div class="section-header" onclick="toggleSection('hdrPerms','bodyPerms')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">Employee Permissions</span></div></div>
@@ -654,9 +619,8 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div>
 
-        <!-- PANEL 10 (Credit) -->
+        <!-- PANEL 10 -->
         <div class="panel" id="panel10">
-            <!-- (ከቀድሞው ኮድህ የ Credit ክፍል እዚህ ይቀመጣል) -->
              <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrCredit','bodyCredit')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">Credit</span></div>
@@ -686,7 +650,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 </div> <!-- End main-content-wrapper -->
 </div> <!-- End mainApp -->
 
-<!--<script type="module">
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
@@ -712,31 +676,21 @@ let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed =
 
 setTimeout(() => { const splash = document.getElementById('splashScreen'); if(splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; }, 500); } }, 1500); 
 
-// --- የገጽ መቀያየሪያ ሎጂክ (አዲስ) ---
 window.switchPage = function(panelId, subPanelId, element) {
-    // 1. ሁሉንም ዋና ፓነሎች ደብቅ
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    
-    // 2. የተመረጠውን ዋና ፓነል አሳይ
     const targetPanel = document.getElementById(panelId);
     if(targetPanel) targetPanel.classList.add('active');
 
-    // 3. በዚያ ፓነል ውስጥ ያሉትን ሁሉንም ንዑስ ፓነሎች ደብቅ
-    if(targetPanel) {
-        targetPanel.querySelectorAll('.sub-panel').forEach(sp => sp.classList.remove('active'));
-    }
+    if(targetPanel) targetPanel.querySelectorAll('.sub-panel').forEach(sp => sp.classList.remove('active'));
 
-    // 4. የተመረጠውን ንዑስ ፓነል አሳይ
     if(subPanelId) {
         const targetSubPanel = document.getElementById(subPanelId);
         if(targetSubPanel) targetSubPanel.classList.add('active');
     }
 
-    // 5. የሜኑ ቁልፎችን Active አድርግ
     document.querySelectorAll('.sub-menu label, .menu-header').forEach(el => el.classList.remove('active'));
     if(element) {
         element.classList.add('active');
-        // ወላጅ ሜኑ ካለው እሱንም Active አድርግ
         const parentMenu = element.closest('.menu-group');
         if(parentMenu) {
             const header = parentMenu.querySelector('.menu-header');
@@ -1078,13 +1032,12 @@ window.completeSale = async function() {
     let branch = 'all', customer = '';
     if (currentBizType === 'wholesale') { customer = document.getElementById('sellCustomer').value; if (!customer) { alert('⚠️ እባክህ ደንበኛ ምረጥ!'); return; } } else { branch = document.getElementById('sellBranch').value; } 
     let totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0); let paidAmount = totalAmount;
-    if (paymentMethod === 'credit') { paidAmount = parseFloat(document.getElementById('sellPaidAmount').value) || 0; if (paidAmount > totalAmount) paidAmount = totalAmount; } 
     try {
         for(const item of cart) {
-            await addDoc(collection(db, 'sales'), { medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, total: item.price * item.qty, paymentMethod: paymentMethod, paidAmount: paymentMethod === 'credit' ? (item.price * item.qty) * (paidAmount/totalAmount) : (item.price * item.qty), date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+            await addDoc(collection(db, 'sales'), { medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, total: item.price * item.qty, paymentMethod: paymentMethod, paidAmount: paidAmount, date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
             await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
         }
-        alert('✅ ሽያጭ ተመዝግቧል!'); cart = []; renderCart(); document.getElementById('sellPaidAmount').value = '0';
+        alert('✅ ሽያጭ ተመዝግቧል!'); cart = []; renderCart();
     } catch(e) { alert(e.message); }
 }; 
 
