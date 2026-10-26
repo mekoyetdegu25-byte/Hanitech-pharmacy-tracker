@@ -119,7 +119,10 @@ input:focus, select:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16
 /* POS (Point of Sale) Specific Layout */
 .pos-layout { display: grid; grid-template-columns: 350px 1fr; gap: 20px; height: calc(100vh - 160px); }
 .pos-cart { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
-.pos-cart-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; flex-shrink: 0; }
+/* ራስጌው ከ 55% በላይ እንዳይሆን እና የራሱ ስክሮል እንዲኖረው */
+.pos-cart-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; flex-shrink: 0; max-height: 55%; overflow-y: auto; } 
+.pos-cart-header::-webkit-scrollbar { width: 4px; }
+.pos-cart-header::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
 .pos-cart-items { flex: 1; overflow-y: auto; padding: 16px; }
 .pos-cart-footer { padding: 16px; border-top: 1px solid #e5e7eb; background: #fff; flex-shrink: 0; }
 .pos-products { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
@@ -772,7 +775,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="section-collapsible" style="box-shadow:none; border:1px solid #e5e7eb;">
                             <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
                             <div class="section-body" id="bodyDailySales">
-                                <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="loadDailyReport()">
+                                <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="dailyPage=1; loadDailyReport()">
                                 <div id="dailySalesList"></div>
                                 <div class="pagination-controls">
                                     <div class="rows-per-page">
@@ -830,7 +833,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="section-collapsible" style="box-shadow:none; border:1px solid #e5e7eb;">
                             <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
                             <div class="section-body" id="bodyMonthlySales">
-                                <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="loadMonthlyReport()">
+                                <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="monthlyPage=1; loadMonthlyReport()">
                                 <div id="monthlySalesList"></div>
                                 <div class="pagination-controls">
                                     <div class="rows-per-page">
@@ -1035,7 +1038,6 @@ let currentUserPharmacyId = null, currentUserRole = 'employee', currentBizType =
 let dailyChartInstance = null, expensePieChartInstance = null;
 let currentCategoryFilter = 'all';
 
-// Pagination Variables
 let medPage = 1, catPage = 1, expPage = 1, lowPage = 1, invPage = 1, salesHistPage = 1, dailyPage = 1, monthlyPage = 1;
 
 let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null, unsubQuickSales = null;
@@ -1092,7 +1094,6 @@ window.onMedTypeChange = function() {
     document.getElementById('medicineOnlyFields').style.display = type === 'cosmetic' ? 'none' : 'block';
 }; 
 
-// --- AUTH & HEADER ---
 async function loadUserHeader(user) {
     try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
