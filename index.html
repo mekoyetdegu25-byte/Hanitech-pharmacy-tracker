@@ -8,6 +8,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: #f4f7f6; color: #1a202c; font-size: 15px; margin: 0; min-height: 100vh; overflow: hidden; }
+body.dark { background: #1a202c; color: #e2e8f0; }
 
 /* Splash & Login */
 #splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
@@ -41,7 +42,7 @@ header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spac
 .tabs::-webkit-scrollbar { width: 5px; }
 .tabs::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 5px; }
 
-input[type="radio"][name="tabs"] { display: none !important; }
+input[type="radio"][name="tabs"], input[type="radio"][name="sub-tabs"] { display: none !important; }
 
 .menu-group { width: 100%; margin-bottom: 5px; }
 .menu-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; font-size: 14px; font-weight: 700; color: #a0aec0; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
@@ -69,8 +70,9 @@ input[type="radio"][name="tabs"] { display: none !important; }
 #tab4_1:checked ~ .tabs label[for="tab4_1"],
 #tab4_2:checked ~ .tabs label[for="tab4_2"],
 #tab4_3:checked ~ .tabs label[for="tab4_3"],
-#tab5:checked ~ .tabs label[for="tab5"],
-#tab6:checked ~ .tabs label[for="tab6"],
+#tab8_1:checked ~ .tabs label[for="tab8_1"],
+#tab8_2:checked ~ .tabs label[for="tab8_2"],
+#tab8_3:checked ~ .tabs label[for="tab8_3"],
 #tab7:checked ~ .tabs label[for="tab7"],
 #tab8:checked ~ .tabs label[for="tab8"],
 #tab9:checked ~ .tabs label[for="tab9"],
@@ -80,8 +82,10 @@ input[type="radio"][name="tabs"] { display: none !important; }
 
 /* Main Content Area */
 .panels { flex: 1; padding: 24px; background: #f4f7f6; overflow-y: auto; width: calc(100% - 260px); }
-.panel { padding: 0; display: none; } 
+.panel { display: none; padding: 0; } 
+.sub-panel { display: none; padding: 0; }
 
+/* የፓነሎች መታየት ህግ */
 #tab1_1:checked ~ .panels #panel1 .sub1_1,
 #tab1_2:checked ~ .panels #panel1 .sub1_2,
 #tab1_3:checked ~ .panels #panel1 .sub1_3,
@@ -94,10 +98,11 @@ input[type="radio"][name="tabs"] { display: none !important; }
 #tab4_1:checked ~ .panels #panel4 .sub4_1,
 #tab4_2:checked ~ .panels #panel4 .sub4_2,
 #tab4_3:checked ~ .panels #panel4 .sub4_3,
-#tab5:checked ~ .panels #panel5,
-#tab6:checked ~ .panels #panel6,
 #tab7:checked ~ .panels #panel7,
 #tab8:checked ~ .panels #panel8,
+#tab8_1:checked ~ .panels #panel8 .sub8_1,
+#tab8_2:checked ~ .panels #panel8 .sub8_2,
+#tab8_3:checked ~ .panels #panel8 .sub8_3,
 #tab9:checked ~ .panels #panel9,
 #tab10:checked ~ .panels #panel10 { 
     display: block !important; 
@@ -196,6 +201,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 
 <div class="main-content-wrapper">
 <div class="tabs-wrapper">
+    <!-- Radio Inputs -->
     <input type="radio" name="tabs" id="tab1_1" checked>
     <input type="radio" name="tabs" id="tab1_2">
     <input type="radio" name="tabs" id="tab1_3">
@@ -208,12 +214,15 @@ input:checked + .slider:before { transform: translateX(18px); }
     <input type="radio" name="tabs" id="tab4_1">
     <input type="radio" name="tabs" id="tab4_2">
     <input type="radio" name="tabs" id="tab4_3">
-    <input type="radio" name="tabs" id="tab5">
-    <input type="radio" name="tabs" id="tab6">
     <input type="radio" name="tabs" id="tab7">
     <input type="radio" name="tabs" id="tab8">
     <input type="radio" name="tabs" id="tab9">
     <input type="radio" name="tabs" id="tab10"> 
+    
+    <!-- Sub-tabs for Reports -->
+    <input type="radio" name="sub-tabs" id="tab8_1" checked>
+    <input type="radio" name="sub-tabs" id="tab8_2">
+    <input type="radio" name="sub-tabs" id="tab8_3">
 
     <div class="tabs">
         <div class="menu-group">
@@ -265,27 +274,21 @@ input:checked + .slider:before { transform: translateX(18px); }
         </div>
 
         <div class="menu-group">
-            <label class="menu-header" for="tab5" style="margin-bottom:0;">
-                <div class="m-left"><i>📅</i> Daily Report</div>
-            </label>
-        </div>
-
-        <div class="menu-group">
-            <label class="menu-header" for="tab6" style="margin-bottom:0;">
-                <div class="m-left"><i>📆</i> Monthly Report</div>
-            </label>
-        </div>
-
-        <div class="menu-group">
             <label class="menu-header" for="tab7" style="margin-bottom:0;">
                 <div class="m-left"><i>📊</i> Dashboard</div>
             </label>
         </div>
 
         <div class="menu-group">
-            <label class="menu-header" for="tab8" style="margin-bottom:0;">
+            <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>📄</i> Reports</div>
-            </label>
+                <span class="m-arrow">▶</span>
+            </div>
+            <div class="sub-menu">
+                <label for="tab8_1">📄 General Report</label>
+                <label for="tab8_2">📅 Daily Report</label>
+                <label for="tab8_3">📆 Monthly Report</label>
+            </div>
         </div>
 
         <div class="menu-group">
@@ -293,12 +296,19 @@ input:checked + .slider:before { transform: translateX(18px); }
                 <div class="m-left"><i>⚙️</i> Settings</div>
             </label>
         </div>
+        
+        <div class="menu-group">
+            <label class="menu-header" for="tab10" style="margin-bottom:0;">
+                <div class="m-left"><i>💳</i> Credit</div>
+            </label>
+        </div>
     </div> 
 
     <div class="panels">
         <!-- PANEL 1 (Medicine) -->
         <div class="panel" id="panel1">
-            <div class="sub-panel sub1_1 active">
+            <!-- Sub 1_1 -->
+            <div class="sub-panel sub1_1">
                 <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrMedList','bodyMedList')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">Medicine List</span></div>
@@ -315,16 +325,14 @@ input:checked + .slider:before { transform: translateX(18px); }
                         </div>
                         <div style="overflow-x: auto;">
                             <table class="data-table">
-                                <thead>
-                                    <tr><th>Branch</th><th>Item</th><th>Category</th><th>Sub Cat</th><th>Batch</th><th>Exp Date</th><th>Item Name</th><th>Supplier</th><th>Cost</th><th>Price</th><th>Qty</th><th>Action</th></tr>
-                                </thead>
+                                <thead><tr><th>Branch</th><th>Item</th><th>Category</th><th>Sub Cat</th><th>Batch</th><th>Exp Date</th><th>Item Name</th><th>Supplier</th><th>Cost</th><th>Price</th><th>Qty</th><th>Action</th></tr></thead>
                                 <tbody id="medTableBody"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <!-- Sub 1_2 -->
             <div class="sub-panel sub1_2">
                 <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrAddMed','bodyAddMed')">
@@ -333,8 +341,7 @@ input:checked + .slider:before { transform: translateX(18px); }
                     <div class="section-body open" id="bodyAddMed">
                         <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
                             <div>
-                                <label class="field-label">📦 Type</label>
-                                <select id="medType" onchange="onMedTypeChange()"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
+                                <label class="field-label">📦 Type</label><select id="medType" onchange="onMedTypeChange()"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
                                 <label class="field-label">🏢 Branch</label><select id="medBranch"></select>
                                 <label class="field-label">📁 Category</label><select id="medCategory" onchange="loadSubcategoriesForSelectedCategory()"></select>
                                 <label class="field-label">📂 Sub Category</label><select id="medSubcategory" onchange="onSubcategoryChange()"></select>
@@ -356,7 +363,7 @@ input:checked + .slider:before { transform: translateX(18px); }
                     </div>
                 </div>
             </div>
-
+            <!-- Sub 1_3 -->
             <div class="sub-panel sub1_3">
                 <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
@@ -380,7 +387,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 
         <!-- PANEL 2 (Sales) -->
         <div class="panel" id="panel2">
-            <div class="sub-panel sub2_1 active">
+            <div class="sub-panel sub2_1">
                 <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrSell','bodySell')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">New Sale</span></div>
@@ -395,8 +402,7 @@ input:checked + .slider:before { transform: translateX(18px); }
                             <option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit" id="creditOption" style="display:none;">📝 Credit</option>
                         </select> 
                         <div id="creditPaymentDetails" style="display:none; margin-top:10px; padding:10px; background:#fffaf0; border:1px solid #fbd38d; border-radius:8px;">
-                            <label class="field-label" style="margin-top:0;">💰 Paid Amount</label>
-                            <input type="number" id="sellPaidAmount" value="0">
+                            <label class="field-label" style="margin-top:0;">💰 Paid Amount</label><input type="number" id="sellPaidAmount" value="0">
                         </div> 
                         <label class="field-label">🧾 Receipt No</label><input type="text" id="sellReceipt">
                         <div style="margin-top:10px;"><input type="text" id="searchSellInput" placeholder="🔍 Search Product..." oninput="renderSellProducts()"></div>
@@ -405,8 +411,7 @@ input:checked + .slider:before { transform: translateX(18px); }
                             <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛍️ Selected Items</h3>
                             <div id="cartList" style="margin-bottom:10px;"></div>
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                <span style="font-weight:700; color:#2d3748;">Total:</span>
-                                <span id="cartTotal" style="font-weight:800; color:#276749; font-size:18px;">0.00 ETB</span>
+                                <span style="font-weight:700; color:#2d3748;">Total:</span><span id="cartTotal" style="font-weight:800; color:#276749; font-size:18px;">0.00 ETB</span>
                             </div>
                             <button class="btn btn-success" onclick="completeSale()">💸 Complete Sale</button>
                             <button class="btn btn-danger" style="margin-top:8px; background:#a0aec0;" onclick="clearCart()">🗑️ Clear Cart</button>
@@ -449,7 +454,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 
         <!-- PANEL 3 (Expenses) -->
         <div class="panel" id="panel3">
-            <div class="sub-panel sub3_1 active">
+            <div class="sub-panel sub3_1">
                 <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrAddExp','bodyAddExp')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">Daily Expense</span></div>
@@ -506,7 +511,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 
         <!-- PANEL 4 (Inventory) -->
         <div class="panel" id="panel4">
-            <div class="sub-panel sub4_1 active">
+            <div class="sub-panel sub4_1">
                 <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrInventory','bodyInventory')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory List</span></div>
@@ -558,60 +563,6 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div> 
 
-        <!-- PANEL 5 (Daily) -->
-        <div class="panel" id="panel5">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrDaily','bodyDaily')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">Daily Report</span></div>
-                </div>
-                <div class="section-body open" id="bodyDaily">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
-                        <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="loadDailyReport()"></div>
-                        <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="loadDailyReport()"><option value="all">All Branches</option></select></div>
-                    </div>
-                    <div class="dash-grid" style="margin-bottom:15px;">
-                        <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="dailyTotalRevenue">0.00</div></div>
-                        <div class="summary-box red"><div class="label">Expense</div><div class="value" id="dailyTotalExpense">0.00</div></div>
-                        <div class="summary-box"><div class="label">Profit</div><div class="value" id="dailyNetProfit">0.00</div></div>
-                    </div>
-                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                        <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
-                        <div class="section-body" id="bodyDailySales">
-                            <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="loadDailyReport()">
-                            <div id="dailySalesList"></div>
-                        </div>
-                    </div> 
-                </div>
-            </div>
-        </div> 
-
-        <!-- PANEL 6 (Monthly) -->
-        <div class="panel" id="panel6">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrMonthly','bodyMonthly')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">Monthly Report</span></div>
-                </div>
-                <div class="section-body open" id="bodyMonthly">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
-                        <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()"></div>
-                        <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="loadMonthlyReport()"><option value="all">All Branches</option></select></div>
-                    </div>
-                    <div class="dash-grid" style="margin-bottom:15px;">
-                        <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="monthlyTotalRevenue">0.00</div></div>
-                        <div class="summary-box red"><div class="label">Expenses</div><div class="value" id="monthlyTotalExpense">0.00</div></div>
-                        <div class="summary-box"><div class="label">Profit</div><div class="value" id="monthlyNetProfit">0.00</div></div>
-                    </div>
-                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
-                        <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
-                        <div class="section-body" id="bodyMonthlySales">
-                            <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="loadMonthlyReport()">
-                            <div id="monthlySalesList"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- PANEL 7 (Dashboard) -->
         <div class="panel" id="panel7">
             <div class="section-collapsible">
@@ -647,22 +598,75 @@ input:checked + .slider:before { transform: translateX(18px); }
 
         <!-- PANEL 8 (Reports) -->
         <div class="panel" id="panel8">
-            <div class="section-collapsible">
-                <div class="section-header open no-print" onclick="toggleSection('hdrRepMain','bodyRepMain')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📄</span><span class="sec-title">Reports</span></div>
-                </div>
-                <div class="section-body open" id="bodyRepMain">
-                    <div class="no-print" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #edf2f7; margin-bottom:20px;">
-                        <label class="field-label">Report Type</label>
-                        <select id="reportTypeSelect" onchange="toggleReportDatePickers()">
-                            <option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option>
-                        </select>
-                        <div id="repDateDiv" style="display:none; margin-top:10px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
-                        <div id="repMonthDiv" style="display:none; margin-top:10px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
-                        <button class="btn btn-primary" style="margin-top:15px;" onclick="generateReport()">👁️ Generate</button>
-                        <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ Print</button>
+            <div class="sub-panel sub8_1">
+                <div class="section-collapsible">
+                    <div class="section-header open no-print" onclick="toggleSection('hdrRepMain','bodyRepMain')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📄</span><span class="sec-title">Generate Report</span></div>
                     </div>
-                    <div id="reportDisplayArea" style="background:#fff; padding:20px; border-radius:10px; border:1px solid #edf2f7;"></div>
+                    <div class="section-body open" id="bodyRepMain">
+                        <div class="no-print" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #edf2f7; margin-bottom:20px;">
+                            <label class="field-label">Report Type</label>
+                            <select id="reportTypeSelect" onchange="toggleReportDatePickers()">
+                                <option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option>
+                            </select>
+                            <div id="repDateDiv" style="display:none; margin-top:10px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
+                            <div id="repMonthDiv" style="display:none; margin-top:10px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
+                            <button class="btn btn-primary" style="margin-top:15px;" onclick="generateReport()">👁️ Generate</button>
+                            <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ Print</button>
+                        </div>
+                        <div id="reportDisplayArea" style="background:#fff; padding:20px; border-radius:10px; border:1px solid #edf2f7;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sub-panel sub8_2">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrDaily','bodyDaily')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">Daily Report</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyDaily">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+                            <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="loadDailyReport()"></div>
+                            <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="loadDailyReport()"><option value="all">All Branches</option></select></div>
+                        </div>
+                        <div class="dash-grid" style="margin-bottom:15px;">
+                            <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="dailyTotalRevenue">0.00</div></div>
+                            <div class="summary-box red"><div class="label">Expense</div><div class="value" id="dailyTotalExpense">0.00</div></div>
+                            <div class="summary-box"><div class="label">Profit</div><div class="value" id="dailyNetProfit">0.00</div></div>
+                        </div>
+                        <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+                            <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
+                            <div class="section-body" id="bodyDailySales">
+                                <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="loadDailyReport()">
+                                <div id="dailySalesList"></div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="sub-panel sub8_3">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrMonthly','bodyMonthly')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">Monthly Report</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyMonthly">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+                            <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()"></div>
+                            <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="loadMonthlyReport()"><option value="all">All Branches</option></select></div>
+                        </div>
+                        <div class="dash-grid" style="margin-bottom:15px;">
+                            <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="monthlyTotalRevenue">0.00</div></div>
+                            <div class="summary-box red"><div class="label">Expenses</div><div class="value" id="monthlyTotalExpense">0.00</div></div>
+                        </div>
+                        <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+                            <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
+                            <div class="section-body" id="bodyMonthlySales">
+                                <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="loadMonthlyReport()">
+                                <div id="monthlySalesList"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -734,7 +738,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 </div> <!-- End main-content-wrapper -->
 </div> <!-- End mainApp -->
 
-<script type="module">
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
@@ -1020,13 +1024,8 @@ window.renderMedList = function() {
     const filter = document.getElementById('filterTypeMed').value; const search = (document.getElementById('searchMedList')?.value || '').toLowerCase();
     let filtered = allMedicines; if (filter !== 'all') filtered = filtered.filter(m => m.type === filter); 
     if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search) || (m.subcategory||'').toLowerCase().includes(search));
-    const mobileListEl = document.getElementById('medListDisplayMobile');
-    if(mobileListEl) {
-        if(filtered.length === 0) { mobileListEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; } 
-        else { let mobileHtml = ''; filtered.forEach(m => { const typeLabel = m.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት'; const extra = m.type === 'medicine' ? `| 📦 ${m.batch || '-'} | 📅 ${m.expiry || '-'}` : ''; mobileHtml += `<div class="list-item"><div class="info"><div class="name">${typeLabel}: ${m.name}</div><div class="meta">${m.category} → ${m.subcategory} ${extra}</div></div><div class="amount">${m.price} ብር</div></div>`; }); mobileListEl.innerHTML = mobileHtml; }
-    }
     const tableBody = document.getElementById('medTableBody'); if(!tableBody) return;
-    if(filtered.length === 0) { tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#a0aec0;">ምንም ምርት የለም።</td></tr>'; document.getElementById('medPageInfo').innerText = `ገጽ 0 ከ 0`; return; }
+    if(filtered.length === 0) { tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#a0aec0;">ምንም ምርት የለም።</td></tr>'; return; }
     const totalPages = Math.ceil(filtered.length / medRowsPerPage); if (medCurrentPage > totalPages) medCurrentPage = totalPages; if (medCurrentPage < 1) medCurrentPage = 1;
     const startIndex = (medCurrentPage - 1) * medRowsPerPage; const endIndex = startIndex + medRowsPerPage; const paginatedItems = filtered.slice(startIndex, endIndex);
     let tableHtml = '';
@@ -1034,7 +1033,7 @@ window.renderMedList = function() {
         const isLowStock = m.quantity <= lowStockThreshold; const qtyColor = isLowStock ? 'color: #c53030; font-weight: bold;' : 'color: #276749; font-weight: bold;';
         tableHtml += `<tr><td>${m.branch || 'Main'}</td><td>${m.type === 'cosmetic' ? '🧴 Cosmetic' : '💊 Medicine'}</td><td>${m.category || '-'}</td><td>${m.subcategory || '-'}</td><td>${m.batch || '-'}</td><td>${m.expiry || '-'}</td><td><strong>${m.name}</strong></td><td>${m.supplier || '-'}</td><td>${m.cost || 0} ብር</td><td>${m.price} ብር</td><td style="${qtyColor}">${m.quantity}</td><td><button class="action-btn btn-edit" onclick="editMedicine('${m.id}')">✏️ Edit</button><button class="action-btn btn-delete" onclick="deleteMedicine('${m.id}')">🗑️ Delete</button></td></tr>`;
     });
-    tableBody.innerHTML = tableHtml; document.getElementById('medPageInfo').innerText = `ገጽ ${medCurrentPage} ከ ${totalPages}`;
+    tableBody.innerHTML = tableHtml;
 };
 
 window.changeMedPage = function(direction) { medCurrentPage += direction; renderMedList(); };
@@ -1369,4 +1368,4 @@ window.generateReport = function() {
 };
 </script>
 </body>
-</html>
+</html>  
