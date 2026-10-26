@@ -9,26 +9,22 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: #f0f4f8; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; transition: background 0.3s, color 0.3s; }
 body.dark { background: #1a202c; color: #e2e8f0; }
-body.dark .section-collapsible, body.dark .login-box { background: #2d3748; color: #e2e8f0; }
+body.dark .section-collapsible, body.dark .login-box, body.dark .dash-card { background: #2d3748; color: #e2e8f0; }
 body.dark label { color: #a0aec0; }
 body.dark input, body.dark select { background: #4a5568; border-color: #4a5568; color: #e2e8f0; }
 body.dark input:focus, body.dark select:focus { border-color: #63b3ed; }
-body.dark .section-header .sec-title { color: #63b3ed; }
+body.dark .section-header .sec-title, body.dark .sub-menu-btn { color: #63b3ed; }
 body.dark .cat-header { background: linear-gradient(135deg, #2c5282, #2a4365); border-color: #2c5282; }
 body.dark .cat-body { background: #2d3748; border-color: #2c5282; }
 body.dark .list-item { background: #4a5568; border-color: #4a5568; }
 body.dark .list-item .name { color: #e2e8f0; }
 body.dark .list-item .meta { color: #a0aec0; }
-body.dark .list-item .qty-input { background: #2d3748; color: #63b3ed; border-color: #718096; }
 body.dark .info-banner { background: #2c5282; border-color: #3182ce; color: #bee3f8; }
-body.dark .summary-box { background: linear-gradient(135deg, #2a4365, #1a365d); }
-body.dark .summary-box.green { background: linear-gradient(135deg, #22543d, #1c4532); }
-body.dark .summary-box.red { background: linear-gradient(135deg, #742a2a, #63171b); }
-body.dark .expiry-alert { color: #fc8181; }
-body.dark .low-stock { color: #fbd38d; }
-body.dark .cat-tag { background: #2d3748; border-color: #2c5282; color: #63b3ed; }
-body.dark .toggle-row label { color: #e2e8f0; } 
+body.dark .data-table { background: #2d3748; }
+body.dark .data-table th { background: #1a202c; color: #a0aec0; }
+body.dark .data-table td { border-bottom: 1px solid #4a5568; }
 
+/* Splash & Login */
 #splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
 #splashScreen.fade-out { opacity: 0; pointer-events: none; }
 .logo-text { font-size: 32px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
@@ -39,12 +35,12 @@ body.dark .toggle-row label { color: #e2e8f0; }
 #loginScreen.hidden { display: none; }
 .login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
 .login-box h1 { text-align: center; color: #1a365d; font-size: 20px; margin-bottom: 20px; font-weight: 800;}
-body.dark .login-box h1 { color: #63b3ed; }
 .form-group { margin-bottom: 16px; }
 input { width: 100%; padding: 14px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f7fafc; outline: none; }
 input:focus { border-color: #3182ce; background: #fff; }
 .btn-login { width: 100%; padding: 15px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; cursor: pointer; margin-top: 8px; } 
 
+/* Layout */
 #mainApp { display: none; }
 #mainApp.show { display: block; }
 header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 0 0 16px 16px; margin-bottom: 10px; }
@@ -62,24 +58,12 @@ body.dark .tabs label { background: #2d3748; color: #a0aec0; }
 .tabs label i { font-size: 20px; font-style: normal; line-height: 1; margin-bottom: 2px;} 
 
 #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"], #tab10:checked ~ .tabs label[for="tab10"] { color: #2c5282; background: #ebf4ff; border-color: #90cdf4; box-shadow: 0 4px 12px rgba(44,82,130,0.15);}
-body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"], body.dark #tab10:checked ~ .tabs label[for="tab10"] { color: #63b3ed; background: #4a5568; border-color: #63b3ed; } 
 
 .panel { display: none; padding: 14px; }
 #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9, #tab10:checked ~ .panels #panel10 { display: block; } 
 
-.section-collapsible { background: #fff; border-radius: 14px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; display: flex; flex-direction: column;}
-.section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; }
-.section-header .sec-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-.section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; display: inline-block; }
-.section-header.open .sec-arrow { transform: rotate(90deg); }
-.section-header .sec-icon { font-size: 18px; }
-.section-header .sec-title { font-size: 14px; font-weight: 800; color: #2c5282; }
-.section-body { display: none; padding: 0 14px 14px 14px; border-top: 1px solid #edf2f7; padding-top: 12px; flex: 1;}
-.section-body.open { display: block; } 
-
 label.field-label { display: block; font-size: 12.5px; font-weight: 600; color: #4a5568; margin-bottom: 5px; margin-top: 10px; }
 input[type="text"], input[type="number"], input[type="date"], input[type="month"], select { width: 100%; padding: 14px; font-size: 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #f7fafc; outline: none; }
-input:focus, select:focus { border-color: #3182ce; background: #fff; }
 .btn { display: block; width: 100%; padding: 15px; font-size: 16px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; margin-top: 14px; }
 .btn-primary { background: #2c5282; color: #fff; }
 .btn-success { background: #276749; color: #fff; }
@@ -99,56 +83,67 @@ input:focus, select:focus { border-color: #3182ce; background: #fff; }
 .list-item .amount { font-size: 14px; font-weight: 700; color: #2c5282; margin-left: 10px; white-space: nowrap; }
 .list-item .amount.red { color: #c53030; }
 .list-item .amount.green { color: #276749; }
-.list-item .qty-input { width: 65px; padding: 8px; font-size: 15px; text-align: center; border: 1.5px solid #cbd5e0; border-radius: 8px; margin-left: 8px; font-weight: 700; color: #2c5282; background: #fff; } 
 
-.cat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-.cat-tag { display: inline-flex; align-items: center; gap: 5px; background: #fff; border: 1px solid #bee3f8; color: #2c5282; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-.cat-tag .del { cursor: pointer; color: #c53030; font-weight: 800; font-size: 14px; padding: 0 2px; }
-.cat-add-row { display: flex; gap: 6px; align-items: center; }
-.cat-add-row input { padding: 9px 10px; font-size: 13.5px; flex: 1; }
-.cat-add-row button { background: #2c5282; color: #fff; border: none; padding: 9px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; } 
+/* Tables */
+.data-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.data-table th, .data-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #edf2f7; font-size: 13px; white-space: nowrap; }
+.data-table th { background: #f7fafc; font-weight: 700; color: #4a5568; }
+.data-table tbody tr:hover { background: #f7fafc; }
+.data-table .action-btn { background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 4px; margin-right: 4px; }
+.data-table .btn-edit { color: #2b6cb0; background: #ebf8ff; }
+.data-table .btn-delete { color: #c53030; background: #fff5f5; }
 
-.info-banner { background: #ebf8ff; border: 1px solid #90cdf4; border-radius: 10px; padding: 12px; font-size: 12.5px; color: #2c5282; margin-bottom: 12px; line-height: 1.5; }
-.expiry-alert { color: #e53e3e; font-weight: bold; font-size: 11.5px; }
-.low-stock { color: #dd6b20; font-weight: bold; font-size: 11.5px; } 
-
-#expiryBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fed7d7; font-weight: bold; font-size: 13px; text-align: center; }
-#stockAlertBanner { display: none; background: #fffaf0; color: #dd6b20; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fbd38d; font-weight: bold; font-size: 13px; text-align: center; }
-#creditAlertBanner { display: none; background: #fff5f5; color: #c53030; padding: 12px; margin: 0 14px 10px; border-radius: 10px; border: 1px solid #fed7d7; font-weight: bold; font-size: 13px; text-align: center; } 
-
-.cat-section { margin-bottom: 10px; }
-.cat-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: linear-gradient(135deg, #ebf4ff, #bee3f8); border-radius: 10px; cursor: pointer; border: 1px solid #90cdf4; }
-.cat-header.open { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
-.cat-header .cat-left { display: flex; align-items: center; gap: 8px; flex: 1; }
-.cat-header .cat-arrow { font-size: 12px; font-weight: 900; color: #2c5282; transition: transform 0.2s; display: inline-block; }
-.cat-header.open .cat-arrow { transform: rotate(90deg); }
-.cat-header .cat-name { font-size: 14px; font-weight: 800; color: #1a365d; }
-.cat-body { display: none; padding: 8px 6px 6px 6px; background: #fff; border: 1px solid #90cdf4; border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
-.cat-body.open { display: block; } 
-
-.chart-container { position: relative; height: 250px; margin-bottom: 15px; } 
+.section-collapsible { background: #fff; border-radius: 14px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; display: flex; flex-direction: column;}
+.section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; }
+.section-header .sec-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; display: inline-block; }
+.section-header.open .sec-arrow { transform: rotate(90deg); }
+.section-header .sec-icon { font-size: 18px; }
+.section-header .sec-title { font-size: 14px; font-weight: 800; color: #2c5282; }
+.section-body { display: none; padding: 0 14px 14px 14px; border-top: 1px solid #edf2f7; padding-top: 12px; flex: 1;}
+.section-body.open { display: block; } 
 
 .dash-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
 .dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: space-between; }
-body.dark .dash-card { background: #2d3748; border-color: #4a5568; } 
-
-.dash-header { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 700; color: #4a5568; margin-bottom: 12px; }
-body.dark .dash-header { color: #a0aec0; } 
-
-.dash-badge { background: #ebf8ff; color: #2b6cb0; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
-.dash-badge.green { background: #c6f6d5; color: #22543d; }
-.dash-badge.red { background: #fed7d7; color: #822727; } 
-
 .dash-val-box { border-radius: 8px; padding: 16px; text-align: center; color: #fff; }
 .dash-val-label { font-size: 12px; opacity: 0.9; margin-bottom: 4px; }
 .dash-val-number { font-size: 24px; font-weight: 800; } 
 
-.dash-list { list-style: none; padding: 0; margin: 0; }
-.dash-list li { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed #edf2f7; }
-body.dark .dash-list li { border-bottom-color: #4a5568; }
-.dash-list li:last-child { border-bottom: none; padding-bottom: 0; } 
+/* Desktop Specific */
+@media (min-width: 768px) {
+    body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; overflow: hidden; } 
+    #mainApp.show { display: flex; flex-direction: column; height: 100vh; width: 100%; } 
+    header { flex-shrink: 0; height: 70px; border-radius: 0; margin-bottom: 0; padding: 0 24px; position: static; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 101; }
+    
+    .main-content-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: #f0f4f8; }
+    
+    .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: transparent; position: static; width: 100%; } 
+    .tabs { flex-direction: column; width: 260px; background: #1a202c; padding: 20px 10px; gap: 5px; overflow-y: auto; flex-shrink: 0; height: 100%; border-right: none; }
+    .tabs label { flex-direction: row; justify-content: flex-start; padding: 12px 15px; min-width: 100%; font-size: 14px; box-shadow: none; border: none; border-radius: 8px; background: transparent; color: #a0aec0; font-weight: 600; } 
+    .tabs label:hover { background: #2d3748; color: #fff; }
+    .tabs label i { margin-bottom: 0; margin-right: 12px; font-size: 18px; } 
+    
+    #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"], #tab10:checked ~ .tabs label[for="tab10"] { 
+        background: #2b6cb0; color: #fff; border-left: 4px solid #63b3ed; 
+    }
 
-.search-box { margin-bottom: 10px; width: 100%; }
+    .panels { flex: 1; padding: 24px; background: #f0f4f8; overflow-y: auto; width: calc(100% - 260px); }
+    body.dark .panels { background: #1a202c; } 
+    .panel { padding: 0; display: none; } 
+    
+    .sub-menu-container { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+    .sub-menu-btn { background: transparent; border: none; font-size: 14px; font-weight: 700; color: #718096; cursor: pointer; padding: 8px 12px; border-radius: 6px; }
+    .sub-menu-btn:hover { background: #edf2f7; color: #2c5282; }
+    .sub-menu-btn.active { background: #2b6cb0; color: #fff; }
+    
+    .sub-panel { display: none; }
+    .sub-panel.active { display: block; }
+    
+    .mobile-only { display: none !important; }
+    .desktop-only { display: block !important; }
+
+    .dash-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 @media print {
     body * { visibility: hidden; }
@@ -156,48 +151,15 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
     #panel10 { position: absolute; left: 0; top: 0; width: 100%; }
     .no-print { display: none !important; }
 }
-
-@media (min-width: 768px) {
-    body { padding-bottom: 0; max-width: 100%; background: #f0f4f8; margin: 0; overflow: hidden; } 
-    #mainApp.show { display: flex; flex-direction: column; height: 100vh; width: 100%; } 
-    header { flex-shrink: 0; height: 70px; border-radius: 0; margin-bottom: 0; padding: 0 24px; position: static; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 101; display: flex; align-items: center; justify-content: space-between; } 
-    .main-content-wrapper { display: flex; flex-direction: column; flex: 1; overflow: hidden; background: #f0f4f8; }
-    body.dark .main-content-wrapper { background: #1a202c; } 
-    #expiryBanner, #stockAlertBanner, #creditAlertBanner, #suspendedWarningBanner { margin: 15px 24px 0 24px; flex-shrink: 0; }
-    #userPaymentAlert { margin: 15px 24px 0 24px !important; flex-shrink: 0; }
-    .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: transparent; position: static; width: 100%; } 
-    .tabs { flex-direction: column; width: 260px; background: #fff; border-right: 1px solid #e2e8f0; padding: 24px 16px; gap: 8px; overflow-y: auto; flex-shrink: 0; height: 100%; }
-    body.dark .tabs { background: #2d3748; border-right: 1px solid #4a5568; } 
-    .tabs label { flex-direction: row; justify-content: flex-start; padding: 14px 20px; min-width: 100%; font-size: 15px; box-shadow: none; border: none; border-radius: 10px; transition: all 0.2s; } 
-    .tabs label:hover { background: #edf2f7; }
-    body.dark .tabs label:hover { background: #4a5568; } 
-    .tabs label i { margin-bottom: 0; margin-right: 15px; font-size: 24px; } 
-    #tab1:checked ~ .tabs label[for="tab1"], #tab2:checked ~ .tabs label[for="tab2"], #tab3:checked ~ .tabs label[for="tab3"], #tab4:checked ~ .tabs label[for="tab4"], #tab5:checked ~ .tabs label[for="tab5"], #tab6:checked ~ .tabs label[for="tab6"], #tab7:checked ~ .tabs label[for="tab7"], #tab8:checked ~ .tabs label[for="tab8"], #tab9:checked ~ .tabs label[for="tab9"], #tab10:checked ~ .tabs label[for="tab10"] { background: #ebf4ff; color: #2c5282; border-left: 4px solid #2c5282; font-weight: 800; }
-    body.dark #tab1:checked ~ .tabs label[for="tab1"], body.dark #tab2:checked ~ .tabs label[for="tab2"], body.dark #tab3:checked ~ .tabs label[for="tab3"], body.dark #tab4:checked ~ .tabs label[for="tab4"], body.dark #tab5:checked ~ .tabs label[for="tab5"], body.dark #tab6:checked ~ .tabs label[for="tab6"], body.dark #tab7:checked ~ .tabs label[for="tab7"], body.dark #tab8:checked ~ .tabs label[for="tab8"], body.dark #tab9:checked ~ .tabs label[for="tab9"], body.dark #tab10:checked ~ .tabs label[for="tab10"] { background: #4a5568; color: #63b3ed; border-left: 4px solid #63b3ed; } 
-    .panels { flex: 1; padding: 24px; background: #f0f4f8; overflow-y: auto; width: calc(100% - 260px); }
-    body.dark .panels { background: #1a202c; } 
-    .panel { padding: 0; } 
-    #tab1:checked ~ .panels #panel1, #tab2:checked ~ .panels #panel2, #tab3:checked ~ .panels #panel3, #tab4:checked ~ .panels #panel4, #tab5:checked ~ .panels #panel5, #tab6:checked ~ .panels #panel6, #tab7:checked ~ .panels #panel7, #tab8:checked ~ .panels #panel8, #tab9:checked ~ .panels #panel9, #tab10:checked ~ .panels #panel10 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: start; } 
-    #panel8 > .section-collapsible { grid-column: 1 / -1; }
-    #bodySettings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding-top: 15px; }
-    #bodySettings > .section-collapsible { margin-bottom: 0; background: #f7fafc; } 
-    #hdrDaily, #hdrMonthly, #hdrDash, .true-full-width { grid-column: 1 / -1 !important; }
-    .section-collapsible { margin-bottom: 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid #edf2f7; background: #fff; border-radius: 12px; height: 100%; }
-    body.dark .section-collapsible { background: #2d3748; border-color: #4a5568; }
-    .dash-grid { grid-template-columns: repeat(2, 1fr); }
-    .dash-card[style*="grid-column: 1 / -1"] { grid-column: 1 / -1 !important; }
-}
 </style>
 </head>
 <body> 
-
-<!-- Splash Screen -->
+<!-- Splash & Login (Same as before) -->
 <div id="splashScreen">
 <div class="logo-text">HaniTech <span>Digital</span></div>
 <div class="sub-text">Pharmacy Tracker</div>
 </div> 
 
-<!-- Login Screen -->
 <div id="loginScreen" class="hidden">
 <div class="login-box">
 <h1>💊 HaniTech Digital Pharmacy Tracker</h1> 
@@ -227,7 +189,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 </div> 
 
-<!-- Main App -->
 <div id="mainApp">
 <header>
 <div class="h-left" style="display: flex; align-items: center; gap: 10px;">
@@ -246,14 +207,8 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 </header> 
 
-<div id="userPaymentAlert" style="display:none; background:#fffaf0; color:#dd6b20; padding:12px; margin: 10px 14px; border-radius:10px; border:1px solid #fbd38d; font-weight:bold; font-size:13px; text-align:center; z-index: 102;">
-  ⚠️ <span id="userPaymentAlertText"></span>
-</div>
-
 <div class="main-content-wrapper">
 <div id="expiryBanner">⚠️ <span id="expiryBannerText"></span></div>
-<div id="stockAlertBanner">🚨 <span id="stockAlertText"></span></div>
-<div id="creditAlertBanner">💳 <span id="creditAlertText"></span></div>
 <div id="suspendedWarningBanner" style="display:none; background:#fed7d7; color:#822727; padding:12px; margin: 0 14px 10px; border-radius:10px; font-weight:bold; font-size:13px; text-align:center;">
 🚫 ይህ ፋርማሲ በአድሚን ተቆልፏል! እባክዎ አድሚኑን ያግኙ።
 </div> 
@@ -284,267 +239,311 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div> 
 
 <div class="panels">
-<!-- PANEL 1 -->
+<!-- PANEL 1 (Medicine) -->
 <div class="panel" id="panel1">
-<div class="section-collapsible">
-<div class="section-header" id="hdrCatMgr" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">ምድቦችን አስተዳድር</span></div>
-</div>
-<div class="section-body" id="bodyCatMgr">
-<div class="cat-add-row">
-<input type="text" id="newCat" placeholder="አዲስ ዋና ምድብ" autocomplete="off">
-<button onclick="addCategory()">+ ጨምር</button>
-</div>
-<div style="margin-top:10px;">
-    <input type="text" class="search-box" id="searchCategory" placeholder="🔍 ምድብ ፈልግ..." oninput="renderCategoryList()">
-</div>
-<div class="cat-tags" id="catListDisplay"></div>
-</div>
-</div>
-<div class="section-collapsible">
-<div class="section-header" id="hdrAddMed" onclick="toggleSection('hdrAddMed','bodyAddMed')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">አዲስ ምርት ጨምር</span></div>
-</div>
-<div class="section-body" id="bodyAddMed">
-<label class="field-label">📦 ዓይነት</label>
-<select id="medType" onchange="onMedTypeChange()">
-<option value="medicine">💊 መድሃኒት</option>
-<option value="cosmetic">🧴 ኮስሞቲክስ</option>
-</select>
-<label class="field-label">📁 ዋና ምድብ</label>
-<select id="medCategory" onchange="loadSubcategoriesForSelectedCategory()"></select>
-<label class="field-label">📂 ንዑስ ምድብ</label>
-<select id="medSubcategory" onchange="onSubcategoryChange()"></select>
-<input type="text" id="medNewSubcategory" placeholder="አዲስ ንዑስ ምድብ ስም ካለ እዚህ ጻፍ" autocomplete="off" style="margin-top:5px; display:none;">
-<label class="field-label">💊 የምርት ስም</label>
-<input type="text" id="medName" placeholder="ለምሳሌ: Paracetamol" autocomplete="off"> 
-<div id="medicineOnlyFields">
-<label class="field-label">🔢 የባች ቁጥር</label>
-<input type="text" id="medBatch" placeholder="BATCH-001" autocomplete="off">
-<label class="field-label">📅 የማለቂያ ቀን</label>
-<input type="date" id="medExpiry">
-<label class="field-label">🏭 አቅራቢ (Supplier)</label>
-<input type="text" id="medSupplier" placeholder="ለምሳሌ: Addis Pharma" autocomplete="off">
-</div> 
-<label class="field-label">💰 የግዢ ዋጋ (ብር)</label>
-<input type="number" id="medCost" placeholder="0.00">
-<label class="field-label">🏷️ የሽያጭ ዋጋ (ብር)</label>
-<input type="number" id="medPrice" placeholder="0.00">
-<label class="field-label">📦 ብዛት</label>
-<input type="number" id="medQty" placeholder="0">
-<button class="btn btn-success" onclick="addMedicine()">💾 አስቀምጥ</button>
-</div>
-</div>
-<div class="section-collapsible">
-<div class="section-header" id="hdrMedList" onclick="toggleSection('hdrMedList','bodyMedList')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">የምርት ዝርዝር</span></div>
-</div>
-<div class="section-body" id="bodyMedList">
-<input type="text" class="search-box" id="searchMedList" placeholder="🔍 ምርት ፈልግ..." oninput="renderMedList()">
-<select id="filterTypeMed" onchange="renderMedList()" style="margin-bottom:10px;">
-<option value="all">ሁሉም ዓይነት</option>
-<option value="medicine">💊 መድሃኒት ብቻ</option>
-<option value="cosmetic">🧴 ኮስሞቲክስ ብቻ</option>
-</select>
-<div id="medListDisplay"></div>
-</div>
-</div>
-</div> 
-
-<!-- PANEL 2 -->
-<div class="panel" id="panel2">
-<div class="section-collapsible">
-<div class="section-header open" id="hdrSell" onclick="toggleSection('hdrSell','bodySell')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">ከዝርዝር መሸጥ</span></div>
-</div>
-<div class="section-body open" id="bodySell">
-<label class="field-label">📅 የሽያጭ ቀን</label>
-<input type="date" id="sellDate">
-<div id="retailSaleFields">
-<label class="field-label">🏢 ቅርንጫፍ (Branch)</label>
-<select id="sellBranch"></select>
-</div>
-<div id="wholesaleSaleFields" style="display:none;">
-<label class="field-label">🏪 ደንበኛ (ፋርማሲ/ሱፐርማርኬት)</label>
-<select id="sellCustomer"></select>
-</div> 
-<label class="field-label">💳 የክፍያ ዓይነት</label>
-<select id="sellPaymentMethod" onchange="togglePaymentDetails()">
-<option value="cash">💵 Cash</option>
-<option value="transfer">🏦 Transfer</option>
-<option value="credit" id="creditOption" style="display:none;">📝 Credit (ዱቤ)</option>
-</select> 
-<div id="creditPaymentDetails" style="display:none; margin-top:10px; padding:10px; background:#fffaf0; border:1px solid #fbd38d; border-radius:8px;">
-<label class="field-label" style="margin-top:0;">💰 የተከፈለ መጠን (Partial Payment)</label>
-<input type="number" id="sellPaidAmount" placeholder="0.00" value="0">
-<div class="info-banner" style="margin-top:8px; font-size:11.5px;">💡 የተከፈለው መጠን ብቻ ገቢ ሆኖ ይመዘገባል። ቀሪው ወደ ዕዳ ይመዘገባል።</div>
-</div> 
-<label class="field-label">🧾 የደረሰኝ ቁጥር (አማራጭ)</label>
-<input type="text" id="sellReceipt" placeholder="ለምሳሌ: REC-001">
-<div style="margin-top:10px;">
-<input type="text" id="searchSellInput" placeholder="🔍 ምርት ፈልግ..." oninput="renderSellProducts()">
-</div>
-<div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
-<div style="border-top:2px solid #edf2f7; margin-top:15px; padding-top:10px;">
-<h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛍️ የተመረጡ ሽያጮች</h3>
-<div id="cartList" style="margin-bottom:10px;"></div>
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-<span style="font-weight:700; color:#2d3748;">ጠቅላላ፦</span>
-<span id="cartTotal" style="font-weight:800; color:#276749; font-size:18px;">0.00 ብር</span>
-</div>
-<button class="btn btn-success" onclick="completeSale()">💸 ሽያጭ አድርግ</button>
-<button class="btn btn-danger" style="margin-top:8px; background:#a0aec0;" onclick="clearCart()">🗑️ ግልጽ አድርግ</button>
-</div>
-</div>
-</div>
-<div class="section-collapsible">
-<div class="section-header" id="hdrQuickSale" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">ፈጣን ገቢ ማስገቢያ</span></div>
-</div>
-<div class="section-body" id="bodyQuickSale">
-<div class="info-banner">💡 ያለ ዝርዝር በቀጥታ ጠቅላላ ገቢ ማስገባት ይችላሉ።</div>
-<label class="field-label">📦 ዓይነት</label>
-<select id="quickType">
-<option value="medicine">💊 መድሃኒት</option>
-<option value="cosmetic">🧴 ኮስሞቲክስ</option>
-</select>
-<label class="field-label">🏢 ቅርንጫፍ</label>
-<select id="quickBranch"></select>
-<label class="field-label">📅 ቀን</label>
-<input type="date" id="quickDate">
-<label class="field-label">💰 መጠን (ብር)</label>
-<input type="number" id="quickAmount" placeholder="0.00">
-<button class="btn btn-success" onclick="addQuickSale()">+ ጨምር</button>
-<div id="quickSaleList" style="margin-top:14px;"></div>
-</div>
-</div>
-<div class="section-collapsible true-full-width">
-    <div class="section-header" id="hdrSalesHistory" onclick="toggleSection('hdrSalesHistory','bodySalesHistory')">
-        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">የሽያጭ ታሪክ (Sales History)</span></div>
+    <div class="sub-menu-container desktop-only">
+        <button class="sub-menu-btn active" id="btnSub1_1" onclick="switchSubTab(1, 1)">📋 Medicine List</button>
+        <button class="sub-menu-btn" id="btnSub1_2" onclick="switchSubTab(1, 2)">➕ Add Medicine</button>
+        <button class="sub-menu-btn" id="btnSub1_3" onclick="switchSubTab(1, 3)">🗂️ Medicine Category</button>
     </div>
-    <div class="section-body" id="bodySalesHistory">
-        <div style="display:flex; gap:10px; margin-bottom:10px;">
-            <select id="filterSalesHistory" onchange="renderSalesHistory()" style="flex:1;">
-                <option value="all">ሁሉም ሽያጮች</option>
-                <option value="detail">🛒 ዝርዝር ሽያጭ</option>
-                <option value="quick">⚡ Quick Sale</option>
-            </select>
-            <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 15px; font-size:13px; background:#c53030;" onclick="clearAllSales()">🗑️ ሁሉንም ሰርዝ</button>
+    <div class="mobile-only" style="display: flex; gap: 5px; margin-bottom: 15px; overflow-x: auto;">
+        <button class="btn btn-primary" style="padding: 8px 12px; font-size: 12px; margin:0; flex:1;" onclick="switchSubTab(1, 1)">📋 List</button>
+        <button class="btn btn-primary" style="padding: 8px 12px; font-size: 12px; margin:0; flex:1; background:#a0aec0;" onclick="switchSubTab(1, 2)">➕ Add</button>
+        <button class="btn btn-primary" style="padding: 8px 12px; font-size: 12px; margin:0; flex:1; background:#a0aec0;" onclick="switchSubTab(1, 3)">🗂️ Cat</button>
+    </div>
+
+    <!-- Sub-panel 1: Medicine List -->
+    <div class="sub-panel active" id="sub1_1">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrMedList','bodyMedList')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">Medicine List</span></div>
+            </div>
+            <div class="section-body open" id="bodyMedList">
+                <div class="no-print" style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                    <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search Medicine..." oninput="renderMedList()" style="flex: 1; min-width: 150px;">
+                    <select id="filterTypeMed" onchange="renderMedList()" style="flex: 1; min-width: 120px;">
+                        <option value="all">All Types</option>
+                        <option value="medicine">💊 Medicine</option>
+                        <option value="cosmetic">🧴 Cosmetics</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="window.print()" style="width: auto; margin-top: 0; padding: 10px 15px; font-size: 13px;">🖨️ Print</button>
+                </div>
+                <div class="mobile-only" id="medListDisplayMobile"></div>
+                <div class="desktop-only" style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Branch</th><th>Item</th><th>Category</th><th>Sub Category</th>
+                                <th>Batch No</th><th>Exp Date</th><th>Item Name</th><th>Supplier</th>
+                                <th>Purchase Price</th><th>Sell Price</th><th>Qty</th><th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="medTableBody"></tbody>
+                    </table>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <div id="medPageInfo" style="font-size: 13px; color: #718096;">Page 1 of 1</div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-outline" id="btnPrevMed" onclick="changeMedPage(-1)" style="width: auto; margin-top: 0; padding: 8px 15px;">⬅️ Prev</button>
+                            <button class="btn btn-outline" id="btnNextMed" onclick="changeMedPage(1)" style="width: auto; margin-top: 0; padding: 8px 15px;">Next ➡️</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="salesHistoryList"></div>
     </div>
-</div>
+
+    <!-- Sub-panel 2: Add Medicine -->
+    <div class="sub-panel" id="sub1_2">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrAddMed','bodyAddMed')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">Add Medicine</span></div>
+            </div>
+            <div class="section-body open" id="bodyAddMed">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label class="field-label">📦 Type</label>
+                        <select id="medType" onchange="onMedTypeChange()">
+                            <option value="medicine">💊 Medicine</option>
+                            <option value="cosmetic">🧴 Cosmetics</option>
+                        </select>
+                        <label class="field-label">📁 Category</label>
+                        <select id="medCategory" onchange="loadSubcategoriesForSelectedCategory()"></select>
+                        <label class="field-label">📂 Sub Category</label>
+                        <select id="medSubcategory" onchange="onSubcategoryChange()"></select>
+                        <input type="text" id="medNewSubcategory" placeholder="New Subcategory Name" autocomplete="off" style="margin-top:5px; display:none;">
+                        <label class="field-label">💊 Item Name</label>
+                        <input type="text" id="medName" placeholder="e.g. Paracetamol" autocomplete="off"> 
+                        <div id="medicineOnlyFields">
+                            <label class="field-label">🔢 Batch No</label>
+                            <input type="text" id="medBatch" placeholder="BATCH-001" autocomplete="off">
+                            <label class="field-label">📅 Exp Date</label>
+                            <input type="date" id="medExpiry">
+                            <label class="field-label">🏭 Supplier</label>
+                            <input type="text" id="medSupplier" placeholder="e.g. Addis Pharma" autocomplete="off">
+                        </div> 
+                    </div>
+                    <div>
+                        <label class="field-label">💰 Purchase Price</label>
+                        <input type="number" id="medCost" placeholder="0.00">
+                        <label class="field-label">🏷️ Sell Price</label>
+                        <input type="number" id="medPrice" placeholder="0.00">
+                        <label class="field-label">📦 Qty</label>
+                        <input type="number" id="medQty" placeholder="0">
+                        <button class="btn btn-success" style="margin-top:20px;" onclick="addMedicine()">💾 Save Medicine</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sub-panel 3: Category -->
+    <div class="sub-panel" id="sub1_3">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Medicine Category</span></div>
+            </div>
+            <div class="section-body open" id="bodyCatMgr">
+                <div class="cat-add-row" style="margin-bottom:15px;">
+                    <input type="text" id="newCat" placeholder="New Category Name" autocomplete="off">
+                    <button onclick="addCategory()">+ Add</button>
+                </div>
+                <table class="data-table desktop-only">
+                    <thead><tr><th>Category Name</th><th>Sub Categories</th><th>Action</th></tr></thead>
+                    <tbody id="catTableBody"></tbody>
+                </table>
+                <div class="mobile-only" id="catListDisplay"></div>
+            </div>
+        </div>
+    </div>
 </div> 
 
-<!-- PANEL 3 -->
+<!-- PANEL 2 (Sales) -->
+<div class="panel" id="panel2">
+    <div class="sub-menu-container desktop-only">
+        <button class="sub-menu-btn active" id="btnSub2_1" onclick="switchSubTab(2, 1)">🛒 New Sale</button>
+        <button class="sub-menu-btn" id="btnSub2_2" onclick="switchSubTab(2, 2)">⚡ Quick Sale</button>
+        <button class="sub-menu-btn" id="btnSub2_3" onclick="switchSubTab(2, 3)">📜 Sales History</button>
+    </div>
+    
+    <div class="sub-panel active" id="sub2_1">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrSell','bodySell')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">New Sale</span></div>
+            </div>
+            <div class="section-body open" id="bodySell">
+                <!-- (Same sale form as before) -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div><label class="field-label">📅 Date</label><input type="date" id="sellDate"></div>
+                    <div><label class="field-label">🏢 Branch</label><select id="sellBranch"></select></div>
+                </div>
+                <div id="wholesaleSaleFields" style="display:none;"><label class="field-label">🏪 Customer</label><select id="sellCustomer"></select></div>
+                <label class="field-label">💳 Payment Method</label>
+                <select id="sellPaymentMethod" onchange="togglePaymentDetails()">
+                    <option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit" id="creditOption" style="display:none;">📝 Credit</option>
+                </select> 
+                <div id="creditPaymentDetails" style="display:none; margin-top:10px; padding:10px; background:#fffaf0; border:1px solid #fbd38d; border-radius:8px;">
+                    <label class="field-label" style="margin-top:0;">💰 Paid Amount</label>
+                    <input type="number" id="sellPaidAmount" placeholder="0.00" value="0">
+                </div> 
+                <label class="field-label">🧾 Receipt No</label><input type="text" id="sellReceipt" placeholder="REC-001">
+                <div style="margin-top:10px;"><input type="text" id="searchSellInput" placeholder="🔍 Search Product..." oninput="renderSellProducts()"></div>
+                <div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
+                <div style="border-top:2px solid #edf2f7; margin-top:15px; padding-top:10px;">
+                    <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛍️ Selected Items</h3>
+                    <div id="cartList" style="margin-bottom:10px;"></div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span style="font-weight:700; color:#2d3748;">Total:</span>
+                        <span id="cartTotal" style="font-weight:800; color:#276749; font-size:18px;">0.00 ETB</span>
+                    </div>
+                    <button class="btn btn-success" onclick="completeSale()">💸 Complete Sale</button>
+                    <button class="btn btn-danger" style="margin-top:8px; background:#a0aec0;" onclick="clearCart()">🗑️ Clear Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sub-panel" id="sub2_2">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">Quick Sale</span></div>
+            </div>
+            <div class="section-body open" id="bodyQuickSale">
+                <div class="info-banner">💡 Record total income directly without selecting items.</div>
+                <label class="field-label">📦 Type</label><select id="quickType"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
+                <label class="field-label">🏢 Branch</label><select id="quickBranch"></select>
+                <label class="field-label">📅 Date</label><input type="date" id="quickDate">
+                <label class="field-label">💰 Amount</label><input type="number" id="quickAmount" placeholder="0.00">
+                <button class="btn btn-success" onclick="addQuickSale()">+ Add</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sub-panel" id="sub2_3">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrSalesHistory','bodySalesHistory')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Sales History</span></div>
+            </div>
+            <div class="section-body open" id="bodySalesHistory">
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <select id="filterSalesHistory" onchange="renderSalesHistory()" style="flex:1;">
+                        <option value="all">All Sales</option><option value="detail">🛒 Detail Sales</option><option value="quick">⚡ Quick Sales</option>
+                    </select>
+                    <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 15px; font-size:13px; background:#c53030;" onclick="clearAllSales()">🗑️ Clear All</button>
+                </div>
+                <div id="salesHistoryList"></div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<!-- PANEL 3 (Expenses) -->
 <div class="panel" id="panel3">
-<div class="section-collapsible">
-<div class="section-header open" id="hdrAddExp" onclick="toggleSection('hdrAddExp','bodyAddExp')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">የቀን ወጪ መመዝገቢያ</span></div>
-</div>
-<div class="section-body open" id="bodyAddExp">
-<label class="field-label">📁 የወጪ ምድብ</label>
-<select id="expCat"></select>
-<label class="field-label">🏢 ቅርንጫፍ</label>
-<select id="expBranch"></select>
-<label class="field-label">📝 ዝርዝር (አማራጭ)</label>
-<input type="text" id="expNote" placeholder="ለምሳሌ: ትራንስፖርት">
-<label class="field-label">💰 መጠን (ብር)</label>
-<input type="number" id="expAmount" placeholder="0.00">
-<label class="field-label">📅 ቀን</label>
-<input type="date" id="expDate">
-<button class="btn btn-danger" onclick="addExpense()">💾 አስቀምጥ</button>
-<div id="expList" style="margin-top:14px;"></div>
-</div>
-</div>
-<div class="section-collapsible">
-<div class="section-header" id="hdrFixedExp" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">የወር ቋሚ ወጪ (Fixed)</span></div>
-</div>
-<div class="section-body" id="bodyFixedExp">
-<div class="info-banner">💡 የቤት ኪራይ፣ ደመወዝ፣ መብራት ወዘተ። ወር ሲመረጥ ይመዘገባል።</div>
-<label class="field-label">📁 የወጪ ምድብ</label>
-<select id="fixCat"></select>
-<label class="field-label">📝 ዝርዝር (አማራጭ)</label>
-<input type="text" id="fixNote" placeholder="ለምሳሌ: የጥቅምት ደሞዝ">
-<label class="field-label">💰 መጠን (ብር)</label>
-<input type="number" id="fixAmount" placeholder="0.00">
-<label class="field-label">📅 ወር</label>
-<input type="month" id="fixMonth">
-<button class="btn btn-warning" onclick="addFixedExpense()">💾 አስቀምጥ</button>
-<div id="fixedExpList" style="margin-top:14px;"></div>
-</div>
-</div>
-<div class="section-collapsible">
-<div class="section-header" id="hdrExpCatMgr" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">የወጪ ምድቦችን አስተዳድር</span></div>
-</div>
-<div class="section-body" id="bodyExpCatMgr">
-<div class="cat-add-row">
-<input type="text" id="newExpCat" placeholder="አዲስ የወጪ ምድብ" autocomplete="off">
-<button onclick="addExpCategory()">+ ጨምር</button>
-</div>
-<div class="cat-tags" id="expCatListDisplay" style="margin-top:10px;"></div>
-</div>
-</div>
+    <div class="sub-menu-container desktop-only">
+        <button class="sub-menu-btn active" id="btnSub3_1" onclick="switchSubTab(3, 1)">💸 Daily Expense</button>
+        <button class="sub-menu-btn" id="btnSub3_2" onclick="switchSubTab(3, 2)">🏢 Fixed Expense</button>
+        <button class="sub-menu-btn" id="btnSub3_3" onclick="switchSubTab(3, 3)">🗂️ Expense Category</button>
+    </div>
+    <div class="sub-panel active" id="sub3_1">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrAddExp','bodyAddExp')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">Daily Expense</span></div>
+            </div>
+            <div class="section-body open" id="bodyAddExp">
+                <label class="field-label">📁 Category</label><select id="expCat"></select>
+                <label class="field-label">🏢 Branch</label><select id="expBranch"></select>
+                <label class="field-label">📝 Note</label><input type="text" id="expNote" placeholder="e.g. Transport">
+                <label class="field-label">💰 Amount</label><input type="number" id="expAmount" placeholder="0.00">
+                <label class="field-label">📅 Date</label><input type="date" id="expDate">
+                <button class="btn btn-danger" onclick="addExpense()">💾 Save</button>
+                <div id="expList" style="margin-top:14px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub3_2">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Fixed Expense</span></div>
+            </div>
+            <div class="section-body open" id="bodyFixedExp">
+                <label class="field-label">📁 Category</label><select id="fixCat"></select>
+                <label class="field-label">📝 Note</label><input type="text" id="fixNote" placeholder="e.g. October Salary">
+                <label class="field-label">💰 Amount</label><input type="number" id="fixAmount" placeholder="0.00">
+                <label class="field-label">📅 Month</label><input type="month" id="fixMonth">
+                <button class="btn btn-warning" onclick="addFixedExpense()">💾 Save</button>
+                <div id="fixedExpList" style="margin-top:14px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub3_3">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Expense Category</span></div>
+            </div>
+            <div class="section-body open" id="bodyExpCatMgr">
+                <div class="cat-add-row">
+                    <input type="text" id="newExpCat" placeholder="New Expense Category" autocomplete="off">
+                    <button onclick="addExpCategory()">+ Add</button>
+                </div>
+                <div class="cat-tags" id="expCatListDisplay" style="margin-top:10px;"></div>
+            </div>
+        </div>
+    </div>
 </div> 
 
-<!-- PANEL 4 -->
+<!-- PANEL 4 (Inventory) -->
 <div class="panel" id="panel4">
-<div class="section-collapsible true-full-width">
-<div class="section-header open" id="hdrInventory" onclick="toggleSection('hdrInventory','bodyInventory')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">የእቃ ክምችት</span></div>
-</div>
-<div class="section-body open" id="bodyInventory">
-<input type="text" class="search-box" id="searchInventory" placeholder="🔍 በስም፣ በባች ወይም በምድብ ፈልግ..." oninput="loadInventory()">
-<select id="filterTypeInv" onchange="loadInventory()" style="margin-bottom:10px;">
-<option value="all">ሁሉም ዓይነት</option>
-<option value="medicine">💊 መድሃኒት ብቻ</option>
-<option value="cosmetic">🧴 ኮስሞቲክስ ብቻ</option>
-</select>
-<div id="inventoryList"></div>
-<div class="summary-box green" style="margin-top:14px;">
-<div class="label">ጠቅላላ የክምችት ዋጋ</div>
-<div class="value" id="invTotalValue">0.00 <small>ብር</small></div>
-</div>
-</div>
-</div>
-<div class="section-collapsible">
-<div class="section-header" id="hdrStockAdjust" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">የስቶክ ማስተካከያ</span></div>
-</div>
-<div class="section-body" id="bodyStockAdjust">
-<div class="info-banner">💡 እቃ ሲበላሽ ወይም ሲጠፋ ከክምችቱ ላይ ለማስተካከል።</div>
-<label class="field-label">📦 ምርት ምረጥ</label>
-<select id="adjustMedId"></select>
-<label class="field-label">🔢 አዲስ ብዛት</label>
-<input type="number" id="adjustQty" placeholder="0">
-<label class="field-label">📝 ምክንያት (አማራጭ)</label>
-<input type="text" id="adjustReason" placeholder="ለምሳሌ: ተበላሽቷል">
-<button class="btn btn-warning" onclick="adjustStock()">🔧 አስተካክል</button>
-</div>
-</div>
-<div class="section-collapsible">
-<div class="section-header" id="hdrExpiryList" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">የማለቂያ ቀን ማሳወቂያ</span></div>
-</div>
-<div class="section-body" id="bodyExpiryList">
-<input type="text" class="search-box" id="searchExpiry" placeholder="🔍 ፈልግ..." oninput="loadInventory()">
-<div id="expiryListDisplay"></div>
-</div>
-</div>
-<div class="section-collapsible">
-<div class="section-header" id="hdrLowStock" onclick="toggleSection('hdrLowStock','bodyLowStock')">
-<div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">የሚያልቅ ክምችት</span></div>
-</div>
-<div class="section-body" id="bodyLowStock">
-<input type="text" class="search-box" id="searchLowStock" placeholder="🔍 ፈልግ..." oninput="loadInventory()">
-<div id="lowStockListDisplay"></div>
-</div>
-</div>
+    <div class="sub-menu-container desktop-only">
+        <button class="sub-menu-btn active" id="btnSub4_1" onclick="switchSubTab(4, 1)">📦 Inventory List</button>
+        <button class="sub-menu-btn" id="btnSub4_2" onclick="switchSubTab(4, 2)">⚠️ Expiry & Low Stock</button>
+        <button class="sub-menu-btn" id="btnSub4_3" onclick="switchSubTab(4, 3)">🔧 Stock Adjust</button>
+    </div>
+    <div class="sub-panel active" id="sub4_1">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrInventory','bodyInventory')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory</span></div>
+            </div>
+            <div class="section-body open" id="bodyInventory">
+                <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search Inventory..." oninput="loadInventory()">
+                <select id="filterTypeInv" onchange="loadInventory()" style="margin-bottom:10px;">
+                    <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
+                </select>
+                <div id="inventoryList"></div>
+                <div class="summary-box green" style="margin-top:14px;">
+                    <div class="label">Total Inventory Value</div>
+                    <div class="value" id="invTotalValue">0.00 <small>ETB</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub4_2">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Expiry & Low Stock Alerts</span></div>
+            </div>
+            <div class="section-body open" id="bodyExpiryList">
+                <input type="text" class="search-box" id="searchExpiry" placeholder="🔍 Search..." oninput="loadInventory()">
+                <h4 style="margin:10px 0 5px; color:#dd6b20;">Expiring Soon / Expired</h4>
+                <div id="expiryListDisplay"></div>
+                <h4 style="margin:20px 0 5px; color:#c53030;">Low Stock</h4>
+                <div id="lowStockListDisplay"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub4_3">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">Stock Adjust</span></div>
+            </div>
+            <div class="section-body open" id="bodyStockAdjust">
+                <label class="field-label">📦 Select Item</label><select id="adjustMedId"></select>
+                <label class="field-label">🔢 New Qty</label><input type="number" id="adjustQty" placeholder="0">
+                <label class="field-label">📝 Reason</label><input type="text" id="adjustReason" placeholder="e.g. Damaged">
+                <button class="btn btn-warning" onclick="adjustStock()">🔧 Adjust</button>
+            </div>
+        </div>
+    </div>
 </div> 
-
-<!-- PANEL 5 -->
+    <!-- PANEL 5 (Daily Income) -->
 <div class="panel" id="panel5">
 <div class="section-collapsible true-full-width">
 <div class="section-header open" id="hdrDaily" onclick="toggleSection('hdrDaily','bodyDaily')">
@@ -606,7 +605,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 </div> 
 
-<!-- PANEL 6 -->
+<!-- PANEL 6 (Monthly Income) -->
 <div class="panel" id="panel6">
 <div class="section-collapsible true-full-width">
 <div class="section-header open" id="hdrMonthly" onclick="toggleSection('hdrMonthly','bodyMonthly')">
@@ -662,7 +661,8 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 </div>
 </div>
-<!-- PANEL 7 -->
+
+<!-- PANEL 7 (Dashboard) -->
 <div class="panel" id="panel7">
 <div class="section-collapsible true-full-width">
 <div class="section-header open" id="hdrDash" onclick="toggleSection('hdrDash','bodyDash')">
@@ -715,7 +715,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
         </div>
         <div class="dash-card" style="grid-column: 1 / -1;">
             <div class="dash-header">📈 የ30 ቀን ሽያጭ ግራፍ</div>
-            <div class="chart-container">
+            <div class="chart-container" style="height: 250px;">
                 <canvas id="dailyChartCanvas"></canvas>
             </div>
         </div>
@@ -730,7 +730,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 </div>
 
-<!-- PANEL 8 -->
+<!-- PANEL 8 (Settings) -->
 <div class="panel" id="panel8">
 <div class="section-collapsible true-full-width">
 <div class="section-header open" id="hdrSettings" onclick="toggleSection('hdrSettings','bodySettings')">
@@ -838,42 +838,6 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
     </div>
 
     <div class="section-collapsible">
-        <div class="section-header" id="hdrNotif" onclick="toggleSection('hdrNotif','bodyNotif')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔔</span><span class="sec-title">Notification</span></div>
-        </div>
-        <div class="section-body" id="bodyNotif">
-            <div class="toggle-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <label style="margin:0;">የስቶክ ማሳወቂያዎች</label>
-                <input type="checkbox" id="notifStock" style="width:20px; height:20px;">
-            </div>
-            <div class="toggle-row" style="display:flex; justify-content:space-between; align-items:center;">
-                <label style="margin:0;">የማለቂያ ቀን ማሳወቂያዎች</label>
-                <input type="checkbox" id="notifExpiry" style="width:20px; height:20px;">
-            </div>
-        </div>
-    </div>
-
-    <div class="section-collapsible">
-        <div class="section-header" id="hdrSysUpdate" onclick="toggleSection('hdrSysUpdate','bodySysUpdate')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔄</span><span class="sec-title">ስርዓቱን አስተካክል</span></div>
-        </div>
-        <div class="section-body" id="bodySysUpdate">
-            <div class="info-banner">💡 የሶፍትዌሩን አዲስ መረጃ እዚህ ማየት ይችላሉ።</div>
-            <button class="btn btn-primary" onclick="alert('ስርዓቱ ወቅታዊ ነው! (v1.0.0)')">አሁን አስተካክል</button>
-        </div>
-    </div>
-
-    <div class="section-collapsible">
-        <div class="section-header" id="hdrReset" onclick="toggleSection('hdrReset','bodyReset')">
-            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗑️</span><span class="sec-title">አዲስ ቀን ጀምር (Reset)</span></div>
-        </div>
-        <div class="section-body" id="bodyReset">
-            <div class="info-banner" style="background:#fff5f5; color:#c53030; border-color:#fed7d7;">🚨 ይህ ተግባር የዕለቱን መረጃ ብቻ ያጠፋል (ዳታቤዙን አያጠፋም)።</div>
-            <button class="btn btn-danger" onclick="resetDailyData()">🗑️ የዕለቱን መረጃ አጽዳ</button>
-        </div>
-    </div>
-
-    <div class="section-collapsible">
         <div class="section-header" id="hdrSupport" onclick="toggleSection('hdrSupport','bodySupport')">
             <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📞</span><span class="sec-title">የድጋፍ መረጃ (Support Info)</span></div>
         </div>
@@ -910,7 +874,7 @@ body.dark .dash-list li { border-bottom-color: #4a5568; }
 </div>
 </div>
 
-<!-- PANEL 9 -->
+<!-- PANEL 9 (Credit) -->
 <div class="panel" id="panel9">
 <div class="section-collapsible true-full-width">
 <div class="section-header open" id="hdrCredit" onclick="toggleSection('hdrCredit','bodyCredit')">
@@ -1024,6 +988,29 @@ let allowedBizType = 'retail';
 let lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
 
+// Sub-tab Navigation Logic
+window.switchSubTab = function(mainTabNum, subTabNum) {
+    const panel = document.getElementById('panel' + mainTabNum);
+    const subPanels = panel.querySelectorAll('.sub-panel');
+    subPanels.forEach(p => p.classList.remove('active'));
+    
+    const targetPanel = document.getElementById('sub' + mainTabNum + '_' + subTabNum);
+    if (targetPanel) targetPanel.classList.add('active');
+
+    const btns = panel.querySelectorAll('.sub-menu-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    
+    const targetBtn = document.getElementById('btnSub' + mainTabNum + '_' + subTabNum);
+    if (targetBtn) targetBtn.classList.add('active');
+
+    // Change mobile buttons background color
+    if (window.innerWidth < 768) {
+        const mobileBtns = panel.querySelectorAll('.mobile-only button');
+        mobileBtns.forEach(b => b.style.background = '#a0aec0');
+        if (mobileBtns[subTabNum - 1]) mobileBtns[subTabNum - 1].style.background = '#2c5282';
+    }
+};
+
 let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null, unsubQuickSales = null;
 
 setTimeout(() => {
@@ -1038,14 +1025,8 @@ window.toggleSection = function(h, b) {
     const hd = document.getElementById(h);
     const bd = document.getElementById(b);
     if (!hd || !bd) return; 
-    const isOpen = bd.classList.contains('open');
-    if (isOpen) {
-        bd.classList.remove('open');
-        hd.classList.remove('open');
-    } else {
-        bd.classList.add('open');
-        hd.classList.add('open');
-    }
+    bd.classList.toggle('open');
+    hd.classList.toggle('open');
 }; 
 
 window.onMedTypeChange = function() {
@@ -1067,22 +1048,12 @@ async function loadUserHeader(user) {
         document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase() || 'U'; 
 
         const roleElement = document.getElementById('hdrUserRole'); 
-        if (currentUserRole === 'owner' || currentUserRole === 'ባለቤት') {
-            roleElement.innerText = '👑 ባለቤት';
-            roleElement.style.background = '#fefcbf';
-            roleElement.style.color = '#975a16';
-        } else if (currentUserRole === 'manager' || currentUserRole === 'ማናጀር') {
-            roleElement.innerText = '🎯 ማናጀር';
-            roleElement.style.background = '#bee3f8';
-            roleElement.style.color = '#2c5282';
-        } else if (currentUserRole === 'accountant' || currentUserRole === 'አካውንታንት') {
-            roleElement.innerText = '💼 አካውንታንት';
-            roleElement.style.background = '#c6f6d5';
-            roleElement.style.color = '#22543d';
+        if (currentUserRole === 'owner') {
+            roleElement.innerText = '👑 ባለቤት'; roleElement.style.background = '#fefcbf'; roleElement.style.color = '#975a16';
+        } else if (currentUserRole === 'manager') {
+            roleElement.innerText = '🎯 ማናጀር'; roleElement.style.background = '#bee3f8'; roleElement.style.color = '#2c5282';
         } else {
-            roleElement.innerText = '👤 ሠራተኛ';
-            roleElement.style.background = '#e2e8f0';
-            roleElement.style.color = '#4a5568';
+            roleElement.innerText = '👤 ሠራተኛ'; roleElement.style.background = '#e2e8f0'; roleElement.style.color = '#4a5568';
         } 
 
         if (currentUserPharmacyId) {
@@ -1094,8 +1065,6 @@ async function loadUserHeader(user) {
                 currentBizType = phData.userBizType || allowedBizType; 
                 lowStockThreshold = phData.lowStockThreshold || 10; 
                 
-                checkUserPaymentStatus(phData);
-
                 if (phData.isSuspended) {
                     document.getElementById('mainApp').classList.remove('show');
                     document.getElementById('loginScreen').classList.remove('hidden');
@@ -1108,37 +1077,6 @@ async function loadUserHeader(user) {
     } catch (err) { console.error('loadUserHeader error:', err); }
 } 
 
-function checkUserPaymentStatus(phData) {
-    const alertBanner = document.getElementById('userPaymentAlert');
-    const alertText = document.getElementById('userPaymentAlertText');
-    if (!alertBanner) return;
-
-    const expiryDate = phData.expiryDate;
-    if (!expiryDate) { alertBanner.style.display = 'none'; return; }
-
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    const expiry = new Date(expiryDate);
-    const diffTime = expiry - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) {
-        alertBanner.style.display = 'block';
-        alertBanner.style.background = '#fed7d7';
-        alertBanner.style.color = '#822727';
-        alertBanner.style.borderColor = '#feb2b2';
-        alertText.innerHTML = `🚨 የክፍያ ጊዜዎ አልፏል! እባክዎ አስተዳዳሪውን ያግኙ።`;
-    } else if (diffDays <= 5) {
-        alertBanner.style.display = 'block';
-        alertBanner.style.background = '#fefcbf';
-        alertBanner.style.color = '#975a16';
-        alertBanner.style.borderColor = '#fef08a';
-        alertText.innerHTML = `⚠️ የክፍያ ጊዜዎ በ ${diffDays} ቀናት ውስጥ ያበቃል! እባክዎ አስቀድመው ይክፈሉ።`;
-    } else {
-        alertBanner.style.display = 'none';
-    }
-}
-
 window.login = async function() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
@@ -1146,37 +1084,6 @@ window.login = async function() {
     errorEl.style.display = 'none'; 
     try { await signInWithEmailAndPassword(auth, email, password); } 
     catch (err) { errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም'; errorEl.style.display = 'block'; }
-}; 
-
-window.showResetRequest = function() { document.getElementById('loginForm').style.display = 'none'; document.getElementById('resetRequestForm').style.display = 'block'; }; 
-window.backToLogin = function() { document.getElementById('loginForm').style.display = 'block'; document.getElementById('resetRequestForm').style.display = 'none'; document.getElementById('resetRequestMsg').style.display = 'none'; }; 
-
-window.submitPasswordRequest = async function() {
-    const email = document.getElementById('resetEmail').value.trim();
-    const msgEl = document.getElementById('resetRequestMsg'); 
-    if(!email) { msgEl.textContent = '⚠️ እባክዎ ኢሜይል ያስገቡ'; msgEl.style.color = 'red'; msgEl.style.display = 'block'; return; } 
-    try {
-        await addDoc(collection(db, 'passwordRequests'), { email: email, date: new Date().toISOString().split('T')[0], timestamp: serverTimestamp() });
-        msgEl.textContent = '✅ ጥያቄዎ ተልኳል!'; msgEl.style.color = '#276749'; msgEl.style.display = 'block'; document.getElementById('resetEmail').value = '';
-    } catch(e) { msgEl.textContent = '⚠️ ስህተት: ' + e.message; msgEl.style.color = 'red'; msgEl.style.display = 'block'; }
-}; 
-
-window.saveFirstTimePassword = async function() {
-    const newPass = document.getElementById('firstTimeNewPass').value;
-    const errorEl = document.getElementById('changePassError');
-    errorEl.style.display = 'none'; 
-    if (newPass.length < 6) { errorEl.textContent = '⚠️ ፓስወርድ ቢያንስ 6 ፊደል መሆን አለበት!'; errorEl.style.display = 'block'; return; } 
-    try {
-        const user = auth.currentUser;
-        await updatePassword(user, newPass);
-        await updateDoc(doc(db, 'users', user.uid), { isTempPassword: false }); 
-        alert('✅ ፓስወርድዎ በተሳካ ሁኔታ ተቀይሯል!'); 
-        document.getElementById('loginForm').style.display = 'block';
-        document.getElementById('changePassForm').style.display = 'none';
-        document.getElementById('mainApp').classList.add('show'); 
-        await loadUserHeader(user);
-        await loadAllData(); 
-    } catch (err) { errorEl.textContent = '⚠️ ስህተት: ' + err.message; errorEl.style.display = 'block'; }
 }; 
 
 window.logout = function() { 
@@ -1193,63 +1100,15 @@ onAuthStateChanged(auth, async (user) => {
     if (user) {
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('mainApp').classList.add('show'); 
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (userDoc.exists() && userDoc.data().isTempPassword) {
-            document.getElementById('mainApp').classList.remove('show');
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('resetRequestForm').style.display = 'none';
-            document.getElementById('changePassForm').style.display = 'block';
-            return;
-        } 
         await loadUserHeader(user);
         await loadAllData();
-        applyPermissionsUI();
     } else {
         document.getElementById('loginScreen').classList.remove('hidden');
         document.getElementById('mainApp').classList.remove('show');
-        document.getElementById('loginForm').style.display = 'block';
-        document.getElementById('changePassForm').style.display = 'none';
-        document.getElementById('resetRequestForm').style.display = 'none';
         currentUserPharmacyId = null;
         currentUserRole = 'employee';
     }
 }); 
-
-async function applyPermissionsUI() {
-    if (currentUserRole === 'owner') return;
-    
-    let perms = null;
-    try {
-        const permDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'));
-        if (permDoc.exists()) perms = permDoc.data();
-    } catch(e) { console.error(e); } 
-    
-    if (!perms) return; 
-    
-    const rolePerms = currentUserRole === 'manager' ? perms.manager : perms.accountant;
-    if (!rolePerms) return; 
-    
-    const tabMap = { 'tab1': rolePerms.med, 'tab2': rolePerms.sell, 'tab3': rolePerms.exp, 'tab4': rolePerms.inv, 'tab5': rolePerms.daily, 'tab6': rolePerms.monthly, 'tab7': rolePerms.dash, 'tab8': rolePerms.settings, 'tab9': true, 'tab10': true }; 
-    
-    let firstAvailableTab = null; 
-    for (const [tabId, isAllowed] of Object.entries(tabMap)) {
-        const inputEl = document.getElementById(tabId);
-        if (inputEl && inputEl.parentElement.tagName === 'DIV') {
-            const labelEl = document.querySelector(`.tabs label[for="${tabId}"]`); 
-            if (!isAllowed) { 
-                if(inputEl) inputEl.style.display = 'none'; 
-                if(labelEl) labelEl.style.display = 'none'; 
-            } 
-            else if (!firstAvailableTab) { 
-                firstAvailableTab = tabId; 
-            }
-        }
-    } 
-    if (firstAvailableTab && !document.getElementById(firstAvailableTab).checked) { 
-        document.getElementById(firstAvailableTab).checked = true; 
-    }
-} 
 
 async function loadAllData() {
     if (!currentUserPharmacyId) return; 
@@ -1407,30 +1266,35 @@ window.onSubcategoryChange = function() {
 
 function renderCategoryList() {
     const listEl = document.getElementById('catListDisplay');
-    const search = (document.getElementById('searchCategory')?.value || '').toLowerCase();
+    const tableBody = document.getElementById('catTableBody');
     
-    let filteredCats = allCategories;
-    if(search) filteredCats = allCategories.filter(c => c.toLowerCase().includes(search));
-
-    if(filteredCats.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:#a0aec0;">ምንም ምድብ የለም።</p>'; return; }
+    let htmlTags = '';
+    let htmlTable = '';
     
-    let html = '';
-    filteredCats.forEach(c => {
-        html += `<div style="margin-bottom:10px; background:#f7fafc; padding:10px; border-radius:8px; border:1px solid #edf2f7;">
+    allCategories.forEach(c => {
+        const subsHtml = (allSubcategories[c] || []).map(sub => `<span class="cat-tag" style="font-size:11px; margin:2px;">${sub.name} <span class="del" onclick="deleteSubcategory('${c}', '${sub.id}', '${sub.name}')">×</span></span>`).join('');
+        
+        htmlTags += `<div style="margin-bottom:10px; background:#f7fafc; padding:10px; border-radius:8px; border:1px solid #edf2f7;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
                 <strong style="font-size:14px; color:#2c5282;">📁 ${c}</strong>
                 <span class="del" onclick="deleteCategory('${c}')" style="cursor:pointer; color:#c53030; font-weight:bold;">×</span>
             </div>
-            <div class="cat-tags" style="margin-bottom:5px;">
-                ${(allSubcategories[c] || []).map(sub => `<span class="cat-tag" style="font-size:11px;">${sub.name} <span class="del" onclick="deleteSubcategory('${c}', '${sub.id}', '${sub.name}')">×</span></span>`).join('')}
-            </div>
+            <div class="cat-tags" style="margin-bottom:5px;">${subsHtml}</div>
             <div class="cat-add-row">
                 <input type="text" id="newSub_${c}" placeholder="አዲስ ንዑስ ምድብ" style="padding:6px; font-size:12px;">
                 <button onclick="addSubcategory('${c}')" style="padding:6px 10px; font-size:12px;">+</button>
             </div>
         </div>`;
+
+        htmlTable += `<tr>
+            <td><strong>${c}</strong></td>
+            <td>${subsHtml || '-'}</td>
+            <td><button class="action-btn btn-delete" onclick="deleteCategory('${c}')">🗑️ Delete</button></td>
+        </tr>`;
     });
-    listEl.innerHTML = html;
+    
+    if(listEl) listEl.innerHTML = htmlTags || '<p>ምንም ምድብ የለም።</p>';
+    if(tableBody) tableBody.innerHTML = htmlTable || '<tr><td colspan="3">ምንም ምድብ የለም።</td></tr>';
 } 
 
 window.addCategory = async function() {
@@ -1469,8 +1333,7 @@ window.deleteSubcategory = async function(catName, subId, subName) {
         loadCategories();
     } catch(e) { alert(e.message); }
 };
-
-async function loadExpCategories() {
+    async function loadExpCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'expenseCategories'), where('pharmacyId', '==', currentUserPharmacyId)));
         allExpCategories = []; const select = document.getElementById('expCat'); select.innerHTML = '<option value="">-- ምድብ ምረጥ --</option>';
@@ -1560,7 +1423,7 @@ window.deleteCustomer = async function(name) {
     try { await deleteDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name)); loadCustomers(); } catch(e) { alert(e.message); }
 }; 
 
-// ---- Medicines ----
+// ---- Medicines Logic ----
 window.addMedicine = async function() {
     const type = document.getElementById('medType').value;
     const category = document.getElementById('medCategory').value;
@@ -1607,8 +1470,11 @@ window.addMedicine = async function() {
     } catch (err) { alert('⚠️ ስህተት: ' + err.message); }
 }; 
 
+// Pagination Variables
+let medCurrentPage = 1;
+let medRowsPerPage = 15; 
+
 window.renderMedList = function() {
-    const listEl = document.getElementById('medListDisplay');
     const filter = document.getElementById('filterTypeMed').value;
     const search = (document.getElementById('searchMedList')?.value || '').toLowerCase();
     
@@ -1616,16 +1482,128 @@ window.renderMedList = function() {
     if (filter !== 'all') filtered = filtered.filter(m => m.type === filter); 
     if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search) || (m.subcategory||'').toLowerCase().includes(search));
 
-    if(filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; return; }
-    let html = '';
-    filtered.forEach(m => {
-        const typeLabel = m.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
-        const extra = m.type === 'medicine' ? `| 📦 ${m.batch || '-'} | 📅 ${m.expiry || '-'}` : '';
-        html += `<div class="list-item"><div class="info"><div class="name">${typeLabel}: ${m.name}</div><div class="meta">${m.category} → ${m.subcategory} ${extra}</div></div><div class="amount">${m.price} ብር</div></div>`;
-    });
-    listEl.innerHTML = html;
-}; 
+    // --- Mobile Cards ---
+    const mobileListEl = document.getElementById('medListDisplayMobile');
+    if(filtered.length === 0) { 
+        mobileListEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; 
+    } else {
+        let mobileHtml = '';
+        filtered.forEach(m => {
+            const typeLabel = m.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
+            const extra = m.type === 'medicine' ? `| 📦 ${m.batch || '-'} | 📅 ${m.expiry || '-'}` : '';
+            mobileHtml += `<div class="list-item"><div class="info"><div class="name">${typeLabel}: ${m.name}</div><div class="meta">${m.category} → ${m.subcategory} ${extra}</div></div><div class="amount">${m.price} ብር</div></div>`;
+        });
+        mobileListEl.innerHTML = mobileHtml;
+    }
 
+    // --- Desktop Table ---
+    const tableBody = document.getElementById('medTableBody');
+    if(filtered.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#a0aec0;">ምንም ምርት የለም።</td></tr>';
+        document.getElementById('medPageInfo').innerText = `ገጽ 0 ከ 0`;
+        return;
+    }
+
+    const totalPages = Math.ceil(filtered.length / medRowsPerPage);
+    if (medCurrentPage > totalPages) medCurrentPage = totalPages;
+    if (medCurrentPage < 1) medCurrentPage = 1;
+
+    const startIndex = (medCurrentPage - 1) * medRowsPerPage;
+    const endIndex = startIndex + medRowsPerPage;
+    const paginatedItems = filtered.slice(startIndex, endIndex);
+
+    let tableHtml = '';
+    paginatedItems.forEach(m => {
+        const isLowStock = m.quantity <= lowStockThreshold;
+        const qtyColor = isLowStock ? 'color: #c53030; font-weight: bold;' : 'color: #276749; font-weight: bold;';
+        
+        tableHtml += `<tr>
+            <td>${m.branch || 'Main'}</td>
+            <td>${m.type === 'cosmetic' ? '🧴 Cosmetic' : '💊 Medicine'}</td>
+            <td>${m.category || '-'}</td>
+            <td>${m.subcategory || '-'}</td>
+            <td>${m.batch || '-'}</td>
+            <td>${m.expiry || '-'}</td>
+            <td><strong>${m.name}</strong></td>
+            <td>${m.supplier || '-'}</td>
+            <td>${m.cost || 0} ብር</td>
+            <td>${m.price} ብር</td>
+            <td style="${qtyColor}">${m.quantity}</td>
+            <td>
+                <button class="action-btn btn-edit" onclick="editMedicine('${m.id}')">✏️ Edit</button>
+                <button class="action-btn btn-delete" onclick="deleteMedicine('${m.id}')">🗑️ Delete</button>
+            </td>
+        </tr>`;
+    });
+    tableBody.innerHTML = tableHtml;
+
+    document.getElementById('medPageInfo').innerText = `ገጽ ${medCurrentPage} ከ ${totalPages}`;
+}
+
+window.changeMedPage = function(direction) {
+    medCurrentPage += direction;
+    renderMedList();
+};
+
+window.editMedicine = function(id) {
+    const med = allMedicines.find(m => m.id === id);
+    if(!med) return;
+    
+    // Fill form in "Add Medicine" tab
+    document.getElementById('medType').value = med.type;
+    onMedTypeChange();
+    document.getElementById('medCategory').value = med.category || '';
+    loadSubcategoriesForSelectedCategory();
+    
+    setTimeout(() => {
+        document.getElementById('medSubcategory').value = med.subcategory || '';
+        document.getElementById('medName').value = med.name || '';
+        document.getElementById('medBatch').value = med.batch || '';
+        document.getElementById('medExpiry').value = med.expiry || '';
+        document.getElementById('medSupplier').value = med.supplier || '';
+        document.getElementById('medCost').value = med.cost || '';
+        document.getElementById('medPrice').value = med.price || '';
+        document.getElementById('medQty').value = med.quantity || '';
+    }, 200);
+
+    // Change button to "Update" temporarily
+    const saveBtn = document.querySelector('#bodyAddMed .btn-success');
+    saveBtn.innerText = '🔄 Update Medicine';
+    saveBtn.onclick = async function() {
+        try {
+            await updateDoc(doc(db, 'medicines', id), {
+                type: document.getElementById('medType').value,
+                category: document.getElementById('medCategory').value,
+                subcategory: document.getElementById('medSubcategory').value,
+                name: document.getElementById('medName').value.trim(),
+                batch: document.getElementById('medBatch').value.trim(),
+                expiry: document.getElementById('medExpiry').value,
+                supplier: document.getElementById('medSupplier').value.trim(),
+                cost: parseFloat(document.getElementById('medCost').value),
+                price: parseFloat(document.getElementById('medPrice').value),
+                quantity: parseInt(document.getElementById('medQty').value)
+            });
+            alert('✅ ምርቱ በተሳካ ሁኔታ ተሻሽሏል!');
+            switchSubTab(1, 1);
+            // Reset Form
+            document.getElementById('medName').value = ''; document.getElementById('medBatch').value = ''; document.getElementById('medCost').value = ''; document.getElementById('medPrice').value = ''; document.getElementById('medQty').value = '';
+            saveBtn.innerText = '💾 Save Medicine';
+            saveBtn.onclick = addMedicine;
+        } catch(e) { alert(e.message); }
+    };
+
+    switchSubTab(1, 2); // Switch to Add tab
+};
+
+window.deleteMedicine = async function(id) {
+    if(!confirm('🚨 ይህን ምርት ማጥፋት ትፈልጋለህ? (ይህ ተግባር አይመለስም)')) return;
+    try {
+        await deleteDoc(doc(db, 'medicines', id));
+        alert('✅ ምርቱ ተሰርዟል!');
+    } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
+};
+
+// ---- Sales Logic ----
 function renderSellProducts() {
     const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase();
     const listEl = document.getElementById('sellProductList');
@@ -1730,7 +1708,7 @@ window.addQuickSale = async function() {
         document.getElementById('quickAmount').value = '';
     } catch(e) { alert(e.message); }
 }; 
-  // ---- Expenses ----
+
 window.addExpense = async function() {
     const cat = document.getElementById('expCat').value;
     const branch = document.getElementById('expBranch').value;
@@ -1745,27 +1723,6 @@ window.addExpense = async function() {
     } catch(e) { alert(e.message); }
 }; 
 
-function renderExpenseHistory() {
-    const listEl = document.getElementById('expList');
-    if(!listEl) return;
-    if(allExpenses.length === 0) {
-        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ወጪ የለም።</p>';
-        return;
-    }
-    const sorted = [...allExpenses].sort((a,b) => (b.date || '').localeCompare(a.date || ''));
-    let html = '';
-    sorted.forEach(e => {
-        html += `<div class="list-item">
-            <div class="info">
-                <div class="name">${e.category}</div>
-                <div class="meta">📅 ${e.date} | ${e.note || ''}</div>
-            </div>
-            <div class="amount red">${e.amount.toFixed(2)} ብር</div>
-        </div>`;
-    });
-    listEl.innerHTML = html;
-}
-
 window.addFixedExpense = async function() {
     const cat = document.getElementById('fixCat').value;
     const note = document.getElementById('fixNote').value.trim();
@@ -1778,128 +1735,6 @@ window.addFixedExpense = async function() {
         document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = '';
     } catch(e) { alert(e.message); }
 }; 
-
-function renderFixedExpenseHistory() {
-    const listEl = document.getElementById('fixedExpList');
-    if(!listEl) return;
-    if(allFixed.length === 0) {
-        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ቋሚ ወጪ የለም።</p>';
-        return;
-    }
-    const sorted = [...allFixed].sort((a,b) => (b.month || '').localeCompare(a.month || ''));
-    let html = '';
-    sorted.forEach(e => {
-        html += `<div class="list-item">
-            <div class="info">
-                <div class="name">${e.category}</div>
-                <div class="meta">📅 ${e.month} | ${e.note || ''}</div>
-            </div>
-            <div class="amount red">${e.amount.toFixed(2)} ብር</div>
-        </div>`;
-    });
-    listEl.innerHTML = html;
-}
-
-// ---- Inventory & Stock ----
-window.loadInventory = function() {
-    const listEl = document.getElementById('inventoryList');
-    const filter = document.getElementById('filterTypeInv').value;
-    const searchInv = (document.getElementById('searchInventory')?.value || '').toLowerCase();
-    const searchExpiry = (document.getElementById('searchExpiry')?.value || '').toLowerCase();
-    const searchLow = (document.getElementById('searchLowStock')?.value || '').toLowerCase();
-    
-    let filtered = allMedicines;
-    
-    if (filter === 'medicine') filtered = allMedicines.filter(m => m.type === 'medicine');
-    else if (filter === 'cosmetic') filtered = allMedicines.filter(m => m.type === 'cosmetic'); 
-
-    let displayFiltered = filtered;
-    if (searchInv) {
-        displayFiltered = filtered.filter(m => 
-            (m.name||'').toLowerCase().includes(searchInv) || 
-            (m.category||'').toLowerCase().includes(searchInv) ||
-            (m.batch||'').toLowerCase().includes(searchInv)
-        );
-    }
-
-    if (displayFiltered.length === 0) { 
-        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት የለም።</p>'; 
-        document.getElementById('invTotalValue').innerHTML = '0.00 <small>ብር</small>'; 
-    } else { 
-        const grouped = {};
-        displayFiltered.forEach(med => {
-            const typeKey = med.type === 'cosmetic' ? '🧴 ኮስሞቲክስ' : '💊 መድሃኒት';
-            const cat = med.category || 'ሌላ'; const sub = med.subcategory || 'ሌላ';
-            const key = typeKey + ' - ' + cat;
-            if(!grouped[key]) grouped[key] = {};
-            if(!grouped[key][sub]) grouped[key][sub] = [];
-            grouped[key][sub].push(med);
-        }); 
-
-        let html = ''; let grandTotal = 0;
-        Object.keys(grouped).forEach(catName => {
-            let catTotalQty = 0, catTotalValue = 0;
-            html += `<div class="cat-section"><div class="cat-header open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')"><div class="cat-left"><span class="cat-arrow">▶</span><span class="cat-name">📁 ${catName}</span></div></div><div class="cat-body open">`; 
-            Object.keys(grouped[catName]).forEach(subName => { 
-                html += `<div style="font-size:13px; font-weight:bold; color:#4a5568; margin:8px 0 5px 5px;">↳ ${subName}</div>`; 
-                grouped[catName][subName].forEach(med => { 
-                    catTotalQty += med.quantity; catTotalValue += med.quantity * (med.price || 0); 
-                    const today = new Date(); today.setHours(0,0,0,0); 
-                    let alertHtml = ''; let rowStyle = ''; 
-                    if (med.expiry && med.expiry !== '-') { 
-                        const expiryDate = new Date(med.expiry); const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24)); 
-                        if (diffDays < 0) { alertHtml = `<span class="expiry-alert">🚨 ጊዜው አልፏል!</span>`; rowStyle = 'background:#fff5f5; border:1px solid #fed7d7;'; } 
-                        else if (diffDays <= 30) { alertHtml = `<span class="expiry-alert" style="color:#dd6b20;">⚠️ ${diffDays} ቀን ቀርቷል</span>`; rowStyle = 'background:#fffaf0; border:1px solid #fbd38d;'; }
-                    }
-                    if (med.quantity <= lowStockThreshold && !alertHtml) { alertHtml = '<span class="low-stock">⚠️ ክምችት እያለቀ ነው</span>'; } 
-
-                    const extra = med.type === 'medicine' ? `<br>📦 ${med.batch || '-'} | 📅 ${med.expiry || '-'}` : '';
-                    html += `<div class="list-item" style="${rowStyle}"><div class="info"><div class="name">${med.name}</div><div class="meta">${extra} ${alertHtml}</div></div><div class="amount">${med.quantity} <small style="font-size:10px;color:#718096;">ብዛት</small><br><small style="font-size:11px;color:#276749;">${med.price} ብር</small></div></div>`;
-                });
-            });
-            grandTotal += catTotalValue;
-            html += `<div style="padding:8px; background:#ebf4ff; border-radius:6px; margin-top:8px; font-size:12.5px; font-weight:700; color:#2c5282;">📊 የዚህ ምድብ ድምር: ${catTotalQty} ብዛት | ${catTotalValue.toFixed(2)} ብር</div>`;
-            html += `</div></div>`;
-        });
-        listEl.innerHTML = html; 
-        document.getElementById('invTotalValue').innerHTML = grandTotal.toFixed(2) + ' <small>ብር</small>'; 
-    }
-
-    const adjSel = document.getElementById('adjustMedId'); 
-    adjSel.innerHTML = '<option value="">-- ምርት ምረጥ --</option>';
-    allMedicines.forEach(m => { adjSel.innerHTML += `<option value="${m.id}">${m.name} (ቀሪ: ${m.quantity})</option>`; }); 
-
-    // Expiry List
-    const expListEl = document.getElementById('expiryListDisplay');
-    let expMeds = allMedicines.filter(m => m.expiry && m.expiry !== '-').map(m => { const diffDays = Math.ceil((new Date(m.expiry) - new Date()) / (1000 * 60 * 60 * 24)); return { ...m, diffDays }; }).filter(m => m.diffDays <= 30).sort((a,b) => a.diffDays - b.diffDays); 
-    
-    if (searchExpiry) expMeds = expMeds.filter(m => (m.name||'').toLowerCase().includes(searchExpiry) || (m.batch||'').toLowerCase().includes(searchExpiry));
-
-    if (expMeds.length === 0) { 
-        expListEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የማለቂያ ቀን ማሳወቂያ የለም።</p>'; 
-    } else {
-        let expHtml = '';
-        expMeds.forEach(m => {
-            const isExpired = m.diffDays < 0;
-            expHtml += `<div class="list-item" style="${isExpired ? 'background:#fff5f5; border:1px solid #fed7d7;' : 'background:#fffaf0; border:1px solid #fbd38d;'}"><div class="info"><div class="name">${m.name}</div><div class="meta">📦 ${m.batch || '-'} | 📅 ${m.expiry} <span style="color:${isExpired ? 'red' : 'orange'}; font-size:12px;">${isExpired ? '🚨 ጊዜው አልፏል!' : `⚠️ ${m.diffDays} ቀን`}</span></div></div></div>`;
-        });
-        expListEl.innerHTML = expHtml;
-    } 
-
-    // Low Stock List
-    const lowStockEl = document.getElementById('lowStockListDisplay');
-    let lowMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold).sort((a,b) => a.quantity - b.quantity);
-    
-    if (searchLow) lowMeds = lowMeds.filter(m => (m.name||'').toLowerCase().includes(searchLow) || (m.category||'').toLowerCase().includes(searchLow));
-
-    if (lowMeds.length === 0) { 
-        lowStockEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የሚያልቅ ክምችት የለም።</p>'; 
-    } else {
-        let lowHtml = '';
-        lowMeds.forEach(m => { lowHtml += `<div class="list-item" style="background:#fffaf0; border:1px solid #fbd38d;"><div class="info"><div class="name">${m.name}</div><div class="meta">📁 ${m.category} → ${m.subcategory}</div></div><div class="amount red" style="font-size:13px;">${m.quantity} ቀሪ</div></div>`; });
-        lowStockEl.innerHTML = lowHtml;
-    }
-} 
 
 window.adjustStock = async function() {
     const id = document.getElementById('adjustMedId').value;
@@ -2107,7 +1942,7 @@ function renderCharts(selectedMonth) {
     }
 }
 
-// ---- Settings ----
+// ---- Settings & Other functions ----
 async function loadSettings() {
     try {
         const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
@@ -2194,13 +2029,7 @@ window.saveBizType = async function() {
         currentBizType = newBizType;
         alert('✅ የድርጅት አይነት በተሳካ ሁኔታ ተቀይሯል!');
         applyBizTypeUI(); 
-        if (newBizType === 'retail' && document.getElementById('tab9').checked) document.getElementById('tab1').checked = true;
     } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
-};
-
-window.resetDailyData = async function() {
-    if(!confirm('🚨 እርግጠኛ ነዎት? የዛሬው መረጃ ብቻ ይጠፋል!')) return;
-    alert('ለጊዜው ይህ ተግባር አልተገኘም። (ዳታቤዝ ላይ ማጽዳት ይፈልጋል)');
 };
 
 window.backupData = function() {
@@ -2216,137 +2045,6 @@ window.backupData = function() {
     a.href = url; a.download = `pharmacy_backup_${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
     alert('✅ ዳታው በተሳካ ሁኔታ ወርዷል!');
-};
-
-window.restoreData = function(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if(!confirm('🚨 እርግጠኛ ነዎት? ይህ አሁን ያለውን ዳታ ሙሉ በሙሉ ይተካል!')) { event.target.value = ''; return; }
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-        try {
-            const data = JSON.parse(e.target.result);
-            alert('⚠️ ዳታ መመለስ ለጊዜው አልተፈቀደም። (ይህ ተግባር በተጨማሪ ስራ ይፈልጋል)');
-        } catch (err) { alert('⚠️ ስህተት: ፋይሉ ትክክል አይደለም'); }
-    };
-    reader.readAsText(file); event.target.value = '';
-};
-
-// ---- Reports & Print ----
-window.toggleReportDatePickers = function() {
-    const type = document.getElementById('reportTypeSelect').value;
-    const dateDiv = document.getElementById('repDateDiv');
-    const monthDiv = document.getElementById('repMonthDiv');
-    
-    if (type === 'daily' || type === 'weekly') {
-        dateDiv.style.display = 'block'; monthDiv.style.display = 'none';
-    } else {
-        dateDiv.style.display = 'none'; monthDiv.style.display = 'block';
-    }
-    generateReport();
-};
-
-window.generateReport = function() {
-    const type = document.getElementById('reportTypeSelect').value;
-    const displayArea = document.getElementById('reportDisplayArea');
-    
-    let startDate, endDate, title = '';
-    
-    if (type === 'daily') {
-        let d = document.getElementById('repDateInput').value;
-        if(!d) d = new Date().toISOString().split('T')[0];
-        startDate = new Date(d); endDate = new Date(d);
-        title = `የቀን ሪፖርት (${d})`;
-    } else if (type === 'weekly') {
-        let d = document.getElementById('repDateInput').value;
-        if(!d) d = new Date().toISOString().split('T')[0];
-        endDate = new Date(d);
-        startDate = new Date(d); startDate.setDate(startDate.getDate() - 7);
-        title = `የሳምንት ሪፖርት (${startDate.toISOString().split('T')[0]} - ${d})`;
-    } else {
-        let m = document.getElementById('repMonthInput').value;
-        if(!m) m = new Date().toISOString().slice(0, 7);
-        if (type === 'monthly') {
-            startDate = new Date(m + '-01'); endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
-            title = `የወር ሪፖርት (${m})`;
-        } else if (type === '3months') {
-            endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
-            startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 2, 1);
-            title = `የ3 ወር ሪፖርት (${startDate.toISOString().slice(0,7)} - ${m})`;
-        } else if (type === '6months') {
-            endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
-            startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 5, 1);
-            title = `የ6 ወር ሪፖርት (${startDate.toISOString().slice(0,7)} - ${m})`;
-        } else if (type === 'yearly') {
-            endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
-            startDate = new Date(new Date(m + '-01').getFullYear() - 1, new Date(m + '-01').getMonth() + 1, 1);
-            title = `የአመት ሪፖርት (${startDate.toISOString().slice(0,7)} - ${m})`;
-        }
-    }
-
-    const sDateStr = startDate.toISOString().split('T')[0];
-    const eDateStr = endDate.toISOString().split('T')[0];
-
-    const filteredSales = allSales.filter(s => s.date >= sDateStr && s.date <= eDateStr);
-    const filteredQuick = allQuickSales.filter(q => q.date >= sDateStr && q.date <= eDateStr);
-    const filteredExpenses = allExpenses.filter(e => e.date >= sDateStr && e.date <= eDateStr);
-    const filteredFixed = allFixed.filter(f => f.month >= sDateStr.slice(0,7) && f.month <= eDateStr.slice(0,7));
-
-    let totalSales = 0; let totalQuick = 0; let totalExpenses = 0; let totalFixed = 0;
-    filteredSales.forEach(s => totalSales += (s.paidAmount !== undefined ? s.paidAmount : s.total));
-    filteredQuick.forEach(q => totalQuick += q.amount);
-    filteredExpenses.forEach(e => totalExpenses += e.amount);
-    filteredFixed.forEach(f => totalFixed += f.amount);
-
-    let grandTotal = totalSales + totalQuick;
-    let grandExp = totalExpenses + totalFixed;
-
-    let salesListHtml = '';
-    if(filteredSales.length === 0) salesListHtml = '<p>ምንም ዝርዝር ሽያጭ የለም።</p>';
-    else filteredSales.forEach(s => { salesListHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">${s.date} | ብዛት: ${s.quantity} | ዋጋ: ${s.unitPrice} ብር</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`; });
-
-    let quickListHtml = '';
-    if(filteredQuick.length === 0) quickListHtml = '<p>ምንም ፈጣን ሽያጭ የለም።</p>';
-    else filteredQuick.forEach(q => { quickListHtml += `<div class="list-item"><div class="info"><div class="name">⚡ Quick (${q.type})</div><div class="meta">${q.date}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`; });
-
-    // Category breakdown
-    let catBreakdown = {};
-    filteredSales.forEach(s => { if(!catBreakdown[s.medicineName]) catBreakdown[s.medicineName] = 0; catBreakdown[s.medicineName] += (s.paidAmount !== undefined ? s.paidAmount : s.total); });
-    let catHtml = '';
-    Object.keys(catBreakdown).forEach(k => {
-        catHtml += `<div class="list-item"><div class="info"><div class="name">${k}</div></div><div class="amount">${catBreakdown[k].toFixed(2)} ብር</div></div>`;
-    });
-    if(!catHtml) catHtml = '<p>ምንም የካቴጎሪ መረጃ የለም።</p>';
-
-    let html = `
-        <div style="text-align:center; margin-bottom:20px;">
-            <h2 style="color:#1a365d; font-size:20px;">💊 HaniTech Digital Pharmacy</h2>
-            <h3 style="color:#4a5568; font-size:16px; margin-top:5px;">${title}</h3>
-        </div>
-        <div class="summary-box green">
-            <div class="label">${title} - ጠቅላላ ገቢ</div>
-            <div class="value">${grandTotal.toFixed(2)} ብር</div>
-        </div>
-        <div class="summary-box red">
-            <div class="label">${title} - ጠቅላላ ወጪ</div>
-            <div class="value">${grandExp.toFixed(2)} ብር</div>
-        </div>
-        <div class="summary-box">
-            <div class="label">${title} - ትርፍ</div>
-            <div class="value">${(grandTotal - grandExp).toFixed(2)} ብር</div>
-        </div>
-        
-        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">📋 የዝርዝር ሽያጭ ዝርዝር</h3>
-        <div style="margin-top:10px;">${salesListHtml}</div>
-
-        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">⚡ የፈጣን ሽያጭ ዝርዝር</h3>
-        <div style="margin-top:10px;">${quickListHtml}</div>
-
-        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">📊 በምርት ስም የተከፋፈለ ገቢ</h3>
-        <div style="margin-top:10px;">${catHtml}</div>
-    `;
-
-    displayArea.innerHTML = html;
 };
 
 function renderPermissionsUI(perms) {
@@ -2382,7 +2080,6 @@ window.savePermissions = async function() {
     try {
         await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), newData);
         alert('✅ ፈቃዶች በተሳካ ሁኔታ ተቀምጠዋል!');
-        applyPermissionsUI(); 
     } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
 };
 
@@ -2461,39 +2158,6 @@ function renderUnpaidCredits() {
     });
     listEl.innerHTML = html;
 }
-
-function checkExpiryAlerts() {
-    const today = new Date(); let expiredCount = 0;
-    allMedicines.forEach(m => { if(m.expiry && m.expiry !== '-' && new Date(m.expiry) < today) expiredCount++; });
-    const banner = document.getElementById('expiryBanner');
-    if(expiredCount > 0 && banner) { document.getElementById('expiryBannerText').innerText = `${expiredCount} የሚያልቁ እቃዎች አሉ! እባክዎ ይመልከቱ።`; banner.style.display = 'block'; }
-    else if (banner) banner.style.display = 'none';
-}
-
-function loadDarkMode() {
-    const isDark = localStorage.getItem('darkMode') === 'true';
-    if(isDark) document.body.classList.add('dark');
-    const toggle = document.getElementById('darkModeToggle'); if(toggle) toggle.checked = isDark;
-}
-window.toggleDarkMode = function() {
-    const isDark = document.getElementById('darkModeToggle').checked;
-    document.body.classList.toggle('dark', isDark);
-    localStorage.setItem('darkMode', isDark);
-};
-
-window.changeCurrentPassword = async function() {
-    const currentPass = document.getElementById('currentPassword').value;
-    const newPass = document.getElementById('newPassword').value;
-    const user = auth.currentUser;
-    if (!user || newPass.length < 6) { alert('አዲስ ፓስወርድ ቢያንስ 6 ፊደል መሆን አለበት!'); return; }
-    try {
-        const credential = EmailAuthProvider.credential(user.email, currentPass);
-        await reauthenticateWithCredential(user, credential);
-        await updatePassword(user, newPass);
-        alert('✅ ፓስወርድዎ በተሳካ ሁኔታ ተቀይሯል!');
-        document.getElementById('currentPassword').value = ''; document.getElementById('newPassword').value = '';
-    } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
-};
 
 function renderSalesHistory() {
     const listEl = document.getElementById('salesHistoryList');
@@ -2584,38 +2248,169 @@ window.deleteSale = async function(saleId, medicineId, quantity) {
 window.clearAllSales = async function() {
     if (!confirm('🚨 እርግጠኛ ነዎት? ሁሉንም የሽያጭ ታሪክ ማጥፋት ትፈልጋለህ? (ይህ ተግባር ክምችቱን አይመልስም)')) return;
     if (!confirm('⚠️ እርግጠኛ ነዎት? ይህ ተግባር አይመለስም!')) return;
-    
     try {
         let batch = writeBatch(db);
         let count = 0;
-        
-        for (let s of allSales) {
-            batch.delete(doc(db, 'sales', s.id));
-            count++;
-        }
-        for (let q of allQuickSales) {
-            batch.delete(doc(db, 'quickSales', q.id));
-            count++;
-        }
-        
-        if (count > 0) {
-            await batch.commit();
-        }
+        for (let s of allSales) { batch.delete(doc(db, 'sales', s.id)); count++; }
+        for (let q of allQuickSales) { batch.delete(doc(db, 'quickSales', q.id)); count++; }
+        if (count > 0) await batch.commit();
         
         let creditBatch = writeBatch(db);
         let cCount = 0;
-        for (let c of allCreditPayments) {
-            creditBatch.delete(doc(db, 'creditPayments', c.id));
-            cCount++;
-        }
+        for (let c of allCreditPayments) { creditBatch.delete(doc(db, 'creditPayments', c.id)); cCount++; }
         if (cCount > 0) await creditBatch.commit();
-
         alert(`✅ ${count} የሽያጭ ታሪኮች እና ${cCount} የዱቤ ክፍያዎች ተሰርዘዋል!`);
-    } catch(e) {
-        alert('⚠️ ስህተት: ' + e.message);
+    } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
+};
+
+function checkExpiryAlerts() {
+    const today = new Date(); let expiredCount = 0;
+    allMedicines.forEach(m => { if(m.expiry && m.expiry !== '-' && new Date(m.expiry) < today) expiredCount++; });
+    const banner = document.getElementById('expiryBanner');
+    if(expiredCount > 0 && banner) { document.getElementById('expiryBannerText').innerText = `${expiredCount} የሚያልቁ እቃዎች አሉ! እባክዎ ይመልከቱ።`; banner.style.display = 'block'; }
+    else if (banner) banner.style.display = 'none';
+}
+
+function loadDarkMode() {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if(isDark) document.body.classList.add('dark');
+    const toggle = document.getElementById('darkModeToggle'); if(toggle) toggle.checked = isDark;
+}
+window.toggleDarkMode = function() {
+    const isDark = document.getElementById('darkModeToggle').checked;
+    document.body.classList.toggle('dark', isDark);
+    localStorage.setItem('darkMode', isDark);
+};
+
+window.changeCurrentPassword = async function() {
+    const currentPass = document.getElementById('currentPassword').value;
+    const newPass = document.getElementById('newPassword').value;
+    const user = auth.currentUser;
+    if (!user || newPass.length < 6) { alert('አዲስ ፓስወርድ ቢያንስ 6 ፊደል መሆን አለበት!'); return; }
+    try {
+        const credential = EmailAuthProvider.credential(user.email, currentPass);
+        await reauthenticateWithCredential(user, credential);
+        await updatePassword(user, newPass);
+        alert('✅ ፓስወርድዎ በተሳካ ሁኔታ ተቀይሯል!');
+        document.getElementById('currentPassword').value = ''; document.getElementById('newPassword').value = '';
+    } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
+};
+
+window.toggleReportDatePickers = function() {
+    const type = document.getElementById('reportTypeSelect').value;
+    const dateDiv = document.getElementById('repDateDiv');
+    const monthDiv = document.getElementById('repMonthDiv');
+    
+    if (type === 'daily' || type === 'weekly') {
+        dateDiv.style.display = 'block'; monthDiv.style.display = 'none';
+    } else {
+        dateDiv.style.display = 'none'; monthDiv.style.display = 'block';
     }
+    generateReport();
+};
+
+window.generateReport = function() {
+    const type = document.getElementById('reportTypeSelect').value;
+    const displayArea = document.getElementById('reportDisplayArea');
+    
+    let startDate, endDate, title = '';
+    
+    if (type === 'daily') {
+        let d = document.getElementById('repDateInput').value;
+        if(!d) d = new Date().toISOString().split('T')[0];
+        startDate = new Date(d); endDate = new Date(d);
+        title = `የቀን ሪፖርት (${d})`;
+    } else if (type === 'weekly') {
+        let d = document.getElementById('repDateInput').value;
+        if(!d) d = new Date().toISOString().split('T')[0];
+        endDate = new Date(d);
+        startDate = new Date(d); startDate.setDate(startDate.getDate() - 7);
+        title = `የሳምንት ሪፖርት (${startDate.toISOString().split('T')[0]} - ${d})`;
+    } else {
+        let m = document.getElementById('repMonthInput').value;
+        if(!m) m = new Date().toISOString().slice(0, 7);
+        if (type === 'monthly') {
+            startDate = new Date(m + '-01'); endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
+            title = `የወር ሪፖርት (${m})`;
+        } else if (type === '3months') {
+            endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
+            startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 2, 1);
+            title = `የ3 ወር ሪፖርት (${startDate.toISOString().slice(0,7)} - ${m})`;
+        } else if (type === '6months') {
+            endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
+            startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 5, 1);
+            title = `የ6 ወር ሪፖርት (${startDate.toISOString().slice(0,7)} - ${m})`;
+        } else if (type === 'yearly') {
+            endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0);
+            startDate = new Date(new Date(m + '-01').getFullYear() - 1, new Date(m + '-01').getMonth() + 1, 1);
+            title = `የአመት ሪፖርት (${startDate.toISOString().slice(0,7)} - ${m})`;
+        }
+    }
+
+    const sDateStr = startDate.toISOString().split('T')[0];
+    const eDateStr = endDate.toISOString().split('T')[0];
+
+    const filteredSales = allSales.filter(s => s.date >= sDateStr && s.date <= eDateStr);
+    const filteredQuick = allQuickSales.filter(q => q.date >= sDateStr && q.date <= eDateStr);
+    const filteredExpenses = allExpenses.filter(e => e.date >= sDateStr && e.date <= eDateStr);
+    const filteredFixed = allFixed.filter(f => f.month >= sDateStr.slice(0,7) && f.month <= eDateStr.slice(0,7));
+
+    let totalSales = 0; let totalQuick = 0; let totalExpenses = 0; let totalFixed = 0;
+    filteredSales.forEach(s => totalSales += (s.paidAmount !== undefined ? s.paidAmount : s.total));
+    filteredQuick.forEach(q => totalQuick += q.amount);
+    filteredExpenses.forEach(e => totalExpenses += e.amount);
+    filteredFixed.forEach(f => totalFixed += f.amount);
+
+    let grandTotal = totalSales + totalQuick;
+    let grandExp = totalExpenses + totalFixed;
+
+    let salesListHtml = '';
+    if(filteredSales.length === 0) salesListHtml = '<p>ምንም ዝርዝር ሽያጭ የለም።</p>';
+    else filteredSales.forEach(s => { salesListHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">${s.date} | ብዛት: ${s.quantity} | ዋጋ: ${s.unitPrice} ብር</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`; });
+
+    let quickListHtml = '';
+    if(filteredQuick.length === 0) quickListHtml = '<p>ምንም ፈጣን ሽያጭ የለም።</p>';
+    else filteredQuick.forEach(q => { quickListHtml += `<div class="list-item"><div class="info"><div class="name">⚡ Quick (${q.type})</div><div class="meta">${q.date}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`; });
+
+    let catBreakdown = {};
+    filteredSales.forEach(s => { if(!catBreakdown[s.medicineName]) catBreakdown[s.medicineName] = 0; catBreakdown[s.medicineName] += (s.paidAmount !== undefined ? s.paidAmount : s.total); });
+    let catHtml = '';
+    Object.keys(catBreakdown).forEach(k => {
+        catHtml += `<div class="list-item"><div class="info"><div class="name">${k}</div></div><div class="amount">${catBreakdown[k].toFixed(2)} ብር</div></div>`;
+    });
+    if(!catHtml) catHtml = '<p>ምንም የካቴጎሪ መረጃ የለም።</p>';
+
+    let html = `
+        <div style="text-align:center; margin-bottom:20px;">
+            <h2 style="color:#1a365d; font-size:20px;">💊 HaniTech Digital Pharmacy</h2>
+            <h3 style="color:#4a5568; font-size:16px; margin-top:5px;">${title}</h3>
+        </div>
+        <div class="summary-box green">
+            <div class="label">${title} - ጠቅላላ ገቢ</div>
+            <div class="value">${grandTotal.toFixed(2)} ብር</div>
+        </div>
+        <div class="summary-box red">
+            <div class="label">${title} - ጠቅላላ ወጪ</div>
+            <div class="value">${grandExp.toFixed(2)} ብር</div>
+        </div>
+        <div class="summary-box">
+            <div class="label">${title} - ትርፍ</div>
+            <div class="value">${(grandTotal - grandExp).toFixed(2)} ብር</div>
+        </div>
+        
+        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">📋 የዝርዝር ሽያጭ ዝርዝር</h3>
+        <div style="margin-top:10px;">${salesListHtml}</div>
+
+        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">⚡ የፈጣን ሽያጭ ዝርዝር</h3>
+        <div style="margin-top:10px;">${quickListHtml}</div>
+
+        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">📊 በምርት ስም የተከፋፈለ ገቢ</h3>
+        <div style="margin-top:10px;">${catHtml}</div>
+    `;
+
+    displayArea.innerHTML = html;
 };
 
 </script>
 </body>
-</html>  
+</html>
