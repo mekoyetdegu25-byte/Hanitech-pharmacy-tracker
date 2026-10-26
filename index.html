@@ -6,100 +6,149 @@
 <title>Hanitech Digital Pharmacy Tracker</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
+/* ==========================================
+   PROFESSIONAL DASHBOARD STYLES
+   ========================================== */
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-body { background: #f4f7f6; color: #1a202c; font-size: 15px; margin: 0; min-height: 100vh; overflow: hidden; }
+body { background: #f3f4f6; color: #111827; font-size: 14px; margin: 0; min-height: 100vh; overflow: hidden; }
 
 /* Splash & Login */
-#splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
+#splashScreen { position: fixed; inset: 0; background: #111827; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s; }
 #splashScreen.fade-out { opacity: 0; pointer-events: none; }
-.logo-text { font-size: 32px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
-.logo-text span { color: #63b3ed; }
-.sub-text { font-size: 14px; margin-top: 10px; color: #a0aec0; font-weight: 600; letter-spacing: 2px;} 
+.logo-text { font-size: 36px; font-weight: 800; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+.logo-text span { color: #10b981; }
+.sub-text { font-size: 14px; margin-top: 8px; color: #9ca3af; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; } 
 
-#loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+#loginScreen { position: fixed; inset: 0; background: #f3f4f6; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
 #loginScreen.hidden { display: none; }
-.login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
-.login-box h1 { text-align: center; color: #1a365d; font-size: 20px; margin-bottom: 20px; font-weight: 800;}
-.form-group { margin-bottom: 16px; }
-input { width: 100%; padding: 14px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f7fafc; outline: none; }
-input:focus { border-color: #3182ce; background: #fff; }
-.btn-login { width: 100%; padding: 15px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; cursor: pointer; margin-top: 8px; } 
+.login-box { background: #fff; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); padding: 40px 32px; width: 100%; max-width: 420px; border: 1px solid #e5e7eb; }
+.login-box h1 { text-align: center; color: #111827; font-size: 22px; margin-bottom: 24px; font-weight: 700;}
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+input { width: 100%; padding: 12px 16px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; background: #f9fafb; outline: none; transition: all 0.2s; }
+input:focus { border-color: #10b981; background: #fff; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+.btn-login { width: 100%; padding: 14px; font-size: 15px; font-weight: 600; border: none; border-radius: 8px; background: #10b981; color: #fff; cursor: pointer; margin-top: 10px; transition: background 0.2s; } 
+.btn-login:hover { background: #059669; }
 
 /* Layout */
 #mainApp { display: none; height: 100vh; width: 100%; flex-direction: column; }
 #mainApp.show { display: flex; }
-header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; height: 70px; flex-shrink: 0; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 101; }
-header .h-title { font-size: 15px; font-weight: 800; }
-header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spacing: 0.5px; }
-.btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; } 
+header { background: #fff; color: #111827; height: 70px; flex-shrink: 0; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e7eb; z-index: 101; }
+header .h-title { font-size: 16px; font-weight: 700; color: #111827; }
+header .h-brand { font-size: 12px; color: #6b7280; font-weight: 500; }
+.btn-logout-hdr { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; } 
+.btn-logout-hdr:hover { background: #e5e7eb; }
 
-.main-content-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: #f4f7f6; }
+.main-content-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: #f3f4f6; }
 .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; width: 100%; } 
 
 /* Sidebar */
-.tabs { display: flex; flex-direction: column; width: 260px; background: #1a202c; padding: 20px 10px; gap: 5px; overflow-y: auto; flex-shrink: 0; height: 100%; }
-.tabs::-webkit-scrollbar { width: 5px; }
-.tabs::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 5px; }
+.tabs { display: flex; flex-direction: column; width: 260px; background: #fff; border-right: 1px solid #e5e7eb; padding: 16px 12px; gap: 4px; overflow-y: auto; flex-shrink: 0; height: 100%; }
+.tabs::-webkit-scrollbar { width: 4px; }
+.tabs::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
 
-.menu-group { width: 100%; margin-bottom: 5px; }
-.menu-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; font-size: 14px; font-weight: 700; color: #a0aec0; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
-.menu-header:hover { background: #2d3748; color: #fff; }
-.menu-header.active { background: #2b6cb0; color: #fff; }
-.menu-header .m-left { display: flex; align-items: center; gap: 12px; }
+.menu-group { width: 100%; margin-bottom: 4px; }
+.menu-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+.menu-header:hover { background: #f3f4f6; color: #111827; }
+.menu-header.active { background: #ecfdf5; color: #10b981; }
+.menu-header .m-left { display: flex; align-items: center; gap: 10px; }
 .menu-header .m-left i { font-size: 18px; font-style: normal; }
-.menu-header .m-arrow { font-size: 10px; transition: transform 0.3s; }
+.menu-header .m-arrow { font-size: 10px; transition: transform 0.2s; opacity: 0.5; }
 .menu-header.open .m-arrow { transform: rotate(90deg); }
 
-.sub-menu { display: none; flex-direction: column; padding-left: 20px; margin-top: 5px; margin-bottom: 5px; gap: 2px; }
+.sub-menu { display: none; flex-direction: column; padding-left: 36px; margin-top: 4px; margin-bottom: 4px; gap: 2px; }
 .sub-menu.open { display: flex; }
-.sub-menu label { padding: 8px 15px; font-size: 13px; font-weight: 600; color: #a0aec0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0; transition: background 0.2s; }
-.sub-menu label:hover { background: #2d3748; color: #fff; }
-.sub-menu label.active { background: #4a5568; color: #63b3ed; }
+.sub-menu label { padding: 8px 12px; font-size: 13px; font-weight: 500; color: #6b7280; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0; transition: all 0.2s; }
+.sub-menu label:hover { background: #f3f4f6; color: #111827; }
+.sub-menu label.active { background: #ecfdf5; color: #10b981; font-weight: 600; }
 
 /* Main Content Area */
-.panels { flex: 1; padding: 24px; background: #f4f7f6; overflow-y: auto; width: calc(100% - 260px); }
+.panels { flex: 1; padding: 24px; background: #f3f4f6; overflow-y: auto; width: calc(100% - 260px); }
 .panel { display: none; padding: 0; } 
 .sub-panel { display: none; padding: 0; }
 .panel.active { display: block !important; }
 .sub-panel.active { display: block !important; }
 
 /* Forms & Buttons */
-label.field-label { display: block; font-size: 12.5px; font-weight: 600; color: #4a5568; margin-bottom: 5px; margin-top: 10px; }
-input[type="text"], input[type="number"], input[type="date"], input[type="month"], select { width: 100%; padding: 12px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #f7fafc; outline: none; }
-.btn { display: block; width: 100%; padding: 12px; font-size: 15px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px; }
-.btn-primary { background: #2c5282; color: #fff; }
-.btn-success { background: #276749; color: #fff; }
-.btn-danger { background: #c53030; color: #fff; }
-.btn-warning { background: #dd6b20; color: #fff; } 
+label.field-label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; margin-top: 12px; }
+input[type="text"], input[type="number"], input[type="date"], input[type="month"], select { width: 100%; padding: 10px 14px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; outline: none; transition: all 0.2s; }
+input:focus, select:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+.btn { display: block; width: 100%; padding: 12px; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; margin-top: 12px; transition: all 0.2s; }
+.btn-primary { background: #3b82f6; color: #fff; }
+.btn-primary:hover { background: #2563eb; }
+.btn-success { background: #10b981; color: #fff; }
+.btn-success:hover { background: #059669; }
+.btn-danger { background: #ef4444; color: #fff; }
+.btn-danger:hover { background: #dc2626; }
+.btn-warning { background: #f59e0b; color: #fff; }
+.btn-warning:hover { background: #d97706; } 
 
-.summary-box { background: linear-gradient(135deg, #2c5282, #1a365d); color: #fff; border-radius: 12px; padding: 16px; margin-bottom: 14px; text-align: center; }
-.summary-box.green { background: linear-gradient(135deg, #276749, #22543d); }
-.summary-box.red { background: linear-gradient(135deg, #c53030, #9b2c2c); }
-.summary-box .label { font-size: 12px; opacity: 0.85; margin-bottom: 4px; }
-.summary-box .value { font-size: 24px; font-weight: 800; } 
+.summary-box { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; text-align: center; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.summary-box.green { border-left: 4px solid #10b981; }
+.summary-box.red { border-left: 4px solid #ef4444; }
+.summary-box .label { font-size: 13px; font-weight: 600; color: #6b7280; margin-bottom: 6px; }
+.summary-box .value { font-size: 28px; font-weight: 800; color: #111827; } 
 
-.section-collapsible { background: #fff; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
-.section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; }
+.section-collapsible { background: #fff; border-radius: 12px; margin-bottom: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; }
+.section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; cursor: pointer; background: #fff; }
 .section-header .sec-left { display: flex; align-items: center; gap: 10px; }
-.section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; display: inline-block; }
+.section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #9ca3af; transition: transform 0.2s; display: inline-block; }
 .section-header.open .sec-arrow { transform: rotate(90deg); }
-.section-header .sec-title { font-size: 14px; font-weight: 800; color: #2c5282; }
-.section-body { display: none; padding: 0 14px 14px 14px; border-top: 1px solid #edf2f7; padding-top: 12px; }
+.section-header .sec-title { font-size: 15px; font-weight: 700; color: #111827; }
+.section-body { display: none; padding: 0 20px 20px 20px; border-top: 1px solid #f3f4f6; padding-top: 16px; }
 .section-body.open { display: block; } 
 
-.data-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-.data-table th, .data-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #edf2f7; font-size: 13px; white-space: nowrap; }
-.data-table th { background: #f7fafc; font-weight: 700; color: #4a5568; }
-.data-table tbody tr:hover { background: #f7fafc; }
-.action-btn { background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 4px; margin-right: 4px; }
-.btn-edit { color: #2b6cb0; background: #ebf8ff; }
-.btn-delete { color: #c53030; background: #fff5f5; }
+/* Tables */
+.data-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb; }
+.data-table th, .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 13px; white-space: nowrap; color: #374151; }
+.data-table th { background: #f9fafb; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; font-size: 12px; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: #f9fafb; }
+.action-btn { background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; margin-right: 4px; transition: background 0.2s; }
+.btn-edit { color: #3b82f6; background: #eff6ff; }
+.btn-edit:hover { background: #dbeafe; }
+.btn-delete { color: #ef4444; background: #fef2f2; }
+.btn-delete:hover { background: #fee2e2; }
 
 /* Dashboard Grid */
-.dash-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
-.dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; }
+.dash-grid { display: grid; gap: 20px; grid-template-columns: repeat(4, 1fr); }
+.dash-card { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 .dash-val-box { border-radius: 8px; padding: 16px; text-align: center; color: #fff; }
-.dash-val-number { font-size: 24px; font-weight: 800; } 
+.dash-val-number { font-size: 28px; font-weight: 800; } 
+
+/* Toggles */
+.toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #d1d5db; transition: .4s; border-radius: 24px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+input:checked + .slider { background-color: #10b981; }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* POS (Point of Sale) Specific Layout */
+.pos-layout { display: grid; grid-template-columns: 350px 1fr; gap: 20px; height: calc(100vh - 160px); }
+.pos-cart { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
+.pos-cart-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
+.pos-cart-items { flex: 1; overflow-y: auto; padding: 16px; }
+.pos-cart-footer { padding: 16px; border-top: 1px solid #e5e7eb; background: #fff; }
+.pos-products { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
+.pos-products-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
+.pos-products-grid { flex: 1; overflow-y: auto; padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; align-content: start; }
+
+.product-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+.product-card:hover { border-color: #10b981; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transform: translateY(-2px); }
+.product-card .p-name { font-weight: 700; font-size: 14px; color: #111827; margin-bottom: 4px; }
+.product-card .p-meta { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
+.product-card .p-price { font-weight: 700; color: #10b981; font-size: 15px; }
+
+.cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #e5e7eb; }
+.cart-item:last-child { border-bottom: none; }
+.cart-item .ci-info { flex: 1; }
+.cart-item .ci-name { font-weight: 600; font-size: 14px; color: #111827; }
+.cart-item .ci-price { font-size: 12px; color: #6b7280; }
+.cart-item .ci-qty { display: flex; align-items: center; gap: 8px; margin: 0 12px; }
+.cart-item .ci-qty button { width: 24px; height: 24px; border-radius: 4px; border: 1px solid #d1d5db; background: #f9fafb; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+.cart-item .ci-total { font-weight: 700; color: #111827; width: 60px; text-align: right; }
+.cart-item .ci-del { color: #ef4444; cursor: pointer; margin-left: 8px; font-weight: bold; }
 
 @media print {
     body * { visibility: hidden; }
@@ -118,31 +167,30 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 
 <div id="loginScreen" class="hidden">
 <div class="login-box">
-<h1>💊 HaniTech Digital Pharmacy Tracker</h1> 
+<h1>💊 Sign in to Dashboard</h1> 
 <div id="loginForm">
 <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-<div class="form-group"><label>📧 Email</label><input type="email" id="email" placeholder="Email"></div>
-<div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="Password"></div>
-<button class="btn-login" onclick="login()">🔓 ግባ</button>
+<div class="form-group"><label>📧 Email Address</label><input type="email" id="email" placeholder="admin@pharmacy.com"></div>
+<div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="••••••••"></div>
+<button class="btn-login" onclick="login()">Sign In</button>
 </div> 
 </div>
 </div> 
 
 <div id="mainApp">
 <header>
-<div class="h-left" style="display: flex; align-items: center; gap: 10px;">
-<div style="background: #1a202c; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; flex-shrink: 0;">
+<div class="h-left" style="display: flex; align-items: center; gap: 12px;">
+<div style="background: #111827; color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; flex-shrink: 0;">
 <span id="hdrUserInitial">A</span>
 </div>
-<div style="display: flex; flex-direction: column; line-height: 1.2;">
-<div class="h-title" id="hdrPharmacyName" style="font-size: 15px; font-weight: 800;">Pharmacy Name</div>
-<div class="h-brand">HaniTech Digital</div>
-<div id="hdrUserEmail" style="font-size: 11px; opacity: 0.8; margin-top: 2px;">email@example.com</div>
+<div style="display: flex; flex-direction: column; line-height: 1.3;">
+<div class="h-title" id="hdrPharmacyName">Pharmacy Name</div>
+<div class="h-brand" id="hdrUserEmail">admin@pharmacy.com</div>
 </div>
 </div>
-<div class="h-right" style="display: flex; align-items: center; gap: 8px;">
-<span id="hdrUserRole" style="background: #fefcbf; color: #975a16; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold;">👑 ባለቤት</span>
-<button class="btn-logout-hdr" onclick="logout()">🚪</button>
+<div class="h-right" style="display: flex; align-items: center; gap: 12px;">
+<span id="hdrUserRole" style="background: #ecfdf5; color: #10b981; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">Owner</span>
+<button class="btn-logout-hdr" onclick="logout()">Sign Out</button>
 </div>
 </header> 
 
@@ -157,7 +205,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
             <div class="sub-menu open">
                 <label onclick="switchPage('panel1', 'sub1_1', this)">📋 Medicine List</label>
                 <label onclick="switchPage('panel1', 'sub1_2', this)">➕ Add Medicine</label>
-                <label onclick="switchPage('panel1', 'sub1_3', this)">🗂️ Medicine Category</label>
+                <label onclick="switchPage('panel1', 'sub1_3', this)">🗂️ Categories</label>
             </div>
         </div>
 
@@ -181,7 +229,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
             <div class="sub-menu">
                 <label onclick="switchPage('panel3', 'sub3_1', this)">💸 Daily Expense</label>
                 <label onclick="switchPage('panel3', 'sub3_2', this)">🏢 Fixed Expense</label>
-                <label onclick="switchPage('panel3', 'sub3_3', this)">🗂️ Expense Category</label>
+                <label onclick="switchPage('panel3', 'sub3_3', this)">🗂️ Categories</label>
             </div>
         </div>
 
@@ -209,9 +257,9 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                 <span class="m-arrow">▶</span>
             </div>
             <div class="sub-menu">
-                <label onclick="switchPage('panel8', 'sub8_1', this)">📄 General Report</label>
-                <label onclick="switchPage('panel8', 'sub8_2', this)">📅 Daily Report</label>
-                <label onclick="switchPage('panel8', 'sub8_3', this)">📆 Monthly Report</label>
+                <label onclick="switchPage('panel8', 'sub8_1', this)">📄 General</label>
+                <label onclick="switchPage('panel8', 'sub8_2', this)">📅 Daily</label>
+                <label onclick="switchPage('panel8', 'sub8_3', this)">📆 Monthly</label>
             </div>
         </div>
 
@@ -229,7 +277,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
     </div> 
 
     <div class="panels">
-        <!-- PANEL 1 -->
+        <!-- PANEL 1 (Medicine) -->
         <div class="panel active" id="panel1">
             <div class="sub-panel active" id="sub1_1">
                 <div class="section-collapsible">
@@ -237,15 +285,15 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">Medicine List</span></div>
                     </div>
                     <div class="section-body open" id="bodyMedList">
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
-                            <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search Medicine..." oninput="renderMedList()" style="flex: 1; min-width: 150px;">
-                            <select id="filterTypeMed" onchange="renderMedList()" style="flex: 1; min-width: 120px;">
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                            <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search Medicine..." oninput="renderMedList()" style="flex: 1; min-width: 200px;">
+                            <select id="filterTypeMed" onchange="renderMedList()" style="width: 180px;">
                                 <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
                             </select>
                         </div>
                         <div style="overflow-x: auto;">
                             <table class="data-table">
-                                <thead><tr><th>Branch</th><th>Item</th><th>Category</th><th>Sub Cat</th><th>Batch</th><th>Exp Date</th><th>Item Name</th><th>Supplier</th><th>Cost</th><th>Price</th><th>Qty</th><th>Action</th></tr></thead>
+                                <thead><tr><th>Branch</th><th>Type</th><th>Category</th><th>Item Name</th><th>Batch</th><th>Exp Date</th><th>Cost</th><th>Price</th><th>Qty</th><th>Action</th></tr></thead>
                                 <tbody id="medTableBody"></tbody>
                             </table>
                         </div>
@@ -267,12 +315,12 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                                 <input type="text" id="medNewSubcategory" placeholder="New Subcategory Name" style="margin-top:5px; display:none;">
                                 <label class="field-label">💊 Item Name</label><input type="text" id="medName" placeholder="e.g. Paracetamol"> 
                             </div>
-                            <div id="medicineOnlyFields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div id="medicineOnlyFields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                                 <div><label class="field-label">🔢 Batch No</label><input type="text" id="medBatch"></div>
                                 <div><label class="field-label">📅 Exp Date</label><input type="date" id="medExpiry"></div>
                                 <div style="grid-column: 1 / -1;"><label class="field-label">🏭 Supplier</label><input type="text" id="medSupplier"></div>
                             </div> 
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                                 <div><label class="field-label">💰 Purchase Price</label><input type="number" id="medCost"></div>
                                 <div><label class="field-label">🏷️ Sell Price</label><input type="number" id="medPrice"></div>
                                 <div><label class="field-label">📦 Qty</label><input type="number" id="medQty"></div>
@@ -288,9 +336,9 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Medicine Category</span></div>
                     </div>
                     <div class="section-body open" id="bodyCatMgr">
-                        <div style="margin-bottom:15px;">
+                        <div style="margin-bottom:20px; display:flex; gap:10px;">
                             <input type="text" id="newCat" placeholder="New Category Name">
-                            <button class="btn btn-primary" style="margin-top:5px;" onclick="addCategory()">+ Add Category</button>
+                            <button class="btn btn-primary" style="width:auto; margin-top:0; white-space:nowrap;" onclick="addCategory()">+ Add</button>
                         </div>
                         <div style="overflow-x: auto;">
                             <table class="data-table">
@@ -303,33 +351,45 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
             </div>
         </div>
 
-        <!-- PANEL 2 -->
+        <!-- PANEL 2 (Sales) -->
         <div class="panel" id="panel2">
             <div class="sub-panel active" id="sub2_1">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrSell','bodySell')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">New Sale</span></div>
-                    </div>
-                    <div class="section-body open" id="bodySell">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <div><label class="field-label">📅 Date</label><input type="date" id="sellDate"></div>
-                            <div><label class="field-label">🏢 Branch</label><select id="sellBranch"></select></div>
-                        </div>
-                        <label class="field-label">💳 Payment Method</label>
-                        <select id="sellPaymentMethod" onchange="togglePaymentDetails()">
-                            <option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option>
-                        </select> 
-                        <label class="field-label">🧾 Receipt No</label><input type="text" id="sellReceipt">
-                        <div style="margin-top:10px;"><input type="text" id="searchSellInput" placeholder="🔍 Search Product..." oninput="renderSellProducts()"></div>
-                        <div id="sellProductList" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
-                        <div style="border-top:2px solid #edf2f7; margin-top:15px; padding-top:10px;">
-                            <h3 style="font-size:14px; color:#4a5568; margin-bottom:8px;">🛍️ Selected Items</h3>
-                            <div id="cartList" style="margin-bottom:10px;"></div>
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                <span style="font-weight:700; color:#2d3748;">Total:</span><span id="cartTotal" style="font-weight:800; color:#276749; font-size:18px;">0.00 ETB</span>
+                <div class="pos-layout">
+                    <!-- Cart Side -->
+                    <div class="pos-cart">
+                        <div class="pos-cart-header">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                                <div><label class="field-label" style="margin-top:0;">📅 Date</label><input type="date" id="sellDate" style="padding:8px;"></div>
+                                <div><label class="field-label" style="margin-top:0;">🏢 Branch</label><select id="sellBranch" style="padding:8px;"></select></div>
                             </div>
-                            <button class="btn btn-success" onclick="completeSale()">💸 Complete Sale</button>
-                            <button class="btn btn-danger" style="margin-top:8px; background:#a0aec0;" onclick="clearCart()">🗑️ Clear Cart</button>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                                <div><label class="field-label" style="margin-top:0;">💳 Payment</label><select id="sellPaymentMethod" style="padding:8px;"><option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option></select></div>
+                                <div><label class="field-label" style="margin-top:0;">🧾 Receipt (Opt)</label><input type="text" id="sellReceipt" style="padding:8px;"></div>
+                            </div>
+                        </div>
+                        <div class="pos-cart-items" id="cartList">
+                            <!-- Cart items will be injected here -->
+                        </div>
+                        <div class="pos-cart-footer">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                                <span style="font-size:16px; font-weight:700; color:#374151;">Total:</span>
+                                <span id="cartTotal" style="font-size:24px; font-weight:800; color:#10b981;">0.00 ETB</span>
+                            </div>
+                            <button class="btn btn-success" style="padding:16px; font-size:16px;" onclick="completeSale()">💸 Complete Sale</button>
+                            <button class="btn btn-danger" style="margin-top:8px; background:#6b7280;" onclick="clearCart()">🗑️ Clear Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Products Side -->
+                    <div class="pos-products">
+                        <div class="pos-products-header">
+                            <input type="text" id="searchSellInput" placeholder="🔍 Search Product by name or barcode..." oninput="renderSellProducts()" style="font-size:16px; padding:12px 16px;">
+                            <div id="categoryFilters" style="display:flex; gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px;">
+                                <!-- Category filter buttons will be injected here -->
+                            </div>
+                        </div>
+                        <div class="pos-products-grid" id="sellProductList">
+                            <!-- Products will be injected here -->
                         </div>
                     </div>
                 </div>
@@ -340,7 +400,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">Quick Sale</span></div>
                     </div>
                     <div class="section-body open" id="bodyQuickSale">
-                        <div class="info-banner">💡 Record total income directly.</div>
+                        <div class="info-banner" style="background:#eff6ff; color:#1e40af; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px;">💡 Record total income directly.</div>
                         <label class="field-label">📦 Type</label><select id="quickType"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
                         <label class="field-label">🏢 Branch</label><select id="quickBranch"></select>
                         <label class="field-label">📅 Date</label><input type="date" id="quickDate">
@@ -355,11 +415,11 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Sales History</span></div>
                     </div>
                     <div class="section-body open" id="bodySalesHistory">
-                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <div style="display:flex; gap:12px; margin-bottom:16px;">
                             <select id="filterSalesHistory" onchange="renderSalesHistory()" style="flex:1;">
                                 <option value="all">All Sales</option><option value="detail">🛒 Detail Sales</option><option value="quick">⚡ Quick Sales</option>
                             </select>
-                            <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 15px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
+                            <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 16px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
                         </div>
                         <div id="salesHistoryList"></div>
                     </div>
@@ -367,7 +427,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
             </div>
         </div> 
 
-        <!-- PANEL 3 -->
+        <!-- PANEL 3 (Expenses) -->
         <div class="panel" id="panel3">
             <div class="sub-panel active" id="sub3_1">
                  <div class="section-collapsible">
@@ -375,17 +435,17 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">Daily Expense</span></div>
                     </div>
                     <div class="section-body open" id="bodyAddExp">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                             <div><label class="field-label">📁 Category</label><select id="expCat"></select></div>
                             <div><label class="field-label">🏢 Branch</label><select id="expBranch"></select></div>
                         </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                             <div><label class="field-label">💰 Amount</label><input type="number" id="expAmount"></div>
                             <div><label class="field-label">📅 Date</label><input type="date" id="expDate"></div>
                         </div>
                         <label class="field-label">📝 Note</label><input type="text" id="expNote">
                         <button class="btn btn-danger" onclick="addExpense()">💾 Save</button>
-                        <div id="expList" style="margin-top:14px;"></div>
+                        <div id="expList" style="margin-top:20px;"></div>
                     </div>
                 </div>
             </div>
@@ -395,16 +455,16 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Fixed Expense</span></div>
                     </div>
                     <div class="section-body open" id="bodyFixedExp">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                             <div><label class="field-label">📁 Category</label><select id="fixCat"></select></div>
                             <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
                         </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                             <div><label class="field-label">💰 Amount</label><input type="number" id="fixAmount"></div>
                             <div><label class="field-label">📝 Note</label><input type="text" id="fixNote"></div>
                         </div>
                         <button class="btn btn-warning" onclick="addFixedExpense()">💾 Save</button>
-                        <div id="fixedExpList" style="margin-top:14px;"></div>
+                        <div id="fixedExpList" style="margin-top:20px;"></div>
                     </div>
                 </div>
             </div>
@@ -414,9 +474,9 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Expense Category</span></div>
                     </div>
                     <div class="section-body open" id="bodyExpCatMgr">
-                        <div style="margin-bottom:10px;">
+                        <div style="margin-bottom:15px; display:flex; gap:10px;">
                             <input type="text" id="newExpCat" placeholder="New Expense Category">
-                            <button class="btn btn-primary" style="margin-top:5px;" onclick="addExpCategory()">+ Add</button>
+                            <button class="btn btn-primary" style="width:auto; margin-top:0; white-space:nowrap;" onclick="addExpCategory()">+ Add</button>
                         </div>
                         <div class="cat-tags" id="expCatListDisplay" style="margin-top:10px;"></div>
                     </div>
@@ -424,7 +484,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
             </div>
         </div> 
 
-        <!-- PANEL 4 -->
+        <!-- PANEL 4 (Inventory) -->
         <div class="panel" id="panel4">
             <div class="sub-panel active" id="sub4_1">
                  <div class="section-collapsible">
@@ -432,14 +492,17 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory List</span></div>
                     </div>
                     <div class="section-body open" id="bodyInventory">
-                        <div class="no-print" style="display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+                        <div class="no-print" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
                             <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search Inventory..." oninput="loadInventory()" style="flex:1;">
-                            <select id="filterTypeInv" onchange="loadInventory()" style="flex:1;">
+                            <select id="filterTypeInv" onchange="loadInventory()" style="width:180px;">
                                 <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
+                            </select>
+                            <select id="filterBranchInv" onchange="loadInventory()" style="width:180px;">
+                                <option value="all">All Branches</option>
                             </select>
                         </div>
                         <div id="inventoryList"></div>
-                        <div class="summary-box green" style="margin-top:14px;">
+                        <div class="summary-box green" style="margin-top:20px;">
                             <div class="label">Total Inventory Value</div>
                             <div class="value" id="invTotalValue">0.00 <small>ETB</small></div>
                         </div>
@@ -453,9 +516,9 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                     </div>
                     <div class="section-body open" id="bodyExpiryList">
                         <input type="text" class="search-box" id="searchExpiry" placeholder="🔍 Search..." oninput="loadInventory()">
-                        <h4 style="margin:10px 0 5px; color:#dd6b20;">Expiring Soon / Expired</h4>
+                        <h4 style="margin:15px 0 8px; color:#f59e0b; font-size:14px;">Expiring Soon / Expired</h4>
                         <div id="expiryListDisplay"></div>
-                        <h4 style="margin:20px 0 5px; color:#c53030;">Low Stock</h4>
+                        <h4 style="margin:20px 0 8px; color:#ef4444; font-size:14px;">Low Stock</h4>
                         <div id="lowStockListDisplay"></div>
                     </div>
                 </div>
@@ -475,29 +538,29 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
             </div>
         </div> 
 
-        <!-- PANEL 7 -->
+        <!-- PANEL 7 (Dashboard) -->
         <div class="panel" id="panel7">
             <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrDash','bodyDash')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
                 </div>
                 <div class="section-body open" id="bodyDash">
-                    <div class="no-print" style="margin-bottom:15px; background:#fff; padding:10px; border-radius:10px; border:1px solid #edf2f7;">
+                    <div class="no-print" style="margin-bottom:20px; background:#fff; padding:16px; border-radius:12px; border:1px solid #e5e7eb;">
                         <label class="field-label" style="margin-top:0;">📅 Select Month</label>
                         <input type="month" id="dashMonthPicker" onchange="loadDashboard()">
                     </div>
                     <div class="dash-grid">
-                        <div class="dash-card"><div class="dash-header">Revenue</div><div class="dash-val-box" style="background: linear-gradient(135deg, #2b6cb0, #2c5282);"><div class="dash-val-number" id="dashGrossIncome">0.00</div></div></div>
-                        <div class="dash-card"><div class="dash-header">Expenses</div><div class="dash-val-box" style="background: linear-gradient(135deg, #276749, #22543d);"><div class="dash-val-number" id="dashTotalExpense">0.00</div></div></div>
-                        <div class="dash-card"><div class="dash-header">Net Profit</div><div class="dash-val-box" style="background: linear-gradient(135deg, #2f855a, #276749);"><div class="dash-val-number" id="dashNetProfit">0.00</div></div></div>
-                        <div class="dash-card"><div class="dash-header">Transactions</div><div class="dash-val-box" style="background: linear-gradient(135deg, #dd6b20, #c05621);"><div class="dash-val-number" id="dashTotalSalesCount">0</div></div></div>
+                        <div class="dash-card"><div style="font-size:13px; font-weight:600; color:#6b7280; margin-bottom:12px;">Revenue</div><div class="dash-val-box" style="background: linear-gradient(135deg, #3b82f6, #2563eb);"><div class="dash-val-number" id="dashGrossIncome">0.00</div></div></div>
+                        <div class="dash-card"><div style="font-size:13px; font-weight:600; color:#6b7280; margin-bottom:12px;">Expenses</div><div class="dash-val-box" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><div class="dash-val-number" id="dashTotalExpense">0.00</div></div></div>
+                        <div class="dash-card"><div style="font-size:13px; font-weight:600; color:#6b7280; margin-bottom:12px;">Net Profit</div><div class="dash-val-box" style="background: linear-gradient(135deg, #10b981, #059669);"><div class="dash-val-number" id="dashNetProfit">0.00</div></div></div>
+                        <div class="dash-card"><div style="font-size:13px; font-weight:600; color:#6b7280; margin-bottom:12px;">Transactions</div><div class="dash-val-box" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><div class="dash-val-number" id="dashTotalSalesCount">0</div></div></div>
                         
                         <div class="dash-card" style="grid-column: 1 / -1;">
-                            <div class="dash-header">📈 30-Day Sales Chart</div>
+                            <div style="font-size:13px; font-weight:600; color:#6b7280; margin-bottom:12px;">📈 30-Day Sales Chart</div>
                             <div class="chart-container" style="height: 300px;"><canvas id="dailyChartCanvas"></canvas></div>
                         </div>
                         <div class="dash-card" style="grid-column: 1 / -1;">
-                            <div class="dash-header">🥧 Expense Breakdown Chart</div>
+                            <div style="font-size:13px; font-weight:600; color:#6b7280; margin-bottom:12px;">🥧 Expense Breakdown Chart</div>
                             <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
                                 <div style="flex: 1; min-width: 200px; height: 200px;"><canvas id="expensePieChartCanvas"></canvas></div>
                                 <div id="expenseLegend" style="flex: 1; min-width: 200px;"></div>
@@ -508,7 +571,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
             </div>
         </div>
 
-        <!-- PANEL 8 -->
+        <!-- PANEL 8 (Reports) -->
         <div class="panel" id="panel8">
             <div class="sub-panel active" id="sub8_1">
                  <div class="section-collapsible">
@@ -516,17 +579,17 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📄</span><span class="sec-title">Generate Report</span></div>
                     </div>
                     <div class="section-body open" id="bodyRepMain">
-                        <div class="no-print" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #edf2f7; margin-bottom:20px;">
+                        <div class="no-print" style="background:#fff; padding:20px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:20px;">
                             <label class="field-label">Report Type</label>
                             <select id="reportTypeSelect" onchange="toggleReportDatePickers()">
                                 <option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option>
                             </select>
-                            <div id="repDateDiv" style="display:none; margin-top:10px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
-                            <div id="repMonthDiv" style="display:none; margin-top:10px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
-                            <button class="btn btn-primary" style="margin-top:15px;" onclick="generateReport()">👁️ Generate</button>
+                            <div id="repDateDiv" style="display:none; margin-top:12px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
+                            <div id="repMonthDiv" style="display:none; margin-top:12px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
+                            <button class="btn btn-primary" style="margin-top:20px;" onclick="generateReport()">👁️ Generate</button>
                             <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ Print</button>
                         </div>
-                        <div id="reportDisplayArea" style="background:#fff; padding:20px; border-radius:10px; border:1px solid #edf2f7;"></div>
+                        <div id="reportDisplayArea" style="background:#fff; padding:24px; border-radius:12px; border:1px solid #e5e7eb;"></div>
                     </div>
                 </div>
             </div>
@@ -537,16 +600,16 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">Daily Report</span></div>
                     </div>
                     <div class="section-body open" id="bodyDaily">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
                             <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="loadDailyReport()"></div>
                             <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="loadDailyReport()"><option value="all">All Branches</option></select></div>
                         </div>
-                        <div class="dash-grid" style="margin-bottom:15px;">
+                        <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(3,1fr);">
                             <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="dailyTotalRevenue">0.00</div></div>
                             <div class="summary-box red"><div class="label">Expense</div><div class="value" id="dailyTotalExpense">0.00</div></div>
-                            <div class="summary-box"><div class="label">Profit</div><div class="value" id="dailyNetProfit">0.00</div></div>
+                            <div class="summary-box" style="border-left:4px solid #3b82f6;"><div class="label">Profit</div><div class="value" id="dailyNetProfit">0.00</div></div>
                         </div>
-                        <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+                        <div class="section-collapsible" style="box-shadow:none; border:1px solid #e5e7eb;">
                             <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
                             <div class="section-body" id="bodyDailySales">
                                 <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="loadDailyReport()">
@@ -563,15 +626,15 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">Monthly Report</span></div>
                     </div>
                     <div class="section-body open" id="bodyMonthly">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
                             <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()"></div>
                             <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="loadMonthlyReport()"><option value="all">All Branches</option></select></div>
                         </div>
-                        <div class="dash-grid" style="margin-bottom:15px;">
+                        <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(2,1fr);">
                             <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="monthlyTotalRevenue">0.00</div></div>
                             <div class="summary-box red"><div class="label">Expenses</div><div class="value" id="monthlyTotalExpense">0.00</div></div>
                         </div>
-                        <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+                        <div class="section-collapsible" style="box-shadow:none; border:1px solid #e5e7eb;">
                             <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
                             <div class="section-body" id="bodyMonthlySales">
                                 <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="loadMonthlyReport()">
@@ -583,14 +646,14 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
             </div>
         </div>
 
-        <!-- PANEL 9 -->
+        <!-- PANEL 9 (Settings) -->
         <div class="panel" id="panel9">
             <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
                 </div>
                 <div class="section-body open" id="bodySettings">
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:15px;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrPhName','bodyPhName')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">Pharmacy Name</span></div></div>
                             <div class="section-body" id="bodyPhName"><input type="text" id="settingPhName"><button class="btn btn-primary" onclick="savePharmacyName()">💾 Save</button></div>
@@ -601,17 +664,17 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
                         </div>
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrBranchMgr','bodyBranchMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div></div>
-                            <div class="section-body" id="bodyBranchMgr"><div style="margin-bottom:10px;"><input type="text" id="newBranch" placeholder="New Branch"><button class="btn btn-primary" style="margin-top:5px;" onclick="addBranch()">+ Add</button></div><div class="cat-tags" id="branchListDisplay" style="margin-top:10px;"></div></div>
+                            <div class="section-body" id="bodyBranchMgr"><div style="margin-bottom:10px; display:flex; gap:10px;"><input type="text" id="newBranch" placeholder="New Branch"><button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addBranch()">+ Add</button></div><div class="cat-tags" id="branchListDisplay" style="margin-top:10px;"></div></div>
                         </div>
                         <div class="section-collapsible" style="margin-bottom:0;">
                             <div class="section-header" onclick="toggleSection('hdrCustMgr','bodyCustMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">Customers</span></div></div>
-                            <div class="section-body" id="bodyCustMgr"><div style="margin-bottom:10px;"><input type="text" id="newCustomer" placeholder="New Customer"><button class="btn btn-primary" style="margin-top:5px;" onclick="addCustomer()">+ Add</button></div><div class="cat-tags" id="customerListDisplay" style="margin-top:10px;"></div></div>
+                            <div class="section-body" id="bodyCustMgr"><div style="margin-bottom:10px; display:flex; gap:10px;"><input type="text" id="newCustomer" placeholder="New Customer"><button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addCustomer()">+ Add</button></div><div class="cat-tags" id="customerListDisplay" style="margin-top:10px;"></div></div>
                         </div>
                         <div class="section-collapsible" style="margin-bottom:0; grid-column: 1 / -1;">
                             <div class="section-header" onclick="toggleSection('hdrPerms','bodyPerms')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">Employee Permissions</span></div></div>
                             <div class="section-body" id="bodyPerms">
-                                <div id="permSectionDisplay" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
-                                <button class="btn btn-success" style="margin-top:15px; grid-column:1/-1;" onclick="savePermissions()">💾 Save Permissions</button>
+                                <div id="permSectionDisplay" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;"></div>
+                                <button class="btn btn-success" style="margin-top:20px; grid-column:1/-1;" onclick="savePermissions()">💾 Save Permissions</button>
                             </div>
                         </div>
                     </div>
@@ -619,22 +682,22 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
             </div>
         </div>
 
-        <!-- PANEL 10 -->
+        <!-- PANEL 10 (Credit) -->
         <div class="panel" id="panel10">
              <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrCredit','bodyCredit')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">Credit</span></div>
                 </div>
                 <div class="section-body open" id="bodyCredit">
-                    <div class="summary-box red" style="margin-bottom:15px;"><div class="label">Total Unpaid Debt</div><div class="value" id="totalUnpaidDebt">0.00</div></div>
-                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7;">
+                    <div class="summary-box red" style="margin-bottom:20px;"><div class="label">Total Unpaid Debt</div><div class="value" id="totalUnpaidDebt">0.00</div></div>
+                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #e5e7eb;">
                         <div class="section-header open" onclick="toggleSection('hdrCreditList','bodyCreditList')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">Unpaid Credits</span></div></div>
                         <div class="section-body open" id="bodyCreditList"><input type="text" class="search-box" id="searchUnpaidCredit" placeholder="🔍 Search..." oninput="renderUnpaidCredits()"><div id="unpaidCreditList"></div></div>
                     </div>
-                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #edf2f7; margin-top:15px;">
+                    <div class="section-collapsible" style="box-shadow:none; border:1px solid #e5e7eb; margin-top:20px;">
                         <div class="section-header open" onclick="toggleSection('hdrAddCredit','bodyAddCredit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💵</span><span class="sec-title">Add Credit Payment</span></div></div>
                         <div class="section-body open" id="bodyAddCredit">
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                                 <div><label class="field-label">🏪 Customer</label><select id="creditCustomerSelect"></select></div>
                                 <div><label class="field-label">📅 Date</label><input type="date" id="creditDate"></div>
                             </div>
@@ -650,7 +713,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 </div> <!-- End main-content-wrapper -->
 </div> <!-- End mainApp -->
 
-<script type="module">
+ <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
@@ -671,6 +734,7 @@ const db = getFirestore(app);
 let allMedicines = [], allCategories = [], allSubcategories = {}, allExpCategories = [], allBranches = [], allCustomers = [], allSales = [], allQuickSales = [], allExpenses = [], allFixed = [], allCreditPayments = [], cart = [];
 let currentUserPharmacyId = null, currentUserRole = 'employee', currentBizType = 'retail', allowedBizType = 'retail', lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
+let currentCategoryFilter = 'all';
 
 let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null, unsubQuickSales = null;
 
@@ -739,15 +803,15 @@ async function loadUserHeader(user) {
         document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase() || 'U'; 
 
         const roleElement = document.getElementById('hdrUserRole'); 
-        if (currentUserRole === 'owner') { roleElement.innerText = '👑 ባለቤት'; roleElement.style.background = '#fefcbf'; roleElement.style.color = '#975a16'; } 
-        else if (currentUserRole === 'manager') { roleElement.innerText = '🎯 ማናጀር'; roleElement.style.background = '#bee3f8'; roleElement.style.color = '#2c5282'; } 
-        else { roleElement.innerText = '👤 ሠራተኛ'; roleElement.style.background = '#e2e8f0'; roleElement.style.color = '#4a5568'; } 
+        if (currentUserRole === 'owner') { roleElement.innerText = '👑 Owner'; roleElement.style.background = '#fefcbf'; roleElement.style.color = '#975a16'; } 
+        else if (currentUserRole === 'manager') { roleElement.innerText = '🎯 Manager'; roleElement.style.background = '#bee3f8'; roleElement.style.color = '#2c5282'; } 
+        else { roleElement.innerText = '👤 Employee'; roleElement.style.background = '#e2e8f0'; roleElement.style.color = '#4a5568'; } 
 
         if (currentUserPharmacyId) {
             const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
             if (phDoc.exists()) {
                 const phData = phDoc.data();
-                document.getElementById('hdrPharmacyName').innerText = '💊 ' + (phData.name || 'Pharmacy Tracker'); 
+                document.getElementById('hdrPharmacyName').innerText = phData.name || 'Pharmacy Tracker'; 
                 allowedBizType = phData.bizType || 'retail';
                 currentBizType = phData.userBizType || allowedBizType; 
                 lowStockThreshold = phData.lowStockThreshold || 10; 
@@ -959,11 +1023,11 @@ window.renderMedList = function() {
     let filtered = allMedicines; if (filter !== 'all') filtered = filtered.filter(m => m.type === filter); 
     if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search) || (m.subcategory||'').toLowerCase().includes(search));
     const tableBody = document.getElementById('medTableBody'); if(!tableBody) return;
-    if(filtered.length === 0) { tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#a0aec0;">ምንም ምርት የለም።</td></tr>'; return; }
+    if(filtered.length === 0) { tableBody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:#a0aec0;">ምንም ምርት የለም።</td></tr>'; return; }
     let tableHtml = '';
     filtered.forEach(m => {
-        const isLowStock = m.quantity <= lowStockThreshold; const qtyColor = isLowStock ? 'color: #c53030; font-weight: bold;' : 'color: #276749; font-weight: bold;';
-        tableHtml += `<tr><td>${m.branch || 'Main'}</td><td>${m.type === 'cosmetic' ? '🧴 Cosmetic' : '💊 Medicine'}</td><td>${m.category || '-'}</td><td>${m.subcategory || '-'}</td><td>${m.batch || '-'}</td><td>${m.expiry || '-'}</td><td><strong>${m.name}</strong></td><td>${m.supplier || '-'}</td><td>${m.cost || 0} ብር</td><td>${m.price} ብር</td><td style="${qtyColor}">${m.quantity}</td><td><button class="action-btn btn-edit" onclick="editMedicine('${m.id}')">✏️ Edit</button><button class="action-btn btn-delete" onclick="deleteMedicine('${m.id}')">🗑️ Delete</button></td></tr>`;
+        const isLowStock = m.quantity <= lowStockThreshold; const qtyColor = isLowStock ? 'color: #ef4444; font-weight: bold;' : 'color: #10b981; font-weight: bold;';
+        tableHtml += `<tr><td>${m.branch || 'Main'}</td><td>${m.type === 'cosmetic' ? '🧴 Cosmetic' : '💊 Medicine'}</td><td>${m.category || '-'}</td><td><strong>${m.name}</strong></td><td>${m.batch || '-'}</td><td>${m.expiry || '-'}</td><td>${m.cost || 0} ብር</td><td>${m.price} ብር</td><td style="${qtyColor}">${m.quantity}</td><td><button class="action-btn btn-edit" onclick="editMedicine('${m.id}')">✏️ Edit</button><button class="action-btn btn-delete" onclick="deleteMedicine('${m.id}')">🗑️ Delete</button></td></tr>`;
     });
     tableBody.innerHTML = tableHtml;
 };
@@ -991,104 +1055,158 @@ window.editMedicine = function(id) {
 
 window.deleteMedicine = async function(id) {
     if(!confirm('🚨 ይህን ምርት ማጥፋት ትፈልጋለህ? (ይህ ተግባር አይመለስም)')) return;
-    try { await deleteDoc(doc(db, 'medicines', id)); alert('✅ ምርቱ ተሰርዟል!'); } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
+    try { await deleteDoc(doc(db, 'medicines', id)); alert('✅ ምርቱ ተሰርዟል!'); } catch(e) { alert('⚠️ ስተት: ' + e.message); }
 };
 
+// --- POS LOGIC ---
 function renderSellProducts() {
     const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase(); const listEl = document.getElementById('sellProductList'); if(!listEl) return; 
-    let filtered = allMedicines.filter(m => m.quantity > 0); if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search)); 
-    if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ምርት አልተገኘም።</p>'; return; } 
-    const grouped = {}; filtered.forEach(m => { const key = (m.type === 'cosmetic' ? '🧴 ' : '💊 ') + m.category; if(!grouped[key]) grouped[key] = []; grouped[key].push(m); }); 
+    
+    // Render Category Filters
+    const catFiltersEl = document.getElementById('categoryFilters');
+    if(catFiltersEl && catFiltersEl.innerHTML === '') {
+        let catHtml = `<button class="btn ${currentCategoryFilter === 'all' ? 'btn-primary' : 'btn-outline'}" style="width:auto; padding:6px 16px; border-radius:20px; font-size:12px; margin-top:0;" onclick="setCategoryFilter('all')">All Categories</button>`;
+        allCategories.forEach(c => {
+            catHtml += `<button class="btn ${currentCategoryFilter === c ? 'btn-primary' : 'btn-outline'}" style="width:auto; padding:6px 16px; border-radius:20px; font-size:12px; margin-top:0;" onclick="setCategoryFilter('${c}')">${c}</button>`;
+        });
+        catFiltersEl.innerHTML = catHtml;
+    }
+
+    let filtered = allMedicines.filter(m => m.quantity > 0); 
+    if (currentCategoryFilter !== 'all') filtered = filtered.filter(m => m.category === currentCategoryFilter);
+    if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search)); 
+
+    if (filtered.length === 0) { listEl.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#6b7280; padding:20px;">No products found.</div>'; return; } 
+    
     let html = '';
-    Object.keys(grouped).forEach(catName => {
-        html += `<div class="cat-section"><div class="cat-header open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')"><div class="cat-left"><span class="cat-arrow">▶</span><span class="cat-name">📁 ${catName}</span></div></div><div class="cat-body open">`;
-        grouped[catName].forEach(m => { html += `<div class="list-item"><div class="info"><div class="name">${m.name}</div><div class="meta">${m.subcategory} | ቀሪ: ${m.quantity}</div></div><div style="display:flex; align-items:center;"><div class="amount">${m.price} ብር</div><input class="qty-input" type="number" min="0" placeholder="0" onchange="addToCart('${m.id}', this.value)" onclick="event.stopPropagation()"></div></div>`; });
-        html += `</div></div>`;
+    filtered.forEach(m => { 
+        html += `
+        <div class="product-card" onclick="addToCart('${m.id}', 1)">
+            <div>
+                <div class="p-name">${m.name}</div>
+                <div class="p-meta">${m.category} | Stock: ${m.quantity}</div>
+            </div>
+            <div class="p-price">${m.price} ETB</div>
+        </div>`;
     });
     listEl.innerHTML = html;
 } 
 
+window.setCategoryFilter = function(cat) {
+    currentCategoryFilter = cat;
+    document.getElementById('categoryFilters').innerHTML = ''; // Force re-render
+    renderSellProducts();
+};
+
 window.addToCart = function(id, qty) {
     qty = parseInt(qty); if(isNaN(qty) || qty <= 0) return; const med = allMedicines.find(m => m.id === id);
     if(!med || med.quantity < qty) { alert(`በቂ ክምችት የለም! ያለው: ${med.quantity}`); return; } 
-    const existing = cart.find(c => c.id === id); if(existing) existing.qty += qty; else cart.push({ id, name: med.name, price: med.price, qty }); 
+    const existing = cart.find(c => c.id === id); 
+    if(existing) { if(existing.qty + qty > med.quantity) { alert('በቂ ክምችት የለም'); return; } existing.qty += qty; } 
+    else cart.push({ id, name: med.name, price: med.price, qty }); 
     renderCart(); document.getElementById('searchSellInput').value = ''; renderSellProducts();
 }; 
-
-function renderCart() {
-    const listEl = document.getElementById('cartList'); if(cart.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የተመረጠ የለም።</p>'; document.getElementById('cartTotal').innerText = '0.00 ብር'; return; } 
-    let html = ''; let total = 0;
-    cart.forEach((c, i) => { total += c.price * c.qty; html += `<div class="list-item"><div class="info"><div class="name">${c.name}</div><div class="meta">${c.qty} x ${c.price} ብር</div></div><div style="display:flex; align-items:center;"><div class="amount">${(c.price * c.qty).toFixed(2)} ብር</div><button onclick="removeFromCart(${i})" style="margin-left:8px; background:#c53030; color:white; border:none; border-radius:6px; padding:4px 8px; cursor:pointer; font-size:12px;">✕</button></div></div>`; });
-    listEl.innerHTML = html; document.getElementById('cartTotal').innerText = total.toFixed(2) + ' ብር';
-} 
 
 window.removeFromCart = function(i) { cart.splice(i, 1); renderCart(); };
 window.clearCart = function() { cart = []; renderCart(); }; 
 
+function renderCart() {
+    const listEl = document.getElementById('cartList'); 
+    if(cart.length === 0) { listEl.innerHTML = '<div style="text-align:center; color:#6b7280; padding:40px 0;">Cart is empty</div>'; document.getElementById('cartTotal').innerText = '0.00 ETB'; return; } 
+    let html = ''; let total = 0;
+    cart.forEach((c, i) => { 
+        total += c.price * c.qty; 
+        html += `<div class="cart-item">
+            <div class="ci-info">
+                <div class="ci-name">${c.name}</div>
+                <div class="ci-price">${c.price} ETB</div>
+            </div>
+            <div class="ci-qty">
+                <button onclick="updateCartQty(${i}, -1)">-</button>
+                <span>${c.qty}</span>
+                <button onclick="updateCartQty(${i}, 1)">+</button>
+            </div>
+            <div class="ci-total">${(c.price * c.qty).toFixed(2)}</div>
+            <div class="ci-del" onclick="removeFromCart(${i})">✕</div>
+        </div>`; 
+    });
+    listEl.innerHTML = html; document.getElementById('cartTotal').innerText = total.toFixed(2) + ' ETB';
+} 
+
+window.updateCartQty = function(index, change) {
+    const item = cart[index];
+    if(!item) return;
+    const med = allMedicines.find(m => m.id === item.id);
+    if(!med) return;
+    const newQty = item.qty + change;
+    if (newQty <= 0) { removeFromCart(index); return; }
+    if (newQty > med.quantity) { alert('Not enough stock!'); return; }
+    item.qty = newQty;
+    renderCart();
+};
+
 window.completeSale = async function() {
-    if(cart.length === 0) { alert('ምንም የተመረጠ የለም'); return; }
+    if(cart.length === 0) { alert('Cart is empty'); return; }
     const date = document.getElementById('sellDate').value; const receipt = document.getElementById('sellReceipt').value.trim(); const paymentMethod = document.getElementById('sellPaymentMethod').value;
-    if(!date) { alert('ቀን ምረጥ'); return; } 
-    let branch = 'all', customer = '';
-    if (currentBizType === 'wholesale') { customer = document.getElementById('sellCustomer').value; if (!customer) { alert('⚠️ እባክህ ደንበኛ ምረጥ!'); return; } } else { branch = document.getElementById('sellBranch').value; } 
-    let totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0); let paidAmount = totalAmount;
+    if(!date) { alert('Select date'); return; } 
+    let branch = document.getElementById('sellBranch').value;
+    let totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0); 
     try {
         for(const item of cart) {
-            await addDoc(collection(db, 'sales'), { medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, total: item.price * item.qty, paymentMethod: paymentMethod, paidAmount: paidAmount, date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+            await addDoc(collection(db, 'sales'), { medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, total: item.price * item.qty, paymentMethod: paymentMethod, paidAmount: item.price * item.qty, date, branch, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
             await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
         }
-        alert('✅ ሽያጭ ተመዝግቧል!'); cart = []; renderCart();
+        alert('✅ Sale Completed!'); cart = []; renderCart(); document.getElementById('sellReceipt').value = '';
     } catch(e) { alert(e.message); }
 }; 
 
 window.addQuickSale = async function() {
     const type = document.getElementById('quickType').value; const branch = document.getElementById('quickBranch').value; const date = document.getElementById('quickDate').value; const amount = parseFloat(document.getElementById('quickAmount').value);
-    if(!date || isNaN(amount) || amount <= 0) { alert('ሁሉንም መረጃዎች ሙላ'); return; } 
-    try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ ተመዝግቧል!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
+    if(!date || isNaN(amount) || amount <= 0) { alert('Fill all fields'); return; } 
+    try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Recorded!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
 window.addExpense = async function() {
     const cat = document.getElementById('expCat').value; const branch = document.getElementById('expBranch').value; const note = document.getElementById('expNote').value.trim(); const amount = parseFloat(document.getElementById('expAmount').value); const date = document.getElementById('expDate').value;
-    if(!cat || isNaN(amount) || amount <= 0 || !date) { alert('ሁሉንም መረጃዎች ሙላ'); return; }
-    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ ተመዝግቧል!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; } catch(e) { alert(e.message); }
+    if(!cat || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields'); return; }
+    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
 window.addFixedExpense = async function() {
     const cat = document.getElementById('fixCat').value; const note = document.getElementById('fixNote').value.trim(); const amount = parseFloat(document.getElementById('fixAmount').value); const month = document.getElementById('fixMonth').value;
-    if(!cat || isNaN(amount) || amount <= 0 || !month) { alert('ሁሉንም መረጃዎች ሙላ'); return; }
-    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ ተመዝግቧል!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; } catch(e) { alert(e.message); }
+    if(!cat || isNaN(amount) || amount <= 0 || !month) { alert('Fill all fields'); return; }
+    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
 window.adjustStock = async function() {
     const id = document.getElementById('adjustMedId').value; const qty = parseInt(document.getElementById('adjustQty').value);
-    if(!id || isNaN(qty) || qty < 0) { alert('ምርት እና ትክክለኛ ብዛት ምረጥ'); return; }
-    try { await updateDoc(doc(db, 'medicines', id), { quantity: qty }); alert('✅ ክምችት ተስተካክሏል!'); document.getElementById('adjustQty').value = ''; document.getElementById('adjustReason').value = ''; } catch(e) { alert(e.message); }
+    if(!id || isNaN(qty) || qty < 0) { alert('Select product and valid qty'); return; }
+    try { await updateDoc(doc(db, 'medicines', id), { quantity: qty }); alert('✅ Adjusted!'); document.getElementById('adjustQty').value = ''; document.getElementById('adjustReason').value = ''; } catch(e) { alert(e.message); }
 }; 
 
+// --- REPORTS & DASHBOARD ---
 async function loadDailyReport() {
     const dateInput = document.getElementById('dailyReportDate'); if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
     const selDate = dateInput.value; const branch = document.getElementById('dailyReportBranch').value; const searchDaily = (document.getElementById('searchDailySales')?.value || '').toLowerCase();
     let daySales = allSales.filter(s => s.date === selDate); let dayQuick = allQuickSales.filter(q => q.date === selDate); let dayExp = allExpenses.filter(e => e.date === selDate);
     if (branch !== 'all') { daySales = daySales.filter(s => s.branch === branch); dayQuick = dayQuick.filter(q => q.branch === branch); dayExp = dayExp.filter(e => e.branch === branch); } 
 
-    let totalRev = 0, totalExp = 0; let cashRev = 0, transferRev = 0, creditRev = 0; let salesHtml = '', quickHtml = '';
+    let totalRev = 0, totalExp = 0; let salesHtml = '', quickHtml = '';
     daySales.forEach(s => {
         totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total;
-        if (s.paymentMethod === 'transfer') transferRev += (s.paidAmount !== undefined ? s.paidAmount : s.total); else if (s.paymentMethod === 'credit') creditRev += (s.paidAmount || 0); else cashRev += (s.paidAmount !== undefined ? s.paidAmount : s.total); 
-        const pmLabel = s.paymentMethod === 'transfer' ? '🏦' : (s.paymentMethod === 'credit' ? '📝' : '💵');
         const matchesSearch = !searchDaily || (s.medicineName||'').toLowerCase().includes(searchDaily);
-        if (matchesSearch) { salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} x ${s.unitPrice} ብር ${pmLabel}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`; }
+        if (matchesSearch) { salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${s.medicineName} (x${s.quantity})</span> <strong>${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ETB</strong></div>`; }
     }); 
     dayQuick.forEach(q => {
-        totalRev += q.amount; cashRev += q.amount;
+        totalRev += q.amount;
         const matchesSearch = !searchDaily || 'quick'.includes(searchDaily) || (q.type||'').toLowerCase().includes(searchDaily);
-        if (matchesSearch) { quickHtml += `<div class="list-item"><div class="info"><div class="name">⚡ ${q.category} (${q.type})</div><div class="meta">${q.branch && q.branch !== 'all' ? '🏢 '+q.branch : ''}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`; }
+        if (matchesSearch) { quickHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>⚡ Quick Sale (${q.type})</span> <strong>${q.amount.toFixed(2)} ETB</strong></div>`; }
     });
     dayExp.forEach(e => { totalExp += e.amount; }); 
     document.getElementById('dailyTotalRevenue').innerHTML = totalRev.toFixed(2);
     document.getElementById('dailyTotalExpense').innerHTML = totalExp.toFixed(2);
     document.getElementById('dailyNetProfit').innerHTML = (totalRev - totalExp).toFixed(2);
-    document.getElementById('dailySalesList').innerHTML = (salesHtml + quickHtml) || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
+    document.getElementById('dailySalesList').innerHTML = (salesHtml + quickHtml) || '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales</p>';
 }
 
 async function loadMonthlyReport() {
@@ -1100,14 +1218,14 @@ async function loadMonthlyReport() {
     monthSales.forEach(s => { 
         totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total; 
         const matchesSearch = !searchMonthly || (s.medicineName||'').toLowerCase().includes(searchMonthly) || (s.customer||'').toLowerCase().includes(searchMonthly);
-        if (matchesSearch) { salesHtml += `<div class="list-item"><div class="info"><div class="name">${s.medicineName}</div><div class="meta">x${s.quantity} | 📅 ${s.date}</div></div><div class="amount">${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ብር</div></div>`; }
+        if (matchesSearch) { salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${s.medicineName} (x${s.quantity})</span> <strong>${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)} ETB</strong></div>`; }
     });
-    monthQuick.forEach(q => { totalRev += q.amount; const matchesSearch = !searchMonthly || 'quick'.includes(searchMonthly) || (q.type||'').toLowerCase().includes(searchMonthly); if (matchesSearch) { quickHtml += `<div class="list-item"><div class="info"><div class="name">⚡ Quick (${q.type})</div><div class="meta">📅 ${q.date}</div></div><div class="amount">${q.amount.toFixed(2)} ብር</div></div>`; } });
+    monthQuick.forEach(q => { totalRev += q.amount; const matchesSearch = !searchMonthly || 'quick'.includes(searchMonthly) || (q.type||'').toLowerCase().includes(searchMonthly); if (matchesSearch) { quickHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>⚡ Quick Sale (${q.type})</span> <strong>${q.amount.toFixed(2)} ETB</strong></div>`; } });
     monthExp.forEach(e => { totalExp += e.amount; }); monthFixed.forEach(f => { totalFixed += f.amount; });
     document.getElementById('monthlyTotalRevenue').innerHTML = totalRev.toFixed(2);
     document.getElementById('monthlyTotalExpense').innerHTML = (totalExp + totalFixed).toFixed(2);
     document.getElementById('monthlyNetProfit').innerHTML = (totalRev - totalExp - totalFixed).toFixed(2);
-    document.getElementById('monthlySalesList').innerHTML = (salesHtml + quickHtml) || '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ሽያጭ የለም።</p>';
+    document.getElementById('monthlySalesList').innerHTML = (salesHtml + quickHtml) || '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales</p>';
 }
 
 async function loadDashboard() {
@@ -1120,9 +1238,9 @@ async function loadDashboard() {
     monthSales.forEach(s => { totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total; itemsSold += s.quantity || 0; });
     monthQuick.forEach(q => { totalRev += q.amount; }); monthExp.forEach(e => { totalExp += e.amount; }); monthFixed.forEach(f => { totalFixed += f.amount; });
     const netProfit = totalRev - totalExp - totalFixed;
-    document.getElementById('dashGrossIncome').innerText = totalRev.toFixed(2) + ' ብር';
-    document.getElementById('dashTotalExpense').innerText = (totalExp + totalFixed).toFixed(2) + ' ብር';
-    document.getElementById('dashNetProfit').innerText = netProfit.toFixed(2) + ' ብር';
+    document.getElementById('dashGrossIncome').innerText = totalRev.toFixed(2) + ' ETB';
+    document.getElementById('dashTotalExpense').innerText = (totalExp + totalFixed).toFixed(2) + ' ETB';
+    document.getElementById('dashNetProfit').innerText = netProfit.toFixed(2) + ' ETB';
     document.getElementById('dashTotalSalesCount').innerText = monthSales.length + monthQuick.length;
     renderCharts(selectedMonth);
 }
@@ -1134,7 +1252,7 @@ function renderCharts(selectedMonth) {
         let year = parseInt(selectedMonth.split('-')[0]); let month = parseInt(selectedMonth.split('-')[1]) - 1; let daysInMonth = new Date(year, month + 1, 0).getDate();
         for (let i = 1; i <= daysInMonth; i++) { labels.push(i); let dateStr = selectedMonth + '-' + (i<10?'0'+i:i); let dayS = allSales.filter(s => s.date === dateStr).reduce((sum, s) => sum + (s.paidAmount !== undefined ? s.paidAmount : s.total), 0); let dayQ = allQuickSales.filter(q => q.date === dateStr).reduce((sum, q) => sum + q.amount, 0); data.push(dayS + dayQ); }
         if(dailyChartInstance) dailyChartInstance.destroy();
-        dailyChartInstance = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Sales', data: data, borderColor: '#2b6cb0', backgroundColor: 'rgba(43,108,176,0.1)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false } });
+        dailyChartInstance = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Sales', data: data, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false } });
     }
     const pieCtx = document.getElementById('expensePieChartCanvas'); const legendEl = document.getElementById('expenseLegend');
     if(pieCtx) {
@@ -1144,11 +1262,11 @@ function renderCharts(selectedMonth) {
         let pieLabels = Object.keys(expenseCats); let pieData = Object.values(expenseCats);
         if(pieLabels.length === 0) { pieLabels = ['No Expenses']; pieData = [1]; }
         if(expensePieChartInstance) expensePieChartInstance.destroy();
-        expensePieChartInstance = new Chart(pieCtx, { type: 'doughnut', data: { labels: pieLabels, datasets: [{ data: pieData, backgroundColor: ['#c53030', '#dd6b20', '#2b6cb0', '#276749', '#805ad5', '#d53f8c'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+        expensePieChartInstance = new Chart(pieCtx, { type: 'doughnut', data: { labels: pieLabels, datasets: [{ data: pieData, backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899'] }] }, options: { responsive: true, maintainAspectRatio: false } });
         
         let legendHtml = '<table style="width:100%; border-collapse:collapse; font-size:13px;">';
-        pieLabels.forEach((label, i) => { legendHtml += `<tr style="border-bottom:1px solid #edf2f7;"><td style="padding:8px 0;"><span style="display:inline-block;width:12px;height:12px;background:${expensePieChartInstance.data.datasets[0].backgroundColor[i]};margin-right:8px;border-radius:3px;"></span>${label}</td><td style="text-align:right;font-weight:bold;">${pieData[i].toFixed(2)} ብር</td></tr>`; });
-        let totalExp = pieData.reduce((a,b)=>a+b,0); legendHtml += `<tr><td style="padding:8px 0;font-weight:bold;">Total</td><td style="text-align:right;font-weight:bold;color:#c53030;">${totalExp.toFixed(2)} ብር</td></tr></table>`;
+        pieLabels.forEach((label, i) => { legendHtml += `<tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 0;"><span style="display:inline-block;width:12px;height:12px;background:${expensePieChartInstance.data.datasets[0].backgroundColor[i]};margin-right:8px;border-radius:3px;"></span>${label}</td><td style="text-align:right;font-weight:bold;">${pieData[i].toFixed(2)} ETB</td></tr>`; });
+        let totalExp = pieData.reduce((a,b)=>a+b,0); legendHtml += `<tr><td style="padding:8px 0;font-weight:bold;">Total</td><td style="text-align:right;font-weight:bold;color:#ef4444;">${totalExp.toFixed(2)} ETB</td></tr></table>`;
         if(legendEl) legendEl.innerHTML = legendHtml;
     }
 }
@@ -1167,21 +1285,21 @@ async function loadSettings() {
 }
 
 window.savePharmacyName = async function() {
-    const name = document.getElementById('settingPhName').value.trim(); if(!name) { alert('ስም አስገባ'); return; }
-    try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { name: name }); document.getElementById('hdrPharmacyName').innerText = '💊 ' + name; alert('✅ ተቀይሯል!'); } catch(e) { alert(e.message); }
+    const name = document.getElementById('settingPhName').value.trim(); if(!name) { alert('Enter name'); return; }
+    try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { name: name }); document.getElementById('hdrPharmacyName').innerText = name; alert('✅ Saved!'); } catch(e) { alert(e.message); }
 };
 window.saveStockLimit = async function() {
-    const limit = parseInt(document.getElementById('settingStockLimit').value); if(isNaN(limit) || limit < 1) { alert('ትክክለኛ ቁጥር አስገባ'); return; }
-    try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { lowStockThreshold: limit }); lowStockThreshold = limit; alert('✅ ተቀይሯል!'); loadInventory(); } catch(e) { alert(e.message); }
+    const limit = parseInt(document.getElementById('settingStockLimit').value); if(isNaN(limit) || limit < 1) { alert('Valid number required'); return; }
+    try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { lowStockThreshold: limit }); lowStockThreshold = limit; alert('✅ Saved!'); loadInventory(); } catch(e) { alert(e.message); }
 };
 
 function renderPermissionsUI(perms) {
     const displayEl = document.getElementById('permSectionDisplay'); if(!displayEl) return;
-    let html = ''; const sections = [{ key: 'med', label: '💊 መድሃኒቶች' }, { key: 'sell', label: '🛒 ሽያጭ' }, { key: 'exp', label: '💸 ወጪ' }, { key: 'inv', label: '📦 ክምችት' }, { key: 'daily', label: '📅 የቀን ገቢ' }, { key: 'monthly', label: '📆 የወር ገቢ' }, { key: 'dash', label: '📊 Dashboard' }, { key: 'settings', label: '⚙️ Settings' }];
-    html += `<div style="background:#f7fafc; padding:10px; border-radius:8px;"><h4 style="font-size:14px; margin-bottom:10px; color:#2c5282;">🎯 ማናጀር (Manager)</h4>`;
-    sections.forEach(sec => { const checked = perms.manager && perms.manager[sec.key] ? 'checked' : ''; html += `<div style="display:flex; justify-content:space-between; padding:5px 0;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" id="perm_mgr_${sec.key}" ${checked} style="width:20px;height:20px;"></div>`; });
-    html += `</div><div style="background:#f7fafc; padding:10px; border-radius:8px;"><h4 style="font-size:14px; margin-bottom:10px; color:#2c5282;">💼 አካውንታንት</h4>`;
-    sections.forEach(sec => { const checked = perms.accountant && perms.accountant[sec.key] ? 'checked' : ''; html += `<div style="display:flex; justify-content:space-between; padding:5px 0;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" id="perm_acc_${sec.key}" ${checked} style="width:20px;height:20px;"></div>`; });
+    let html = ''; const sections = [{ key: 'med', label: '💊 Medicine' }, { key: 'sell', label: '🛒 Sales' }, { key: 'exp', label: '💸 Expenses' }, { key: 'inv', label: '📦 Inventory' }, { key: 'daily', label: '📅 Daily Report' }, { key: 'monthly', label: '📆 Monthly Report' }, { key: 'dash', label: '📊 Dashboard' }, { key: 'settings', label: '⚙️ Settings' }];
+    html += `<div style="background:#f9fafb; padding:16px; border-radius:8px; border:1px solid #e5e7eb;"><h4 style="font-size:14px; font-weight:700; margin-bottom:12px; color:#111827;">Manager</h4>`;
+    sections.forEach(sec => { const checked = perms.manager && perms.manager[sec.key] ? 'checked' : ''; html += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #e5e7eb;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" id="perm_mgr_${sec.key}" ${checked} style="width:20px;height:20px;"></div>`; });
+    html += `</div><div style="background:#f9fafb; padding:16px; border-radius:8px; border:1px solid #e5e7eb;"><h4 style="font-size:14px; font-weight:700; margin-bottom:12px; color:#111827;">Accountant</h4>`;
+    sections.forEach(sec => { const checked = perms.accountant && perms.accountant[sec.key] ? 'checked' : ''; html += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #e5e7eb;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" id="perm_acc_${sec.key}" ${checked} style="width:20px;height:20px;"></div>`; });
     html += `</div>`;
     displayEl.innerHTML = html;
 }
@@ -1189,24 +1307,24 @@ function renderPermissionsUI(perms) {
 window.savePermissions = async function() {
     const sections = ['med', 'sell', 'exp', 'inv', 'daily', 'monthly', 'dash', 'settings']; let newData = { manager: {}, accountant: {} };
     sections.forEach(key => { newData.manager[key] = document.getElementById(`perm_mgr_${key}`).checked; newData.accountant[key] = document.getElementById(`perm_acc_${key}`).checked; });
-    try { await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), newData); alert('✅ ፈቃዶች ተቀምጠዋል!'); } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
+    try { await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), newData); alert('✅ Permissions saved!'); } catch(e) { alert('Error: ' + e.message); }
 };
 
 function populateCreditCustomerSelect() {
     const sel = document.getElementById('creditCustomerSelect'); if(!sel) return;
-    sel.innerHTML = '<option value="">-- ደንበኛ ምረጥ --</option>'; allCustomers.forEach(c => { sel.innerHTML += `<option value="${c}">${c}</option>`; });
+    sel.innerHTML = '<option value="">-- Select Customer --</option>'; allCustomers.forEach(c => { sel.innerHTML += `<option value="${c}">${c}</option>`; });
 }
 
 window.addCreditPayment = async function() {
     const customer = document.getElementById('creditCustomerSelect').value; const amount = parseFloat(document.getElementById('creditAmount').value); const date = document.getElementById('creditDate').value;
-    if (!customer || isNaN(amount) || amount <= 0 || !date) { alert('እባክዎ ሁሉንም መረጃዎች በትክክል ይሙሉ!'); return; }
-    try { await addDoc(collection(db, 'creditPayments'), { customer, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ ክፍያው ተመዝግቧል!'); document.getElementById('creditAmount').value = ''; } catch(e) { alert(e.message); }
+    if (!customer || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields correctly!'); return; }
+    try { await addDoc(collection(db, 'creditPayments'), { customer, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Payment recorded!'); document.getElementById('creditAmount').value = ''; } catch(e) { alert(e.message); }
 };
 
 function loadCreditPaymentHistory() {
     const listEl = document.getElementById('creditPaymentList'); if(!listEl) return;
-    if(allCreditPayments.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ክፍያ የለም።</p>'; return; }
-    let html = ''; allCreditPayments.forEach(p => { html += `<div class="list-item"><div class="info"><div class="name">🏪 ${p.customer}</div><div class="meta">📅 ${p.date}</div></div><div class="amount green">+ ${p.amount.toFixed(2)} ብር</div></div>`; }); listEl.innerHTML = html;
+    if(allCreditPayments.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">No payments yet.</p>'; return; }
+    let html = ''; allCreditPayments.forEach(p => { html += `<div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>🏪 ${p.customer}</span><span style="color:#10b981; font-weight:bold;">+ ${p.amount.toFixed(2)} ETB</span></div>`; }); listEl.innerHTML = html;
 }
 
 function renderUnpaidCredits() {
@@ -1214,12 +1332,12 @@ function renderUnpaidCredits() {
     const searchVal = (document.getElementById('searchUnpaidCredit')?.value || '').toLowerCase();
     const creditSales = allSales.filter(s => s.paymentMethod === 'credit');
     const customerDebts = {};
-    creditSales.forEach(sale => { const customer = sale.customer || 'ያልታወቀ ደንበኛ'; const unpaid = sale.total - (sale.paidAmount || 0); if(unpaid > 0) { if(!customerDebts[customer]) customerDebts[customer] = 0; customerDebts[customer] += unpaid; } });
+    creditSales.forEach(sale => { const customer = sale.customer || 'Unknown'; const unpaid = sale.total - (sale.paidAmount || 0); if(unpaid > 0) { if(!customerDebts[customer]) customerDebts[customer] = 0; customerDebts[customer] += unpaid; } });
     allCreditPayments.forEach(payment => { const customer = payment.customer; if(customerDebts[customer]) { customerDebts[customer] -= payment.amount; if(customerDebts[customer] <= 0) delete customerDebts[customer]; } });
     let customersWithDebt = Object.keys(customerDebts); if (searchVal) customersWithDebt = customersWithDebt.filter(c => c.toLowerCase().includes(searchVal));
     let totalDebt = 0; let html = '';
-    if(customersWithDebt.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ያልተከፈለ ዕዳ የለም።</p>'; document.getElementById('totalUnpaidDebt').innerText = '0.00'; return; }
-    customersWithDebt.forEach(customer => { const debt = customerDebts[customer]; if(debt > 0) { totalDebt += debt; html += `<div class="list-item" style="background:#fff5f5; border-color:#fed7d7;"><div class="info"><div class="name" style="color:#c53030;">🏪 ${customer}</div><div class="meta">ያልተከፈለ ዕዳ</div></div><div class="amount red" style="font-size:16px;">${debt.toFixed(2)} ብር</div></div>`; } });
+    if(customersWithDebt.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">No unpaid debts.</p>'; document.getElementById('totalUnpaidDebt').innerText = '0.00'; return; }
+    customersWithDebt.forEach(customer => { const debt = customerDebts[customer]; if(debt > 0) { totalDebt += debt; html += `<div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; background:#fef2f2;"><span style="color:#dc2626; font-weight:bold;">${customer}</span><span style="color:#dc2626; font-weight:bold;">${debt.toFixed(2)} ETB</span></div>`; } });
     listEl.innerHTML = html; document.getElementById('totalUnpaidDebt').innerText = totalDebt.toFixed(2);
 }
 
@@ -1227,29 +1345,29 @@ function renderSalesHistory() {
     const listEl = document.getElementById('salesHistoryList'); if (!listEl) return;
     let combined = []; allSales.forEach(s => combined.push({ ...s, _type: 'sale' })); allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
     const filter = document.getElementById('filterSalesHistory')?.value || 'all'; if (filter === 'detail') combined = combined.filter(c => c._type === 'sale'); if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
-    if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም የሽያጭ ታሪክ የለም።</p>'; return; }
+    if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales history.</p>'; return; }
     combined.sort((a, b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
     let html = '';
     combined.forEach(item => {
-        const dateStr = item.date || 'ቀን የለም';
-        if (item._type === 'quick') { html += `<div class="list-item" style="flex-direction: column; align-items: stretch; padding: 12px; border-left: 4px solid #dd6b20;"><div style="display: flex; justify-content: space-between; align-items: flex-start;"><div style="flex: 1;"><div class="name" style="font-size: 15px; color: #dd6b20;">⚡ Quick Sale (${item.type})</div><div class="meta" style="font-size: 12px; margin-top: 4px;">📅 ${dateStr} ${item.branch ? '| 🏢 '+item.branch : ''}</div></div><div style="text-align: right;"><div class="amount" style="font-size: 16px; color: #276749;">${item.amount.toFixed(2)} ብር</div></div></div></div>`; } 
+        const dateStr = item.date || 'Unknown';
+        if (item._type === 'quick') { html += `<div style="padding:16px; border-bottom:1px solid #e5e7eb; border-left:4px solid #f59e0b;"><div style="display:flex; justify-content:space-between;"><strong style="color:#111827;">⚡ Quick Sale (${item.type})</strong><span style="font-weight:bold; color:#10b981;">${item.amount.toFixed(2)} ETB</span></div><div style="font-size:12px; color:#6b7280; margin-top:4px;">📅 ${dateStr} ${item.branch ? '| 🏢 '+item.branch : ''}</div></div>`; } 
         else {
             const total = item.total || 0; const paid = item.paidAmount !== undefined ? item.paidAmount : total; const pmLabel = item.paymentMethod === 'transfer' ? '🏦' : (item.paymentMethod === 'credit' ? '📝' : '💵');
-            html += `<div class="list-item" style="flex-direction: column; align-items: stretch; padding: 12px;"><div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;"><div style="flex: 1;"><div class="name" style="font-size: 15px;">${item.medicineName}</div><div class="meta" style="font-size: 12px; margin-top: 4px;">📅 ${dateStr} | 📦 ብዛት: ${item.quantity} | 🏷️ ዋጋ: ${item.unitPrice} ብር</div></div><div style="text-align: right;"><div class="amount" style="font-size: 16px; color: #276749;">${paid.toFixed(2)} ብር</div><div style="font-size: 11px; color: #718096;">${pmLabel} ${item.paymentMethod || 'cash'}</div></div></div><div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #718096; border-top: 1px dashed #e2e8f0; padding-top: 8px;"><div>${item.branch ? `🏢 ${item.branch}` : ''} ${item.customer ? `| 🏪 ${item.customer}` : ''} ${item.receipt ? `| 🧾 ${item.receipt}` : ''}</div><button onclick="deleteSale('${item.id}', '${item.medicineId}', ${item.quantity})" style="background: #fed7d7; color: #c53030; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">🗑️ ሰርዝ</button></div></div>`;
+            html += `<div style="padding:16px; border-bottom:1px solid #e5e7eb;"><div style="display:flex; justify-content:space-between; margin-bottom:8px;"><div><strong style="color:#111827;">${item.medicineName}</strong><div style="font-size:12px; color:#6b7280; margin-top:4px;">📅 ${dateStr} | 📦 Qty: ${item.quantity} | 🏷️ ${item.unitPrice} ETB</div></div><div style="text-align:right;"><strong style="color:#10b981;">${paid.toFixed(2)} ETB</strong><div style="font-size:11px; color:#6b7280;">${pmLabel} ${item.paymentMethod || 'cash'}</div></div></div><div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#6b7280; border-top:1px dashed #e5e7eb; padding-top:8px;"><div>${item.branch ? `🏢 ${item.branch}` : ''} ${item.receipt ? `| 🧾 ${item.receipt}` : ''}</div><button onclick="deleteSale('${item.id}', '${item.medicineId}', ${item.quantity})" style="background: #fef2f2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🗑️ Delete</button></div></div>`;
         }
     });
     listEl.innerHTML = html;
 }
 
 window.deleteSale = async function(saleId, medicineId, quantity) {
-    if (!confirm('🚨 እርግጠኛ ነዎት? ይህን ሽያጭ መሰረዝ ትፈልጋለህ? (ክምችቱ ወደነበረበት ይመለሳል)')) return;
-    try { if (medicineId && medicineId !== 'undefined') { await updateDoc(doc(db, 'medicines', medicineId), { quantity: increment(quantity) }); } await deleteDoc(doc(db, 'sales', saleId)); alert('✅ ሽያጩ ተሰርዟል!'); } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
+    if (!confirm('Delete this sale? (Stock will be restored)')) return;
+    try { if (medicineId && medicineId !== 'undefined') { await updateDoc(doc(db, 'medicines', medicineId), { quantity: increment(quantity) }); } await deleteDoc(doc(db, 'sales', saleId)); alert('✅ Deleted!'); } catch(e) { alert('Error: ' + e.message); }
 };
 
 window.clearAllSales = async function() {
-    if (!confirm('🚨 እርግጠኛ ነዎት? ሁሉንም የሽያጭ ታሪክ ማጥፋት ትፈልጋለህ? (ይህ ተግባር ክምችቱን አይመልስም)')) return;
-    if (!confirm('⚠️ እርግጠኛ ነዎት? ይህ ተግባር አይመለስም!')) return;
-    try { let batch = writeBatch(db); let count = 0; for (let s of allSales) { batch.delete(doc(db, 'sales', s.id)); count++; } for (let q of allQuickSales) { batch.delete(doc(db, 'quickSales', q.id)); count++; } if (count > 0) await batch.commit(); let creditBatch = writeBatch(db); let cCount = 0; for (let c of allCreditPayments) { creditBatch.delete(doc(db, 'creditPayments', c.id)); cCount++; } if (cCount > 0) await creditBatch.commit(); alert(`✅ ${count} የሽያጭ ታሪኮች ተሰርዘዋል!`); } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
+    if (!confirm('Delete ALL sales history? (Stock will NOT be restored)')) return;
+    if (!confirm('Are you absolutely sure? This cannot be undone!')) return;
+    try { let batch = writeBatch(db); let count = 0; for (let s of allSales) { batch.delete(doc(db, 'sales', s.id)); count++; } for (let q of allQuickSales) { batch.delete(doc(db, 'quickSales', q.id)); count++; } if (count > 0) await batch.commit(); let creditBatch = writeBatch(db); let cCount = 0; for (let c of allCreditPayments) { creditBatch.delete(doc(db, 'creditPayments', c.id)); cCount++; } if (cCount > 0) await creditBatch.commit(); alert(`✅ ${count} sales deleted!`); } catch(e) { alert('Error: ' + e.message); }
 };
 
 window.toggleReportDatePickers = function() {
@@ -1271,31 +1389,33 @@ window.generateReport = function() {
     filteredSales.forEach(s => totalSales += (s.paidAmount !== undefined ? s.paidAmount : s.total)); filteredQuick.forEach(q => totalQuick += q.amount); filteredExpenses.forEach(e => totalExpenses += e.amount); filteredFixed.forEach(f => totalFixed += f.amount);
     let grandTotal = totalSales + totalQuick; let grandExp = totalExpenses + totalFixed;
 
-    let salesTableHtml = `<table class="data-table"><thead><tr><th>Date</th><th>Item Name</th><th>Batch</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead><tbody>`;
+    let salesTableHtml = `<table class="data-table" style="margin-top:16px;"><thead><tr><th>Date</th><th>Item Name</th><th>Batch</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead><tbody>`;
     filteredSales.forEach(s => { salesTableHtml += `<tr><td>${s.date}</td><td>${s.medicineName}</td><td>${s.batch || '-'}</td><td>${s.quantity}</td><td>${s.unitPrice}</td><td>${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)}</td></tr>`; });
-    if(filteredSales.length === 0) salesTableHtml += `<tr><td colspan="6" style="text-align:center;">No sales</td></tr>`;
+    if(filteredSales.length === 0) salesTableHtml += `<tr><td colspan="6" style="text-align:center; color:#6b7280;">No sales</td></tr>`;
     salesTableHtml += `</tbody></table>`;
 
-    let expTableHtml = `<table class="data-table"><thead><tr><th>Date</th><th>Category</th><th>Note</th><th>Amount</th></tr></thead><tbody>`;
+    let expTableHtml = `<table class="data-table" style="margin-top:16px;"><thead><tr><th>Date</th><th>Category</th><th>Note</th><th>Amount</th></tr></thead><tbody>`;
     filteredExpenses.forEach(e => { expTableHtml += `<tr><td>${e.date}</td><td>${e.category}</td><td>${e.note || '-'}</td><td>${e.amount.toFixed(2)}</td></tr>`; });
     filteredFixed.forEach(f => { expTableHtml += `<tr><td>${f.month}</td><td>${f.category}</td><td>${f.note || '-'}</td><td>${f.amount.toFixed(2)}</td></tr>`; });
-    if(filteredExpenses.length === 0 && filteredFixed.length === 0) expTableHtml += `<tr><td colspan="4" style="text-align:center;">No expenses</td></tr>`;
+    if(filteredExpenses.length === 0 && filteredFixed.length === 0) expTableHtml += `<tr><td colspan="4" style="text-align:center; color:#6b7280;">No expenses</td></tr>`;
     expTableHtml += `</tbody></table>`;
 
     let html = `
-        <div style="text-align:center; margin-bottom:20px;">
-            <h2 style="color:#1a365d; font-size:20px;">💊 ${document.getElementById('hdrPharmacyName').innerText}</h2>
-            <h3 style="color:#4a5568; font-size:16px; margin-top:5px;">${title}</h3>
+        <div style="text-align:center; margin-bottom:24px;">
+            <h2 style="color:#111827; font-size:24px; font-weight:800;">💊 ${document.getElementById('hdrPharmacyName').innerText}</h2>
+            <h3 style="color:#6b7280; font-size:16px; margin-top:8px;">${title}</h3>
         </div>
-        <div class="summary-box green"><div class="label">Total Revenue</div><div class="value">${grandTotal.toFixed(2)}</div></div>
-        <div class="summary-box red"><div class="label">Total Expenses</div><div class="value">${grandExp.toFixed(2)}</div></div>
-        <div class="summary-box"><div class="label">Net Profit</div><div class="value">${(grandTotal - grandExp).toFixed(2)}</div></div>
-        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">📋 Detailed Sales</h3>${salesTableHtml}
-        <h3 style="margin-top:20px; font-size:14px; color:#2c5282;">💸 Detailed Expenses</h3>${expTableHtml}
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:24px;">
+            <div class="summary-box green" style="margin-bottom:0;"><div class="label">Total Revenue</div><div class="value">${grandTotal.toFixed(2)}</div></div>
+            <div class="summary-box red" style="margin-bottom:0;"><div class="label">Total Expenses</div><div class="value">${grandExp.toFixed(2)}</div></div>
+            <div class="summary-box" style="margin-bottom:0; border-left:4px solid #3b82f6;"><div class="label">Net Profit</div><div class="value">${(grandTotal - grandExp).toFixed(2)}</div></div>
+        </div>
+        <h3 style="margin-top:24px; font-size:16px; font-weight:700; color:#111827;">📋 Detailed Sales</h3>${salesTableHtml}
+        <h3 style="margin-top:24px; font-size:16px; font-weight:700; color:#111827;">💸 Detailed Expenses</h3>${expTableHtml}
     `;
     displayArea.innerHTML = html;
 };
 
 </script>
 </body>
-</html>
+</html>   
