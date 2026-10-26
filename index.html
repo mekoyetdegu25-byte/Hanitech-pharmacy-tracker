@@ -79,12 +79,13 @@ input:focus, select:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16
 .btn-danger:hover { background: #dc2626; }
 .btn-warning { background: #f59e0b; color: #fff; }
 .btn-warning:hover { background: #d97706; } 
+.btn-outline { background: transparent; border: 1px solid #d1d5db; color: #374151; }
+.btn-outline:hover { background: #f3f4f6; }
 
 .summary-box { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; text-align: center; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 .summary-box.green { border-left: 4px solid #10b981; }
 .summary-box.red { border-left: 4px solid #ef4444; }
 .summary-box.blue { border-left: 4px solid #3b82f6; }
-.summary-box.orange { border-left: 4px solid #f59e0b; }
 .summary-box .label { font-size: 13px; font-weight: 600; color: #6b7280; margin-bottom: 6px; }
 .summary-box .value { font-size: 28px; font-weight: 800; color: #111827; } 
 
@@ -196,7 +197,6 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div class="main-content-wrapper">
 <div class="tabs-wrapper">
     <div class="tabs">
-        <!-- Medicine -->
         <div class="menu-group">
             <div class="menu-header open" onclick="toggleMenu(this)">
                 <div class="m-left"><i>💊</i> Medicine</div>
@@ -209,7 +209,6 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <!-- Sales -->
         <div class="menu-group">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>🛒</i> Sales</div>
@@ -222,7 +221,6 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <!-- Expenses -->
         <div class="menu-group">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>💸</i> Expenses</div>
@@ -235,7 +233,6 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <!-- Inventory -->
         <div class="menu-group">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>📦</i> Inventory</div>
@@ -248,14 +245,12 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <!-- Dashboard -->
         <div class="menu-group">
             <label class="menu-header" onclick="switchPage('panel7', null, this)">
                 <div class="m-left"><i>📊</i> Dashboard</div>
             </label>
         </div>
 
-        <!-- Reports -->
         <div class="menu-group">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>📄</i> Reports</div>
@@ -268,14 +263,12 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <!-- Settings -->
         <div class="menu-group">
             <label class="menu-header" onclick="switchPage('panel9', null, this)">
                 <div class="m-left"><i>⚙️</i> Settings</div>
             </label>
         </div>
         
-        <!-- Credit -->
         <div class="menu-group">
             <label class="menu-header" onclick="switchPage('panel10', null, this)">
                 <div class="m-left"><i>💳</i> Credit</div>
@@ -293,7 +286,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyMedList">
                         <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
-                            <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search Medicine..." oninput="renderMedList()" style="flex: 1; min-width: 200px;">
+                            <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search by name or batch..." oninput="renderMedList()" style="flex: 1; min-width: 200px;">
                             <select id="filterTypeMed" onchange="renderMedList()" style="width: 180px;">
                                 <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
                             </select>
@@ -316,8 +309,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
                             <div id="medPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                             <div style="display:flex; gap:8px;">
-                                <button class="btn btn-primary" id="btnPrevMed" onclick="changeMedPage(-1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">⬅️ Prev</button>
-                                <button class="btn btn-primary" id="btnNextMed" onclick="changeMedPage(1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">Next ➡️</button>
+                                <button class="btn btn-outline" id="btnPrevMed" onclick="changeMedPage(-1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextMed" onclick="changeMedPage(1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">Next ➡️</button>
                             </div>
                         </div>
                     </div>
@@ -333,9 +326,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div>
                                 <label class="field-label">📦 Type</label><select id="medType" onchange="onMedTypeChange()"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
                                 <label class="field-label">🏢 Branch</label><select id="medBranch"></select>
-                                <label class="field-label">📁 Category</label><select id="medCategory" onchange="loadSubcategoriesForSelectedCategory()"></select>
-                                <label class="field-label">📂 Sub Category</label><select id="medSubcategory" onchange="onSubcategoryChange()"></select>
-                                <input type="text" id="medNewSubcategory" placeholder="New Subcategory Name" style="margin-top:5px; display:none;">
+                                <label class="field-label">📁 Category</label>
+                                <input list="categoryList" id="medCategory" placeholder="Type to search category..." onchange="loadSubcategoriesForSelectedCategory()">
+                                <datalist id="categoryList"></datalist>
+                                
+                                <label class="field-label">📂 Sub Category</label>
+                                <input list="subCategoryList" id="medSubcategory" placeholder="Type to search subcategory...">
+                                <datalist id="subCategoryList"></datalist>
+                                
                                 <label class="field-label">💊 Item Name</label><input type="text" id="medName" placeholder="e.g. Paracetamol"> 
                             </div>
                             <div id="medicineOnlyFields">
@@ -380,6 +378,13 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <tbody id="catTableBody"></tbody>
                             </table>
                         </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                            <div id="catPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-outline" id="btnPrevCat" onclick="changeCatPage(-1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextCat" onclick="changeCatPage(1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">Next ➡️</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -396,7 +401,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <div><label class="field-label" style="margin-top:0;">🏢 Branch</label><select id="sellBranch" style="padding:8px;"></select></div>
                             </div>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-                                <div><label class="field-label" style="margin-top:0;">💳 Payment</label><select id="sellPaymentMethod" style="padding:8px;"><option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option></select></div>
+                                <div><label class="field-label" style="margin-top:0;">💳 Payment</label><select id="sellPaymentMethod" style="padding:8px;"><option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit">📝 Credit</option></select></div>
                                 <div><label class="field-label" style="margin-top:0;">🧾 Receipt (Opt)</label><input type="text" id="sellReceipt" style="padding:8px;"></div>
                             </div>
                         </div>
@@ -452,6 +457,9 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <select id="filterSalesHistory" onchange="renderSalesHistory()" style="flex:1;">
                                 <option value="all">All Sales</option><option value="detail">🛒 Detail Sales</option><option value="quick">⚡ Quick Sales</option>
                             </select>
+                            <select id="filterBranchSalesHistory" onchange="renderSalesHistory()" style="width:180px;">
+                                <option value="all">All Branches</option>
+                            </select>
                             <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 16px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
                         </div>
                         <div id="salesHistoryList"></div>
@@ -491,12 +499,13 @@ input:checked + .slider:before { transform: translateX(20px); }
                     <div class="section-body open" id="bodyFixedExp">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                             <div><label class="field-label">📁 Category</label><select id="fixCat"></select></div>
-                            <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
+                            <div><label class="field-label">🏢 Branch</label><select id="fixBranch"></select></div>
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                             <div><label class="field-label">💰 Amount</label><input type="number" id="fixAmount"></div>
-                            <div><label class="field-label">📝 Note</label><input type="text" id="fixNote"></div>
+                            <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
                         </div>
+                        <label class="field-label">📝 Note</label><input type="text" id="fixNote">
                         <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addFixedExpense()">💾 Save Expense</button>
                         <div style="clear:both;"></div>
                         <div id="fixedExpList" style="margin-top:20px;"></div>
@@ -528,7 +537,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyInventory">
                         <div class="no-print" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
-                            <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search Inventory..." oninput="loadInventory()" style="flex:1;">
+                            <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name or batch..." oninput="loadInventory()" style="flex:1;">
                             <select id="filterTypeInv" onchange="loadInventory()" style="width:180px;">
                                 <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
                             </select>
@@ -550,15 +559,34 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Expiry & Low Stock Alerts</span></div>
                     </div>
                     <div class="section-body open" id="bodyExpiryList">
-                        <input type="text" class="search-box" id="searchExpiry" placeholder="🔍 Search..." oninput="loadInventory()" style="margin-bottom:20px;">
+                        <div style="display:flex; gap:12px; margin-bottom:20px;">
+                            <input type="text" class="search-box" id="searchExpiry" placeholder="🔍 Search..." oninput="loadInventory()" style="flex:1;">
+                            <select id="filterBranchAlert" onchange="loadInventory()" style="width:180px;">
+                                <option value="all">All Branches</option>
+                            </select>
+                        </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                             <div>
                                 <h4 style="margin:0 0 10px; color:#f59e0b; font-size:14px;">Expiring Soon / Expired</h4>
                                 <div id="expiryListDisplay"></div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                                    <div id="expPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="btn btn-outline" id="btnPrevExp" onclick="changeExpPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">⬅️</button>
+                                        <button class="btn btn-outline" id="btnNextExp" onclick="changeExpPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">➡️</button>
+                                    </div>
+                                </div>
                             </div>
                             <div>
                                 <h4 style="margin:0 0 10px; color:#ef4444; font-size:14px;">Low Stock</h4>
                                 <div id="lowStockListDisplay"></div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                                    <div id="lowPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="btn btn-outline" id="btnPrevLow" onclick="changeLowPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">⬅️</button>
+                                        <button class="btn btn-outline" id="btnNextLow" onclick="changeLowPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">➡️</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -570,7 +598,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">Stock Adjust</span></div>
                     </div>
                     <div class="section-body open" id="bodyStockAdjust">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+                            <div><label class="field-label">🏢 Branch</label><select id="adjustBranch" onchange="populateAdjustMedSelect()"></select></div>
                             <div><label class="field-label">📦 Select Item</label><select id="adjustMedId"></select></div>
                             <div><label class="field-label">🔢 New Qty</label><input type="number" id="adjustQty"></div>
                         </div>
@@ -868,7 +897,10 @@ input:checked + .slider:before { transform: translateX(20px); }
                     <div class="section-collapsible" style="box-shadow:none; border:1px solid #e5e7eb;">
                         <div class="section-header open" onclick="toggleSection('hdrCreditList','bodyCreditList')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📉</span><span class="sec-title">Unpaid Credits</span></div></div>
                         <div class="section-body open" id="bodyCreditList">
-                            <input type="text" class="search-box" id="searchUnpaidCredit" placeholder="🔍 Search Customer..." oninput="renderUnpaidCredits()">
+                            <div style="display:flex; gap:12px; margin-bottom:15px;">
+                                <input type="text" class="search-box" id="searchUnpaidCredit" placeholder="🔍 Search Customer..." oninput="renderUnpaidCredits()" style="flex:1;">
+                                <select id="filterBranchCredit" onchange="renderUnpaidCredits()" style="width:180px;"><option value="all">All Branches</option></select>
+                            </div>
                             <div id="unpaidCreditList"></div>
                         </div>
                     </div>
@@ -878,10 +910,13 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="section-body open" id="bodyAddCredit">
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                                 <div><label class="field-label">🏪 Customer</label><select id="creditCustomerSelect"></select></div>
-                                <div><label class="field-label">📅 Date</label><input type="date" id="creditDate"></div>
+                                <div><label class="field-label">🏢 Branch</label><select id="creditBranchSelect"></select></div>
                             </div>
-                            <label class="field-label">💰 Amount</label><input type="number" id="creditAmount" placeholder="0.00">
-                            <button class="btn btn-success" style="width:auto; padding:10px 20px; float:right;" onclick="addCreditPayment()">💾 Record Payment</button>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                                <div><label class="field-label">📅 Date</label><input type="date" id="creditDate"></div>
+                                <div><label class="field-label">💰 Amount</label><input type="number" id="creditAmount" placeholder="0.00"></div>
+                            </div>
+                            <button class="btn btn-success" style="width:auto; padding:10px 20px; float:right; margin-top:15px;" onclick="addCreditPayment()">💾 Record Payment</button>
                             <div style="clear:both;"></div>
                         </div>
                     </div>
@@ -893,7 +928,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 </div> <!-- End main-content-wrapper -->
 </div> <!-- End mainApp -->
 
-   <script type="module">
+    <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
@@ -915,12 +950,13 @@ let allMedicines = [], allCategories = [], allSubcategories = {}, allExpCategori
 let currentUserPharmacyId = null, currentUserRole = 'employee', currentBizType = 'retail', allowedBizType = 'retail', lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
 let currentCategoryFilter = 'all';
+let medPage = 1, catPage = 1, expPage = 1, lowPage = 1;
+const itemsPerPage = 10;
 
 let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null, unsubQuickSales = null;
 
 setTimeout(() => { const splash = document.getElementById('splashScreen'); if(splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; }, 500); } }, 1500); 
 
-// --- PAGE NAVIGATION ---
 window.switchPage = function(panelId, subPanelId, element) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     const targetPanel = document.getElementById(panelId);
@@ -971,7 +1007,6 @@ window.onMedTypeChange = function() {
     document.getElementById('medicineOnlyFields').style.display = type === 'cosmetic' ? 'none' : 'block';
 }; 
 
-// --- AUTH & HEADER ---
 async function loadUserHeader(user) {
     try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
@@ -1023,7 +1058,6 @@ async function loadAllData() {
     if (!currentUserPharmacyId) return; 
     await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
     
-    // Date defaults
     const today = new Date().toISOString().split('T')[0];
     const thisMonth = new Date().toISOString().slice(0, 7);
     if(!document.getElementById('dashMonthPicker').value) document.getElementById('dashMonthPicker').value = thisMonth;
@@ -1051,13 +1085,14 @@ function setupRealtimeListeners() {
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; loadCreditPaymentHistory(); renderUnpaidCredits(); });
 }
 
-// --- CATEGORIES & SUBCATEGORIES ---
 async function loadCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId)));
-        allCategories = []; allSubcategories = {}; const select = document.getElementById('medCategory'); select.innerHTML = '<option value="">-- Select Category --</option>';
+        allCategories = []; allSubcategories = {}; 
+        const catList = document.getElementById('categoryList'); if(catList) catList.innerHTML = '';
+        
         const catPromises = [];
-        snap.forEach(doc => { const catName = doc.data().name; allCategories.push(catName); select.innerHTML += `<option value="${catName}">${catName}</option>`; catPromises.push(loadSubcategoriesForCategory(catName)); });
+        snap.forEach(doc => { const catName = doc.data().name; allCategories.push(catName); if(catList) catList.innerHTML += `<option value="${catName}">`; catPromises.push(loadSubcategoriesForCategory(catName)); });
         await Promise.all(catPromises); renderCategoryList(); loadSubcategoriesForSelectedCategory();
     } catch(e) { console.error(e); }
 } 
@@ -1070,27 +1105,34 @@ async function loadSubcategoriesForCategory(catName) {
 }
 
 window.loadSubcategoriesForSelectedCategory = function() {
-    const catName = document.getElementById('medCategory').value; const subSelect = document.getElementById('medSubcategory'); const newSubInput = document.getElementById('medNewSubcategory');
-    subSelect.innerHTML = '<option value="">-- Select Sub Category --</option>';
-    if (catName && allSubcategories[catName]) { allSubcategories[catName].forEach(sub => { subSelect.innerHTML += `<option value="${sub.name}">${sub.name}</option>`; }); }
-    subSelect.innerHTML += `<option value="NEW">+ Add New Subcategory</option>`;
-    newSubInput.style.display = 'none'; newSubInput.value = '';
-};
-
-window.onSubcategoryChange = function() {
-    const subVal = document.getElementById('medSubcategory').value; const newSubInput = document.getElementById('medNewSubcategory');
-    if (subVal === 'NEW') { newSubInput.style.display = 'block'; newSubInput.focus(); } else { newSubInput.style.display = 'none'; newSubInput.value = ''; }
+    const catName = document.getElementById('medCategory').value; 
+    const subList = document.getElementById('subCategoryList'); if(!subList) return;
+    subList.innerHTML = '';
+    if (catName && allSubcategories[catName]) { 
+        allSubcategories[catName].forEach(sub => { subList.innerHTML += `<option value="${sub.name}">`; }); 
+    }
 };
 
 function renderCategoryList() {
     const tableBody = document.getElementById('catTableBody'); if(!tableBody) return;
+    if(allCategories.length === 0) { tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No categories found.</td></tr>'; document.getElementById('catPageInfo').innerText = `Page 1 of 1`; return; }
+    
+    const totalPages = Math.ceil(allCategories.length / itemsPerPage);
+    if(catPage > totalPages) catPage = totalPages;
+    if(catPage < 1) catPage = 1;
+    const start = (catPage - 1) * itemsPerPage;
+    const paginated = allCategories.slice(start, start + itemsPerPage);
+
     let htmlTable = '';
-    allCategories.forEach(c => {
+    paginated.forEach(c => {
         const subsHtml = (allSubcategories[c] || []).map(sub => `<span class="cat-tag" style="font-size:11px; margin:2px; background:#e5e7eb; padding:2px 6px; border-radius:4px; display:inline-block;">${sub.name} <span class="del" onclick="deleteSubcategory('${c}', '${sub.id}', '${sub.name}')" style="cursor:pointer; color:#c53030; font-weight:bold;">×</span></span>`).join('');
         htmlTable += `<tr><td><strong>${c}</strong></td><td>${subsHtml || '-'}</td><td><button class="action-btn btn-delete" onclick="deleteCategory('${c}')">🗑️ Delete</button></td></tr>`;
     });
-    if(tableBody) tableBody.innerHTML = htmlTable || '<tr><td colspan="3">No categories found.</td></tr>';
+    tableBody.innerHTML = htmlTable;
+    document.getElementById('catPageInfo').innerText = `Page ${catPage} of ${totalPages}`;
 } 
+
+window.changeCatPage = function(dir) { catPage += dir; renderCategoryList(); };
 
 window.addCategoryWithSub = async function() {
     const catName = document.getElementById('newCat').value.trim(); 
@@ -1099,24 +1141,15 @@ window.addCategoryWithSub = async function() {
     
     try { 
         await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + catName), { name: catName, pharmacyId: currentUserPharmacyId }); 
-        if(subName) {
-            await addDoc(collection(db, 'subcategories'), { name: subName, categoryName: catName, pharmacyId: currentUserPharmacyId });
-        }
-        document.getElementById('newCat').value = ''; 
-        document.getElementById('newSubCatDirect').value = '';
-        loadCategories(); 
-        alert('✅ Category added!');
+        if(subName) { await addDoc(collection(db, 'subcategories'), { name: subName, categoryName: catName, pharmacyId: currentUserPharmacyId }); }
+        document.getElementById('newCat').value = ''; document.getElementById('newSubCatDirect').value = '';
+        loadCategories(); alert('✅ Category added!');
     } catch(e) { alert(e.message); }
 }; 
 
 window.deleteCategory = async function(name) {
     if(!confirm('Delete this category and all its subcategories?')) return;
-    try { 
-        await deleteDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name)); 
-        const subs = allSubcategories[name] || []; 
-        for(let s of subs) { await deleteDoc(doc(db, 'subcategories', s.id)); } 
-        loadCategories(); 
-    } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name)); const subs = allSubcategories[name] || []; for(let s of subs) { await deleteDoc(doc(db, 'subcategories', s.id)); } loadCategories(); } catch(e) { alert(e.message); }
 }; 
 
 window.deleteSubcategory = async function(catName, subId, subName) {
@@ -1124,7 +1157,6 @@ window.deleteSubcategory = async function(catName, subId, subName) {
     try { await deleteDoc(doc(db, 'subcategories', subId)); loadCategories(); } catch(e) { alert(e.message); }
 };
 
-// --- EXPENSES CATEGORIES ---
 async function loadExpCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'expenseCategories'), where('pharmacyId', '==', currentUserPharmacyId)));
@@ -1148,11 +1180,10 @@ window.deleteExpCategory = async function(name) {
     try { await deleteDoc(doc(db, 'expenseCategories', currentUserPharmacyId + '_' + name)); loadExpCategories(); } catch(e) { alert(e.message); }
 }; 
 
-// --- BRANCHES & CUSTOMERS ---
 async function loadBranches() {
     try {
         const snap = await getDocs(query(collection(db, 'branches'), where('pharmacyId', '==', currentUserPharmacyId)));
-        allBranches = []; const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter'];
+        allBranches = []; const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect'];
         selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML = '<option value="all">All Branches</option>'; });
         snap.forEach(doc => { const bName = doc.data().name; allBranches.push(bName); selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML += `<option value="${bName}">${bName}</option>`; }); });
         renderBranchList();
@@ -1194,13 +1225,12 @@ window.deleteCustomer = async function(name) {
     try { await deleteDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name)); loadCustomers(); } catch(e) { alert(e.message); }
 }; 
 
-// --- MEDICINES CRUD ---
 window.addMedicine = async function() {
     const type = document.getElementById('medType').value; const category = document.getElementById('medCategory').value;
-    let subcategory = document.getElementById('medSubcategory').value; const newSubVal = document.getElementById('medNewSubcategory').value.trim();
+    const subcategory = document.getElementById('medSubcategory').value; 
     const branch = document.getElementById('medBranch').value;
-    if (subcategory === 'NEW') { if (!newSubVal) { alert('Fill new subcategory name'); return; } subcategory = newSubVal; } 
-    else if (!subcategory) { alert('Select subcategory'); return; }
+    
+    if (!subcategory) { alert('Enter subcategory'); return; }
     
     const name = document.getElementById('medName').value.trim(); 
     const cost = parseFloat(document.getElementById('medCost').value); 
@@ -1219,7 +1249,10 @@ window.addMedicine = async function() {
     if (!category || !subcategory || !name || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) { alert('Fill all fields correctly'); return; } 
     
     try {
-        if (subcategory === newSubVal) { await addDoc(collection(db, 'subcategories'), { name: subcategory, categoryName: category, pharmacyId: currentUserPharmacyId }); }
+        // If subcategory doesn't exist in DB for this category, add it
+        const exists = (allSubcategories[category] || []).find(s => s.name === subcategory);
+        if (!exists) { await addDoc(collection(db, 'subcategories'), { name: subcategory, categoryName: category, pharmacyId: currentUserPharmacyId }); }
+        
         await addDoc(collection(db, 'medicines'), { type, category, subcategory, name, batch, expiry, supplier, cost, price, quantity: qty, branch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId });
         alert('✅ Medicine saved!');
         document.getElementById('medName').value = ''; document.getElementById('medBatch').value = ''; document.getElementById('medExpiry').value = ''; document.getElementById('medSupplier').value = ''; document.getElementById('medCost').value = ''; document.getElementById('medPrice').value = ''; document.getElementById('medQty').value = '';
@@ -1235,13 +1268,19 @@ window.renderMedList = function() {
     let filtered = allMedicines; 
     if (filter !== 'all') filtered = filtered.filter(m => m.type === filter); 
     if (branchFilter !== 'all') filtered = filtered.filter(m => m.branch === branchFilter);
-    if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search));
+    if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.batch||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search));
     
     const tableBody = document.getElementById('medTableBody'); if(!tableBody) return;
-    if(filtered.length === 0) { tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#a0aec0;">No medicines found.</td></tr>'; return; }
+    if(filtered.length === 0) { tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#a0aec0;">No medicines found.</td></tr>'; document.getElementById('medPageInfo').innerText = `Page 1 of 1`; return; }
     
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    if(medPage > totalPages) medPage = totalPages;
+    if(medPage < 1) medPage = 1;
+    const start = (medPage - 1) * itemsPerPage;
+    const paginated = filtered.slice(start, start + itemsPerPage);
+
     let tableHtml = '';
-    filtered.forEach(m => {
+    paginated.forEach(m => {
         const isLowStock = m.quantity <= lowStockThreshold; const qtyColor = isLowStock ? 'color: #ef4444; font-weight: bold;' : 'color: #10b981; font-weight: bold;';
         tableHtml += `<tr>
             <td>${m.branch || 'Main'}</td><td>${m.type === 'cosmetic' ? '🧴 Cosmetic' : '💊 Medicine'}</td>
@@ -1253,7 +1292,10 @@ window.renderMedList = function() {
         </tr>`;
     });
     tableBody.innerHTML = tableHtml;
+    document.getElementById('medPageInfo').innerText = `Page ${medPage} of ${totalPages}`;
 };
+
+window.changeMedPage = function(dir) { medPage += dir; renderMedList(); };
 
 window.editMedicine = function(id) {
     const med = allMedicines.find(m => m.id === id); if(!med) return;
@@ -1283,7 +1325,6 @@ window.deleteMedicine = async function(id) {
     try { await deleteDoc(doc(db, 'medicines', id)); alert('✅ Deleted!'); } catch(e) { alert('Error: ' + e.message); }
 };
 
-// --- POS (POINT OF SALE) ---
 window.renderSellProducts = function() {
     const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase(); const listEl = document.getElementById('sellProductList'); if(!listEl) return; 
     
@@ -1298,7 +1339,7 @@ window.renderSellProducts = function() {
 
     let filtered = allMedicines.filter(m => m.quantity > 0); 
     if (currentCategoryFilter !== 'all') filtered = filtered.filter(m => m.category === currentCategoryFilter);
-    if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search)); 
+    if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search) || (m.batch||'').toLowerCase().includes(search)); 
 
     if (filtered.length === 0) { listEl.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#6b7280; padding:20px;">No products found.</div>'; return; } 
     
@@ -1363,7 +1404,7 @@ window.completeSale = async function() {
     let totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0); 
     try {
         for(const item of cart) {
-            await addDoc(collection(db, 'sales'), { medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, total: item.price * item.qty, paymentMethod: paymentMethod, paidAmount: item.price * item.qty, date, branch, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+            await addDoc(collection(db, 'sales'), { medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, total: item.price * item.qty, paymentMethod: paymentMethod, paidAmount: paymentMethod === 'credit' ? 0 : (item.price * item.qty), date, branch, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
             await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
         }
         alert('✅ Sale Completed!'); cart = []; renderCart(); document.getElementById('sellReceipt').value = '';
@@ -1376,7 +1417,6 @@ window.addQuickSale = async function() {
     try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Recorded!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
-// --- EXPENSES ---
 window.addExpense = async function() {
     const cat = document.getElementById('expCat').value; const branch = document.getElementById('expBranch').value; const note = document.getElementById('expNote').value.trim(); const amount = parseFloat(document.getElementById('expAmount').value); const date = document.getElementById('expDate').value;
     if(!cat || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields'); return; }
@@ -1384,12 +1424,11 @@ window.addExpense = async function() {
 }; 
 
 window.addFixedExpense = async function() {
-    const cat = document.getElementById('fixCat').value; const note = document.getElementById('fixNote').value.trim(); const amount = parseFloat(document.getElementById('fixAmount').value); const month = document.getElementById('fixMonth').value;
+    const cat = document.getElementById('fixCat').value; const branch = document.getElementById('fixBranch').value; const note = document.getElementById('fixNote').value.trim(); const amount = parseFloat(document.getElementById('fixAmount').value); const month = document.getElementById('fixMonth').value;
     if(!cat || isNaN(amount) || amount <= 0 || !month) { alert('Fill all fields'); return; }
-    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
-// --- INVENTORY ---
 window.loadInventory = function() {
     const listEl = document.getElementById('inventoryList');
     const filter = document.getElementById('filterTypeInv').value;
@@ -1399,7 +1438,7 @@ window.loadInventory = function() {
     let filtered = allMedicines;
     if (filter !== 'all') filtered = filtered.filter(m => m.type === filter);
     if (branchFilter !== 'all') filtered = filtered.filter(m => m.branch === branchFilter);
-    if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search));
+    if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.batch||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search));
 
     if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No inventory items found.</p>'; document.getElementById('invTotalValue').innerHTML = '0.00 <small>ETB</small>'; return; }
     
@@ -1415,19 +1454,54 @@ window.loadInventory = function() {
     document.getElementById('invTotalValue').innerHTML = grandTotal.toFixed(2) + ' <small>ETB</small>';
 
     // Expiry & Low stock lists
-    let expMeds = allMedicines.filter(m => m.expiry && m.expiry !== '-').map(m => { const diff = Math.ceil((new Date(m.expiry) - new Date()) / (1000*60*60*24)); return {...m, diff}; }).filter(m => m.diff <= 30).sort((a,b) => a.diff - b.diff);
+    const searchExpiry = (document.getElementById('searchExpiry')?.value || '').toLowerCase();
+    const alertBranchFilter = document.getElementById('filterBranchAlert').value;
+
+    let expMeds = allMedicines.filter(m => m.expiry && m.expiry !== '-');
+    if (alertBranchFilter !== 'all') expMeds = expMeds.filter(m => m.branch === alertBranchFilter);
+    if (searchExpiry) expMeds = expMeds.filter(m => (m.name||'').toLowerCase().includes(searchExpiry) || (m.batch||'').toLowerCase().includes(searchExpiry));
+    expMeds = expMeds.map(m => { const diff = Math.ceil((new Date(m.expiry) - new Date()) / (1000*60*60*24)); return {...m, diff}; }).filter(m => m.diff <= 30).sort((a,b) => a.diff - b.diff);
+    
     const expEl = document.getElementById('expiryListDisplay');
     if(expMeds.length === 0) expEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No expiring items.</p>';
     else {
-        expEl.innerHTML = expMeds.map(m => `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><div><strong>${m.name}</strong><div style="font-size:12px; color:#6b7280;">${m.expiry}</div></div><div style="color:${m.diff < 0 ? '#ef4444' : '#f59e0b'}; font-weight:bold;">${m.diff < 0 ? 'Expired' : m.diff + ' days'}</div></div>`).join('');
+        const totalPages = Math.ceil(expMeds.length / itemsPerPage);
+        if(expPage > totalPages) expPage = totalPages;
+        if(expPage < 1) expPage = 1;
+        const start = (expPage - 1) * itemsPerPage;
+        expEl.innerHTML = expMeds.slice(start, start + itemsPerPage).map(m => `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><div><strong>${m.name}</strong><div style="font-size:12px; color:#6b7280;">${m.expiry}</div></div><div style="color:${m.diff < 0 ? '#ef4444' : '#f59e0b'}; font-weight:bold;">${m.diff < 0 ? 'Expired' : m.diff + ' days'}</div></div>`).join('');
+        document.getElementById('expPageInfo').innerText = `Page ${expPage} of ${totalPages}`;
     }
 
-    let lowMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold).sort((a,b) => a.quantity - b.quantity);
+    let lowMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold);
+    if (alertBranchFilter !== 'all') lowMeds = lowMeds.filter(m => m.branch === alertBranchFilter);
+    if (searchExpiry) lowMeds = lowMeds.filter(m => (m.name||'').toLowerCase().includes(searchExpiry) || (m.batch||'').toLowerCase().includes(searchExpiry));
+    lowMeds = lowMeds.sort((a,b) => a.quantity - b.quantity);
+
     const lowEl = document.getElementById('lowStockListDisplay');
     if(lowMeds.length === 0) lowEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No low stock items.</p>';
     else {
-        lowEl.innerHTML = lowMeds.map(m => `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><div><strong>${m.name}</strong><div style="font-size:12px; color:#6b7280;">${m.category}</div></div><div style="color:#ef4444; font-weight:bold;">${m.quantity} left</div></div>`).join('');
+        const totalPages = Math.ceil(lowMeds.length / itemsPerPage);
+        if(lowPage > totalPages) lowPage = totalPages;
+        if(lowPage < 1) lowPage = 1;
+        const start = (lowPage - 1) * itemsPerPage;
+        lowEl.innerHTML = lowMeds.slice(start, start + itemsPerPage).map(m => `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><div><strong>${m.name}</strong><div style="font-size:12px; color:#6b7280;">${m.category}</div></div><div style="color:#ef4444; font-weight:bold;">${m.quantity} left</div></div>`).join('');
+        document.getElementById('lowPageInfo').innerText = `Page ${lowPage} of ${totalPages}`;
     }
+
+    populateAdjustMedSelect();
+};
+
+window.changeExpPage = function(dir) { expPage += dir; loadInventory(); };
+window.changeLowPage = function(dir) { lowPage += dir; loadInventory(); };
+
+window.populateAdjustMedSelect = function() {
+    const branch = document.getElementById('adjustBranch').value;
+    const sel = document.getElementById('adjustMedId'); if(!sel) return;
+    sel.innerHTML = '<option value="">-- Select Item --</option>';
+    let filtered = allMedicines;
+    if (branch !== 'all') filtered = filtered.filter(m => m.branch === branch);
+    filtered.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Qty: ${m.quantity}</option>`; });
 };
 
 window.adjustStock = async function() {
@@ -1436,7 +1510,6 @@ window.adjustStock = async function() {
     try { await updateDoc(doc(db, 'medicines', id), { quantity: qty }); alert('✅ Adjusted!'); document.getElementById('adjustQty').value = ''; document.getElementById('adjustReason').value = ''; } catch(e) { alert(e.message); }
 }; 
 
-// --- DASHBOARD ---
 async function loadDashboard() {
     if (!currentUserPharmacyId) return;
     let selectedMonth = document.getElementById('dashMonthPicker')?.value;
@@ -1500,7 +1573,6 @@ function renderCharts(selectedMonth, branchFilter) {
     }
 }
 
-// --- SETTINGS ---
 async function loadSettings() {
     try {
         const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
@@ -1610,31 +1682,42 @@ window.savePermissions = async function() {
     try { await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), newData); alert('✅ Permissions saved!'); } catch(e) { alert('Error: ' + e.message); }
 };
 
-// --- CREDIT ---
 function populateCreditCustomerSelect() {
     const sel = document.getElementById('creditCustomerSelect'); if(!sel) return;
     sel.innerHTML = '<option value="">-- Select Customer --</option>'; allCustomers.forEach(c => { sel.innerHTML += `<option value="${c}">${c}</option>`; });
 }
 
 window.addCreditPayment = async function() {
-    const customer = document.getElementById('creditCustomerSelect').value; const amount = parseFloat(document.getElementById('creditAmount').value); const date = document.getElementById('creditDate').value;
+    const customer = document.getElementById('creditCustomerSelect').value; 
+    const branch = document.getElementById('creditBranchSelect').value;
+    const amount = parseFloat(document.getElementById('creditAmount').value); 
+    const date = document.getElementById('creditDate').value;
     if (!customer || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields correctly!'); return; }
-    try { await addDoc(collection(db, 'creditPayments'), { customer, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Payment recorded!'); document.getElementById('creditAmount').value = ''; } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'creditPayments'), { customer, branch, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Payment recorded!'); document.getElementById('creditAmount').value = ''; } catch(e) { alert(e.message); }
 };
 
 function loadCreditPaymentHistory() {
     const listEl = document.getElementById('creditPaymentList'); if(!listEl) return;
     if(allCreditPayments.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">No payments yet.</p>'; return; }
-    let html = ''; allCreditPayments.forEach(p => { html += `<div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>🏪 ${p.customer}</span><span style="color:#10b981; font-weight:bold;">+ ${p.amount.toFixed(2)} ETB</span></div>`; }); listEl.innerHTML = html;
+    let html = ''; allCreditPayments.forEach(p => { html += `<div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>🏪 ${p.customer} ${p.branch ? '| 🏢 '+p.branch : ''}</span><span style="color:#10b981; font-weight:bold;">+ ${p.amount.toFixed(2)} ETB</span></div>`; }); listEl.innerHTML = html;
 }
 
 function renderUnpaidCredits() {
     const listEl = document.getElementById('unpaidCreditList'); if(!listEl) return;
     const searchVal = (document.getElementById('searchUnpaidCredit')?.value || '').toLowerCase();
+    const branchFilter = document.getElementById('filterBranchCredit').value;
+    
     const creditSales = allSales.filter(s => s.paymentMethod === 'credit');
     const customerDebts = {};
-    creditSales.forEach(sale => { const customer = sale.customer || 'Unknown'; const unpaid = sale.total - (sale.paidAmount || 0); if(unpaid > 0) { if(!customerDebts[customer]) customerDebts[customer] = 0; customerDebts[customer] += unpaid; } });
-    allCreditPayments.forEach(payment => { const customer = payment.customer; if(customerDebts[customer]) { customerDebts[customer] -= payment.amount; if(customerDebts[customer] <= 0) delete customerDebts[customer]; } });
+    creditSales.forEach(sale => { 
+        if(branchFilter !== 'all' && sale.branch !== branchFilter) return;
+        const customer = sale.customer || 'Unknown'; const unpaid = sale.total - (sale.paidAmount || 0); 
+        if(unpaid > 0) { if(!customerDebts[customer]) customerDebts[customer] = 0; customerDebts[customer] += unpaid; } 
+    });
+    allCreditPayments.forEach(payment => { 
+        const customer = payment.customer; 
+        if(customerDebts[customer]) { customerDebts[customer] -= payment.amount; if(customerDebts[customer] <= 0) delete customerDebts[customer]; } 
+    });
     let customersWithDebt = Object.keys(customerDebts); if (searchVal) customersWithDebt = customersWithDebt.filter(c => c.toLowerCase().includes(searchVal));
     let totalDebt = 0; let html = '';
     if(customersWithDebt.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">No unpaid debts.</p>'; document.getElementById('totalUnpaidDebt').innerText = '0.00'; return; }
@@ -1642,11 +1725,16 @@ function renderUnpaidCredits() {
     listEl.innerHTML = html; document.getElementById('totalUnpaidDebt').innerText = totalDebt.toFixed(2);
 }
 
-// --- SALES HISTORY ---
 function renderSalesHistory() {
     const listEl = document.getElementById('salesHistoryList'); if (!listEl) return;
     let combined = []; allSales.forEach(s => combined.push({ ...s, _type: 'sale' })); allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
-    const filter = document.getElementById('filterSalesHistory')?.value || 'all'; if (filter === 'detail') combined = combined.filter(c => c._type === 'sale'); if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
+    const filter = document.getElementById('filterSalesHistory')?.value || 'all'; 
+    const branchFilter = document.getElementById('filterBranchSalesHistory')?.value || 'all'; 
+    
+    if (filter === 'detail') combined = combined.filter(c => c._type === 'sale'); 
+    if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
+    if (branchFilter !== 'all') combined = combined.filter(c => c.branch === branchFilter);
+
     if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales history.</p>'; return; }
     combined.sort((a, b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
     let html = '';
@@ -1672,7 +1760,6 @@ window.clearAllSales = async function() {
     try { let batch = writeBatch(db); let count = 0; for (let s of allSales) { batch.delete(doc(db, 'sales', s.id)); count++; } for (let q of allQuickSales) { batch.delete(doc(db, 'quickSales', q.id)); count++; } if (count > 0) await batch.commit(); let creditBatch = writeBatch(db); let cCount = 0; for (let c of allCreditPayments) { creditBatch.delete(doc(db, 'creditPayments', c.id)); cCount++; } if (cCount > 0) await creditBatch.commit(); alert(`✅ ${count} sales deleted!`); } catch(e) { alert('Error: ' + e.message); }
 };
 
-// --- REPORTS ---
 window.toggleReportDatePickers = function() {
     const type = document.getElementById('reportTypeSelect').value; const dateDiv = document.getElementById('repDateDiv'); const monthDiv = document.getElementById('repMonthDiv');
     if (type === 'daily' || type === 'weekly') { dateDiv.style.display = 'block'; monthDiv.style.display = 'none'; } else { dateDiv.style.display = 'none'; monthDiv.style.display = 'block'; }
@@ -1759,7 +1846,6 @@ window.generateReport = function() {
     displayArea.innerHTML = html;
 };
 
-// --- DAILY & MONTHLY REPORTS ---
 async function loadDailyReport() {
     const dateInput = document.getElementById('dailyReportDate'); if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
     const selDate = dateInput.value; const branch = document.getElementById('dailyReportBranch').value; const searchDaily = (document.getElementById('searchDailySales')?.value || '').toLowerCase();
