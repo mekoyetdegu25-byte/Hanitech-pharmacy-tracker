@@ -150,6 +150,11 @@ input:focus, select:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16
 input:checked + .slider { background-color: #10b981; }
 input:checked + .slider:before { transform: translateX(20px); }
 
+/* Pagination Controls */
+.pagination-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 10px; }
+.rows-per-page { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6b7280; }
+.rows-per-page select { width: auto; padding: 6px 10px; font-size: 13px; }
+
 @media print {
     body * { visibility: hidden; }
     #panel8, #panel8 * { visibility: visible; }
@@ -306,11 +311,18 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <tbody id="medTableBody"></tbody>
                             </table>
                         </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                        <div class="pagination-controls">
+                            <div class="rows-per-page">
+                                Show 
+                                <select id="medRowsPerPage" onchange="medPage=1; renderMedList()">
+                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
                             <div id="medPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                             <div style="display:flex; gap:8px;">
-                                <button class="btn btn-outline" id="btnPrevMed" onclick="changeMedPage(-1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">⬅️ Prev</button>
-                                <button class="btn btn-outline" id="btnNextMed" onclick="changeMedPage(1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">Next ➡️</button>
+                                <button class="btn btn-outline" id="btnPrevMed" onclick="changeMedPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextMed" onclick="changeMedPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
                             </div>
                         </div>
                     </div>
@@ -378,11 +390,18 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <tbody id="catTableBody"></tbody>
                             </table>
                         </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                        <div class="pagination-controls">
+                            <div class="rows-per-page">
+                                Show 
+                                <select id="catRowsPerPage" onchange="catPage=1; renderCategoryList()">
+                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
                             <div id="catPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                             <div style="display:flex; gap:8px;">
-                                <button class="btn btn-outline" id="btnPrevCat" onclick="changeCatPage(-1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">⬅️ Prev</button>
-                                <button class="btn btn-outline" id="btnNextCat" onclick="changeCatPage(1)" style="width:auto; margin-top:0; padding:8px 16px; font-size:13px;">Next ➡️</button>
+                                <button class="btn btn-outline" id="btnPrevCat" onclick="changeCatPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextCat" onclick="changeCatPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
                             </div>
                         </div>
                     </div>
@@ -401,8 +420,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <div><label class="field-label" style="margin-top:0;">🏢 Branch</label><select id="sellBranch" style="padding:8px;"></select></div>
                             </div>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-                                <div><label class="field-label" style="margin-top:0;">💳 Payment</label><select id="sellPaymentMethod" style="padding:8px;"><option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit">📝 Credit</option></select></div>
+                                <div><label class="field-label" style="margin-top:0;">💳 Payment</label><select id="sellPaymentMethod" onchange="toggleCreditFields()" style="padding:8px;"><option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit">📝 Credit</option></select></div>
                                 <div><label class="field-label" style="margin-top:0;">🧾 Receipt (Opt)</label><input type="text" id="sellReceipt" style="padding:8px;"></div>
+                            </div>
+                            <div id="creditFields" style="display:none; margin-top:10px; padding:10px; background:#fffbeb; border:1px solid #fcd34d; border-radius:8px;">
+                                <label class="field-label">🏪 Customer Name</label>
+                                <input type="text" id="sellCreditCustomer" placeholder="Enter customer name" style="margin-bottom:8px;">
+                                <label class="field-label">💰 Paid Amount (Partial)</label>
+                                <input type="number" id="sellCreditPaid" placeholder="0.00 (0 for full credit)">
                             </div>
                         </div>
                         <div class="pos-cart-items" id="cartList"></div>
@@ -454,15 +479,29 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodySalesHistory">
                         <div style="display:flex; gap:12px; margin-bottom:16px;">
-                            <select id="filterSalesHistory" onchange="renderSalesHistory()" style="flex:1;">
+                            <select id="filterSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="flex:1;">
                                 <option value="all">All Sales</option><option value="detail">🛒 Detail Sales</option><option value="quick">⚡ Quick Sales</option>
                             </select>
-                            <select id="filterBranchSalesHistory" onchange="renderSalesHistory()" style="width:180px;">
+                            <select id="filterBranchSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="width:180px;">
                                 <option value="all">All Branches</option>
                             </select>
                             <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 16px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
                         </div>
                         <div id="salesHistoryList"></div>
+                        <div class="pagination-controls">
+                            <div class="rows-per-page">
+                                Show 
+                                <select id="salesHistRowsPerPage" onchange="salesHistPage=1; renderSalesHistory()">
+                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div id="salesHistPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-outline" id="btnPrevSalesHist" onclick="changeSalesHistPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextSalesHist" onclick="changeSalesHistPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -537,11 +576,11 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyInventory">
                         <div class="no-print" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
-                            <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name or batch..." oninput="loadInventory()" style="flex:1;">
-                            <select id="filterTypeInv" onchange="loadInventory()" style="width:180px;">
+                            <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name or batch..." oninput="invPage=1; loadInventory()" style="flex:1;">
+                            <select id="filterTypeInv" onchange="invPage=1; loadInventory()" style="width:180px;">
                                 <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
                             </select>
-                            <select id="filterBranchInv" onchange="loadInventory()" style="width:180px;">
+                            <select id="filterBranchInv" onchange="invPage=1; loadInventory()" style="width:180px;">
                                 <option value="all">All Branches</option>
                             </select>
                         </div>
@@ -549,6 +588,20 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="summary-box green" style="margin-top:20px;">
                             <div class="label">Total Inventory Value</div>
                             <div class="value" id="invTotalValue">0.00 <small>ETB</small></div>
+                        </div>
+                        <div class="pagination-controls">
+                            <div class="rows-per-page">
+                                Show 
+                                <select id="invRowsPerPage" onchange="invPage=1; loadInventory()">
+                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div id="invPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-outline" id="btnPrevInv" onclick="changeInvPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextInv" onclick="changeInvPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -569,7 +622,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div>
                                 <h4 style="margin:0 0 10px; color:#f59e0b; font-size:14px;">Expiring Soon / Expired</h4>
                                 <div id="expiryListDisplay"></div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                                <div class="pagination-controls">
                                     <div id="expPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                                     <div style="display:flex; gap:8px;">
                                         <button class="btn btn-outline" id="btnPrevExp" onclick="changeExpPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">⬅️</button>
@@ -580,7 +633,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div>
                                 <h4 style="margin:0 0 10px; color:#ef4444; font-size:14px;">Low Stock</h4>
                                 <div id="lowStockListDisplay"></div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                                <div class="pagination-controls">
                                     <div id="lowPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                                     <div style="display:flex; gap:8px;">
                                         <button class="btn btn-outline" id="btnPrevLow" onclick="changeLowPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">⬅️</button>
@@ -687,8 +740,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyDaily">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-                            <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="loadDailyReport()"></div>
-                            <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="loadDailyReport()"><option value="all">All Branches</option></select></div>
+                            <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="dailyPage=1; loadDailyReport()"></div>
+                            <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="dailyPage=1; loadDailyReport()"><option value="all">All Branches</option></select></div>
                         </div>
                         <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(3,1fr);">
                             <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="dailyTotalRevenue">0.00</div></div>
@@ -718,6 +771,20 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div class="section-body" id="bodyDailySales">
                                 <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="loadDailyReport()">
                                 <div id="dailySalesList"></div>
+                                <div class="pagination-controls">
+                                    <div class="rows-per-page">
+                                        Show 
+                                        <select id="dailyRowsPerPage" onchange="dailyPage=1; loadDailyReport()">
+                                            <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                                        </select> 
+                                        entries
+                                    </div>
+                                    <div id="dailyPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="btn btn-outline" id="btnPrevDaily" onclick="changeDailyPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                                        <button class="btn btn-outline" id="btnNextDaily" onclick="changeDailyPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                                    </div>
+                                </div>
                             </div>
                         </div> 
                     </div>
@@ -731,8 +798,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyMonthly">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-                            <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="loadMonthlyReport()"></div>
-                            <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="loadMonthlyReport()"><option value="all">All Branches</option></select></div>
+                            <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="monthlyPage=1; loadMonthlyReport()"></div>
+                            <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="monthlyPage=1; loadMonthlyReport()"><option value="all">All Branches</option></select></div>
                         </div>
                         <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(3,1fr);">
                             <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="monthlyTotalRevenue">0.00</div></div>
@@ -762,6 +829,20 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div class="section-body" id="bodyMonthlySales">
                                 <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="loadMonthlyReport()">
                                 <div id="monthlySalesList"></div>
+                                <div class="pagination-controls">
+                                    <div class="rows-per-page">
+                                        Show 
+                                        <select id="monthlyRowsPerPage" onchange="monthlyPage=1; loadMonthlyReport()">
+                                            <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                                        </select> 
+                                        entries
+                                    </div>
+                                    <div id="monthlyPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="btn btn-outline" id="btnPrevMonthly" onclick="changeMonthlyPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                                        <button class="btn btn-outline" id="btnNextMonthly" onclick="changeMonthlyPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -950,8 +1031,9 @@ let allMedicines = [], allCategories = [], allSubcategories = {}, allExpCategori
 let currentUserPharmacyId = null, currentUserRole = 'employee', currentBizType = 'retail', allowedBizType = 'retail', lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
 let currentCategoryFilter = 'all';
-let medPage = 1, catPage = 1, expPage = 1, lowPage = 1;
-const itemsPerPage = 10;
+
+// Pagination Variables
+let medPage = 1, catPage = 1, expPage = 1, lowPage = 1, invPage = 1, salesHistPage = 1, dailyPage = 1, monthlyPage = 1;
 
 let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null, unsubQuickSales = null;
 
@@ -1007,6 +1089,7 @@ window.onMedTypeChange = function() {
     document.getElementById('medicineOnlyFields').style.display = type === 'cosmetic' ? 'none' : 'block';
 }; 
 
+// --- AUTH & HEADER ---
 async function loadUserHeader(user) {
     try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
@@ -1115,13 +1198,15 @@ window.loadSubcategoriesForSelectedCategory = function() {
 
 function renderCategoryList() {
     const tableBody = document.getElementById('catTableBody'); if(!tableBody) return;
+    const rowsPerPage = parseInt(document.getElementById('catRowsPerPage').value) || 10;
+    
     if(allCategories.length === 0) { tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No categories found.</td></tr>'; document.getElementById('catPageInfo').innerText = `Page 1 of 1`; return; }
     
-    const totalPages = Math.ceil(allCategories.length / itemsPerPage);
+    const totalPages = Math.ceil(allCategories.length / rowsPerPage);
     if(catPage > totalPages) catPage = totalPages;
     if(catPage < 1) catPage = 1;
-    const start = (catPage - 1) * itemsPerPage;
-    const paginated = allCategories.slice(start, start + itemsPerPage);
+    const start = (catPage - 1) * rowsPerPage;
+    const paginated = allCategories.slice(start, start + rowsPerPage);
 
     let htmlTable = '';
     paginated.forEach(c => {
@@ -1130,6 +1215,8 @@ function renderCategoryList() {
     });
     tableBody.innerHTML = htmlTable;
     document.getElementById('catPageInfo').innerText = `Page ${catPage} of ${totalPages}`;
+    document.getElementById('btnPrevCat').disabled = catPage === 1;
+    document.getElementById('btnNextCat').disabled = catPage === totalPages;
 } 
 
 window.changeCatPage = function(dir) { catPage += dir; renderCategoryList(); };
@@ -1249,7 +1336,6 @@ window.addMedicine = async function() {
     if (!category || !subcategory || !name || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) { alert('Fill all fields correctly'); return; } 
     
     try {
-        // If subcategory doesn't exist in DB for this category, add it
         const exists = (allSubcategories[category] || []).find(s => s.name === subcategory);
         if (!exists) { await addDoc(collection(db, 'subcategories'), { name: subcategory, categoryName: category, pharmacyId: currentUserPharmacyId }); }
         
@@ -1264,6 +1350,7 @@ window.renderMedList = function() {
     const filter = document.getElementById('filterTypeMed').value; 
     const branchFilter = document.getElementById('filterBranchMed').value;
     const search = (document.getElementById('searchMedList')?.value || '').toLowerCase();
+    const rowsPerPage = parseInt(document.getElementById('medRowsPerPage').value) || 10;
     
     let filtered = allMedicines; 
     if (filter !== 'all') filtered = filtered.filter(m => m.type === filter); 
@@ -1273,11 +1360,11 @@ window.renderMedList = function() {
     const tableBody = document.getElementById('medTableBody'); if(!tableBody) return;
     if(filtered.length === 0) { tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:#a0aec0;">No medicines found.</td></tr>'; document.getElementById('medPageInfo').innerText = `Page 1 of 1`; return; }
     
-    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const totalPages = Math.ceil(filtered.length / rowsPerPage);
     if(medPage > totalPages) medPage = totalPages;
     if(medPage < 1) medPage = 1;
-    const start = (medPage - 1) * itemsPerPage;
-    const paginated = filtered.slice(start, start + itemsPerPage);
+    const start = (medPage - 1) * rowsPerPage;
+    const paginated = filtered.slice(start, start + rowsPerPage);
 
     let tableHtml = '';
     paginated.forEach(m => {
@@ -1293,6 +1380,8 @@ window.renderMedList = function() {
     });
     tableBody.innerHTML = tableHtml;
     document.getElementById('medPageInfo').innerText = `Page ${medPage} of ${totalPages}`;
+    document.getElementById('btnPrevMed').disabled = medPage === 1;
+    document.getElementById('btnNextMed').disabled = medPage === totalPages;
 };
 
 window.changeMedPage = function(dir) { medPage += dir; renderMedList(); };
@@ -1323,6 +1412,13 @@ window.editMedicine = function(id) {
 window.deleteMedicine = async function(id) {
     if(!confirm('Delete this medicine?')) return;
     try { await deleteDoc(doc(db, 'medicines', id)); alert('✅ Deleted!'); } catch(e) { alert('Error: ' + e.message); }
+};
+
+window.toggleCreditFields = function() {
+    const method = document.getElementById('sellPaymentMethod').value;
+    const fields = document.getElementById('creditFields');
+    if (method === 'credit') { fields.style.display = 'block'; } 
+    else { fields.style.display = 'none'; }
 };
 
 window.renderSellProducts = function() {
@@ -1398,16 +1494,38 @@ window.clearCart = function() { cart = []; renderCart(); };
 
 window.completeSale = async function() {
     if(cart.length === 0) { alert('Cart is empty'); return; }
-    const date = document.getElementById('sellDate').value; const receipt = document.getElementById('sellReceipt').value.trim(); const paymentMethod = document.getElementById('sellPaymentMethod').value;
+    const date = document.getElementById('sellDate').value; 
+    const receipt = document.getElementById('sellReceipt').value.trim(); 
+    const paymentMethod = document.getElementById('sellPaymentMethod').value;
     if(!date) { alert('Select date'); return; } 
+    
     let branch = document.getElementById('sellBranch').value;
     let totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0); 
+    
+    let customer = '';
+    let paidAmount = totalAmount;
+    if (paymentMethod === 'credit') {
+        customer = document.getElementById('sellCreditCustomer').value.trim();
+        if (!customer) { alert('Enter customer name for credit'); return; }
+        paidAmount = parseFloat(document.getElementById('sellCreditPaid').value) || 0;
+        if (paidAmount > totalAmount) paidAmount = totalAmount;
+    }
+
     try {
         for(const item of cart) {
-            await addDoc(collection(db, 'sales'), { medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, total: item.price * item.qty, paymentMethod: paymentMethod, paidAmount: paymentMethod === 'credit' ? 0 : (item.price * item.qty), date, branch, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+            await addDoc(collection(db, 'sales'), { 
+                medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, 
+                total: item.price * item.qty, 
+                paymentMethod: paymentMethod, 
+                paidAmount: paymentMethod === 'credit' ? (item.price * item.qty) * (paidAmount/totalAmount) : (item.price * item.qty), 
+                date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
+            });
             await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
         }
-        alert('✅ Sale Completed!'); cart = []; renderCart(); document.getElementById('sellReceipt').value = '';
+        alert('✅ Sale Completed!'); cart = []; renderCart(); 
+        document.getElementById('sellReceipt').value = '';
+        document.getElementById('sellCreditCustomer').value = '';
+        document.getElementById('sellCreditPaid').value = '';
     } catch(e) { alert(e.message); }
 }; 
 
@@ -1434,24 +1552,37 @@ window.loadInventory = function() {
     const filter = document.getElementById('filterTypeInv').value;
     const branchFilter = document.getElementById('filterBranchInv').value;
     const search = (document.getElementById('searchInventory')?.value || '').toLowerCase();
+    const rowsPerPage = parseInt(document.getElementById('invRowsPerPage').value) || 10;
     
     let filtered = allMedicines;
     if (filter !== 'all') filtered = filtered.filter(m => m.type === filter);
     if (branchFilter !== 'all') filtered = filtered.filter(m => m.branch === branchFilter);
     if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.batch||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search));
 
-    if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No inventory items found.</p>'; document.getElementById('invTotalValue').innerHTML = '0.00 <small>ETB</small>'; return; }
+    if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No inventory items found.</p>'; document.getElementById('invTotalValue').innerHTML = '0.00 <small>ETB</small>'; document.getElementById('invPageInfo').innerText = `Page 1 of 1`; return; }
     
+    const totalPages = Math.ceil(filtered.length / rowsPerPage);
+    if(invPage > totalPages) invPage = totalPages;
+    if(invPage < 1) invPage = 1;
+    const start = (invPage - 1) * rowsPerPage;
+    const paginated = filtered.slice(start, start + rowsPerPage);
+
     let tableHtml = `<table class="data-table"><thead><tr><th>Item Name</th><th>Category</th><th>Branch</th><th>Batch</th><th>Qty</th><th>Price</th><th>Total Value</th></tr></thead><tbody>`;
     let grandTotal = 0;
-    filtered.forEach(med => {
+    paginated.forEach(med => {
         let totalValue = med.quantity * (med.price || 0);
         grandTotal += totalValue;
         tableHtml += `<tr><td><strong>${med.name}</strong></td><td>${med.category}</td><td>${med.branch || 'Main'}</td><td>${med.batch || '-'}</td><td>${med.quantity}</td><td>${med.price} ETB</td><td><strong>${totalValue.toFixed(2)} ETB</strong></td></tr>`;
     });
     tableHtml += `</tbody></table>`;
     listEl.innerHTML = tableHtml;
-    document.getElementById('invTotalValue').innerHTML = grandTotal.toFixed(2) + ' <small>ETB</small>';
+    // Note: Grand Total here is only for paginated page, but usually inventory total is for all. I'll keep it as page total for now or compute over all filtered.
+    let fullTotal = filtered.reduce((sum, med) => sum + (med.quantity * (med.price || 0)), 0);
+    document.getElementById('invTotalValue').innerHTML = fullTotal.toFixed(2) + ' <small>ETB</small>';
+    
+    document.getElementById('invPageInfo').innerText = `Page ${invPage} of ${totalPages}`;
+    document.getElementById('btnPrevInv').disabled = invPage === 1;
+    document.getElementById('btnNextInv').disabled = invPage === totalPages;
 
     // Expiry & Low stock lists
     const searchExpiry = (document.getElementById('searchExpiry')?.value || '').toLowerCase();
@@ -1463,14 +1594,16 @@ window.loadInventory = function() {
     expMeds = expMeds.map(m => { const diff = Math.ceil((new Date(m.expiry) - new Date()) / (1000*60*60*24)); return {...m, diff}; }).filter(m => m.diff <= 30).sort((a,b) => a.diff - b.diff);
     
     const expEl = document.getElementById('expiryListDisplay');
-    if(expMeds.length === 0) expEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No expiring items.</p>';
+    if(expMeds.length === 0) { expEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No expiring items.</p>'; document.getElementById('expPageInfo').innerText = `Page 1 of 1`; }
     else {
-        const totalPages = Math.ceil(expMeds.length / itemsPerPage);
-        if(expPage > totalPages) expPage = totalPages;
+        const totalPagesExp = Math.ceil(expMeds.length / 10);
+        if(expPage > totalPagesExp) expPage = totalPagesExp;
         if(expPage < 1) expPage = 1;
-        const start = (expPage - 1) * itemsPerPage;
-        expEl.innerHTML = expMeds.slice(start, start + itemsPerPage).map(m => `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><div><strong>${m.name}</strong><div style="font-size:12px; color:#6b7280;">${m.expiry}</div></div><div style="color:${m.diff < 0 ? '#ef4444' : '#f59e0b'}; font-weight:bold;">${m.diff < 0 ? 'Expired' : m.diff + ' days'}</div></div>`).join('');
-        document.getElementById('expPageInfo').innerText = `Page ${expPage} of ${totalPages}`;
+        const startExp = (expPage - 1) * 10;
+        expEl.innerHTML = expMeds.slice(startExp, startExp + 10).map(m => `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><div><strong>${m.name}</strong><div style="font-size:12px; color:#6b7280;">${m.expiry}</div></div><div style="color:${m.diff < 0 ? '#ef4444' : '#f59e0b'}; font-weight:bold;">${m.diff < 0 ? 'Expired' : m.diff + ' days'}</div></div>`).join('');
+        document.getElementById('expPageInfo').innerText = `Page ${expPage} of ${totalPagesExp}`;
+        document.getElementById('btnPrevExp').disabled = expPage === 1;
+        document.getElementById('btnNextExp').disabled = expPage === totalPagesExp;
     }
 
     let lowMeds = allMedicines.filter(m => m.quantity <= lowStockThreshold);
@@ -1479,19 +1612,22 @@ window.loadInventory = function() {
     lowMeds = lowMeds.sort((a,b) => a.quantity - b.quantity);
 
     const lowEl = document.getElementById('lowStockListDisplay');
-    if(lowMeds.length === 0) lowEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No low stock items.</p>';
+    if(lowMeds.length === 0) { lowEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No low stock items.</p>'; document.getElementById('lowPageInfo').innerText = `Page 1 of 1`; }
     else {
-        const totalPages = Math.ceil(lowMeds.length / itemsPerPage);
-        if(lowPage > totalPages) lowPage = totalPages;
+        const totalPagesLow = Math.ceil(lowMeds.length / 10);
+        if(lowPage > totalPagesLow) lowPage = totalPagesLow;
         if(lowPage < 1) lowPage = 1;
-        const start = (lowPage - 1) * itemsPerPage;
-        lowEl.innerHTML = lowMeds.slice(start, start + itemsPerPage).map(m => `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><div><strong>${m.name}</strong><div style="font-size:12px; color:#6b7280;">${m.category}</div></div><div style="color:#ef4444; font-weight:bold;">${m.quantity} left</div></div>`).join('');
-        document.getElementById('lowPageInfo').innerText = `Page ${lowPage} of ${totalPages}`;
+        const startLow = (lowPage - 1) * 10;
+        lowEl.innerHTML = lowMeds.slice(startLow, startLow + 10).map(m => `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><div><strong>${m.name}</strong><div style="font-size:12px; color:#6b7280;">${m.category}</div></div><div style="color:#ef4444; font-weight:bold;">${m.quantity} left</div></div>`).join('');
+        document.getElementById('lowPageInfo').innerText = `Page ${lowPage} of ${totalPagesLow}`;
+        document.getElementById('btnPrevLow').disabled = lowPage === 1;
+        document.getElementById('btnNextLow').disabled = lowPage === totalPagesLow;
     }
 
     populateAdjustMedSelect();
 };
 
+window.changeInvPage = function(dir) { invPage += dir; loadInventory(); };
 window.changeExpPage = function(dir) { expPage += dir; loadInventory(); };
 window.changeLowPage = function(dir) { lowPage += dir; loadInventory(); };
 
@@ -1725,8 +1861,9 @@ function renderUnpaidCredits() {
     listEl.innerHTML = html; document.getElementById('totalUnpaidDebt').innerText = totalDebt.toFixed(2);
 }
 
-function renderSalesHistory() {
+window.renderSalesHistory = function() {
     const listEl = document.getElementById('salesHistoryList'); if (!listEl) return;
+    const rowsPerPage = parseInt(document.getElementById('salesHistRowsPerPage').value) || 10;
     let combined = []; allSales.forEach(s => combined.push({ ...s, _type: 'sale' })); allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
     const filter = document.getElementById('filterSalesHistory')?.value || 'all'; 
     const branchFilter = document.getElementById('filterBranchSalesHistory')?.value || 'all'; 
@@ -1735,19 +1872,31 @@ function renderSalesHistory() {
     if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
     if (branchFilter !== 'all') combined = combined.filter(c => c.branch === branchFilter);
 
-    if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales history.</p>'; return; }
+    if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales history.</p>'; document.getElementById('salesHistPageInfo').innerText = `Page 1 of 1`; return; }
     combined.sort((a, b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
+    
+    const totalPages = Math.ceil(combined.length / rowsPerPage);
+    if(salesHistPage > totalPages) salesHistPage = totalPages;
+    if(salesHistPage < 1) salesHistPage = 1;
+    const start = (salesHistPage - 1) * rowsPerPage;
+    const paginated = combined.slice(start, start + rowsPerPage);
+
     let html = '';
-    combined.forEach(item => {
+    paginated.forEach(item => {
         const dateStr = item.date || 'Unknown';
         if (item._type === 'quick') { html += `<div style="padding:16px; border-bottom:1px solid #e5e7eb; border-left:4px solid #f59e0b;"><div style="display:flex; justify-content:space-between;"><strong style="color:#111827;">⚡ Quick Sale (${item.type})</strong><span style="font-weight:bold; color:#10b981;">${item.amount.toFixed(2)} ETB</span></div><div style="font-size:12px; color:#6b7280; margin-top:4px;">📅 ${dateStr} ${item.branch ? '| 🏢 '+item.branch : ''}</div></div>`; } 
         else {
             const total = item.total || 0; const paid = item.paidAmount !== undefined ? item.paidAmount : total; const pmLabel = item.paymentMethod === 'transfer' ? '🏦' : (item.paymentMethod === 'credit' ? '📝' : '💵');
-            html += `<div style="padding:16px; border-bottom:1px solid #e5e7eb;"><div style="display:flex; justify-content:space-between; margin-bottom:8px;"><div><strong style="color:#111827;">${item.medicineName}</strong><div style="font-size:12px; color:#6b7280; margin-top:4px;">📅 ${dateStr} | 📦 Qty: ${item.quantity} | 🏷️ ${item.unitPrice} ETB</div></div><div style="text-align:right;"><strong style="color:#10b981;">${paid.toFixed(2)} ETB</strong><div style="font-size:11px; color:#6b7280;">${pmLabel} ${item.paymentMethod || 'cash'}</div></div></div><div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#6b7280; border-top:1px dashed #e5e7eb; padding-top:8px;"><div>${item.branch ? `🏢 ${item.branch}` : ''} ${item.receipt ? `| 🧾 ${item.receipt}` : ''}</div><button onclick="deleteSale('${item.id}', '${item.medicineId}', ${item.quantity})" style="background: #fef2f2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🗑️ Delete</button></div></div>`;
+            html += `<div style="padding:16px; border-bottom:1px solid #e5e7eb;"><div style="display:flex; justify-content:space-between; margin-bottom:8px;"><div><strong style="color:#111827;">${item.medicineName}</strong><div style="font-size:12px; color:#6b7280; margin-top:4px;">📅 ${dateStr} | 📦 Qty: ${item.quantity} | 🏷️ ${item.unitPrice} ETB</div></div><div style="text-align:right;"><strong style="color:#10b981;">${paid.toFixed(2)} ETB</strong><div style="font-size:11px; color:#6b7280;">${pmLabel} ${item.paymentMethod || 'cash'} ${item.customer ? '| '+item.customer : ''}</div></div></div><div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#6b7280; border-top:1px dashed #e5e7eb; padding-top:8px;"><div>${item.branch ? `🏢 ${item.branch}` : ''} ${item.receipt ? `| 🧾 ${item.receipt}` : ''}</div><button onclick="deleteSale('${item.id}', '${item.medicineId}', ${item.quantity})" style="background: #fef2f2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🗑️ Delete</button></div></div>`;
         }
     });
     listEl.innerHTML = html;
-}
+    document.getElementById('salesHistPageInfo').innerText = `Page ${salesHistPage} of ${totalPages}`;
+    document.getElementById('btnPrevSalesHist').disabled = salesHistPage === 1;
+    document.getElementById('btnNextSalesHist').disabled = salesHistPage === totalPages;
+};
+
+window.changeSalesHistPage = function(dir) { salesHistPage += dir; renderSalesHistory(); };
 
 window.deleteSale = async function(saleId, medicineId, quantity) {
     if (!confirm('Delete this sale? (Stock will be restored)')) return;
@@ -1849,22 +1998,22 @@ window.generateReport = function() {
 async function loadDailyReport() {
     const dateInput = document.getElementById('dailyReportDate'); if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
     const selDate = dateInput.value; const branch = document.getElementById('dailyReportBranch').value; const searchDaily = (document.getElementById('searchDailySales')?.value || '').toLowerCase();
+    const rowsPerPage = parseInt(document.getElementById('dailyRowsPerPage').value) || 10;
+    
     let daySales = allSales.filter(s => s.date === selDate); let dayQuick = allQuickSales.filter(q => q.date === selDate); let dayExp = allExpenses.filter(e => e.date === selDate);
     if (branch !== 'all') { daySales = daySales.filter(s => s.branch === branch); dayQuick = dayQuick.filter(q => q.branch === branch); dayExp = dayExp.filter(e => e.branch === branch); } 
 
     let totalRev = 0, totalExp = 0; let cash = 0, transfer = 0, credit = 0; let salesHtml = '';
+    let combinedSales = [];
     daySales.forEach(s => {
         let amt = s.paidAmount !== undefined ? s.paidAmount : s.total;
         totalRev += amt;
         if (s.paymentMethod === 'transfer') transfer += amt;
         else if (s.paymentMethod === 'credit') credit += amt;
         else cash += amt;
-        
-        const pmLabel = s.paymentMethod === 'transfer' ? '🏦' : (s.paymentMethod === 'credit' ? '📝' : '💵');
-        const matchesSearch = !searchDaily || (s.medicineName||'').toLowerCase().includes(searchDaily);
-        if (matchesSearch) { salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${s.medicineName} (x${s.quantity}) ${pmLabel}</span> <strong>${amt.toFixed(2)} ETB</strong></div>`; }
+        combinedSales.push({ type: 'sale', ...s, amt });
     }); 
-    dayQuick.forEach(q => { totalRev += q.amount; cash += q.amount; const matchesSearch = !searchDaily || 'quick'.includes(searchDaily); if (matchesSearch) { salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>⚡ Quick (${q.type}) 💵</span> <strong>${q.amount.toFixed(2)} ETB</strong></div>`; } });
+    dayQuick.forEach(q => { totalRev += q.amount; cash += q.amount; combinedSales.push({ type: 'quick', ...q, amt: q.amount }); });
     dayExp.forEach(e => { totalExp += e.amount; }); 
     
     document.getElementById('dailyTotalRevenue').innerHTML = totalRev.toFixed(2);
@@ -1873,28 +2022,52 @@ async function loadDailyReport() {
     document.getElementById('dailyCash').innerHTML = cash.toFixed(2);
     document.getElementById('dailyTransfer').innerHTML = transfer.toFixed(2);
     document.getElementById('dailyCredit').innerHTML = credit.toFixed(2);
-    document.getElementById('dailySalesList').innerHTML = salesHtml || '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales</p>';
+
+    let filteredCombined = combinedSales.filter(c => !searchDaily || (c.medicineName && c.medicineName.toLowerCase().includes(searchDaily)) || (c.type === 'quick' && 'quick'.includes(searchDaily)));
+    filteredCombined.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+    if (filteredCombined.length === 0) { document.getElementById('dailySalesList').innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales</p>'; document.getElementById('dailyPageInfo').innerText = `Page 1 of 1`; return; }
+    
+    const totalPages = Math.ceil(filteredCombined.length / rowsPerPage);
+    if(dailyPage > totalPages) dailyPage = totalPages;
+    if(dailyPage < 1) dailyPage = 1;
+    const start = (dailyPage - 1) * rowsPerPage;
+    
+    filteredCombined.slice(start, start + rowsPerPage).forEach(c => {
+        if (c.type === 'quick') {
+            salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>⚡ Quick (${c.qtype || c.type}) 💵</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`;
+        } else {
+            const pmLabel = c.paymentMethod === 'transfer' ? '🏦' : (c.paymentMethod === 'credit' ? '📝' : '💵');
+            salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${c.medicineName} (x${c.quantity}) ${pmLabel}</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`;
+        }
+    });
+    document.getElementById('dailySalesList').innerHTML = salesHtml;
+    document.getElementById('dailyPageInfo').innerText = `Page ${dailyPage} of ${totalPages}`;
+    document.getElementById('btnPrevDaily').disabled = dailyPage === 1;
+    document.getElementById('btnNextDaily').disabled = dailyPage === totalPages;
 }
+
+window.changeDailyPage = function(dir) { dailyPage += dir; loadDailyReport(); };
 
 async function loadMonthlyReport() {
     const monthInput = document.getElementById('monthlyReportMonth'); if(!monthInput.value) monthInput.value = new Date().toISOString().slice(0, 7);
     const selMonth = monthInput.value; const branch = document.getElementById('monthlyReportBranch').value; const searchMonthly = (document.getElementById('searchMonthlySales')?.value || '').toLowerCase();
+    const rowsPerPage = parseInt(document.getElementById('monthlyRowsPerPage').value) || 10;
+
     let monthSales = allSales.filter(s => s.date.startsWith(selMonth)); let monthQuick = allQuickSales.filter(q => q.date.startsWith(selMonth)); let monthExp = allExpenses.filter(e => e.date.startsWith(selMonth)); let monthFixed = allFixed.filter(f => f.month === selMonth);
     if (branch !== 'all') { monthSales = monthSales.filter(s => s.branch === branch); monthQuick = monthQuick.filter(q => q.branch === branch); monthExp = monthExp.filter(e => e.branch === branch); }
     
     let totalRev = 0, totalExp = 0, totalFixed = 0; let cash = 0, transfer = 0, credit = 0; let salesHtml = '';
+    let combinedSales = [];
     monthSales.forEach(s => { 
         let amt = s.paidAmount !== undefined ? s.paidAmount : s.total;
         totalRev += amt; 
         if (s.paymentMethod === 'transfer') transfer += amt;
         else if (s.paymentMethod === 'credit') credit += amt;
         else cash += amt;
-
-        const pmLabel = s.paymentMethod === 'transfer' ? '🏦' : (s.paymentMethod === 'credit' ? '📝' : '💵');
-        const matchesSearch = !searchMonthly || (s.medicineName||'').toLowerCase().includes(searchMonthly) || (s.customer||'').toLowerCase().includes(searchMonthly);
-        if (matchesSearch) { salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${s.medicineName} (x${s.quantity}) ${pmLabel}</span> <strong>${amt.toFixed(2)} ETB</strong></div>`; }
+        combinedSales.push({ type: 'sale', ...s, amt });
     });
-    monthQuick.forEach(q => { totalRev += q.amount; cash += q.amount; const matchesSearch = !searchMonthly || 'quick'.includes(searchMonthly); if (matchesSearch) { salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>⚡ Quick (${q.type}) 💵</span> <strong>${q.amount.toFixed(2)} ETB</strong></div>`; } });
+    monthQuick.forEach(q => { totalRev += q.amount; cash += q.amount; combinedSales.push({ type: 'quick', ...q, amt: q.amount }); });
     monthExp.forEach(e => { totalExp += e.amount; }); monthFixed.forEach(f => { totalFixed += f.amount; });
     
     document.getElementById('monthlyTotalRevenue').innerHTML = totalRev.toFixed(2);
@@ -1903,8 +2076,32 @@ async function loadMonthlyReport() {
     document.getElementById('monthlyCash').innerHTML = cash.toFixed(2);
     document.getElementById('monthlyTransfer').innerHTML = transfer.toFixed(2);
     document.getElementById('monthlyCredit').innerHTML = credit.toFixed(2);
-    document.getElementById('monthlySalesList').innerHTML = salesHtml || '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales</p>';
+
+    let filteredCombined = combinedSales.filter(c => !searchMonthly || (c.medicineName && c.medicineName.toLowerCase().includes(searchMonthly)) || (c.customer && c.customer.toLowerCase().includes(searchMonthly)) || (c.type === 'quick' && 'quick'.includes(searchMonthly)));
+    filteredCombined.sort((a,b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
+
+    if (filteredCombined.length === 0) { document.getElementById('monthlySalesList').innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales</p>'; document.getElementById('monthlyPageInfo').innerText = `Page 1 of 1`; return; }
+    
+    const totalPages = Math.ceil(filteredCombined.length / rowsPerPage);
+    if(monthlyPage > totalPages) monthlyPage = totalPages;
+    if(monthlyPage < 1) monthlyPage = 1;
+    const start = (monthlyPage - 1) * rowsPerPage;
+    
+    filteredCombined.slice(start, start + rowsPerPage).forEach(c => {
+        if (c.type === 'quick') {
+            salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>⚡ Quick (${c.qtype || c.type}) 💵</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`;
+        } else {
+            const pmLabel = c.paymentMethod === 'transfer' ? '🏦' : (c.paymentMethod === 'credit' ? '📝' : '💵');
+            salesHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${c.medicineName} (x${c.quantity}) ${pmLabel}</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`;
+        }
+    });
+    document.getElementById('monthlySalesList').innerHTML = salesHtml;
+    document.getElementById('monthlyPageInfo').innerText = `Page ${monthlyPage} of ${totalPages}`;
+    document.getElementById('btnPrevMonthly').disabled = monthlyPage === 1;
+    document.getElementById('btnNextMonthly').disabled = monthlyPage === totalPages;
 }
+
+window.changeMonthlyPage = function(dir) { monthlyPage += dir; loadMonthlyReport(); };
 
 </script>
 </body>
