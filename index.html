@@ -7,16 +7,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-body { background: #f4f7f6; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; transition: background 0.3s, color 0.3s; }
+body { background: #f4f7f6; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
 body.dark { background: #1a202c; color: #e2e8f0; }
-body.dark .section-collapsible, body.dark .login-box, body.dark .dash-card { background: #2d3748; color: #e2e8f0; }
-body.dark label { color: #a0aec0; }
-body.dark input, body.dark select { background: #4a5568; border-color: #4a5568; color: #e2e8f0; }
-body.dark input:focus, body.dark select:focus { border-color: #63b3ed; }
-body.dark .section-header .sec-title, body.dark .menu-header { color: #63b3ed; }
-body.dark .data-table { background: #2d3748; }
-body.dark .data-table th { background: #1a202c; color: #a0aec0; }
-body.dark .data-table td { border-bottom: 1px solid #4a5568; }
 
 /* Splash & Login */
 #splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
@@ -43,11 +35,32 @@ header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spac
 .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; } 
 
 .tabs-wrapper { position: sticky; top: 60px; z-index: 99; background: #f4f7f6; }
-.tabs { display: flex; background: transparent; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
+.tabs { display: flex; background: transparent; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; }
 .tabs::-webkit-scrollbar { display: none; }
 input[type="radio"][name="tabs"] { display: none !important; }
 .tabs label { flex: 0 0 auto; min-width: 75px; text-align: center; padding: 10px 6px; font-size: 12px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
-body.dark .tabs label { background: #2d3748; color: #a0aec0; }
+
+.panel { display: none; padding: 14px; }
+#tab1_1:checked ~ .panels #panel1 .sub1_1,
+#tab1_2:checked ~ .panels #panel1 .sub1_2,
+#tab1_3:checked ~ .panels #panel1 .sub1_3,
+#tab2_1:checked ~ .panels #panel2 .sub2_1,
+#tab2_2:checked ~ .panels #panel2 .sub2_2,
+#tab2_3:checked ~ .panels #panel2 .sub2_3,
+#tab3_1:checked ~ .panels #panel3 .sub3_1,
+#tab3_2:checked ~ .panels #panel3 .sub3_2,
+#tab3_3:checked ~ .panels #panel3 .sub3_3,
+#tab4_1:checked ~ .panels #panel4 .sub4_1,
+#tab4_2:checked ~ .panels #panel4 .sub4_2,
+#tab4_3:checked ~ .panels #panel4 .sub4_3,
+#tab5:checked ~ .panels #panel5,
+#tab6:checked ~ .panels #panel6,
+#tab7:checked ~ .panels #panel7,
+#tab8:checked ~ .panels #panel8,
+#tab9:checked ~ .panels #panel9,
+#tab10:checked ~ .panels #panel10 { 
+    display: block !important; 
+}
 
 /* Forms & Buttons */
 label.field-label { display: block; font-size: 12.5px; font-weight: 600; color: #4a5568; margin-bottom: 5px; margin-top: 10px; }
@@ -64,54 +77,33 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 .summary-box .label { font-size: 12px; opacity: 0.85; margin-bottom: 4px; }
 .summary-box .value { font-size: 24px; font-weight: 800; } 
 
-.list-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 12px; background: #f7fafc; border-radius: 10px; margin-bottom: 8px; border: 1px solid #edf2f7; }
-.list-item .info { flex: 1; min-width: 0; }
-.list-item .name { font-size: 14px; font-weight: 600; color: #2d3748; }
-.list-item .meta { font-size: 11.5px; color: #718096; margin-top: 2px; }
-.list-item .amount { font-size: 14px; font-weight: 700; color: #2c5282; margin-left: 10px; white-space: nowrap; }
+.section-collapsible { background: #fff; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
+.section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; }
+.section-header .sec-left { display: flex; align-items: center; gap: 10px; }
+.section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; display: inline-block; }
+.section-header.open .sec-arrow { transform: rotate(90deg); }
+.section-header .sec-title { font-size: 14px; font-weight: 800; color: #2c5282; }
+.section-body { display: none; padding: 0 14px 14px 14px; border-top: 1px solid #edf2f7; padding-top: 12px; }
+.section-body.open { display: block; } 
 
-/* Tables */
 .data-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
 .data-table th, .data-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #edf2f7; font-size: 13px; white-space: nowrap; }
 .data-table th { background: #f7fafc; font-weight: 700; color: #4a5568; }
 .data-table tbody tr:hover { background: #f7fafc; }
-.data-table .action-btn { background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 4px; margin-right: 4px; }
-.data-table .btn-edit { color: #2b6cb0; background: #ebf8ff; }
-.data-table .btn-delete { color: #c53030; background: #fff5f5; }
+.action-btn { background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 4px; margin-right: 4px; }
+.btn-edit { color: #2b6cb0; background: #ebf8ff; }
+.btn-delete { color: #c53030; background: #fff5f5; }
 
-.section-collapsible { background: #fff; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; display: flex; flex-direction: column;}
-.section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; }
-.section-header .sec-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-.section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; display: inline-block; }
-.section-header.open .sec-arrow { transform: rotate(90deg); }
-.section-header .sec-icon { font-size: 18px; }
-.section-header .sec-title { font-size: 14px; font-weight: 800; color: #2c5282; }
-.section-body { display: none; padding: 0 14px 14px 14px; border-top: 1px solid #edf2f7; padding-top: 12px; flex: 1;}
-.section-body.open { display: block; } 
-
-/* Dashboard Grid */
-.dash-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
-.dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; }
-.dash-val-box { border-radius: 8px; padding: 16px; text-align: center; color: #fff; }
-.dash-val-label { font-size: 12px; opacity: 0.9; margin-bottom: 4px; }
-.dash-val-number { font-size: 24px; font-weight: 800; } 
-
-/* Toggles */
-.toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
-.toggle-switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
-.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-input:checked + .slider { background-color: #276749; }
-input:checked + .slider:before { transform: translateX(18px); }
-
-/* Modern Desktop Overrides */
+/* ==========================================
+   DESKTOP LAYOUT (Modern Dashboard)
+   ========================================== */
 @media (min-width: 768px) {
     body { padding-bottom: 0; max-width: 100%; background: #f4f7f6; margin: 0; overflow: hidden; } 
     #mainApp.show { display: flex; flex-direction: column; height: 100vh; width: 100%; } 
-    header { flex-shrink: 0; height: 70px; border-radius: 0; margin-bottom: 0; padding: 0 24px; position: static; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 101; }
+    header { flex-shrink: 0; height: 70px; border-radius: 0; margin-bottom: 0; padding: 0 24px; position: static; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
     
-    .main-content-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: #f4f7f6; }
-    .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: transparent; position: static; width: 100%; } 
+    .main-content-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
+    .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; position: static; width: 100%; } 
     
     /* Sidebar */
     .tabs { flex-direction: column; width: 260px; background: #1a202c; padding: 20px 10px; gap: 5px; overflow-y: auto; flex-shrink: 0; height: 100%; border-right: none; }
@@ -147,15 +139,13 @@ input:checked + .slider:before { transform: translateX(18px); }
     #tab7:checked ~ .tabs label[for="tab7"],
     #tab8:checked ~ .tabs label[for="tab8"],
     #tab9:checked ~ .tabs label[for="tab9"],
-    #tab10:checked ~ .tabs label[for="tab10"] { background: #4a5568; color: #63b3ed; }
+    #tab10:checked ~ .tabs label[for="tab10"] {
+        background: #4a5568; color: #63b3ed;
+    }
 
     .panels { flex: 1; padding: 24px; background: #f4f7f6; overflow-y: auto; width: calc(100% - 260px); }
     .panel { padding: 0; display: none; } 
     
-    .mobile-tabs { display: none !important; }
-    .desktop-only { display: block !important; }
-
-    /* Panel Display */
     #tab1_1:checked ~ .panels #panel1 .sub1_1,
     #tab1_2:checked ~ .panels #panel1 .sub1_2,
     #tab1_3:checked ~ .panels #panel1 .sub1_3,
@@ -173,15 +163,14 @@ input:checked + .slider:before { transform: translateX(18px); }
     #tab7:checked ~ .panels #panel7,
     #tab8:checked ~ .panels #panel8,
     #tab9:checked ~ .panels #panel9,
-    #tab10:checked ~ .panels #panel10 { display: block !important; }
-
-    .dash-grid { grid-template-columns: repeat(2, 1fr); }
+    #tab10:checked ~ .panels #panel10 { 
+        display: block !important; 
+    }
 }
 </style>
 </head>
 <body> 
 
-<!-- Splash & Login (Unchanged) -->
 <div id="splashScreen">
 <div class="logo-text">HaniTech <span>Digital</span></div>
 <div class="sub-text">Pharmacy Tracker</div>
@@ -218,10 +207,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 </header> 
 
 <div class="main-content-wrapper">
-<div id="expiryBanner" style="display:none;">⚠️ <span id="expiryBannerText"></span></div>
-
 <div class="tabs-wrapper">
-    <!-- Radio Inputs -->
     <input type="radio" name="tabs" id="tab1_1" checked>
     <input type="radio" name="tabs" id="tab1_2">
     <input type="radio" name="tabs" id="tab1_3">
@@ -243,7 +229,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 
     <div class="tabs">
         <!-- DESKTOP MAIN MENU -->
-        <div class="menu-group desktop-only">
+        <div class="menu-group">
             <div class="menu-header open" onclick="toggleMenu(this)">
                 <div class="m-left"><i>💊</i> Medicine</div>
                 <span class="m-arrow">▶</span>
@@ -255,7 +241,7 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div>
 
-        <div class="menu-group desktop-only">
+        <div class="menu-group">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>🛒</i> Sales</div>
                 <span class="m-arrow">▶</span>
@@ -267,7 +253,7 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div>
 
-        <div class="menu-group desktop-only">
+        <div class="menu-group">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>💸</i> Expenses</div>
                 <span class="m-arrow">▶</span>
@@ -279,7 +265,7 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div>
 
-        <div class="menu-group desktop-only">
+        <div class="menu-group">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>📦</i> Inventory</div>
                 <span class="m-arrow">▶</span>
@@ -291,47 +277,34 @@ input:checked + .slider:before { transform: translateX(18px); }
             </div>
         </div>
 
-        <div class="menu-group desktop-only">
+        <div class="menu-group">
             <label class="menu-header" for="tab5" style="margin-bottom:0;">
                 <div class="m-left"><i>📅</i> Daily Report</div>
             </label>
         </div>
 
-        <div class="menu-group desktop-only">
+        <div class="menu-group">
             <label class="menu-header" for="tab6" style="margin-bottom:0;">
                 <div class="m-left"><i>📆</i> Monthly Report</div>
             </label>
         </div>
 
-        <div class="menu-group desktop-only">
+        <div class="menu-group">
             <label class="menu-header" for="tab7" style="margin-bottom:0;">
                 <div class="m-left"><i>📊</i> Dashboard</div>
             </label>
         </div>
 
-        <div class="menu-group desktop-only">
+        <div class="menu-group">
             <label class="menu-header" for="tab8" style="margin-bottom:0;">
                 <div class="m-left"><i>📄</i> Reports</div>
             </label>
         </div>
 
-        <div class="menu-group desktop-only">
+        <div class="menu-group">
             <label class="menu-header" for="tab9" style="margin-bottom:0;">
                 <div class="m-left"><i>⚙️</i> Settings</div>
             </label>
-        </div>
-
-        <!-- MOBILE MENU -->
-        <div class="mobile-tabs">
-            <label for="tab1_1"><i>💊</i>መድሃኒቶች</label>
-            <label for="tab2_1"><i>🛒</i>ሽያጭ</label>
-            <label for="tab3_1"><i>💸</i>ወጪ</label>
-            <label for="tab4_1"><i>📦</i>ክምችት</label>
-            <label for="tab5"><i>📅</i>የቀን ገቢ</label>
-            <label for="tab6"><i>📆</i>የወር ገቢ</label>
-            <label for="tab7"><i>📊</i>Dashboard</label>
-            <label for="tab8"><i>📄</i>ሪፖርቶች</label>
-            <label for="tab9"><i>⚙️</i>Settings</label>
         </div>
     </div> 
 
@@ -344,7 +317,7 @@ input:checked + .slider:before { transform: translateX(18px); }
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">Medicine List</span></div>
                     </div>
                     <div class="section-body open" id="bodyMedList">
-                        <div class="no-print" style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
                             <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search Medicine..." oninput="renderMedList()" style="flex: 1; min-width: 150px;">
                             <select id="filterTypeMed" onchange="renderMedList()" style="flex: 1; min-width: 120px;">
                                 <option value="all">All Types</option>
@@ -353,21 +326,13 @@ input:checked + .slider:before { transform: translateX(18px); }
                             </select>
                             <button class="btn btn-primary" onclick="window.print()" style="width: auto; margin-top: 0; padding: 10px 15px; font-size: 13px;">🖨️ Print</button>
                         </div>
-                        <div class="mobile-only" id="medListDisplayMobile"></div>
-                        <div class="desktop-only" style="overflow-x: auto;">
+                        <div style="overflow-x: auto;">
                             <table class="data-table">
                                 <thead>
                                     <tr><th>Branch</th><th>Item</th><th>Category</th><th>Sub Cat</th><th>Batch</th><th>Exp Date</th><th>Item Name</th><th>Supplier</th><th>Cost</th><th>Price</th><th>Qty</th><th>Action</th></tr>
                                 </thead>
                                 <tbody id="medTableBody"></tbody>
                             </table>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                                <div id="medPageInfo" style="font-size: 13px; color: #718096;">Page 1 of 1</div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn btn-outline" id="btnPrevMed" onclick="changeMedPage(-1)" style="width: auto; margin-top: 0; padding: 8px 15px;">⬅️ Prev</button>
-                                    <button class="btn btn-outline" id="btnNextMed" onclick="changeMedPage(1)" style="width: auto; margin-top: 0; padding: 8px 15px;">Next ➡️</button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -415,13 +380,12 @@ input:checked + .slider:before { transform: translateX(18px); }
                             <input type="text" id="newCat" placeholder="New Category Name">
                             <button onclick="addCategory()">+ Add</button>
                         </div>
-                        <div class="desktop-only" style="overflow-x: auto;">
+                        <div style="overflow-x: auto;">
                             <table class="data-table">
                                 <thead><tr><th>Category Name</th><th>Sub Categories</th><th>Action</th></tr></thead>
                                 <tbody id="catTableBody"></tbody>
                             </table>
                         </div>
-                        <div class="mobile-only" id="catListDisplay"></div>
                     </div>
                 </div>
             </div>
@@ -439,7 +403,6 @@ input:checked + .slider:before { transform: translateX(18px); }
                             <div><label class="field-label">📅 Date</label><input type="date" id="sellDate"></div>
                             <div><label class="field-label">🏢 Branch</label><select id="sellBranch"></select></div>
                         </div>
-                        <div id="wholesaleSaleFields" style="display:none;"><label class="field-label">🏪 Customer</label><select id="sellCustomer"></select></div>
                         <label class="field-label">💳 Payment Method</label>
                         <select id="sellPaymentMethod" onchange="togglePaymentDetails()">
                             <option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit" id="creditOption" style="display:none;">📝 Credit</option>
@@ -784,7 +747,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 </div> <!-- End main-content-wrapper -->
 </div> <!-- End mainApp -->
 
-    <script type="module">
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
@@ -1045,9 +1008,8 @@ window.deleteCustomer = async function(name) {
     if(!confirm('ይህን ደንበኛ ማጥፋት ትፈልጋለህ?')) return;
     try { await deleteDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name)); loadCustomers(); } catch(e) { alert(e.message); }
 }; 
-</script>
 
-    window.addMedicine = async function() {
+window.addMedicine = async function() {
     const type = document.getElementById('medType').value; const category = document.getElementById('medCategory').value;
     let subcategory = document.getElementById('medSubcategory').value; const newSubVal = document.getElementById('medNewSubcategory').value.trim();
     const branch = document.getElementById('medBranch').value;
@@ -1420,4 +1382,4 @@ window.generateReport = function() {
 };
 </script>
 </body>
-</html>
+</html>  
