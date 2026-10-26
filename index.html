@@ -7,8 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-body { background: #f4f7f6; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
-body.dark { background: #1a202c; color: #e2e8f0; }
+body { background: #f4f7f6; color: #1a202c; font-size: 15px; margin: 0; min-height: 100vh; overflow: hidden; }
 
 /* Splash & Login */
 #splashScreen { position: fixed; inset: 0; background: #1a365d; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s ease-out; }
@@ -27,20 +26,62 @@ input:focus { border-color: #3182ce; background: #fff; }
 .btn-login { width: 100%; padding: 15px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; cursor: pointer; margin-top: 8px; } 
 
 /* Layout */
-#mainApp { display: none; }
-#mainApp.show { display: block; }
-header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 12px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-radius: 0 0 16px 16px; margin-bottom: 10px; }
+#mainApp { display: none; height: 100vh; width: 100%; flex-direction: column; }
+#mainApp.show { display: flex; }
+header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; height: 70px; flex-shrink: 0; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 101; }
 header .h-title { font-size: 15px; font-weight: 800; }
 header .h-brand { font-size: 10px; color: #bee3f8; font-weight: 600; letter-spacing: 0.5px; }
 .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; } 
 
-.tabs-wrapper { position: sticky; top: 60px; z-index: 99; background: #f4f7f6; }
-.tabs { display: flex; background: transparent; overflow-x: auto; padding: 10px 14px; gap: 8px; scrollbar-width: none; justify-content: flex-start; }
-.tabs::-webkit-scrollbar { display: none; }
-input[type="radio"][name="tabs"] { display: none !important; }
-.tabs label { flex: 0 0 auto; min-width: 75px; text-align: center; padding: 10px 6px; font-size: 12px; font-weight: 700; color: #4a5568; cursor: pointer; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1.5px solid transparent;}
+.main-content-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: #f4f7f6; }
+.tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; width: 100%; } 
 
-.panel { display: none; padding: 14px; }
+/* Sidebar */
+.tabs { display: flex; flex-direction: column; width: 260px; background: #1a202c; padding: 20px 10px; gap: 5px; overflow-y: auto; flex-shrink: 0; height: 100%; }
+.tabs::-webkit-scrollbar { width: 5px; }
+.tabs::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 5px; }
+
+input[type="radio"][name="tabs"] { display: none !important; }
+
+.menu-group { width: 100%; margin-bottom: 5px; }
+.menu-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; font-size: 14px; font-weight: 700; color: #a0aec0; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+.menu-header:hover { background: #2d3748; color: #fff; }
+.menu-header.active { background: #2b6cb0; color: #fff; }
+.menu-header .m-left { display: flex; align-items: center; gap: 12px; }
+.menu-header .m-left i { font-size: 18px; font-style: normal; }
+.menu-header .m-arrow { font-size: 10px; transition: transform 0.3s; }
+.menu-header.open .m-arrow { transform: rotate(90deg); }
+
+.sub-menu { display: none; flex-direction: column; padding-left: 20px; margin-top: 5px; margin-bottom: 5px; gap: 2px; }
+.sub-menu.open { display: flex; }
+.sub-menu label { padding: 8px 15px; font-size: 13px; font-weight: 600; color: #a0aec0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0; transition: background 0.2s; }
+.sub-menu label:hover { background: #2d3748; color: #fff; }
+
+#tab1_1:checked ~ .tabs label[for="tab1_1"], 
+#tab1_2:checked ~ .tabs label[for="tab1_2"], 
+#tab1_3:checked ~ .tabs label[for="tab1_3"],
+#tab2_1:checked ~ .tabs label[for="tab2_1"],
+#tab2_2:checked ~ .tabs label[for="tab2_2"],
+#tab2_3:checked ~ .tabs label[for="tab2_3"],
+#tab3_1:checked ~ .tabs label[for="tab3_1"],
+#tab3_2:checked ~ .tabs label[for="tab3_2"],
+#tab3_3:checked ~ .tabs label[for="tab3_3"],
+#tab4_1:checked ~ .tabs label[for="tab4_1"],
+#tab4_2:checked ~ .tabs label[for="tab4_2"],
+#tab4_3:checked ~ .tabs label[for="tab4_3"],
+#tab5:checked ~ .tabs label[for="tab5"],
+#tab6:checked ~ .tabs label[for="tab6"],
+#tab7:checked ~ .tabs label[for="tab7"],
+#tab8:checked ~ .tabs label[for="tab8"],
+#tab9:checked ~ .tabs label[for="tab9"],
+#tab10:checked ~ .tabs label[for="tab10"] {
+    background: #4a5568; color: #63b3ed;
+}
+
+/* Main Content Area */
+.panels { flex: 1; padding: 24px; background: #f4f7f6; overflow-y: auto; width: calc(100% - 260px); }
+.panel { padding: 0; display: none; } 
+
 #tab1_1:checked ~ .panels #panel1 .sub1_1,
 #tab1_2:checked ~ .panels #panel1 .sub1_2,
 #tab1_3:checked ~ .panels #panel1 .sub1_3,
@@ -94,78 +135,25 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 .btn-edit { color: #2b6cb0; background: #ebf8ff; }
 .btn-delete { color: #c53030; background: #fff5f5; }
 
-/* ==========================================
-   DESKTOP LAYOUT (Modern Dashboard)
-   ========================================== */
-@media (min-width: 768px) {
-    body { padding-bottom: 0; max-width: 100%; background: #f4f7f6; margin: 0; overflow: hidden; } 
-    #mainApp.show { display: flex; flex-direction: column; height: 100vh; width: 100%; } 
-    header { flex-shrink: 0; height: 70px; border-radius: 0; margin-bottom: 0; padding: 0 24px; position: static; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    
-    .main-content-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
-    .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; position: static; width: 100%; } 
-    
-    /* Sidebar */
-    .tabs { flex-direction: column; width: 260px; background: #1a202c; padding: 20px 10px; gap: 5px; overflow-y: auto; flex-shrink: 0; height: 100%; border-right: none; }
-    
-    .menu-group { width: 100%; margin-bottom: 5px; }
-    .menu-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; font-size: 14px; font-weight: 700; color: #a0aec0; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
-    .menu-header:hover { background: #2d3748; color: #fff; }
-    .menu-header.active { background: #2b6cb0; color: #fff; }
-    .menu-header .m-left { display: flex; align-items: center; gap: 12px; }
-    .menu-header .m-left i { font-size: 18px; font-style: normal; }
-    .menu-header .m-arrow { font-size: 10px; transition: transform 0.3s; }
-    .menu-header.open .m-arrow { transform: rotate(90deg); }
+/* Dashboard Grid */
+.dash-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+.dash-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; }
+.dash-val-box { border-radius: 8px; padding: 16px; text-align: center; color: #fff; }
+.dash-val-number { font-size: 24px; font-weight: 800; } 
 
-    .sub-menu { display: none; flex-direction: column; padding-left: 20px; margin-top: 5px; margin-bottom: 5px; gap: 2px; }
-    .sub-menu.open { display: flex; }
-    .sub-menu label { padding: 8px 15px; font-size: 13px; font-weight: 600; color: #a0aec0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0; transition: background 0.2s; }
-    .sub-menu label:hover { background: #2d3748; color: #fff; }
-    
-    #tab1_1:checked ~ .tabs label[for="tab1_1"], 
-    #tab1_2:checked ~ .tabs label[for="tab1_2"], 
-    #tab1_3:checked ~ .tabs label[for="tab1_3"],
-    #tab2_1:checked ~ .tabs label[for="tab2_1"],
-    #tab2_2:checked ~ .tabs label[for="tab2_2"],
-    #tab2_3:checked ~ .tabs label[for="tab2_3"],
-    #tab3_1:checked ~ .tabs label[for="tab3_1"],
-    #tab3_2:checked ~ .tabs label[for="tab3_2"],
-    #tab3_3:checked ~ .tabs label[for="tab3_3"],
-    #tab4_1:checked ~ .tabs label[for="tab4_1"],
-    #tab4_2:checked ~ .tabs label[for="tab4_2"],
-    #tab4_3:checked ~ .tabs label[for="tab4_3"],
-    #tab5:checked ~ .tabs label[for="tab5"],
-    #tab6:checked ~ .tabs label[for="tab6"],
-    #tab7:checked ~ .tabs label[for="tab7"],
-    #tab8:checked ~ .tabs label[for="tab8"],
-    #tab9:checked ~ .tabs label[for="tab9"],
-    #tab10:checked ~ .tabs label[for="tab10"] {
-        background: #4a5568; color: #63b3ed;
-    }
+/* Toggles */
+.toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #276749; }
+input:checked + .slider:before { transform: translateX(18px); }
 
-    .panels { flex: 1; padding: 24px; background: #f4f7f6; overflow-y: auto; width: calc(100% - 260px); }
-    .panel { padding: 0; display: none; } 
-    
-    #tab1_1:checked ~ .panels #panel1 .sub1_1,
-    #tab1_2:checked ~ .panels #panel1 .sub1_2,
-    #tab1_3:checked ~ .panels #panel1 .sub1_3,
-    #tab2_1:checked ~ .panels #panel2 .sub2_1,
-    #tab2_2:checked ~ .panels #panel2 .sub2_2,
-    #tab2_3:checked ~ .panels #panel2 .sub2_3,
-    #tab3_1:checked ~ .panels #panel3 .sub3_1,
-    #tab3_2:checked ~ .panels #panel3 .sub3_2,
-    #tab3_3:checked ~ .panels #panel3 .sub3_3,
-    #tab4_1:checked ~ .panels #panel4 .sub4_1,
-    #tab4_2:checked ~ .panels #panel4 .sub4_2,
-    #tab4_3:checked ~ .panels #panel4 .sub4_3,
-    #tab5:checked ~ .panels #panel5,
-    #tab6:checked ~ .panels #panel6,
-    #tab7:checked ~ .panels #panel7,
-    #tab8:checked ~ .panels #panel8,
-    #tab9:checked ~ .panels #panel9,
-    #tab10:checked ~ .panels #panel10 { 
-        display: block !important; 
-    }
+@media print {
+    body * { visibility: hidden; }
+    #panel8, #panel8 * { visibility: visible; }
+    #panel8 { position: absolute; left: 0; top: 0; width: 100%; }
+    .no-print { display: none !important; }
 }
 </style>
 </head>
@@ -228,7 +216,6 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
     <input type="radio" name="tabs" id="tab10"> 
 
     <div class="tabs">
-        <!-- DESKTOP MAIN MENU -->
         <div class="menu-group">
             <div class="menu-header open" onclick="toggleMenu(this)">
                 <div class="m-left"><i>💊</i> Medicine</div>
@@ -573,7 +560,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 
         <!-- PANEL 5 (Daily) -->
         <div class="panel" id="panel5">
-            <div class="section-collapsible true-full-width">
+            <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrDaily','bodyDaily')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">Daily Report</span></div>
                 </div>
@@ -600,7 +587,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 
         <!-- PANEL 6 (Monthly) -->
         <div class="panel" id="panel6">
-            <div class="section-collapsible true-full-width">
+            <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrMonthly','bodyMonthly')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">Monthly Report</span></div>
                 </div>
@@ -627,7 +614,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 
         <!-- PANEL 7 (Dashboard) -->
         <div class="panel" id="panel7">
-            <div class="section-collapsible true-full-width">
+            <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrDash','bodyDash')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
                 </div>
@@ -660,7 +647,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 
         <!-- PANEL 8 (Reports) -->
         <div class="panel" id="panel8">
-            <div class="section-collapsible true-full-width">
+            <div class="section-collapsible">
                 <div class="section-header open no-print" onclick="toggleSection('hdrRepMain','bodyRepMain')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📄</span><span class="sec-title">Reports</span></div>
                 </div>
@@ -682,7 +669,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 
         <!-- PANEL 9 (Settings) -->
         <div class="panel" id="panel9">
-            <div class="section-collapsible true-full-width">
+            <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
                 </div>
@@ -718,7 +705,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 
         <!-- PANEL 10 (Credit) -->
         <div class="panel" id="panel10">
-            <div class="section-collapsible true-full-width">
+            <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrCredit','bodyCredit')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💳</span><span class="sec-title">Credit</span></div>
                 </div>
@@ -747,7 +734,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="month"
 </div> <!-- End main-content-wrapper -->
 </div> <!-- End mainApp -->
 
-  <script type="module">
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
@@ -1382,4 +1369,4 @@ window.generateReport = function() {
 };
 </script>
 </body>
-</html>  
+</html>
