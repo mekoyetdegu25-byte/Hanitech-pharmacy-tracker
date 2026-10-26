@@ -118,12 +118,9 @@ input:focus, select:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16
 
 /* POS (Point of Sale) Specific Layout */
 .pos-layout { display: grid; grid-template-columns: 350px 1fr; gap: 20px; height: calc(100vh - 160px); }
-.pos-cart { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
-/* ራስጌው ከ 55% በላይ እንዳይሆን እና የራሱ ስክሮል እንዲኖረው */
-.pos-cart-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; flex-shrink: 0; max-height: 55%; overflow-y: auto; } 
-.pos-cart-header::-webkit-scrollbar { width: 4px; }
-.pos-cart-header::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
-.pos-cart-items { flex: 1; overflow-y: auto; padding: 16px; }
+.pos-cart { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow-y: auto; height: 100%; } /* ሙሉው እንዲንሸራተት */
+.pos-cart-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; flex-shrink: 0; } 
+.pos-cart-items { flex: 1; padding: 16px; }
 .pos-cart-footer { padding: 16px; border-top: 1px solid #e5e7eb; background: #fff; flex-shrink: 0; }
 .pos-products { background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; }
 .pos-products-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
