@@ -176,7 +176,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 </head>
 <body> 
 
-<div id="splashScreen">
+ <div id="splashScreen">
 <div class="logo-text">HaniTech <span>Digital</span></div>
 <div class="sub-text">Pharmacy Tracker</div>
 </div> 
@@ -498,8 +498,8 @@ input:checked + .slider:before { transform: translateX(20px); }
 
                         <div style="background:#fffbeb; padding:16px; border-radius:8px; border:1px solid #fcd34d;">
                             <h4 style="margin-bottom:12px; font-size:14px; font-weight:700; color:#b45309;">Bulk Entry (Multiple Sales)</h4>
-                            <p style="font-size:12px; color:#92400e; margin-bottom:10px;">Format: Item Name, Amount (one per line)</p>
-                            <textarea id="quickBulkData" rows="4" style="width:100%; padding:10px; border:1px solid #fcd34d; border-radius:8px; font-size:14px;" placeholder="Paracetamol, 100&#10;Amoxicillin, 50"></textarea>
+                            <p style="font-size:12px; color:#92400e; margin-bottom:10px;">Format: Item Name or Batch No, Quantity (one per line)</p>
+                            <textarea id="quickBulkData" rows="4" style="width:100%; padding:10px; border:1px solid #fcd34d; border-radius:8px; font-size:14px;" placeholder="Paracetamol, 2&#10;B001, 5&#10;Amoxicillin, 3"></textarea>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:10px;">
                                 <div><label class="field-label">🏢 Branch</label><select id="quickBulkBranch"></select></div>
                                 <div><label class="field-label">📅 Date</label><input type="date" id="quickBulkDate"></div>
@@ -516,13 +516,15 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Sales History</span></div>
                     </div>
                     <div class="section-body open" id="bodySalesHistory">
-                        <div style="display:flex; gap:12px; margin-bottom:16px;">
-                            <select id="filterSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="flex:1;">
+                        <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                            <select id="filterSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="flex:1; min-width:150px;">
                                 <option value="all">All Sales</option><option value="detail">🛒 Detail Sales</option><option value="quick">⚡ Quick Sales</option>
                             </select>
-                            <select id="filterBranchSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="width:180px;">
+                            <select id="filterBranchSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;">
                                 <option value="all">All Branches</option>
                             </select>
+                            <input type="date" id="filterStartDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="Start Date">
+                            <input type="date" id="filterEndDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="End Date">
                             <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 16px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
                         </div>
                         <div id="salesHistoryList"></div>
@@ -613,8 +615,9 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory List</span></div>
                     </div>
                     <div class="section-body open" id="bodyInventory">
-                        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:15px; margin-bottom:20px;">
+                        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:20px;">
                             <div class="summary-box blue" style="margin-bottom:0; padding:15px;"><div class="label">Total Purchased Qty</div><div class="value" id="totalPurchasedQty" style="font-size:22px;">0</div></div>
+                            <div class="summary-box green" style="margin-bottom:0; padding:15px;"><div class="label">Total Purchased Value</div><div class="value" id="totalPurchasedValue" style="font-size:22px;">0.00</div></div>
                             <div class="summary-box green" style="margin-bottom:0; padding:15px;"><div class="label">Total Sold Qty</div><div class="value" id="totalSoldQty" style="font-size:22px;">0</div></div>
                             <div class="summary-box red" style="margin-bottom:0; padding:15px;"><div class="label">Remaining Qty</div><div class="value" id="totalRemainingQty" style="font-size:22px;">0</div></div>
                         </div>
@@ -775,10 +778,10 @@ input:checked + .slider:before { transform: translateX(20px); }
 
                             <div id="repDateDiv" style="display:none; margin-top:12px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
                             <div id="repMonthDiv" style="display:none; margin-top:12px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
-                            <button class="btn btn-primary" style="margin-top:20px;" onclick="generateReport()">👁️ Generate</button>
+                            <button class="btn btn-primary" style="margin-top:20px;" onclick="generateReport()">👁️ Preview Report</button>
                             <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ Print</button>
                         </div>
-                        <div id="reportDisplayArea" style="background:#fff; padding:24px; border-radius:12px; border:1px solid #e5e7eb;"></div>
+                        <div id="reportDisplayArea" style="background:#fff; padding:24px; border-radius:12px; border:1px solid #e5e7eb; display:none;"></div>
                     </div>
                 </div>
             </div>
@@ -904,7 +907,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                 <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
                 </div>
-                <div class="section-body open" id="bodySettings">
+                <div class="section-body" id="bodySettings">
                     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
                         
                         <div class="section-collapsible" style="margin-bottom:0;">
@@ -1046,9 +1049,9 @@ input:checked + .slider:before { transform: translateX(20px); }
     </div> <!-- End Panels -->
 </div> <!-- End Tabs wrapper -->
 </div> <!-- End main-content-wrapper -->
-</div> <!-- End mainApp -->
+</div> <!-- End mainApp --> 
 
-    <script type="module">
+     <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
@@ -1109,16 +1112,16 @@ window.switchPage = function(panelId, subPanelId, element) {
 };
 
 window.toggleSection = function(h, b) {
-    const hd = document.getElementById(h); 
-    const bd = document.getElementById(b); 
-    if (!hd || !bd) return; 
+    const header = document.getElementById(h); 
+    const body = document.getElementById(b); 
+    if (!header || !body) return; 
     
-    if (bd.style.display === 'block') {
-        bd.style.display = 'none';
-        hd.classList.remove('open');
+    if (body.style.display === 'block') {
+        body.style.display = 'none';
+        header.classList.remove('open');
     } else {
-        bd.style.display = 'block';
-        hd.classList.add('open');
+        body.style.display = 'block';
+        header.classList.add('open');
     }
 }; 
 
@@ -1610,22 +1613,35 @@ window.addBulkQuickSales = async function() {
     const date = document.getElementById('quickBulkDate').value;
     if (!bulkData) { alert('Enter data in the text area'); return; }
     if (!date) { alert('Select date'); return; }
+
     const lines = bulkData.split('\n').filter(line => line.trim() !== '');
     if (lines.length === 0) { alert('No valid lines found'); return; }
+
     try {
         for (const line of lines) {
             const parts = line.split(',');
             if (parts.length < 2) continue;
-            const itemName = parts[0].trim();
-            const amount = parseFloat(parts[1].trim());
-            if (!itemName || isNaN(amount) || amount <= 0) continue;
-            await addDoc(collection(db, 'quickSales'), {
-                type: 'medicine', category: 'Quick', branch: branch, date: date, amount: amount,
-                paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId,
-                customer: itemName
-            });
+            
+            const searchKey = parts[0].trim().toLowerCase();
+            const qty = parseInt(parts[1].trim());
+            if (!searchKey || isNaN(qty) || qty <= 0) continue;
+
+            const med = allMedicines.find(m => 
+                (m.name && m.name.toLowerCase() === searchKey) || 
+                (m.batch && m.batch.toLowerCase() === searchKey)
+            );
+
+            if (med && med.quantity >= qty) {
+                await addDoc(collection(db, 'sales'), { 
+                    medicineId: med.id, medicineName: med.name, quantity: qty, unitPrice: med.price, 
+                    total: med.price * qty, paymentMethod: 'cash', paidAmount: med.price * qty, 
+                    date: date, branch: branch, customer: '', receipt: 'Bulk Entry', 
+                    timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
+                });
+                await updateDoc(doc(db, 'medicines', med.id), { quantity: increment(-qty) });
+            }
         }
-        alert('✅ Bulk sales recorded!');
+        alert('✅ Bulk sales recorded successfully!');
         document.getElementById('quickBulkData').value = '';
     } catch(e) { alert('Error: ' + e.message); }
 };
@@ -1783,15 +1799,18 @@ window.adjustStock = async function() {
 };
 
 function calculateStockReport() {
-    let totalPurchased = 0; let totalSold = 0; let totalRemaining = 0;
+    let totalPurchasedQty = 0; let totalPurchasedValue = 0; let totalSold = 0; let totalRemaining = 0;
     allMedicines.forEach(m => {
         const soldForThis = allSales.filter(s => s.medicineId === m.id).reduce((sum, s) => sum + (s.quantity || 0), 0);
-        totalPurchased += (m.quantity + soldForThis);
+        const purchasedQty = m.quantity + soldForThis;
+        totalPurchasedQty += purchasedQty;
+        totalPurchasedValue += purchasedQty * (m.cost || 0);
         totalRemaining += m.quantity;
     });
     allSales.forEach(s => { if (s.medicineId) totalSold += (s.quantity || 0); });
     if(document.getElementById('totalPurchasedQty')) {
-        document.getElementById('totalPurchasedQty').innerText = totalPurchased;
+        document.getElementById('totalPurchasedQty').innerText = totalPurchasedQty;
+        document.getElementById('totalPurchasedValue').innerText = totalPurchasedValue.toFixed(2) + ' ETB';
         document.getElementById('totalSoldQty').innerText = totalSold;
         document.getElementById('totalRemainingQty').innerText = totalRemaining;
     }
@@ -2018,10 +2037,14 @@ window.renderSalesHistory = function() {
     let combined = []; allSales.forEach(s => combined.push({ ...s, _type: 'sale' })); allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
     const filter = document.getElementById('filterSalesHistory')?.value || 'all'; 
     const branchFilter = document.getElementById('filterBranchSalesHistory')?.value || 'all'; 
-    
+    const startDate = document.getElementById('filterStartDate')?.value;
+    const endDate = document.getElementById('filterEndDate')?.value;
+
     if (filter === 'detail') combined = combined.filter(c => c._type === 'sale'); 
     if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
     if (branchFilter !== 'all') combined = combined.filter(c => c.branch === branchFilter);
+    if (startDate) combined = combined.filter(c => c.date >= startDate);
+    if (endDate) combined = combined.filter(c => c.date <= endDate);
 
     if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales history.</p>'; document.getElementById('salesHistPageInfo').innerText = `Page 1 of 1`; return; }
     combined.sort((a, b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
@@ -2102,12 +2125,14 @@ window.generateReport = function() {
     let grandTotal = totalSales + totalQuick; 
     let grandExp = totalExpenses + totalFixed;
 
-    let salesTableHtml = `<table class="data-table" style="margin-top:16px;"><thead><tr><th>Date</th><th>Item Name</th><th>Qty</th><th>Total</th><th>Payment</th></tr></thead><tbody>`;
+    let salesTableHtml = `<table class="data-table" style="margin-top:16px;"><thead><tr><th>Date</th><th>Item Name</th><th>Batch No</th><th>Qty</th><th>Total</th><th>Payment</th></tr></thead><tbody>`;
     filteredSales.forEach(s => { 
         const pmLabel = s.paymentMethod === 'transfer' ? '🏦 Transfer' : (s.paymentMethod === 'credit' ? '📝 Credit' : '💵 Cash');
-        salesTableHtml += `<tr><td>${s.date}</td><td>${s.medicineName}</td><td>${s.quantity}</td><td>${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)}</td><td>${pmLabel}</td></tr>`; 
+        const med = allMedicines.find(m => m.id === s.medicineId);
+        const batchNo = med ? (med.batch || '-') : '-';
+        salesTableHtml += `<tr><td>${s.date}</td><td>${s.medicineName}</td><td>${batchNo}</td><td>${s.quantity}</td><td>${(s.paidAmount !== undefined ? s.paidAmount : s.total).toFixed(2)}</td><td>${pmLabel}</td></tr>`; 
     });
-    if(filteredSales.length === 0) salesTableHtml += `<tr><td colspan="5" style="text-align:center; color:#6b7280;">No sales</td></tr>`;
+    if(filteredSales.length === 0) salesTableHtml += `<tr><td colspan="6" style="text-align:center; color:#6b7280;">No sales</td></tr>`;
     salesTableHtml += `</tbody></table>`;
 
     let expTableHtml = `<table class="data-table" style="margin-top:16px;"><thead><tr><th>Date</th><th>Category</th><th>Note</th><th>Amount</th></tr></thead><tbody>`;
@@ -2144,6 +2169,7 @@ window.generateReport = function() {
         <h3 style="margin-top:24px; font-size:16px; font-weight:700; color:#111827;">💸 Detailed Expenses</h3>${expTableHtml}
     `;
     displayArea.innerHTML = html;
+    displayArea.style.display = 'block'; // ሪፖርቱ ሲፈጠር ብቻ እንዲታይ
 };
 
 async function loadDailyReport() {
@@ -2272,8 +2298,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if(repType) repType.addEventListener('change', () => { toggleReportDatePickers(); generateReport(); });
     if(repDate) repDate.addEventListener('change', () => { generateReport(); });
     if(repMonth) repMonth.addEventListener('change', () => { generateReport(); });
+
+    // Dashboard Auto Sync
+    const dashMonth = document.getElementById('dashMonthPicker');
+    const dashBranch = document.getElementById('dashBranchFilter');
+    if(dashMonth) dashMonth.addEventListener('change', () => { loadDashboard(); });
+    if(dashBranch) dashBranch.addEventListener('change', () => { loadDashboard(); });
 });
 
 </script>
 </body>
-</html>
+</html>   
