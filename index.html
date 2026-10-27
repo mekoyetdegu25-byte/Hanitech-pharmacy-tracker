@@ -525,6 +525,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <select id="filterBranchSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;">
                                 <option value="all">All Branches</option>
                             </select>
+                            <input type="date" id="filterStartDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="Start Date">
+                            <input type="date" id="filterEndDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="End Date">
                             <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 16px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
                         </div>
                         <div id="salesHistoryList"></div>
@@ -1110,6 +1112,7 @@ window.switchPage = function(panelId, subPanelId, element) {
         });
     }
 
+    // Settings Tab ልዩ አያያዝ
     if(panelId === 'panel9') {
         const settingsBody = document.getElementById('bodySettings');
         const settingsHeader = document.getElementById('hdrSettings');
@@ -2214,10 +2217,14 @@ window.renderSalesHistory = function() {
     let combined = []; allSales.forEach(s => combined.push({ ...s, _type: 'sale' })); allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
     const filter = document.getElementById('filterSalesHistory')?.value || 'all'; 
     const branchFilter = document.getElementById('filterBranchSalesHistory')?.value || 'all'; 
+    const startDate = document.getElementById('filterStartDate')?.value;
+    const endDate = document.getElementById('filterEndDate')?.value;
 
     if (filter === 'detail') combined = combined.filter(c => c._type === 'sale'); 
     if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
     if (branchFilter !== 'all') combined = combined.filter(c => c.branch === branchFilter);
+    if (startDate) combined = combined.filter(c => c.date >= startDate);
+    if (endDate) combined = combined.filter(c => c.date <= endDate);
 
     if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales history.</p>'; document.getElementById('salesHistPageInfo').innerText = `Page 1 of 1`; return; }
     combined.sort((a, b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
