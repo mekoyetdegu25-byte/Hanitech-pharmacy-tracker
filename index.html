@@ -1130,14 +1130,15 @@ window.toggleSection = function(h, b) {
     const body = document.getElementById(b); 
     if (!header || !body) return; 
     
+    // በቀጥታ በ JavaScript ስታይሉን ማስገደድ (!important)
     if (body.style.display === 'block') {
-        body.style.display = 'none';
+        body.style.setProperty('display', 'none', 'important');
         header.classList.remove('open');
     } else {
-        body.style.display = 'block';
+        body.style.setProperty('display', 'block', 'important');
         header.classList.add('open');
     }
-}; 
+};
 
 window.toggleMenu = function(element) {
     const allHeaders = document.querySelectorAll('.menu-header');
