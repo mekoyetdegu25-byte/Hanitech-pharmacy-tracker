@@ -1090,7 +1090,7 @@ window.toggleSection = function(h, b) {
     const bd = document.getElementById(b); 
     if (!hd || !bd) return; 
     
-    // ቀላል እና አስተማማኝ የመክፈት/የመዝጋት ዘዴ (በቀጥታ display ላይ የሚሰራ)
+    // በቀጥታ በ style.display መቆጣጠር (ምንም አይነት የ CSS መጋጨት አይፈጥርም)
     if (bd.style.display === 'block') {
         bd.style.display = 'none';
         hd.classList.remove('open');
