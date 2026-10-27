@@ -166,6 +166,11 @@ input:checked + .slider:before { transform: translateX(20px); }
 .rows-per-page { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6b7280; }
 .rows-per-page select { width: auto; padding: 6px 10px; font-size: 13px; }
 
+ /* Settings ካርዶች ሲከፈቱ እንዲታዩ የሚያደርግ */
+#bodySettings .section-body.open,
+#bodySettings .section-body[style*="display: block"] {
+    display: block !important;
+}   
 @media print {
     body * { visibility: hidden; }
     #panel8, #panel8 * { visibility: visible; }
@@ -1112,7 +1117,6 @@ window.switchPage = function(panelId, subPanelId, element) {
         });
     }
 
-    // Settings Tab ልዩ አያያዝ
     if(panelId === 'panel9') {
         const settingsBody = document.getElementById('bodySettings');
         const settingsHeader = document.getElementById('hdrSettings');
@@ -2349,7 +2353,7 @@ window.generateReport = function() {
         <h3 style="margin-top:24px; font-size:16px; font-weight:700; color:#111827;">💸 Detailed Expenses</h3>${expTableHtml}
     `;
     displayArea.innerHTML = html;
-    displayArea.style.display = 'block'; 
+    displayArea.style.display = 'block';
 };
 
 async function loadDailyReport() {
