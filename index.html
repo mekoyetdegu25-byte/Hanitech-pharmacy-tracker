@@ -525,8 +525,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <select id="filterBranchSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;">
                                 <option value="all">All Branches</option>
                             </select>
-                            <input type="date" id="filterStartDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="Start Date">
-                            <input type="date" id="filterEndDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="End Date">
                             <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 16px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
                         </div>
                         <div id="salesHistoryList"></div>
@@ -563,10 +561,10 @@ input:checked + .slider:before { transform: translateX(20px); }
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                             <div><label class="field-label">💰 Amount</label><input type="number" id="expAmount"></div>
-                            <div><label class="field-label">📅 Date</label><input type="date" id="expDate"></div>
+                            <div><label class="field-label">📅 Date</label><input type="date" id="expDate" onchange="renderExpenseHistory()"></div>
                         </div>
                         <label class="field-label">📝 Note</label><input type="text" id="expNote">
-                        <button class="btn btn-danger" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addExpense()">💾 Save Expense</button>
+                        <button class="btn btn-danger" id="btnSaveExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addExpense()">💾 Save Expense</button>
                         <div style="clear:both;"></div>
                         <div id="expList" style="margin-top:20px;"></div>
                     </div>
@@ -584,10 +582,10 @@ input:checked + .slider:before { transform: translateX(20px); }
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                             <div><label class="field-label">💰 Amount</label><input type="number" id="fixAmount"></div>
-                            <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
+                            <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth" onchange="renderFixedExpenseHistory()"></div>
                         </div>
                         <label class="field-label">📝 Note</label><input type="text" id="fixNote">
-                        <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addFixedExpense()">💾 Save Expense</button>
+                        <button class="btn btn-warning" id="btnSaveFixExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addFixedExpense()">💾 Save Expense</button>
                         <div style="clear:both;"></div>
                         <div id="fixedExpList" style="margin-top:20px;"></div>
                     </div>
@@ -909,7 +907,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                 <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
                 </div>
-                <div class="section-body" id="bodySettings" style="display:block;">
+                <div class="section-body" id="bodySettings">
                     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
                         
                         <div class="section-collapsible" style="margin-bottom:0;">
@@ -1112,7 +1110,6 @@ window.switchPage = function(panelId, subPanelId, element) {
         });
     }
 
-    // Settings ላይ ሲገቡ ውስጡ እንዲታይ ማድረግ
     if(panelId === 'panel9') {
         const settingsBody = document.getElementById('bodySettings');
         const settingsHeader = document.getElementById('hdrSettings');
@@ -1223,6 +1220,7 @@ async function loadAllData() {
 
     renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); toggleReportDatePickers();
     setupRealtimeListeners();
+    renderExpenseHistory(); renderFixedExpenseHistory();
 } 
 
 function setupRealtimeListeners() {
@@ -1617,7 +1615,6 @@ window.addQuickSale = async function() {
     try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Recorded!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
-// --- DYNAMIC BULK ENTRY ---
 window.bulkRowCount = 0;
 
 window.addBulkRow = function() {
@@ -1648,7 +1645,6 @@ window.addBulkRow = function() {
     `;
     container.appendChild(rowDiv);
     
-    // Update datalist for names
     const datalist = document.getElementById('bulkMedList');
     if(datalist) {
         datalist.innerHTML = '';
@@ -1727,7 +1723,7 @@ window.saveBulkSales = async function() {
     if (successCount > 0) {
         alert(`✅ ${successCount} sales recorded successfully! ${errorCount > 0 ? errorCount + ' failed due to stock/input errors.' : ''}`);
         document.getElementById('bulkEntryRows').innerHTML = '';
-        addBulkRow(); // Add one empty row back
+        addBulkRow();
     } else {
         alert('❌ No valid sales found. Please check item names, batches, and quantities.');
     }
@@ -1736,36 +1732,127 @@ window.saveBulkSales = async function() {
 window.addExpense = async function() {
     const cat = document.getElementById('expCat').value; const branch = document.getElementById('expBranch').value; const note = document.getElementById('expNote').value.trim(); const amount = parseFloat(document.getElementById('expAmount').value); const date = document.getElementById('expDate').value;
     if(!cat || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields'); return; }
-    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; renderExpenseHistory(); } catch(e) { alert(e.message); }
 }; 
 
 window.addFixedExpense = async function() {
     const cat = document.getElementById('fixCat').value; const branch = document.getElementById('fixBranch').value; const note = document.getElementById('fixNote').value.trim(); const amount = parseFloat(document.getElementById('fixAmount').value); const month = document.getElementById('fixMonth').value;
     if(!cat || isNaN(amount) || amount <= 0 || !month) { alert('Fill all fields'); return; }
-    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; renderFixedExpenseHistory(); } catch(e) { alert(e.message); }
 }; 
 
 function renderExpenseHistory() {
     const expListEl = document.getElementById('expList'); 
     if(expListEl) {
-        if(allExpenses.length === 0) { expListEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No expenses yet.</p>'; }
+        const selectedDate = document.getElementById('expDate')?.value;
+        let filteredExp = allExpenses;
+        if (selectedDate) filteredExp = filteredExp.filter(e => e.date === selectedDate);
+        
+        if(filteredExp.length === 0) { expListEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No expenses for this date.</p>'; }
         else {
-            let expHtml = '<h4 style="margin-bottom:10px; font-size:14px;">Recent Daily Expenses</h4>';
-            allExpenses.slice(0, 10).forEach(e => { expHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${e.category} - ${e.branch}</span><strong>${e.amount.toFixed(2)} ETB</strong></div>`; });
+            let expHtml = `<h4 style="margin-bottom:10px; font-size:14px;">Expenses for ${selectedDate || 'All Dates'}</h4>`;
+            filteredExp.forEach(e => { 
+                expHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
+                    <div><span>${e.category} - ${e.branch}</span><br><span style="font-size:12px; color:#6b7280;">${e.note || ''}</span></div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <strong>${e.amount.toFixed(2)} ETB</strong>
+                        <button onclick="editExpense('${e.id}')" class="action-btn btn-edit" style="padding:4px 8px;">✏️</button>
+                        <button onclick="deleteExpense('${e.id}')" class="action-btn btn-delete" style="padding:4px 8px;">🗑️</button>
+                    </div>
+                </div>`; 
+            });
             expListEl.innerHTML = expHtml;
         }
     }
+}
 
+window.editExpense = function(id) {
+    const exp = allExpenses.find(e => e.id === id); if(!exp) return;
+    document.getElementById('expCat').value = exp.category;
+    document.getElementById('expBranch').value = exp.branch;
+    document.getElementById('expAmount').value = exp.amount;
+    document.getElementById('expDate').value = exp.date;
+    document.getElementById('expNote').value = exp.note || '';
+    
+    const saveBtn = document.getElementById('btnSaveExp');
+    saveBtn.innerText = '🔄 Update Expense';
+    saveBtn.onclick = async function() {
+        try {
+            await updateDoc(doc(db, 'expenses', id), {
+                category: document.getElementById('expCat').value,
+                branch: document.getElementById('expBranch').value,
+                amount: parseFloat(document.getElementById('expAmount').value),
+                date: document.getElementById('expDate').value,
+                note: document.getElementById('expNote').value.trim()
+            });
+            alert('✅ Expense updated!');
+            saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addExpense;
+            document.getElementById('expAmount').value = ''; document.getElementById('expNote').value = '';
+            renderExpenseHistory();
+        } catch(e) { alert(e.message); }
+    };
+};
+
+window.deleteExpense = async function(id) {
+    if(!confirm('Delete this expense?')) return;
+    try { await deleteDoc(doc(db, 'expenses', id)); alert('✅ Deleted!'); renderExpenseHistory(); } catch(e) { alert(e.message); }
+};
+
+function renderFixedExpenseHistory() {
     const fixedListEl = document.getElementById('fixedExpList');
-    if(fixedListEl) {
-        if(allFixed.length === 0) { fixedListEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No fixed expenses yet.</p>'; }
-        else {
-            let fixHtml = '<h4 style="margin-bottom:10px; font-size:14px;">Recent Fixed Expenses</h4>';
-            allFixed.slice(0, 10).forEach(e => { fixHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>${e.category} (${e.month})</span><strong>${e.amount.toFixed(2)} ETB</strong></div>`; });
-            fixedListEl.innerHTML = fixHtml;
-        }
+    if(!fixedListEl) return;
+    const selectedMonth = document.getElementById('fixMonth')?.value;
+    let filteredFixed = allFixed;
+    if (selectedMonth) filteredFixed = filteredFixed.filter(f => f.month === selectedMonth);
+
+    if(filteredFixed.length === 0) { fixedListEl.innerHTML = '<p style="text-align:center; color:#a0aec0;">No fixed expenses for this month.</p>'; }
+    else {
+        let fixHtml = `<h4 style="margin-bottom:10px; font-size:14px;">Fixed Expenses for ${selectedMonth || 'All Months'}</h4>`;
+        filteredFixed.forEach(e => { 
+            fixHtml += `<div style="padding:10px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
+                <div><span>${e.category} - ${e.branch}</span><br><span style="font-size:12px; color:#6b7280;">${e.note || ''}</span></div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <strong>${e.amount.toFixed(2)} ETB</strong>
+                    <button onclick="editFixedExpense('${e.id}')" class="action-btn btn-edit" style="padding:4px 8px;">✏️</button>
+                    <button onclick="deleteFixedExpense('${e.id}')" class="action-btn btn-delete" style="padding:4px 8px;">🗑️</button>
+                </div>
+            </div>`; 
+        });
+        fixedListEl.innerHTML = fixHtml;
     }
 }
+
+window.editFixedExpense = function(id) {
+    const exp = allFixed.find(e => e.id === id); if(!exp) return;
+    document.getElementById('fixCat').value = exp.category;
+    document.getElementById('fixBranch').value = exp.branch;
+    document.getElementById('fixAmount').value = exp.amount;
+    document.getElementById('fixMonth').value = exp.month;
+    document.getElementById('fixNote').value = exp.note || '';
+    
+    const saveBtn = document.getElementById('btnSaveFixExp');
+    saveBtn.innerText = '🔄 Update Expense';
+    saveBtn.onclick = async function() {
+        try {
+            await updateDoc(doc(db, 'fixedExpenses', id), {
+                category: document.getElementById('fixCat').value,
+                branch: document.getElementById('fixBranch').value,
+                amount: parseFloat(document.getElementById('fixAmount').value),
+                month: document.getElementById('fixMonth').value,
+                note: document.getElementById('fixNote').value.trim()
+            });
+            alert('✅ Fixed Expense updated!');
+            saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addFixedExpense;
+            document.getElementById('fixAmount').value = ''; document.getElementById('fixNote').value = '';
+            renderFixedExpenseHistory();
+        } catch(e) { alert(e.message); }
+    };
+};
+
+window.deleteFixedExpense = async function(id) {
+    if(!confirm('Delete this fixed expense?')) return;
+    try { await deleteDoc(doc(db, 'fixedExpenses', id)); alert('✅ Deleted!'); renderFixedExpenseHistory(); } catch(e) { alert(e.message); }
+};
 
 window.loadInventory = function() {
     const listEl = document.getElementById('inventoryList');
@@ -2127,14 +2214,10 @@ window.renderSalesHistory = function() {
     let combined = []; allSales.forEach(s => combined.push({ ...s, _type: 'sale' })); allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
     const filter = document.getElementById('filterSalesHistory')?.value || 'all'; 
     const branchFilter = document.getElementById('filterBranchSalesHistory')?.value || 'all'; 
-    const startDate = document.getElementById('filterStartDate')?.value;
-    const endDate = document.getElementById('filterEndDate')?.value;
 
     if (filter === 'detail') combined = combined.filter(c => c._type === 'sale'); 
     if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
     if (branchFilter !== 'all') combined = combined.filter(c => c.branch === branchFilter);
-    if (startDate) combined = combined.filter(c => c.date >= startDate);
-    if (endDate) combined = combined.filter(c => c.date <= endDate);
 
     if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales history.</p>'; document.getElementById('salesHistPageInfo').innerText = `Page 1 of 1`; return; }
     combined.sort((a, b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
@@ -2259,7 +2342,7 @@ window.generateReport = function() {
         <h3 style="margin-top:24px; font-size:16px; font-weight:700; color:#111827;">💸 Detailed Expenses</h3>${expTableHtml}
     `;
     displayArea.innerHTML = html;
-    displayArea.style.display = 'block';
+    displayArea.style.display = 'block'; 
 };
 
 async function loadDailyReport() {
@@ -2370,7 +2453,6 @@ async function loadMonthlyReport() {
 
 window.changeMonthlyPage = function(dir) { monthlyPage += dir; loadMonthlyReport(); };
 
-// --- AUTO FILTER FOR REPORTS ---
 document.addEventListener('DOMContentLoaded', () => {
     const dailyDate = document.getElementById('dailyReportDate');
     const dailyBranch = document.getElementById('dailyReportBranch');
@@ -2389,7 +2471,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(repDate) repDate.addEventListener('change', () => { generateReport(); });
     if(repMonth) repMonth.addEventListener('change', () => { generateReport(); });
 
-    // Dashboard Auto Sync
     const dashMonth = document.getElementById('dashMonthPicker');
     const dashBranch = document.getElementById('dashBranchFilter');
     if(dashMonth) dashMonth.addEventListener('change', () => { loadDashboard(); });
