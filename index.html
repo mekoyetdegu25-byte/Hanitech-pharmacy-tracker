@@ -498,13 +498,15 @@ input:checked + .slider:before { transform: translateX(20px); }
 
                         <div style="background:#fffbeb; padding:16px; border-radius:8px; border:1px solid #fcd34d;">
                             <h4 style="margin-bottom:12px; font-size:14px; font-weight:700; color:#b45309;">Bulk Entry (Multiple Sales)</h4>
-                            <p style="font-size:12px; color:#92400e; margin-bottom:10px;">Format: Item Name or Batch No, Quantity (one per line)</p>
-                            <textarea id="quickBulkData" rows="4" style="width:100%; padding:10px; border:1px solid #fcd34d; border-radius:8px; font-size:14px;" placeholder="Paracetamol, 2&#10;B001, 5&#10;Amoxicillin, 3"></textarea>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:10px;">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:10px;">
                                 <div><label class="field-label">🏢 Branch</label><select id="quickBulkBranch"></select></div>
                                 <div><label class="field-label">📅 Date</label><input type="date" id="quickBulkDate"></div>
                             </div>
-                            <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right; margin-top:15px;" onclick="addBulkQuickSales()">Add Bulk Sales</button>
+                            <div id="bulkEntryRows" style="margin-bottom:10px;">
+                                <!-- Rows will be added dynamically -->
+                            </div>
+                            <button class="btn btn-outline" style="width:auto; margin-bottom:10px; font-size:13px;" onclick="addBulkRow()">+ Add Row</button>
+                            <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right;" onclick="saveBulkSales()">Save All Sales</button>
                             <div style="clear:both;"></div>
                         </div>
                     </div>
@@ -907,7 +909,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                 <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
                 </div>
-                <div class="section-body" id="bodySettings">
+                <div class="section-body" id="bodySettings" style="display:block;">
                     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
                         
                         <div class="section-collapsible" style="margin-bottom:0;">
@@ -1109,6 +1111,14 @@ window.switchPage = function(panelId, subPanelId, element) {
             }
         });
     }
+
+    // Settings ላይ ሲገቡ ውስጡ እንዲታይ ማድረግ
+    if(panelId === 'panel9') {
+        const settingsBody = document.getElementById('bodySettings');
+        const settingsHeader = document.getElementById('hdrSettings');
+        if(settingsBody) settingsBody.style.display = 'block';
+        if(settingsHeader) settingsHeader.classList.add('open');
+    }
 };
 
 window.toggleSection = function(h, b) {
@@ -1218,7 +1228,7 @@ async function loadAllData() {
 function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
     unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); });
-    unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); });
+    unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); calculateStockReport(); });
     unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
     unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); });
     unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory(); });
@@ -1607,43 +1617,120 @@ window.addQuickSale = async function() {
     try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Recorded!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
-window.addBulkQuickSales = async function() {
-    const bulkData = document.getElementById('quickBulkData').value.trim();
+// --- DYNAMIC BULK ENTRY ---
+window.bulkRowCount = 0;
+
+window.addBulkRow = function() {
+    bulkRowCount++;
+    const container = document.getElementById('bulkEntryRows');
+    const rowDiv = document.createElement('div');
+    rowDiv.id = `bulkRow_${bulkRowCount}`;
+    rowDiv.style.cssText = "display:grid; grid-template-columns: 2fr 1fr 1fr 0.5fr; gap:10px; margin-bottom:8px; align-items:center;";
+    
+    rowDiv.innerHTML = `
+        <div>
+            <input type="text" list="bulkMedList" class="bulk-input-name" placeholder="Search Name/Batch..." oninput="updateBulkRowInfo(this)" style="font-size:12px; padding:8px;">
+        </div>
+        <div>
+            <input type="number" class="bulk-input-qty" placeholder="Qty" style="font-size:12px; padding:8px;">
+        </div>
+        <div>
+            <select class="bulk-input-payment" style="font-size:12px; padding:8px;">
+                <option value="cash">💵 Cash</option>
+                <option value="transfer">🏦 Transfer</option>
+                <option value="credit">📝 Credit</option>
+            </select>
+        </div>
+        <div style="text-align:center;">
+            <button onclick="document.getElementById('bulkRow_${bulkRowCount}').remove()" style="background:none; border:none; color:#ef4444; font-size:18px; cursor:pointer;">✕</button>
+        </div>
+        <div style="grid-column: 1 / -1; font-size:11px; color:#6b7280; margin-top:-4px;" class="bulk-row-info"></div>
+    `;
+    container.appendChild(rowDiv);
+    
+    // Update datalist for names
+    const datalist = document.getElementById('bulkMedList');
+    if(datalist) {
+        datalist.innerHTML = '';
+        allMedicines.forEach(m => {
+            datalist.innerHTML += `<option value="${m.name} | ${m.batch}">Stock: ${m.quantity} | Price: ${m.price}</option>`;
+        });
+    }
+};
+
+window.updateBulkRowInfo = function(input) {
+    const val = input.value;
+    const row = input.closest('[id^="bulkRow_"]');
+    const infoDiv = row.querySelector('.bulk-row-info');
+    
+    if(!val) { infoDiv.innerHTML = ''; return; }
+    
+    const parts = val.split('|').map(p => p.trim());
+    const searchName = parts[0].toLowerCase();
+    const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
+    
+    const med = allMedicines.find(m => 
+        (m.name && m.name.toLowerCase() === searchName) && 
+        (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch))
+    );
+
+    if (med) {
+        infoDiv.innerHTML = `✅ Found: <strong>${med.name}</strong> (Batch: ${med.batch || '-'}) | Available: ${med.quantity} | Price: ${med.price} ETB`;
+        infoDiv.style.color = '#10b981';
+    } else {
+        infoDiv.innerHTML = `⚠️ Item not found in stock.`;
+        infoDiv.style.color = '#ef4444';
+    }
+};
+
+window.saveBulkSales = async function() {
     const branch = document.getElementById('quickBulkBranch').value;
     const date = document.getElementById('quickBulkDate').value;
-    if (!bulkData) { alert('Enter data in the text area'); return; }
     if (!date) { alert('Select date'); return; }
 
-    const lines = bulkData.split('\n').filter(line => line.trim() !== '');
-    if (lines.length === 0) { alert('No valid lines found'); return; }
+    const rows = document.querySelectorAll('[id^="bulkRow_"]');
+    let successCount = 0;
+    let errorCount = 0;
 
-    try {
-        for (const line of lines) {
-            const parts = line.split(',');
-            if (parts.length < 2) continue;
-            
-            const searchKey = parts[0].trim().toLowerCase();
-            const qty = parseInt(parts[1].trim());
-            if (!searchKey || isNaN(qty) || qty <= 0) continue;
+    for (const row of rows) {
+        const nameInput = row.querySelector('.bulk-input-name').value;
+        const qtyInput = parseInt(row.querySelector('.bulk-input-qty').value);
+        const paymentType = row.querySelector('.bulk-input-payment').value;
 
-            const med = allMedicines.find(m => 
-                (m.name && m.name.toLowerCase() === searchKey) || 
-                (m.batch && m.batch.toLowerCase() === searchKey)
-            );
+        if (!nameInput || isNaN(qtyInput) || qtyInput <= 0) continue;
 
-            if (med && med.quantity >= qty) {
+        const parts = nameInput.split('|').map(p => p.trim());
+        const searchName = parts[0].toLowerCase();
+        const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
+
+        const med = allMedicines.find(m => 
+            (m.name && m.name.toLowerCase() === searchName) && 
+            (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch))
+        );
+
+        if (med && med.quantity >= qtyInput) {
+            try {
                 await addDoc(collection(db, 'sales'), { 
-                    medicineId: med.id, medicineName: med.name, quantity: qty, unitPrice: med.price, 
-                    total: med.price * qty, paymentMethod: 'cash', paidAmount: med.price * qty, 
+                    medicineId: med.id, medicineName: med.name, quantity: qtyInput, unitPrice: med.price, 
+                    total: med.price * qtyInput, paymentMethod: paymentType, paidAmount: med.price * qtyInput, 
                     date: date, branch: branch, customer: '', receipt: 'Bulk Entry', 
                     timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
                 });
-                await updateDoc(doc(db, 'medicines', med.id), { quantity: increment(-qty) });
-            }
+                await updateDoc(doc(db, 'medicines', med.id), { quantity: increment(-qtyInput) });
+                successCount++;
+            } catch(e) { errorCount++; }
+        } else {
+            errorCount++;
         }
-        alert('✅ Bulk sales recorded successfully!');
-        document.getElementById('quickBulkData').value = '';
-    } catch(e) { alert('Error: ' + e.message); }
+    }
+
+    if (successCount > 0) {
+        alert(`✅ ${successCount} sales recorded successfully! ${errorCount > 0 ? errorCount + ' failed due to stock/input errors.' : ''}`);
+        document.getElementById('bulkEntryRows').innerHTML = '';
+        addBulkRow(); // Add one empty row back
+    } else {
+        alert('❌ No valid sales found. Please check item names, batches, and quantities.');
+    }
 };
 
 window.addExpense = async function() {
@@ -1800,6 +1887,9 @@ window.adjustStock = async function() {
 
 function calculateStockReport() {
     let totalPurchasedQty = 0; let totalPurchasedValue = 0; let totalSold = 0; let totalRemaining = 0;
+    
+    allSales.forEach(s => { if (s.medicineId) totalSold += (s.quantity || 0); });
+    
     allMedicines.forEach(m => {
         const soldForThis = allSales.filter(s => s.medicineId === m.id).reduce((sum, s) => sum + (s.quantity || 0), 0);
         const purchasedQty = m.quantity + soldForThis;
@@ -1807,7 +1897,7 @@ function calculateStockReport() {
         totalPurchasedValue += purchasedQty * (m.cost || 0);
         totalRemaining += m.quantity;
     });
-    allSales.forEach(s => { if (s.medicineId) totalSold += (s.quantity || 0); });
+    
     if(document.getElementById('totalPurchasedQty')) {
         document.getElementById('totalPurchasedQty').innerText = totalPurchasedQty;
         document.getElementById('totalPurchasedValue').innerText = totalPurchasedValue.toFixed(2) + ' ETB';
@@ -2169,7 +2259,7 @@ window.generateReport = function() {
         <h3 style="margin-top:24px; font-size:16px; font-weight:700; color:#111827;">💸 Detailed Expenses</h3>${expTableHtml}
     `;
     displayArea.innerHTML = html;
-    displayArea.style.display = 'block'; // ሪፖርቱ ሲፈጠር ብቻ እንዲታይ
+    displayArea.style.display = 'block';
 };
 
 async function loadDailyReport() {
