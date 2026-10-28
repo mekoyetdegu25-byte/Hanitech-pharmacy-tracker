@@ -90,6 +90,19 @@ input:focus, select:focus, textarea:focus { border-color: #10b981; box-shadow: 0
 .summary-box .value { font-size: 28px; font-weight: 800; color: #111827; } 
 
 /* --- MODERN SETTINGS SECTION --- */
+:root {
+    --primary: #10b981;
+    --primary-hover: #059669;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+}
+
 .section-collapsible { background: #fff; border-radius: 12px; margin-bottom: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; transition: all 0.3s ease; }
 .section-collapsible:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 .section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; cursor: pointer; background: #fff; transition: background 0.2s; }
@@ -102,12 +115,53 @@ input:focus, select:focus, textarea:focus { border-color: #10b981; box-shadow: 0
 .section-body.open { display: block !important; } 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Settings Grid */
-#bodySettings > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-#bodySettings .section-collapsible { margin-bottom: 0; border: 1px solid #e5e7eb; background: #f9fafb; }
+/* ✅ Modern Settings Grid */
+#bodySettings { display: none; padding: 0 20px 20px 20px; }
+#bodySettings.open { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+#bodySettings .section-collapsible { margin-bottom: 0; border: 1px solid var(--border); }
 #bodySettings .section-header { background: #fff; border-bottom: 1px solid transparent; }
-#bodySettings .section-header.open { border-bottom: 1px solid #f3f4f6; }
-#bodySettings .section-body { background: #fff; }
+#bodySettings .section-header.open { border-bottom: 1px solid var(--border); background: #f8fafc; }
+#bodySettings .section-body { background: var(--card-bg); padding-top: 16px; border-top: none; }
+
+/* Modern Inputs */
+.input-group { position: relative; margin-bottom: 16px; }
+.input-group i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-style: normal; }
+.input-group input, .input-group select { width: 100%; padding: 12px 14px 12px 40px; font-size: 14px; border: 1px solid var(--border); border-radius: 10px; background: #f8fafc; color: var(--text-main); outline: none; transition: all 0.2s; }
+.input-group input:focus, .input-group select:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+
+/* Modern Toggle Switch */
+.toggle-switch { position: relative; display: inline-block; width: 46px; height: 26px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 26px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+.slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+input:checked + .slider { background-color: var(--primary); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* Role Cards */
+.role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 16px; }
+.role-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.role-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.role-header h4 { font-size: 15px; font-weight: 700; color: var(--text-main); }
+.role-header span { font-size: 20px; }
+.perm-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+.perm-row:last-child { border-bottom: none; padding-bottom: 0; }
+.perm-row span { font-size: 13px; font-weight: 500; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+
+/* Audit Trail */
+.audit-list { display: flex; flex-direction: column; gap: 12px; }
+.audit-item { display: flex; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; }
+.audit-item:last-child { border-bottom: none; }
+.audit-avatar { width: 36px; height: 36px; border-radius: 50%; background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; flex-shrink: 0; }
+.audit-content { flex: 1; }
+.audit-text { font-size: 13px; color: var(--text-main); margin-bottom: 4px; }
+.audit-text strong { font-weight: 600; }
+.audit-time { font-size: 11px; color: var(--text-muted); }
+
+.danger-zone { border-color: #fca5a5 !important; }
+.danger-zone .section-header { background: #fef2f2; }
+.danger-zone .sec-title { color: #ef4444; }
+.danger-zone .sec-arrow { color: #ef4444; }
+.warning-text { font-size: 12px; color: #ef4444; background: #fef2f2; padding: 10px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #fecaca; }
 
 /* Tables */
 .data-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb; }
@@ -153,23 +207,10 @@ input:focus, select:focus, textarea:focus { border-color: #10b981; box-shadow: 0
 .cart-item .ci-total { font-weight: 700; color: #111827; width: 60px; text-align: right; }
 .cart-item .ci-del { color: #ef4444; cursor: pointer; margin-left: 8px; font-weight: bold; }
 
-/* Toggles */
-.toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-.toggle-switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #d1d5db; transition: .4s; border-radius: 24px; }
-.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-input:checked + .slider { background-color: #10b981; }
-input:checked + .slider:before { transform: translateX(20px); }
-
 /* Pagination Controls */
 .pagination-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 10px; }
 .rows-per-page { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6b7280; }
 .rows-per-page select { width: auto; padding: 6px 10px; font-size: 13px; }
-
-/* Settings ካርዶች ሲከፈቱ እንዲታዩ የሚያደርግ */
-#bodySettings .section-body[style*="display: block"] {
-    display: block !important;
-}
 
 @media print {
     body * { visibility: hidden; }
@@ -218,7 +259,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div class="main-content-wrapper">
 <div class="tabs-wrapper">
     <div class="tabs">
-        <div class="menu-group">
+        <div class="menu-group" id="menu_med">
             <div class="menu-header open" onclick="toggleMenu(this)">
                 <div class="m-left"><i>💊</i> Medicine</div>
                 <span class="m-arrow">▶</span>
@@ -230,7 +271,7 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <div class="menu-group">
+        <div class="menu-group" id="menu_sell">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>🛒</i> Sales</div>
                 <span class="m-arrow">▶</span>
@@ -242,7 +283,7 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <div class="menu-group">
+        <div class="menu-group" id="menu_exp">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>💸</i> Expenses</div>
                 <span class="m-arrow">▶</span>
@@ -254,7 +295,7 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <div class="menu-group">
+        <div class="menu-group" id="menu_inv">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>📦</i> Inventory</div>
                 <span class="m-arrow">▶</span>
@@ -266,13 +307,13 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <div class="menu-group">
+        <div class="menu-group" id="menu_dash">
             <label class="menu-header" onclick="switchPage('panel7', null, this)">
                 <div class="m-left"><i>📊</i> Dashboard</div>
             </label>
         </div>
 
-        <div class="menu-group">
+        <div class="menu-group" id="menu_rep">
             <div class="menu-header" onclick="toggleMenu(this)">
                 <div class="m-left"><i>📄</i> Reports</div>
                 <span class="m-arrow">▶</span>
@@ -284,13 +325,13 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <div class="menu-group">
+        <div class="menu-group" id="menu_settings">
             <label class="menu-header" onclick="switchPage('panel9', null, this)">
                 <div class="m-left"><i>⚙️</i> Settings</div>
             </label>
         </div>
         
-        <div class="menu-group">
+        <div class="menu-group" id="menu_credit">
             <label class="menu-header" onclick="switchPage('panel10', null, this)">
                 <div class="m-left"><i>💳</i> Credit</div>
             </label>
@@ -908,107 +949,166 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
 
-        <!-- PANEL 9 (Settings) -->
+        <!-- PANEL 9 (Settings) - MODERN DESIGN -->
         <div class="panel" id="panel9">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrSettings','bodySettings')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
-                </div>
-                <div class="section-body" id="bodySettings">
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
-                        
-                        <div class="section-collapsible" style="margin-bottom:0;">
-                            <div class="section-header" onclick="toggleSection('hdrPhName','bodyPhName')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">Pharmacy Name</span></div></div>
-                            <div class="section-body" id="bodyPhName">
-                                <input type="text" id="settingPhName" placeholder="Pharmacy Name">
-                                <button class="btn btn-primary" style="width:auto; padding:10px 20px; float:right;" onclick="savePharmacyName()">💾 Save</button>
-                                <div style="clear:both;"></div>
-                            </div>
-                        </div>
-
-                        <div class="section-collapsible" style="margin-bottom:0;">
-                            <div class="section-header" onclick="toggleSection('hdrBizType','bodyBizType')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Business Type</span></div></div>
-                            <div class="section-body" id="bodyBizType">
-                                <div class="info-banner" id="bizTypeBanner" style="margin-bottom:10px; font-size:12px;">Loading...</div>
-                                <select id="settingBizType" style="margin-bottom:10px;">
-                                    <option value="retail">🛍️ Retail</option>
-                                    <option value="wholesale">🏪 Wholesale</option>
-                                </select>
-                                <button class="btn btn-primary" id="btnSaveBizType" style="width:auto; padding:10px 20px; float:right;" onclick="saveBizType()">💾 Save</button>
-                                <div style="clear:both;"></div>
-                            </div>
-                        </div>
-
-                        <div class="section-collapsible" style="margin-bottom:0;">
-                            <div class="section-header" onclick="toggleSection('hdrStockLimit','bodyStockLimit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Stock Limit</span></div></div>
-                            <div class="section-body" id="bodyStockLimit">
-                                <input type="number" id="settingStockLimit">
-                                <button class="btn btn-primary" style="width:auto; padding:10px 20px; float:right;" onclick="saveStockLimit()">💾 Save</button>
-                                <div style="clear:both;"></div>
-                            </div>
-                        </div>
-
-                        <div class="section-collapsible" style="margin-bottom:0;">
-                            <div class="section-header" onclick="toggleSection('hdrExpLimit','bodyExpLimit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🚨</span><span class="sec-title">Expiry Alert Limit</span></div></div>
-                            <div class="section-body" id="bodyExpLimit">
-                                <input type="number" id="settingExpiryLimit">
-                                <button class="btn btn-primary" style="width:auto; padding:10px 20px; float:right;" onclick="saveExpiryLimit()">💾 Save</button>
-                                <div style="clear:both;"></div>
-                            </div>
-                        </div>
-
-                        <div class="section-collapsible" style="margin-bottom:0;">
-                            <div class="section-header" onclick="toggleSection('hdrBranchMgr','bodyBranchMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div></div>
-                            <div class="section-body" id="bodyBranchMgr">
-                                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                                    <input type="text" id="newBranch" placeholder="New Branch">
-                                    <button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addBranch()">+ Add</button>
+            <div class="settings-container" style="max-width: 100%; margin: 0 auto;">
+                <div class="section-collapsible" style="background: transparent; border: none; box-shadow: none; overflow: visible;">
+                    
+                    <div class="section-header open" style="background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-sm);" onclick="document.getElementById('bodySettings').classList.toggle('open'); this.classList.toggle('open');">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
+                    </div>
+                    
+                    <div class="section-body open" id="bodySettings" style="background: #f1f5f9;">
+                            
+                            <!-- 1. Pharmacy Info -->
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodyPhName').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">Pharmacy Info</span></div>
                                 </div>
-                                <div class="cat-tags" id="branchListDisplay"></div>
-                            </div>
-                        </div>
-
-                        <div class="section-collapsible" style="margin-bottom:0;">
-                            <div class="section-header" onclick="toggleSection('hdrCustMgr','bodyCustMgr')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">Customers</span></div></div>
-                            <div class="section-body" id="bodyCustMgr">
-                                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                                    <input type="text" id="newCustomer" placeholder="New Customer">
-                                    <button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addCustomer()">+ Add</button>
+                                <div class="section-body" id="bodyPhName">
+                                    <label class="field-label">Pharmacy Name</label>
+                                    <div class="input-group"><i>🏥</i><input type="text" id="settingPhName" placeholder="e.g. HaniTech Pharmacy"></div>
+                                    <label class="field-label">Phone Number</label>
+                                    <div class="input-group"><i>📞</i><input type="text" id="settingPhPhone" placeholder="+251 ..."></div>
+                                    <button class="btn btn-primary" onclick="savePharmacyInfo()">💾 Save Info</button>
                                 </div>
-                                <div class="cat-tags" id="customerListDisplay"></div>
                             </div>
-                        </div>
 
-                        <div class="section-collapsible" style="margin-bottom:0;">
-                            <div class="section-header" onclick="toggleSection('hdrPassChange','bodyPassChange')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔐</span><span class="sec-title">Change Password</span></div></div>
-                            <div class="section-body" id="bodyPassChange">
-                                <label class="field-label">Current Password</label>
-                                <input type="password" id="currentPassword" placeholder="********">
-                                <label class="field-label">New Password</label>
-                                <input type="password" id="newPassword" placeholder="********">
-                                <button class="btn btn-warning" style="width:auto; padding:10px 20px; float:right;" onclick="changeCurrentPassword()">💾 Update</button>
-                                <div style="clear:both;"></div>
+                            <!-- 2. System Preferences -->
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodySysPref').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🌍</span><span class="sec-title">System Preferences</span></div>
+                                </div>
+                                <div class="section-body" id="bodySysPref">
+                                    <label class="field-label">Currency</label>
+                                    <div class="input-group"><i>💰</i><select id="settingCurrency"><option value="ETB">ETB (ብር)</option><option value="USD">USD ($)</option></select></div>
+                                    <label class="field-label">Language / ቋንቋ</label>
+                                    <div class="input-group"><i>🌐</i>
+                                        <select id="settingLanguage">
+                                            <option value="am">🇪🇹 አማርኛ (Amharic)</option>
+                                            <option value="en">🇬🇧 English</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-top:1px solid var(--border); margin-top:16px;">
+                                        <div>
+                                            <div style="font-weight:600; font-size:14px;">Dark Mode</div>
+                                            <div style="font-size:12px; color:var(--text-muted);">Switch to dark theme</div>
+                                        </div>
+                                        <label class="toggle-switch"><input type="checkbox" id="settingDarkMode"><span class="slider"></span></label>
+                                    </div>
+                                    <button class="btn btn-primary" style="margin-top: 16px;" onclick="saveSystemPrefs()">💾 Save Preferences</button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="section-collapsible" style="margin-bottom:0;">
-                            <div class="section-header" onclick="toggleSection('hdrBackup','bodyBackup')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💾</span><span class="sec-title">Backup & Restore</span></div></div>
-                            <div class="section-body" id="bodyBackup">
-                                <p style="font-size:12px; color:#6b7280; margin-bottom:10px;">Download or restore system data.</p>
-                                <button class="btn btn-success" style="margin-bottom:8px;" onclick="backupData()">📥 Download Backup</button>
-                                <button class="btn btn-warning" onclick="document.getElementById('restoreFile').click()">📤 Restore Data</button>
-                                <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="restoreData(event)">
+                            <!-- 3. Limits & Alerts -->
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodyLimits').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Limits & Alerts</span></div>
+                                </div>
+                                <div class="section-body" id="bodyLimits">
+                                    <label class="field-label">Low Stock Limit (Qty)</label>
+                                    <div class="input-group"><i>⚠️</i><input type="number" id="settingStockLimit" placeholder="e.g. 10"></div>
+                                    <label class="field-label">Expiry Alert Limit (Days)</label>
+                                    <div class="input-group"><i>📅</i><input type="number" id="settingExpiryLimit" placeholder="e.g. 30"></div>
+                                    <button class="btn btn-primary" onclick="saveLimits()">💾 Save Limits</button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="section-collapsible" style="margin-bottom:0; grid-column: 1 / -1;">
-                            <div class="section-header" onclick="toggleSection('hdrPerms','bodyPerms')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">Employee Permissions</span></div></div>
-                            <div class="section-body" id="bodyPerms">
-                                <div id="permSectionDisplay" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;"></div>
-                                <button class="btn btn-success" style="margin-top:20px; width:auto; padding:10px 20px; float:right;" onclick="savePermissions()">💾 Save Permissions</button>
-                                <div style="clear:both;"></div>
+                            <!-- 4. Notifications -->
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodyNotif').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔔</span><span class="sec-title">Notifications</span></div>
+                                </div>
+                                <div class="section-body" id="bodyNotif">
+                                    <div class="perm-row"><span>📦 Low Stock Alerts</span><label class="toggle-switch"><input type="checkbox" id="notifLowStock" checked><span class="slider"></span></label></div>
+                                    <div class="perm-row"><span>📅 Expiry Reminders</span><label class="toggle-switch"><input type="checkbox" id="notifExpiry" checked><span class="slider"></span></label></div>
+                                    <div class="perm-row"><span>💳 New Credit Alerts</span><label class="toggle-switch"><input type="checkbox" id="notifCredit"><span class="slider"></span></label></div>
+                                    <button class="btn btn-primary" style="margin-top: 16px;" onclick="saveNotifications()">💾 Save Notifications</button>
+                                </div>
                             </div>
-                        </div>
+
+                            <!-- 5. Employee Permissions -->
+                            <div class="section-collapsible" style="grid-column: 1 / -1;">
+                                <div class="section-header" onclick="document.getElementById('bodyPerms').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">Employee Permissions</span></div>
+                                </div>
+                                <div class="section-body" id="bodyPerms">
+                                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Toggle which tabs each role can access. <br><i>Note: Owner always has full access.</i></p>
+                                    
+                                    <div class="role-grid" id="permissionGrid">
+                                        <!-- Managed by JS dynamically to match DB -->
+                                    </div>
+                                    
+                                    <button class="btn btn-primary" style="margin-top:20px;" onclick="savePermissions()">💾 Save Permissions</button>
+                                </div>
+                            </div>
+
+                            <!-- 6. Recent Activity (Audit Trail) -->
+                            <div class="section-collapsible" style="grid-column: 1 / -1;">
+                                <div class="section-header" onclick="document.getElementById('bodyAudit').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📝</span><span class="sec-title">Recent Activity (Audit Trail)</span></div>
+                                </div>
+                                <div class="section-body" id="bodyAudit">
+                                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Track who made changes to the system and when.</p>
+                                    <div class="audit-list" id="auditTrailList">
+                                        <!-- Loaded from DB -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ✅ 7. Branches & Customers (ተመልሰዋል) -->
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodyBranchMgr').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div>
+                                </div>
+                                <div class="section-body" id="bodyBranchMgr">
+                                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                                        <div class="input-group" style="flex:1; margin-bottom:0;"><i>🏢</i><input type="text" id="newBranch" placeholder="New Branch"></div>
+                                        <button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addBranch()">+ Add</button>
+                                    </div>
+                                    <div class="cat-tags" id="branchListDisplay"></div>
+                                </div>
+                            </div>
+
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodyCustMgr').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">Customers</span></div>
+                                </div>
+                                <div class="section-body" id="bodyCustMgr">
+                                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                                        <div class="input-group" style="flex:1; margin-bottom:0;"><i>🏪</i><input type="text" id="newCustomer" placeholder="New Customer"></div>
+                                        <button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addCustomer()">+ Add</button>
+                                    </div>
+                                    <div class="cat-tags" id="customerListDisplay"></div>
+                                </div>
+                            </div>
+
+                            <!-- 8. Backup & Restore -->
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodyBackup').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💾</span><span class="sec-title">Backup & Restore</span></div>
+                                </div>
+                                <div class="section-body" id="bodyBackup">
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                        <button class="btn btn-primary" style="flex:1;" onclick="backupData()">📥 Download</button>
+                                        <button class="btn btn-primary" style="flex:1; background:#f59e0b;" onclick="document.getElementById('restoreFile').click()">📤 Restore</button>
+                                        <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="restoreData(event)">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 9. Danger Zone -->
+                            <div class="section-collapsible danger-zone">
+                                <div class="section-header" onclick="document.getElementById('bodyReset').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Danger Zone</span></div>
+                                </div>
+                                <div class="section-body" id="bodyReset">
+                                    <div class="warning-text">
+                                        <strong>Warning:</strong> This will delete all medicines, sales, and expenses permanently!
+                                    </div>
+                                    <button class="btn btn-danger" onclick="resetAllData()">🗑️ Reset All Data</button>
+                                </div>
+                            </div>
 
                     </div>
                 </div>
@@ -1061,7 +1161,7 @@ input:checked + .slider:before { transform: translateX(20px); }
     <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
+import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyB3bQkI8scEHg36kkxlAalbbCtE4R0Vv8U",
@@ -1117,11 +1217,14 @@ window.switchPage = function(panelId, subPanelId, element) {
         });
     }
 
+    // ✅ Settings ሲከፈት ሳጥኑ ተከፍቶ እንዲታይ ማድረግ + ዳታ መጫን
     if(panelId === 'panel9') {
         const settingsBody = document.getElementById('bodySettings');
         const settingsHeader = document.getElementById('hdrSettings');
-        if(settingsBody) settingsBody.style.setProperty('display', 'block', 'important');
+        if(settingsBody) settingsBody.classList.add('open');
         if(settingsHeader) settingsHeader.classList.add('open');
+        
+        loadSettingsData(); // ዳታውን ጫን
     }
 };
 
@@ -1130,13 +1233,12 @@ window.toggleSection = function(h, b) {
     const body = document.getElementById(b); 
     if (!header || !body) return; 
     
-    // በቀጥታ ስታይሉን መቀየር (CSS እንዳያሸንፍ inline style እንጠቀማለን)
-    if (body.style.display === 'block') {
-        body.style.setProperty('display', 'none', 'important');
+    if (header.classList.contains('open')) {
         header.classList.remove('open');
+        body.classList.remove('open');
     } else {
-        body.style.setProperty('display', 'block', 'important');
         header.classList.add('open');
+        body.classList.add('open');
     }
 };
 
@@ -1190,6 +1292,10 @@ async function loadUserHeader(user) {
                 if (phData.isSuspended) { document.getElementById('mainApp').classList.remove('show'); document.getElementById('loginScreen').classList.remove('hidden'); await signOut(auth); return; }
             }
         }
+        
+        // ✅ Permissions መተግበር
+        await applyPermissionsToUI();
+
     } catch (err) { console.error('loadUserHeader error:', err); }
 } 
 
@@ -1226,7 +1332,7 @@ async function loadAllData() {
     if(!document.getElementById('dailyReportDate').value) document.getElementById('dailyReportDate').value = today;
     if(!document.getElementById('monthlyReportMonth').value) document.getElementById('monthlyReportMonth').value = thisMonth;
 
-    renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); loadSettings(); toggleReportDatePickers();
+    renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); toggleReportDatePickers();
     setupRealtimeListeners();
     renderExpenseHistory(); renderFixedExpenseHistory();
 } 
@@ -1241,6 +1347,240 @@ function setupRealtimeListeners() {
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; loadCreditPaymentHistory(); renderUnpaidCredits(); });
 }
 
+// ==========================================
+// SETTINGS & PERMISSIONS LOGIC (Firebase)
+// ==========================================
+
+async function loadSettingsData() {
+    if (!currentUserPharmacyId) return;
+    try {
+        const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
+        if (phDoc.exists()) {
+            const data = phDoc.data();
+            document.getElementById('settingPhName').value = data.name || '';
+            document.getElementById('settingPhPhone').value = data.phone || '';
+            document.getElementById('settingCurrency').value = data.currency || 'ETB';
+            document.getElementById('settingLanguage').value = data.language || 'am';
+            document.getElementById('settingDarkMode').checked = data.darkMode || false;
+            document.getElementById('settingStockLimit').value = data.lowStockThreshold || 10;
+            document.getElementById('settingExpiryLimit').value = data.expiryAlertThreshold || 30;
+        }
+
+        const notifDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'notifications'));
+        if (notifDoc.exists()) {
+            const nd = notifDoc.data();
+            document.getElementById('notifLowStock').checked = nd.lowStock !== false;
+            document.getElementById('notifExpiry').checked = nd.expiry !== false;
+            document.getElementById('notifCredit').checked = nd.credit === true;
+        }
+
+        const permDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'));
+        if (permDoc.exists()) {
+            renderPermissionsUI(permDoc.data());
+        } else {
+            // ✅ አዲስ ታቦች ተካተዋል (dash, rep)
+            renderPermissionsUI({
+                manager: { med: true, sell: true, exp: true, inv: true, dash: true, rep: true, credit: true, settings: true },
+                accountant: { med: false, sell: true, exp: true, inv: false, dash: true, rep: true, credit: true, settings: false },
+                employee: { med: true, sell: true, exp: false, inv: false, dash: true, rep: false, credit: false, settings: false }
+            });
+        }
+
+        loadAuditTrail();
+
+    } catch (e) { console.error("Error loading settings:", e); }
+}
+
+async function logActivity(actionText) {
+    // ✅ ስህተት ቢፈጠርም ስርዓቱ እንዳይቆም try/catch ተጠቅመናል
+    try {
+        const userEmail = document.getElementById('hdrUserEmail').innerText;
+        const userName = userEmail.split('@')[0]; 
+        await addDoc(collection(db, 'pharmacies', currentUserPharmacyId, 'activities'), {
+            user: userName,
+            action: actionText,
+            timestamp: serverTimestamp(),
+            pharmacyId: currentUserPharmacyId
+        });
+        loadAuditTrail(); 
+    } catch (e) { console.error("Audit log failed:", e); }
+}
+
+window.savePharmacyInfo = async function() {
+    const name = document.getElementById('settingPhName').value;
+    const phone = document.getElementById('settingPhPhone').value;
+    try {
+        await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { name: name, phone: phone });
+        document.getElementById('hdrPharmacyName').innerText = name;
+        logActivity(`updated pharmacy info (Name: ${name}, Phone: ${phone})`);
+        alert('✅ Pharmacy Info Saved!');
+    } catch (e) { alert('Error: ' + e.message); }
+}
+
+window.saveSystemPrefs = async function() {
+    const currency = document.getElementById('settingCurrency').value;
+    const language = document.getElementById('settingLanguage').value;
+    const darkMode = document.getElementById('settingDarkMode').checked;
+    try {
+        await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { currency, language, darkMode });
+        logActivity(`updated system preferences (Currency: ${currency}, Lang: ${language})`);
+        alert('✅ Preferences Saved!');
+    } catch (e) { alert('Error: ' + e.message); }
+}
+
+window.saveLimits = async function() {
+    const stock = parseInt(document.getElementById('settingStockLimit').value);
+    const expiry = parseInt(document.getElementById('settingExpiryLimit').value);
+    try {
+        await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { lowStockThreshold: stock, expiryAlertThreshold: expiry });
+        lowStockThreshold = stock; 
+        logActivity(`updated limits (Stock: ${stock}, Expiry: ${expiry})`);
+        alert('✅ Limits Saved!');
+    } catch (e) { alert('Error: ' + e.message); }
+}
+
+window.saveNotifications = async function() {
+    const lowStock = document.getElementById('notifLowStock').checked;
+    const expiry = document.getElementById('notifExpiry').checked;
+    const credit = document.getElementById('notifCredit').checked;
+    try {
+        await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'notifications'), { lowStock, expiry, credit }, { merge: true });
+        logActivity(`updated notification settings`);
+        alert('✅ Notifications Saved!');
+    } catch (e) { alert('Error: ' + e.message); }
+}
+
+function renderPermissionsUI(perms) {
+    const grid = document.getElementById('permissionGrid');
+    if(!grid) return;
+    
+    // ✅ Dashboard እና Reports ተካተዋል
+    const tabs = [
+        { id: 'med', icon: '💊', label: 'Medicine' },
+        { id: 'sell', icon: '🛒', label: 'Sales' },
+        { id: 'exp', icon: '💸', label: 'Expenses' },
+        { id: 'inv', icon: '📦', label: 'Inventory' },
+        { id: 'dash', icon: '📊', label: 'Dashboard' },
+        { id: 'rep', icon: '📄', label: 'Reports' },
+        { id: 'credit', icon: '💳', label: 'Credit' },
+        { id: 'settings', icon: '⚙️', label: 'Settings' }
+    ];
+    
+    const roles = [
+        { id: 'manager', icon: '🎯', name: 'Manager' },
+        { id: 'accountant', icon: '📊', name: 'Accountant' },
+        { id: 'employee', icon: '👤', name: 'Employee' }
+    ];
+
+    let html = '';
+    roles.forEach(role => {
+        html += `<div class="role-card">
+            <div class="role-header"><span>${role.icon}</span><h4>${role.name}</h4></div>`;
+        tabs.forEach(tab => {
+            const checked = perms[role.id] && perms[role.id][tab.id] ? 'checked' : '';
+            html += `<div class="perm-row">
+                <span>${tab.icon} ${tab.label}</span>
+                <label class="toggle-switch"><input type="checkbox" id="perm_${role.id}_${tab.id}" ${checked}><span class="slider"></span></label>
+            </div>`;
+        });
+        html += `</div>`;
+    });
+    grid.innerHTML = html;
+}
+
+window.savePermissions = async function() {
+    const roles = ['manager', 'accountant', 'employee'];
+    // ✅ አዲስ ታቦች
+    const tabs = ['med', 'sell', 'exp', 'inv', 'dash', 'rep', 'credit', 'settings'];
+    let newData = {};
+
+    roles.forEach(role => {
+        newData[role] = {};
+        tabs.forEach(tab => {
+            newData[role][tab] = document.getElementById(`perm_${role}_${tab}`).checked;
+        });
+    });
+
+    try {
+        await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), newData);
+        logActivity(`updated employee permissions`);
+        alert('✅ Permissions Updated!');
+    } catch (e) { alert('Error: ' + e.message); }
+}
+
+async function loadAuditTrail() {
+    const listEl = document.getElementById('auditTrailList');
+    if (!listEl) return;
+    try {
+        const q = query(
+            collection(db, 'pharmacies', currentUserPharmacyId, 'activities'),
+            orderBy('timestamp', 'desc'),
+            limit(10)
+        );
+        const snap = await getDocs(q);
+        if (snap.empty) {
+            listEl.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">No recent activity found.</p>';
+            return;
+        }
+
+        let html = '';
+        snap.forEach(doc => {
+            const data = doc.data();
+            const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : 'Just now';
+            const initials = data.user.substring(0, 2).toUpperCase();
+            
+            html += `<div class="audit-item">
+                <div class="audit-avatar" style="background:#e0e7ff; color:#4338ca;">${initials}</div>
+                <div class="audit-content">
+                    <div class="audit-text"><strong>${data.user}</strong> ${data.action}.</div>
+                    <div class="audit-time">${date}</div>
+                </div>
+            </div>`;
+        });
+        listEl.innerHTML = html;
+    } catch (e) { 
+        console.error(e); 
+        listEl.innerHTML = '<p style="color:red; font-size:12px;">Error loading activity.</p>';
+    }
+}
+
+async function applyPermissionsToUI() {
+    if (!currentUserPharmacyId) return;
+    if (currentUserRole === 'owner') return; // Owner ሁልጊዜ ሁሉንም ያያል
+
+    try {
+        const permDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'));
+        if (!permDoc.exists()) return; 
+        
+        const perms = permDoc.data();
+        const myPerms = perms[currentUserRole]; 
+        if (!myPerms) return;
+
+        if (!myPerms.med) { document.getElementById('panel1').style.display = 'none'; document.getElementById('menu_med').style.display = 'none'; }
+        if (!myPerms.sell) { document.getElementById('panel2').style.display = 'none'; document.getElementById('menu_sell').style.display = 'none'; }
+        if (!myPerms.exp) { document.getElementById('panel3').style.display = 'none'; document.getElementById('menu_exp').style.display = 'none'; }
+        if (!myPerms.inv) { document.getElementById('panel4').style.display = 'none'; document.getElementById('menu_inv').style.display = 'none'; }
+        if (!myPerms.dash) { document.getElementById('panel7').style.display = 'none'; document.getElementById('menu_dash').style.display = 'none'; }
+        if (!myPerms.rep) { document.getElementById('panel8').style.display = 'none'; document.getElementById('menu_rep').style.display = 'none'; }
+        if (!myPerms.credit) { document.getElementById('panel10').style.display = 'none'; document.getElementById('menu_credit').style.display = 'none'; }
+        
+        if (!myPerms.settings) {
+            document.getElementById('panel9').style.display = 'none';
+            document.getElementById('menu_settings').style.display = 'none';
+        }
+    } catch (e) {
+        console.error("Error applying permissions:", e);
+    }
+}
+
+// Backup & Restore & Reset
+window.backupData = function() { alert('Backup feature coming soon'); };
+window.restoreData = function(event) { alert('Restore feature coming soon'); };
+window.resetAllData = function() { if(confirm('Are you absolutely sure? This deletes everything!')) alert('Reset feature coming soon'); };
+
+// ==========================================
+// REST OF THE FUNCTIONS (Medicine, Sales, Reports...)
+// ==========================================
 async function loadCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId)));
@@ -1310,13 +1650,13 @@ window.addCategoryWithSub = async function() {
         await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + catName), { name: catName, pharmacyId: currentUserPharmacyId }); 
         if(subName) { await addDoc(collection(db, 'subcategories'), { name: subName, categoryName: catName, pharmacyId: currentUserPharmacyId }); }
         document.getElementById('newCat').value = ''; document.getElementById('newSubCatDirect').value = '';
-        loadCategories(); alert('✅ Category added!');
+        loadCategories(); logActivity(`added new category: ${catName}`); alert('✅ Category added!');
     } catch(e) { alert(e.message); }
 }; 
 
 window.deleteCategory = async function(name) {
     if(!confirm('Delete this category and all its subcategories?')) return;
-    try { await deleteDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name)); const subs = allSubcategories[name] || []; for(let s of subs) { await deleteDoc(doc(db, 'subcategories', s.id)); } loadCategories(); } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'categories', currentUserPharmacyId + '_' + name)); const subs = allSubcategories[name] || []; for(let s of subs) { await deleteDoc(doc(db, 'subcategories', s.id)); } loadCategories(); logActivity(`deleted category: ${name}`); } catch(e) { alert(e.message); }
 }; 
 
 window.deleteSubcategory = async function(catName, subId, subName) {
@@ -1363,11 +1703,11 @@ function renderBranchList() {
 } 
 window.addBranch = async function() {
     const name = document.getElementById('newBranch').value.trim(); if(!name) return alert('Enter name');
-    try { await setDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newBranch').value = ''; loadBranches(); } catch(e) { alert(e.message); }
+    try { await setDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newBranch').value = ''; loadBranches(); logActivity(`added new branch: ${name}`); } catch(e) { alert(e.message); }
 }; 
 window.deleteBranch = async function(name) {
     if(!confirm('Delete this branch?')) return;
-    try { await deleteDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name)); loadBranches(); } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name)); loadBranches(); logActivity(`deleted branch: ${name}`); } catch(e) { alert(e.message); }
 }; 
 
 async function loadCustomers() {
@@ -1393,11 +1733,11 @@ function renderCustomerList() {
 } 
 window.addCustomer = async function() {
     const name = document.getElementById('newCustomer').value.trim(); if(!name) return alert('Enter name');
-    try { await setDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newCustomer').value = ''; loadCustomers(); } catch(e) { alert(e.message); }
+    try { await setDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newCustomer').value = ''; loadCustomers(); logActivity(`added new customer: ${name}`); } catch(e) { alert(e.message); }
 }; 
 window.deleteCustomer = async function(name) {
     if(!confirm('Delete this customer?')) return;
-    try { await deleteDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name)); loadCustomers(); } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name)); loadCustomers(); logActivity(`deleted customer: ${name}`); } catch(e) { alert(e.message); }
 }; 
 
 window.addMedicine = async function() {
@@ -1428,6 +1768,7 @@ window.addMedicine = async function() {
         if (!exists) { await addDoc(collection(db, 'subcategories'), { name: subcategory, categoryName: category, pharmacyId: currentUserPharmacyId }); }
         
         await addDoc(collection(db, 'medicines'), { type, category, subcategory, name, batch, expiry, supplier, cost, price, quantity: qty, branch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+        logActivity(`added medicine: ${name} (Qty: ${qty})`);
         alert('✅ Medicine saved!');
         document.getElementById('medName').value = ''; document.getElementById('medBatch').value = ''; document.getElementById('medExpiry').value = ''; document.getElementById('medSupplier').value = ''; document.getElementById('medCost').value = ''; document.getElementById('medPrice').value = ''; document.getElementById('medQty').value = '';
         loadCategories();
@@ -1490,6 +1831,7 @@ window.editMedicine = function(id) {
     saveBtn.onclick = async function() {
         try {
             await updateDoc(doc(db, 'medicines', id), { type: document.getElementById('medType').value, branch: document.getElementById('medBranch').value, category: document.getElementById('medCategory').value, subcategory: document.getElementById('medSubcategory').value, name: document.getElementById('medName').value.trim(), batch: document.getElementById('medBatch').value.trim(), expiry: document.getElementById('medExpiry').value, supplier: document.getElementById('medSupplier').value.trim(), cost: parseFloat(document.getElementById('medCost').value), price: parseFloat(document.getElementById('medPrice').value), quantity: parseInt(document.getElementById('medQty').value) });
+            logActivity(`updated medicine: ${document.getElementById('medName').value}`);
             alert('✅ Medicine updated!'); switchPage('panel1', 'sub1_1', null); 
             document.getElementById('medName').value = ''; document.getElementById('medBatch').value = ''; document.getElementById('medCost').value = ''; document.getElementById('medPrice').value = ''; document.getElementById('medQty').value = '';
             saveBtn.innerText = '💾 Save Medicine'; saveBtn.onclick = addMedicine;
@@ -1499,7 +1841,12 @@ window.editMedicine = function(id) {
 
 window.deleteMedicine = async function(id) {
     if(!confirm('Delete this medicine?')) return;
-    try { await deleteDoc(doc(db, 'medicines', id)); alert('✅ Deleted!'); } catch(e) { alert('Error: ' + e.message); }
+    try { 
+        const med = allMedicines.find(m => m.id === id);
+        await deleteDoc(doc(db, 'medicines', id)); 
+        logActivity(`deleted medicine: ${med?.name || 'Unknown'}`);
+        alert('✅ Deleted!'); 
+    } catch(e) { alert('Error: ' + e.message); }
 };
 
 window.toggleCreditFields = function() {
@@ -1610,6 +1957,7 @@ window.completeSale = async function() {
             });
             await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
         }
+        logActivity(`completed sale (Total: ${totalAmount} ETB)`);
         alert('✅ Sale Completed!'); cart = []; renderCart(); 
         document.getElementById('sellReceipt').value = '';
         document.getElementById('sellCreditCustomer').value = '';
@@ -1620,7 +1968,7 @@ window.completeSale = async function() {
 window.addQuickSale = async function() {
     const type = document.getElementById('quickType').value; const branch = document.getElementById('quickBranch').value; const date = document.getElementById('quickDate').value; const amount = parseFloat(document.getElementById('quickAmount').value);
     if(!date || isNaN(amount) || amount <= 0) { alert('Fill all fields'); return; } 
-    try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Recorded!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added quick sale (Amount: ${amount} ETB)`); alert('✅ Recorded!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
 window.bulkRowCount = 0;
@@ -1730,6 +2078,7 @@ window.saveBulkSales = async function() {
 
     if (successCount > 0) {
         alert(`✅ ${successCount} sales recorded successfully! ${errorCount > 0 ? errorCount + ' failed due to stock/input errors.' : ''}`);
+        logActivity(`completed bulk sale (${successCount} items)`);
         document.getElementById('bulkEntryRows').innerHTML = '';
         addBulkRow();
     } else {
@@ -1740,13 +2089,13 @@ window.saveBulkSales = async function() {
 window.addExpense = async function() {
     const cat = document.getElementById('expCat').value; const branch = document.getElementById('expBranch').value; const note = document.getElementById('expNote').value.trim(); const amount = parseFloat(document.getElementById('expAmount').value); const date = document.getElementById('expDate').value;
     if(!cat || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields'); return; }
-    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; renderExpenseHistory(); } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added expense: ${amount} ETB (${cat})`); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; renderExpenseHistory(); } catch(e) { alert(e.message); }
 }; 
 
 window.addFixedExpense = async function() {
     const cat = document.getElementById('fixCat').value; const branch = document.getElementById('fixBranch').value; const note = document.getElementById('fixNote').value.trim(); const amount = parseFloat(document.getElementById('fixAmount').value); const month = document.getElementById('fixMonth').value;
     if(!cat || isNaN(amount) || amount <= 0 || !month) { alert('Fill all fields'); return; }
-    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; renderFixedExpenseHistory(); } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added fixed expense: ${amount} ETB (${cat})`); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; renderFixedExpenseHistory(); } catch(e) { alert(e.message); }
 }; 
 
 function renderExpenseHistory() {
@@ -1793,6 +2142,7 @@ window.editExpense = function(id) {
                 date: document.getElementById('expDate').value,
                 note: document.getElementById('expNote').value.trim()
             });
+            logActivity(`updated expense`);
             alert('✅ Expense updated!');
             saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addExpense;
             document.getElementById('expAmount').value = ''; document.getElementById('expNote').value = '';
@@ -1803,7 +2153,7 @@ window.editExpense = function(id) {
 
 window.deleteExpense = async function(id) {
     if(!confirm('Delete this expense?')) return;
-    try { await deleteDoc(doc(db, 'expenses', id)); alert('✅ Deleted!'); renderExpenseHistory(); } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'expenses', id)); logActivity(`deleted expense`); alert('✅ Deleted!'); renderExpenseHistory(); } catch(e) { alert(e.message); }
 };
 
 function renderFixedExpenseHistory() {
@@ -1849,6 +2199,7 @@ window.editFixedExpense = function(id) {
                 month: document.getElementById('fixMonth').value,
                 note: document.getElementById('fixNote').value.trim()
             });
+            logActivity(`updated fixed expense`);
             alert('✅ Fixed Expense updated!');
             saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addFixedExpense;
             document.getElementById('fixAmount').value = ''; document.getElementById('fixNote').value = '';
@@ -1859,7 +2210,7 @@ window.editFixedExpense = function(id) {
 
 window.deleteFixedExpense = async function(id) {
     if(!confirm('Delete this fixed expense?')) return;
-    try { await deleteDoc(doc(db, 'fixedExpenses', id)); alert('✅ Deleted!'); renderFixedExpenseHistory(); } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'fixedExpenses', id)); logActivity(`deleted fixed expense`); alert('✅ Deleted!'); renderFixedExpenseHistory(); } catch(e) { alert(e.message); }
 };
 
 window.loadInventory = function() {
@@ -1868,7 +2219,6 @@ window.loadInventory = function() {
     const catFilter = document.getElementById('filterCategoryInv').value;
     const branchFilter = document.getElementById('filterBranchInv').value;
     const search = (document.getElementById('searchInventory')?.value || '').toLowerCase();
-    const rowsPerPage = parseInt(document.getElementById('invRowsPerPage').value) || 10;
     
     let filtered = allMedicines;
     if (filter !== 'all') filtered = filtered.filter(m => m.type === filter);
@@ -1975,6 +2325,7 @@ window.adjustStock = async function() {
     if(Object.keys(updateData).length === 0) { alert('Enter New Qty or New Price to update'); return; }
     try { 
         await updateDoc(doc(db, 'medicines', id), updateData); 
+        logActivity(`adjusted stock for medicine ID: ${id}`);
         alert('✅ Adjusted successfully!'); 
         document.getElementById('adjustQty').value = ''; document.getElementById('adjustPrice').value = ''; document.getElementById('adjustReason').value = ''; 
     } catch(e) { alert(e.message); }
@@ -2063,210 +2414,6 @@ function renderCharts(selectedMonth, branchFilter) {
         if(legendEl) legendEl.innerHTML = legendHtml;
     }
 }
-
-async function loadSettings() {
-    try {
-        const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
-        if(phDoc.exists()) { 
-            const phData = phDoc.data(); 
-            document.getElementById('settingPhName').value = phData.name || ''; 
-            document.getElementById('settingStockLimit').value = phData.lowStockThreshold || 10; 
-            document.getElementById('settingExpiryLimit').value = phData.expiryAlertThreshold || 30;
-            
-            const adminAllowedType = phData.bizType || 'retail'; 
-            const userSelectedType = phData.userBizType || adminAllowedType;
-            const bizTypeSelect = document.getElementById('settingBizType');
-            const btnSave = document.getElementById('btnSaveBizType');
-            const banner = document.getElementById('bizTypeBanner');
-
-            if (adminAllowedType === 'retail') {
-                bizTypeSelect.value = 'retail'; bizTypeSelect.disabled = true; btnSave.style.display = 'none';
-                banner.innerText = "⚠️ Admin allows Retail only."; banner.style.background = '#fffaf0'; banner.style.color = '#dd6b20';
-            } else if (adminAllowedType === 'wholesale') {
-                bizTypeSelect.value = 'wholesale'; bizTypeSelect.disabled = true; btnSave.style.display = 'none';
-                banner.innerText = "⚠️ Admin allows Wholesale only."; banner.style.background = '#fffaf0'; banner.style.color = '#dd6b20';
-            } else {
-                bizTypeSelect.value = userSelectedType; bizTypeSelect.disabled = false; btnSave.style.display = 'block';
-                banner.innerText = "💡 Admin allows both. Choose your type."; banner.style.background = '#ebf8ff'; banner.style.color = '#2c5282';
-            }
-        }
-    } catch(e) { console.error(e); }
-    
-    try {
-        const permDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'));
-        if(permDoc.exists()) { renderPermissionsUI(permDoc.data()); } 
-        else { renderPermissionsUI({ manager: { med: true, sell: true, exp: true, inv: true, daily: true, monthly: true, dash: true, settings: false }, accountant: { med: false, sell: false, exp: true, inv: false, daily: true, monthly: true, dash: true, settings: false } }); }
-    } catch(e) { console.error(e); }
-    
-    loadCreditPaymentHistory();
-}
-
-window.savePharmacyName = async function() {
-    const name = document.getElementById('settingPhName').value.trim(); if(!name) { alert('Enter name'); return; }
-    try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { name: name }); document.getElementById('hdrPharmacyName').innerText = name; alert('✅ Saved!'); } catch(e) { alert(e.message); }
-};
-
-window.saveStockLimit = async function() {
-    const limit = parseInt(document.getElementById('settingStockLimit').value); if(isNaN(limit) || limit < 1) { alert('Valid number required'); return; }
-    try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { lowStockThreshold: limit }); lowStockThreshold = limit; alert('✅ Saved!'); loadInventory(); } catch(e) { alert(e.message); }
-};
-
-window.saveExpiryLimit = async function() {
-    const limit = parseInt(document.getElementById('settingExpiryLimit').value); if(isNaN(limit) || limit < 1) { alert('Valid number required'); return; }
-    try { await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { expiryAlertThreshold: limit }); alert('✅ Saved!'); } catch(e) { alert(e.message); }
-};
-
-window.saveBizType = async function() {
-    const newBizType = document.getElementById('settingBizType').value;
-    if (!confirm(`Are you sure you want to change to ${newBizType}?`)) return;
-    try {
-        await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { userBizType: newBizType });
-        currentBizType = newBizType;
-        alert('✅ Business type changed!');
-    } catch(e) { alert('Error: ' + e.message); }
-};
-
-window.changeCurrentPassword = async function() {
-    const currentPass = document.getElementById('currentPassword').value;
-    const newPass = document.getElementById('newPassword').value;
-    const user = auth.currentUser;
-    if (!user || newPass.length < 6) { alert('New password must be at least 6 characters!'); return; }
-    try {
-        const credential = EmailAuthProvider.credential(user.email, currentPass);
-        await reauthenticateWithCredential(user, credential);
-        await updatePassword(user, newPass);
-        alert('✅ Password updated successfully!');
-        document.getElementById('currentPassword').value = ''; document.getElementById('newPassword').value = '';
-    } catch(e) { alert('Error: ' + e.message); }
-};
-
-window.backupData = function() {
-    const data = { medicines: allMedicines, categories: allCategories, branches: allBranches, customers: allCustomers, sales: allSales, quickSales: allQuickSales, expenses: allExpenses, fixed: allFixed, exportDate: new Date().toISOString() };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `backup_${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-};
-
-window.restoreData = function(event) {
-    const file = event.target.files[0]; if (!file) return;
-    if(!confirm('🚨 This will overwrite current data. Are you sure?')) { event.target.value = ''; return; }
-    const reader = new FileReader();
-    reader.onload = async (e) => { try { const data = JSON.parse(e.target.result); alert('⚠️ Restore feature is under development.'); } catch (err) { alert('⚠️ Error: Invalid file format.'); } };
-    reader.readAsText(file); event.target.value = '';
-};
-
-function renderPermissionsUI(perms) {
-    const displayEl = document.getElementById('permSectionDisplay'); if(!displayEl) return;
-    let html = ''; const sections = [{ key: 'med', label: '💊 Medicine' }, { key: 'sell', label: '🛒 Sales' }, { key: 'exp', label: '💸 Expenses' }, { key: 'inv', label: '📦 Inventory' }, { key: 'daily', label: '📅 Daily Report' }, { key: 'monthly', label: '📆 Monthly Report' }, { key: 'dash', label: '📊 Dashboard' }, { key: 'settings', label: '⚙️ Settings' }];
-    html += `<div style="background:#f9fafb; padding:16px; border-radius:8px; border:1px solid #e5e7eb;"><h4 style="font-size:14px; font-weight:700; margin-bottom:12px; color:#111827;">Manager</h4>`;
-    sections.forEach(sec => { const checked = perms.manager && perms.manager[sec.key] ? 'checked' : ''; html += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #e5e7eb;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" id="perm_mgr_${sec.key}" ${checked} style="width:20px;height:20px;"></div>`; });
-    html += `</div><div style="background:#f9fafb; padding:16px; border-radius:8px; border:1px solid #e5e7eb;"><h4 style="font-size:14px; font-weight:700; margin-bottom:12px; color:#111827;">Accountant</h4>`;
-    sections.forEach(sec => { const checked = perms.accountant && perms.accountant[sec.key] ? 'checked' : ''; html += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #e5e7eb;"><span style="font-size:13px;">${sec.label}</span><input type="checkbox" id="perm_acc_${sec.key}" ${checked} style="width:20px;height:20px;"></div>`; });
-    html += `</div>`;
-    displayEl.innerHTML = html;
-}
-
-window.savePermissions = async function() {
-    const sections = ['med', 'sell', 'exp', 'inv', 'daily', 'monthly', 'dash', 'settings']; let newData = { manager: {}, accountant: {} };
-    sections.forEach(key => { newData.manager[key] = document.getElementById(`perm_mgr_${key}`).checked; newData.accountant[key] = document.getElementById(`perm_acc_${key}`).checked; });
-    try { await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), newData); alert('✅ Permissions saved!'); } catch(e) { alert('Error: ' + e.message); }
-};
-
-function populateCreditCustomerSelect() {
-    const sel = document.getElementById('creditCustomerSelect'); if(!sel) return;
-    sel.innerHTML = '<option value="">-- Select Customer --</option>'; allCustomers.forEach(c => { sel.innerHTML += `<option value="${c}">${c}</option>`; });
-}
-
-window.addCreditPayment = async function() {
-    const customer = document.getElementById('creditCustomerSelect').value; 
-    const branch = document.getElementById('creditBranchSelect').value;
-    const amount = parseFloat(document.getElementById('creditAmount').value); 
-    const date = document.getElementById('creditDate').value;
-    if (!customer || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields correctly!'); return; }
-    try { await addDoc(collection(db, 'creditPayments'), { customer, branch, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); alert('✅ Payment recorded!'); document.getElementById('creditAmount').value = ''; } catch(e) { alert(e.message); }
-};
-
-function loadCreditPaymentHistory() {
-    const listEl = document.getElementById('creditPaymentList'); if(!listEl) return;
-    if(allCreditPayments.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">No payments yet.</p>'; return; }
-    let html = ''; allCreditPayments.forEach(p => { html += `<div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;"><span>🏪 ${p.customer} ${p.branch ? '| 🏢 '+p.branch : ''}</span><span style="color:#10b981; font-weight:bold;">+ ${p.amount.toFixed(2)} ETB</span></div>`; }); listEl.innerHTML = html;
-}
-
-function renderUnpaidCredits() {
-    const listEl = document.getElementById('unpaidCreditList'); if(!listEl) return;
-    const searchVal = (document.getElementById('searchUnpaidCredit')?.value || '').toLowerCase();
-    const branchFilter = document.getElementById('filterBranchCredit').value;
-    
-    const creditSales = allSales.filter(s => s.paymentMethod === 'credit');
-    const customerDebts = {};
-    creditSales.forEach(sale => { 
-        if(branchFilter !== 'all' && sale.branch !== branchFilter) return;
-        const customer = sale.customer || 'Unknown'; const unpaid = sale.total - (sale.paidAmount || 0); 
-        if(unpaid > 0) { if(!customerDebts[customer]) customerDebts[customer] = 0; customerDebts[customer] += unpaid; } 
-    });
-    allCreditPayments.forEach(payment => { 
-        const customer = payment.customer; 
-        if(customerDebts[customer]) { customerDebts[customer] -= payment.amount; if(customerDebts[customer] <= 0) delete customerDebts[customer]; } 
-    });
-    let customersWithDebt = Object.keys(customerDebts); if (searchVal) customersWithDebt = customersWithDebt.filter(c => c.toLowerCase().includes(searchVal));
-    let totalDebt = 0; let html = '';
-    if(customersWithDebt.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">No unpaid debts.</p>'; document.getElementById('totalUnpaidDebt').innerText = '0.00'; return; }
-    customersWithDebt.forEach(customer => { const debt = customerDebts[customer]; if(debt > 0) { totalDebt += debt; html += `<div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; background:#fef2f2;"><span style="color:#dc2626; font-weight:bold;">${customer}</span><span style="color:#dc2626; font-weight:bold;">${debt.toFixed(2)} ETB</span></div>`; } });
-    listEl.innerHTML = html; document.getElementById('totalUnpaidDebt').innerText = totalDebt.toFixed(2);
-}
-
-window.renderSalesHistory = function() {
-    const listEl = document.getElementById('salesHistoryList'); if (!listEl) return;
-    const rowsPerPage = parseInt(document.getElementById('salesHistRowsPerPage').value) || 10;
-    let combined = []; allSales.forEach(s => combined.push({ ...s, _type: 'sale' })); allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
-    const filter = document.getElementById('filterSalesHistory')?.value || 'all'; 
-    const branchFilter = document.getElementById('filterBranchSalesHistory')?.value || 'all'; 
-    const startDate = document.getElementById('filterStartDate')?.value;
-    const endDate = document.getElementById('filterEndDate')?.value;
-
-    if (filter === 'detail') combined = combined.filter(c => c._type === 'sale'); 
-    if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
-    if (branchFilter !== 'all') combined = combined.filter(c => c.branch === branchFilter);
-    if (startDate) combined = combined.filter(c => c.date >= startDate);
-    if (endDate) combined = combined.filter(c => c.date <= endDate);
-
-    if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales history.</p>'; document.getElementById('salesHistPageInfo').innerText = `Page 1 of 1`; return; }
-    combined.sort((a, b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
-    
-    const totalPages = Math.ceil(combined.length / rowsPerPage);
-    if(salesHistPage > totalPages) salesHistPage = totalPages;
-    if(salesHistPage < 1) salesHistPage = 1;
-    const start = (salesHistPage - 1) * rowsPerPage;
-    const paginated = combined.slice(start, start + rowsPerPage);
-
-    let html = '';
-    paginated.forEach(item => {
-        const dateStr = item.date || 'Unknown';
-        if (item._type === 'quick') { html += `<div style="padding:16px; border-bottom:1px solid #e5e7eb; border-left:4px solid #f59e0b;"><div style="display:flex; justify-content:space-between;"><strong style="color:#111827;">⚡ Quick Sale (${item.type})</strong><span style="font-weight:bold; color:#10b981;">${item.amount.toFixed(2)} ETB</span></div><div style="font-size:12px; color:#6b7280; margin-top:4px;">📅 ${dateStr} ${item.branch ? '| 🏢 '+item.branch : ''}</div></div>`; } 
-        else {
-            const total = item.total || 0; const paid = item.paidAmount !== undefined ? item.paidAmount : total; const pmLabel = item.paymentMethod === 'transfer' ? '🏦' : (item.paymentMethod === 'credit' ? '📝' : '💵');
-            html += `<div style="padding:16px; border-bottom:1px solid #e5e7eb;"><div style="display:flex; justify-content:space-between; margin-bottom:8px;"><div><strong style="color:#111827;">${item.medicineName}</strong><div style="font-size:12px; color:#6b7280; margin-top:4px;">📅 ${dateStr} | 📦 Qty: ${item.quantity} | 🏷️ ${item.unitPrice} ETB</div></div><div style="text-align:right;"><strong style="color:#10b981;">${paid.toFixed(2)} ETB</strong><div style="font-size:11px; color:#6b7280;">${pmLabel} ${item.paymentMethod || 'cash'} ${item.customer ? '| '+item.customer : ''}</div></div></div><div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#6b7280; border-top:1px dashed #e5e7eb; padding-top:8px;"><div>${item.branch ? `🏢 ${item.branch}` : ''} ${item.receipt ? `| 🧾 ${item.receipt}` : ''}</div><button onclick="deleteSale('${item.id}', '${item.medicineId}', ${item.quantity})" style="background: #fef2f2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🗑️ Delete</button></div></div>`;
-        }
-    });
-    listEl.innerHTML = html;
-    document.getElementById('salesHistPageInfo').innerText = `Page ${salesHistPage} of ${totalPages}`;
-    document.getElementById('btnPrevSalesHist').disabled = salesHistPage === 1;
-    document.getElementById('btnNextSalesHist').disabled = salesHistPage === totalPages;
-};
-
-window.changeSalesHistPage = function(dir) { salesHistPage += dir; renderSalesHistory(); };
-
-window.deleteSale = async function(saleId, medicineId, quantity) {
-    if (!confirm('Delete this sale? (Stock will be restored)')) return;
-    try { if (medicineId && medicineId !== 'undefined') { await updateDoc(doc(db, 'medicines', medicineId), { quantity: increment(quantity) }); } await deleteDoc(doc(db, 'sales', saleId)); alert('✅ Deleted!'); } catch(e) { alert('Error: ' + e.message); }
-};
-
-window.clearAllSales = async function() {
-    if (!confirm('Delete ALL sales history? (Stock will NOT be restored)')) return;
-    if (!confirm('Are you absolutely sure? This cannot be undone!')) return;
-    try { let batch = writeBatch(db); let count = 0; for (let s of allSales) { batch.delete(doc(db, 'sales', s.id)); count++; } for (let q of allQuickSales) { batch.delete(doc(db, 'quickSales', q.id)); count++; } if (count > 0) await batch.commit(); let creditBatch = writeBatch(db); let cCount = 0; for (let c of allCreditPayments) { creditBatch.delete(doc(db, 'creditPayments', c.id)); cCount++; } if (cCount > 0) await creditBatch.commit(); alert(`✅ ${count} sales deleted!`); } catch(e) { alert('Error: ' + e.message); }
-};
 
 window.toggleReportDatePickers = function() {
     const type = document.getElementById('reportTypeSelect').value; const dateDiv = document.getElementById('repDateDiv'); const monthDiv = document.getElementById('repMonthDiv');
