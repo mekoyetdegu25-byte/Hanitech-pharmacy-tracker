@@ -261,7 +261,7 @@ input:checked + .slider:before { transform: translateX(20px); }
     <div class="tabs">
         <div class="menu-group" id="menu_med">
             <div class="menu-header open" onclick="toggleMenu(this)">
-                <div class="m-left"><i>💊</i> Medicine</div>
+                <div class="m-left"><i>💊</i> <span data-lang="med">Medicine</span></div>
                 <span class="m-arrow">▶</span>
             </div>
             <div class="sub-menu open">
@@ -273,7 +273,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
         <div class="menu-group" id="menu_sell">
             <div class="menu-header" onclick="toggleMenu(this)">
-                <div class="m-left"><i>🛒</i> Sales</div>
+                <div class="m-left"><i>🛒</i> <span data-lang="sell">Sales</span></div>
                 <span class="m-arrow">▶</span>
             </div>
             <div class="sub-menu">
@@ -285,19 +285,20 @@ input:checked + .slider:before { transform: translateX(20px); }
 
         <div class="menu-group" id="menu_exp">
             <div class="menu-header" onclick="toggleMenu(this)">
-                <div class="m-left"><i>💸</i> Expenses</div>
+                <div class="m-left"><i>💸</i> <span data-lang="exp">Expenses</span></div>
                 <span class="m-arrow">▶</span>
             </div>
             <div class="sub-menu">
                 <label onclick="switchPage('panel3', 'sub3_1', this)">💸 Daily Expense</label>
                 <label onclick="switchPage('panel3', 'sub3_2', this)">🏢 Fixed Expense</label>
+                <label onclick="switchPage('panel3', 'sub3_list', this)">📋 Expense List</label>
                 <label onclick="switchPage('panel3', 'sub3_3', this)">🗂️ Categories</label>
             </div>
         </div>
 
         <div class="menu-group" id="menu_inv">
             <div class="menu-header" onclick="toggleMenu(this)">
-                <div class="m-left"><i>📦</i> Inventory</div>
+                <div class="m-left"><i>📦</i> <span data-lang="inv">Inventory</span></div>
                 <span class="m-arrow">▶</span>
             </div>
             <div class="sub-menu">
@@ -309,13 +310,13 @@ input:checked + .slider:before { transform: translateX(20px); }
 
         <div class="menu-group" id="menu_dash">
             <label class="menu-header" onclick="switchPage('panel7', null, this)">
-                <div class="m-left"><i>📊</i> Dashboard</div>
+                <div class="m-left"><i>📊</i> <span data-lang="dash">Dashboard</span></div>
             </label>
         </div>
 
         <div class="menu-group" id="menu_rep">
             <div class="menu-header" onclick="toggleMenu(this)">
-                <div class="m-left"><i>📄</i> Reports</div>
+                <div class="m-left"><i>📄</i> <span data-lang="rep">Reports</span></div>
                 <span class="m-arrow">▶</span>
             </div>
             <div class="sub-menu">
@@ -327,13 +328,13 @@ input:checked + .slider:before { transform: translateX(20px); }
 
         <div class="menu-group" id="menu_settings">
             <label class="menu-header" onclick="switchPage('panel9', null, this)">
-                <div class="m-left"><i>⚙️</i> Settings</div>
+                <div class="m-left"><i>⚙️</i> <span data-lang="settings">Settings</span></div>
             </label>
         </div>
         
         <div class="menu-group" id="menu_credit">
             <label class="menu-header" onclick="switchPage('panel10', null, this)">
-                <div class="m-left"><i>💳</i> Credit</div>
+                <div class="m-left"><i>💳</i> <span data-lang="credit">Credit</span></div>
             </label>
         </div>
     </div> 
@@ -639,6 +640,34 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                 </div>
             </div>
+            
+            <!-- ✅ NEW PANEL: Expense List -->
+            <div class="sub-panel" id="sub3_list">
+                <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrExpenseList','bodyExpenseList')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">All Expenses List</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyExpenseList">
+                        <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; background:#f9fafb; padding:12px; border-radius:8px; border:1px solid #e5e7eb;">
+                            <select id="listFilterType" onchange="renderAllExpensesList()" style="flex:1; min-width:150px;">
+                                <option value="all">All Types</option>
+                                <option value="daily">📅 Daily Expenses</option>
+                                <option value="fixed">🏢 Fixed Expenses</option>
+                            </select>
+                            <select id="listFilterBranch" onchange="renderAllExpensesList()" style="flex:1; min-width:150px;">
+                                <option value="all">All Branches</option>
+                            </select>
+                            <select id="listFilterCategory" onchange="renderAllExpensesList()" style="flex:1; min-width:150px;">
+                                <option value="all">All Categories</option>
+                            </select>
+                            <input type="date" id="listFilterDate" onchange="renderAllExpensesList()" style="flex:1;" title="Filter by Date (Daily)">
+                            <input type="month" id="listFilterMonth" onchange="renderAllExpensesList()" style="flex:1;" title="Filter by Month (Fixed)">
+                        </div>
+                        <div id="allExpensesListDisplay"></div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="sub-panel" id="sub3_3">
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
@@ -1056,7 +1085,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 </div>
                             </div>
 
-                            <!-- ✅ 7. Branches & Customers (ተመልሰዋል) -->
+                            <!-- 7. Branches & Customers -->
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyBranchMgr').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div>
@@ -1217,14 +1246,17 @@ window.switchPage = function(panelId, subPanelId, element) {
         });
     }
 
-    // ✅ Settings ሲከፈት ሳጥኑ ተከፍቶ እንዲታይ ማድረግ + ዳታ መጫን
     if(panelId === 'panel9') {
         const settingsBody = document.getElementById('bodySettings');
         const settingsHeader = document.getElementById('hdrSettings');
         if(settingsBody) settingsBody.classList.add('open');
         if(settingsHeader) settingsHeader.classList.add('open');
         
-        loadSettingsData(); // ዳታውን ጫን
+        loadSettingsData(); 
+    }
+
+    if(subPanelId === 'sub3_list') {
+        renderAllExpensesList();
     }
 };
 
@@ -1293,7 +1325,6 @@ async function loadUserHeader(user) {
             }
         }
         
-        // ✅ Permissions መተግበር
         await applyPermissionsToUI();
 
     } catch (err) { console.error('loadUserHeader error:', err); }
@@ -1334,7 +1365,7 @@ async function loadAllData() {
 
     renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); toggleReportDatePickers();
     setupRealtimeListeners();
-    renderExpenseHistory(); renderFixedExpenseHistory();
+    renderExpenseHistory(); renderFixedExpenseHistory(); renderAllExpensesList();
 } 
 
 function setupRealtimeListeners() {
@@ -1342,14 +1373,30 @@ function setupRealtimeListeners() {
     unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); });
     unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); calculateStockReport(); });
     unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
-    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); });
-    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory(); });
+    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); renderAllExpensesList(); });
+    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory(); renderAllExpensesList(); });
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; loadCreditPaymentHistory(); renderUnpaidCredits(); });
 }
 
 // ==========================================
-// SETTINGS & PERMISSIONS LOGIC (Firebase)
+// 🌐 SETTINGS, TRANSLATIONS & LOGIC
 // ==========================================
+
+function applyLanguage(lang) {
+    const translations = {
+        am: { med: "መድኃኒት", sell: "ሽያጭ", exp: "ወጪዎች", inv: "ክምችት", dash: "ዳሽቦርድ", rep: "ሪፖርቶች", settings: "ሴቲንግ", credit: "ክሬዲት" },
+        en: { med: "Medicine", sell: "Sales", exp: "Expenses", inv: "Inventory", dash: "Dashboard", rep: "Reports", settings: "Settings", credit: "Credit" }
+    };
+    const t = translations[lang] || translations['en'];
+    document.querySelectorAll('[data-lang="med"]').forEach(el => el.innerText = t.med);
+    document.querySelectorAll('[data-lang="sell"]').forEach(el => el.innerText = t.sell);
+    document.querySelectorAll('[data-lang="exp"]').forEach(el => el.innerText = t.exp);
+    document.querySelectorAll('[data-lang="inv"]').forEach(el => el.innerText = t.inv);
+    document.querySelectorAll('[data-lang="dash"]').forEach(el => el.innerText = t.dash);
+    document.querySelectorAll('[data-lang="rep"]').forEach(el => el.innerText = t.rep);
+    document.querySelectorAll('[data-lang="settings"]').forEach(el => el.innerText = t.settings);
+    document.querySelectorAll('[data-lang="credit"]').forEach(el => el.innerText = t.credit);
+}
 
 async function loadSettingsData() {
     if (!currentUserPharmacyId) return;
@@ -1364,6 +1411,8 @@ async function loadSettingsData() {
             document.getElementById('settingDarkMode').checked = data.darkMode || false;
             document.getElementById('settingStockLimit').value = data.lowStockThreshold || 10;
             document.getElementById('settingExpiryLimit').value = data.expiryAlertThreshold || 30;
+            
+            applyLanguage(data.language || 'am');
         }
 
         const notifDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'notifications'));
@@ -1378,7 +1427,6 @@ async function loadSettingsData() {
         if (permDoc.exists()) {
             renderPermissionsUI(permDoc.data());
         } else {
-            // ✅ አዲስ ታቦች ተካተዋል (dash, rep)
             renderPermissionsUI({
                 manager: { med: true, sell: true, exp: true, inv: true, dash: true, rep: true, credit: true, settings: true },
                 accountant: { med: false, sell: true, exp: true, inv: false, dash: true, rep: true, credit: true, settings: false },
@@ -1392,7 +1440,6 @@ async function loadSettingsData() {
 }
 
 async function logActivity(actionText) {
-    // ✅ ስህተት ቢፈጠርም ስርዓቱ እንዳይቆም try/catch ተጠቅመናል
     try {
         const userEmail = document.getElementById('hdrUserEmail').innerText;
         const userName = userEmail.split('@')[0]; 
@@ -1412,7 +1459,7 @@ window.savePharmacyInfo = async function() {
     try {
         await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { name: name, phone: phone });
         document.getElementById('hdrPharmacyName').innerText = name;
-        logActivity(`updated pharmacy info (Name: ${name}, Phone: ${phone})`);
+        logActivity(`updated pharmacy info (Name: ${name})`);
         alert('✅ Pharmacy Info Saved!');
     } catch (e) { alert('Error: ' + e.message); }
 }
@@ -1423,7 +1470,8 @@ window.saveSystemPrefs = async function() {
     const darkMode = document.getElementById('settingDarkMode').checked;
     try {
         await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { currency, language, darkMode });
-        logActivity(`updated system preferences (Currency: ${currency}, Lang: ${language})`);
+        logActivity(`updated system preferences (Lang: ${language})`);
+        applyLanguage(language); // ✅ ቋንቋ ወዲያውኑ ይቀየራል
         alert('✅ Preferences Saved!');
     } catch (e) { alert('Error: ' + e.message); }
 }
@@ -1454,16 +1502,11 @@ function renderPermissionsUI(perms) {
     const grid = document.getElementById('permissionGrid');
     if(!grid) return;
     
-    // ✅ Dashboard እና Reports ተካተዋል
     const tabs = [
-        { id: 'med', icon: '💊', label: 'Medicine' },
-        { id: 'sell', icon: '🛒', label: 'Sales' },
-        { id: 'exp', icon: '💸', label: 'Expenses' },
-        { id: 'inv', icon: '📦', label: 'Inventory' },
-        { id: 'dash', icon: '📊', label: 'Dashboard' },
-        { id: 'rep', icon: '📄', label: 'Reports' },
-        { id: 'credit', icon: '💳', label: 'Credit' },
-        { id: 'settings', icon: '⚙️', label: 'Settings' }
+        { id: 'med', icon: '💊', label: 'Medicine' }, { id: 'sell', icon: '🛒', label: 'Sales' },
+        { id: 'exp', icon: '💸', label: 'Expenses' }, { id: 'inv', icon: '📦', label: 'Inventory' },
+        { id: 'dash', icon: '📊', label: 'Dashboard' }, { id: 'rep', icon: '📄', label: 'Reports' },
+        { id: 'credit', icon: '💳', label: 'Credit' }, { id: 'settings', icon: '⚙️', label: 'Settings' }
     ];
     
     const roles = [
@@ -1490,7 +1533,6 @@ function renderPermissionsUI(perms) {
 
 window.savePermissions = async function() {
     const roles = ['manager', 'accountant', 'employee'];
-    // ✅ አዲስ ታቦች
     const tabs = ['med', 'sell', 'exp', 'inv', 'dash', 'rep', 'credit', 'settings'];
     let newData = {};
 
@@ -1546,7 +1588,7 @@ async function loadAuditTrail() {
 
 async function applyPermissionsToUI() {
     if (!currentUserPharmacyId) return;
-    if (currentUserRole === 'owner') return; // Owner ሁልጊዜ ሁሉንም ያያል
+    if (currentUserRole === 'owner') return; 
 
     try {
         const permDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'));
@@ -1568,18 +1610,33 @@ async function applyPermissionsToUI() {
             document.getElementById('panel9').style.display = 'none';
             document.getElementById('menu_settings').style.display = 'none';
         }
-    } catch (e) {
-        console.error("Error applying permissions:", e);
-    }
+    } catch (e) { console.error("Error applying permissions:", e); }
 }
 
-// Backup & Restore & Reset
-window.backupData = function() { alert('Backup feature coming soon'); };
+// Data Backup
+window.backupData = function() {
+    try {
+        const data = { 
+            medicines: allMedicines, categories: allCategories, branches: allBranches, customers: allCustomers, 
+            sales: allSales, quickSales: allQuickSales, expenses: allExpenses, fixedExpenses: allFixed, 
+            exportDate: new Date().toISOString() 
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); 
+        a.href = url; 
+        a.download = `hanitech_backup_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        logActivity("downloaded system backup");
+    } catch (e) { alert("Error downloading backup: " + e.message); }
+};
+
 window.restoreData = function(event) { alert('Restore feature coming soon'); };
 window.resetAllData = function() { if(confirm('Are you absolutely sure? This deletes everything!')) alert('Reset feature coming soon'); };
 
+
 // ==========================================
-// REST OF THE FUNCTIONS (Medicine, Sales, Reports...)
+// REST OF THE FUNCTIONS
 // ==========================================
 async function loadCategories() {
     try {
@@ -1667,9 +1724,18 @@ window.deleteSubcategory = async function(catName, subId, subName) {
 async function loadExpCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'expenseCategories'), where('pharmacyId', '==', currentUserPharmacyId)));
-        allExpCategories = []; const select = document.getElementById('expCat'); select.innerHTML = '<option value="">-- Select Category --</option>';
+        allExpCategories = []; 
+        const select = document.getElementById('expCat'); if(select) select.innerHTML = '<option value="">-- Select Category --</option>';
         const fixSelect = document.getElementById('fixCat'); if(fixSelect) fixSelect.innerHTML = '<option value="">-- Select Category --</option>';
-        snap.forEach(doc => { const catName = doc.data().name; allExpCategories.push(catName); select.innerHTML += `<option value="${catName}">${catName}</option>`; if(fixSelect) fixSelect.innerHTML += `<option value="${catName}">${catName}</option>`; });
+        const listCat = document.getElementById('listFilterCategory'); if(listCat) listCat.innerHTML = '<option value="all">All Categories</option>';
+        
+        snap.forEach(doc => { 
+            const catName = doc.data().name; 
+            allExpCategories.push(catName); 
+            if(select) select.innerHTML += `<option value="${catName}">${catName}</option>`; 
+            if(fixSelect) fixSelect.innerHTML += `<option value="${catName}">${catName}</option>`; 
+            if(listCat) listCat.innerHTML += `<option value="${catName}">${catName}</option>`;
+        });
         renderExpCatList();
     } catch(e) { console.error(e); }
 } 
@@ -1690,7 +1756,8 @@ window.deleteExpCategory = async function(name) {
 async function loadBranches() {
     try {
         const snap = await getDocs(query(collection(db, 'branches'), where('pharmacyId', '==', currentUserPharmacyId)));
-        allBranches = []; const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch'];
+        allBranches = []; 
+        const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch'];
         selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML = '<option value="all">All Branches</option>'; });
         snap.forEach(doc => { const bName = doc.data().name; allBranches.push(bName); selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML += `<option value="${bName}">${bName}</option>`; }); });
         renderBranchList();
@@ -2089,13 +2156,13 @@ window.saveBulkSales = async function() {
 window.addExpense = async function() {
     const cat = document.getElementById('expCat').value; const branch = document.getElementById('expBranch').value; const note = document.getElementById('expNote').value.trim(); const amount = parseFloat(document.getElementById('expAmount').value); const date = document.getElementById('expDate').value;
     if(!cat || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields'); return; }
-    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added expense: ${amount} ETB (${cat})`); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; renderExpenseHistory(); } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added expense: ${amount} ETB (${cat})`); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; renderExpenseHistory(); renderAllExpensesList(); } catch(e) { alert(e.message); }
 }; 
 
 window.addFixedExpense = async function() {
     const cat = document.getElementById('fixCat').value; const branch = document.getElementById('fixBranch').value; const note = document.getElementById('fixNote').value.trim(); const amount = parseFloat(document.getElementById('fixAmount').value); const month = document.getElementById('fixMonth').value;
     if(!cat || isNaN(amount) || amount <= 0 || !month) { alert('Fill all fields'); return; }
-    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added fixed expense: ${amount} ETB (${cat})`); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; renderFixedExpenseHistory(); } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added fixed expense: ${amount} ETB (${cat})`); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; renderFixedExpenseHistory(); renderAllExpensesList(); } catch(e) { alert(e.message); }
 }; 
 
 function renderExpenseHistory() {
@@ -2146,14 +2213,14 @@ window.editExpense = function(id) {
             alert('✅ Expense updated!');
             saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addExpense;
             document.getElementById('expAmount').value = ''; document.getElementById('expNote').value = '';
-            renderExpenseHistory();
+            renderExpenseHistory(); renderAllExpensesList();
         } catch(e) { alert(e.message); }
     };
 };
 
 window.deleteExpense = async function(id) {
     if(!confirm('Delete this expense?')) return;
-    try { await deleteDoc(doc(db, 'expenses', id)); logActivity(`deleted expense`); alert('✅ Deleted!'); renderExpenseHistory(); } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'expenses', id)); logActivity(`deleted expense`); alert('✅ Deleted!'); renderExpenseHistory(); renderAllExpensesList(); } catch(e) { alert(e.message); }
 };
 
 function renderFixedExpenseHistory() {
@@ -2203,14 +2270,88 @@ window.editFixedExpense = function(id) {
             alert('✅ Fixed Expense updated!');
             saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addFixedExpense;
             document.getElementById('fixAmount').value = ''; document.getElementById('fixNote').value = '';
-            renderFixedExpenseHistory();
+            renderFixedExpenseHistory(); renderAllExpensesList();
         } catch(e) { alert(e.message); }
     };
 };
 
 window.deleteFixedExpense = async function(id) {
     if(!confirm('Delete this fixed expense?')) return;
-    try { await deleteDoc(doc(db, 'fixedExpenses', id)); logActivity(`deleted fixed expense`); alert('✅ Deleted!'); renderFixedExpenseHistory(); } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'fixedExpenses', id)); logActivity(`deleted fixed expense`); alert('✅ Deleted!'); renderFixedExpenseHistory(); renderAllExpensesList(); } catch(e) { alert(e.message); }
+};
+
+// ✅ NEW: Render All Expenses List (Daily + Fixed)
+window.renderAllExpensesList = function() {
+    const listEl = document.getElementById('allExpensesListDisplay');
+    if(!listEl) return;
+
+    const typeFilter = document.getElementById('listFilterType').value;
+    const branchFilter = document.getElementById('listFilterBranch').value;
+    const catFilter = document.getElementById('listFilterCategory').value;
+    const dateFilter = document.getElementById('listFilterDate').value;
+    const monthFilter = document.getElementById('listFilterMonth').value;
+
+    let combined = [];
+
+    if (typeFilter === 'all' || typeFilter === 'daily') {
+        let dExp = allExpenses;
+        if (branchFilter !== 'all') dExp = dExp.filter(e => e.branch === branchFilter);
+        if (catFilter !== 'all') dExp = dExp.filter(e => e.category === catFilter);
+        if (dateFilter) dExp = dExp.filter(e => e.date === dateFilter);
+        if (monthFilter && !dateFilter) dExp = dExp.filter(e => e.date.startsWith(monthFilter));
+        
+        dExp.forEach(e => combined.push({ ...e, _type: 'daily', _displayDate: e.date }));
+    }
+
+    if (typeFilter === 'all' || typeFilter === 'fixed') {
+        let fExp = allFixed;
+        if (branchFilter !== 'all') fExp = fExp.filter(e => e.branch === branchFilter);
+        if (catFilter !== 'all') fExp = fExp.filter(e => e.category === catFilter);
+        if (monthFilter) fExp = fExp.filter(e => e.month === monthFilter);
+        if (dateFilter) fExp = fExp.filter(e => e.month === dateFilter.slice(0, 7));
+
+        fExp.forEach(e => combined.push({ ...e, _type: 'fixed', _displayDate: e.month }));
+    }
+
+    combined.sort((a, b) => b._displayDate.localeCompare(a._displayDate));
+
+    if (combined.length === 0) {
+        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:30px;">No expenses found for the selected filters.</p>';
+        return;
+    }
+
+    let totalAmount = 0;
+    let html = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
+        <div class="summary-box red" style="margin-bottom:0; padding:15px;"><div class="label">Total Expenses Count</div><div class="value" style="font-size:22px;">${combined.length}</div></div>
+        <div class="summary-box red" style="margin-bottom:0; padding:15px;"><div class="label">Total Amount</div><div class="value" style="font-size:22px;">0.00 ETB</div></div>
+    </div>`;
+
+    html += `<div style="background:#fff; border-radius:8px; border:1px solid #e5e7eb; overflow:hidden;">`;
+    html += `<table class="data-table" style="border:none;">
+        <thead><tr><th>Type</th><th>Date/Month</th><th>Category</th><th>Branch</th><th>Note</th><th>Amount</th><th>Action</th></tr></thead>
+        <tbody>`;
+
+    combined.forEach(e => {
+        totalAmount += e.amount;
+        const typeBadge = e._type === 'daily' ? '<span style="background:#eff6ff; color:#1d4ed8; padding:2px 8px; border-radius:12px; font-size:11px;">Daily</span>' : '<span style="background:#fffbeb; color:#b45309; padding:2px 8px; border-radius:12px; font-size:11px;">Fixed</span>';
+        
+        html += `<tr>
+            <td>${typeBadge}</td>
+            <td>${e._displayDate}</td>
+            <td>${e.category}</td>
+            <td>${e.branch || 'Main'}</td>
+            <td style="color:#6b7280; font-size:12px;">${e.note || '-'}</td>
+            <td style="font-weight:bold; color:#ef4444;">${e.amount.toFixed(2)} ETB</td>
+            <td>
+                ${e._type === 'daily' ? `<button onclick="editExpense('${e.id}')" class="action-btn btn-edit">✏️</button><button onclick="deleteExpense('${e.id}'); renderAllExpensesList();" class="action-btn btn-delete">🗑️</button>` : 
+                  `<button onclick="editFixedExpense('${e.id}')" class="action-btn btn-edit">✏️</button><button onclick="deleteFixedExpense('${e.id}'); renderAllExpensesList();" class="action-btn btn-delete">🗑️</button>`}
+            </td>
+        </tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+    html = html.replace('0.00 ETB', totalAmount.toFixed(2) + ' ETB');
+    listEl.innerHTML = html;
 };
 
 window.loadInventory = function() {
