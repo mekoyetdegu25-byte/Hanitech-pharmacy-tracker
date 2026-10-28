@@ -610,12 +610,11 @@ input:checked + .slider:before { transform: translateX(20px); }
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                             <div><label class="field-label">💰 Amount</label><input type="number" id="expAmount"></div>
-                            <div><label class="field-label">📅 Date</label><input type="date" id="expDate" onchange="renderExpenseHistory()"></div>
+                            <div><label class="field-label">📅 Date</label><input type="date" id="expDate"></div>
                         </div>
                         <label class="field-label">📝 Note</label><input type="text" id="expNote">
                         <button class="btn btn-danger" id="btnSaveExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addExpense()">💾 Save Expense</button>
                         <div style="clear:both;"></div>
-                        <div id="expList" style="margin-top:20px;"></div>
                     </div>
                 </div>
             </div>
@@ -631,12 +630,11 @@ input:checked + .slider:before { transform: translateX(20px); }
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                             <div><label class="field-label">💰 Amount</label><input type="number" id="fixAmount"></div>
-                            <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth" onchange="renderFixedExpenseHistory()"></div>
+                            <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
                         </div>
                         <label class="field-label">📝 Note</label><input type="text" id="fixNote">
                         <button class="btn btn-warning" id="btnSaveFixExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addFixedExpense()">💾 Save Expense</button>
                         <div style="clear:both;"></div>
-                        <div id="fixedExpList" style="margin-top:20px;"></div>
                     </div>
                 </div>
             </div>
@@ -692,6 +690,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory List</span></div>
                     </div>
                     <div class="section-body open" id="bodyInventory">
+                        <!-- Summary Boxes -->
                         <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:20px;">
                             <div class="summary-box blue" style="margin-bottom:0; padding:15px;"><div class="label">Total Purchased Qty</div><div class="value" id="totalPurchasedQty" style="font-size:22px;">0</div></div>
                             <div class="summary-box green" style="margin-bottom:0; padding:15px;"><div class="label">Total Purchased Value</div><div class="value" id="totalPurchasedValue" style="font-size:22px;">0.00</div></div>
@@ -699,6 +698,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div class="summary-box red" style="margin-bottom:0; padding:15px;"><div class="label">Remaining Qty</div><div class="value" id="totalRemainingQty" style="font-size:22px;">0</div></div>
                         </div>
 
+                        <!-- Filters -->
                         <div class="no-print" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
                             <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name or batch..." oninput="invPage=1; loadInventory()" style="flex:1;">
                             <select id="filterTypeInv" onchange="invPage=1; loadInventory()" style="width:160px;">
@@ -1246,17 +1246,21 @@ window.switchPage = function(panelId, subPanelId, element) {
         });
     }
 
+    // Settings ሲከፈት ሳጥኑ ተከፍቶ እንዲታይ ማድረግ + ዳታ መጫን
     if(panelId === 'panel9') {
         const settingsBody = document.getElementById('bodySettings');
         const settingsHeader = document.getElementById('hdrSettings');
         if(settingsBody) settingsBody.classList.add('open');
         if(settingsHeader) settingsHeader.classList.add('open');
         
-        loadSettingsData(); 
+        loadSettingsData(); // ዳታውን ጫን
     }
 
     if(subPanelId === 'sub3_list') {
         renderAllExpensesList();
+    }
+    if(subPanelId === 'sub2_3') {
+        renderSalesHistory(); // Sales History ማሳያ
     }
 };
 
@@ -1365,7 +1369,7 @@ async function loadAllData() {
 
     renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); toggleReportDatePickers();
     setupRealtimeListeners();
-    renderExpenseHistory(); renderFixedExpenseHistory(); renderAllExpensesList();
+    renderExpenseHistory(); renderFixedExpenseHistory(); renderAllExpensesList(); renderSalesHistory();
 } 
 
 function setupRealtimeListeners() {
@@ -2280,7 +2284,6 @@ window.deleteFixedExpense = async function(id) {
     try { await deleteDoc(doc(db, 'fixedExpenses', id)); logActivity(`deleted fixed expense`); alert('✅ Deleted!'); renderFixedExpenseHistory(); renderAllExpensesList(); } catch(e) { alert(e.message); }
 };
 
-// ✅ NEW: Render All Expenses List (Daily + Fixed)
 window.renderAllExpensesList = function() {
     const listEl = document.getElementById('allExpensesListDisplay');
     if(!listEl) return;
@@ -2377,21 +2380,37 @@ window.loadInventory = function() {
 
     let catHtml = '';
     let fullTotal = 0;
-    Object.keys(grouped).forEach(cat => {
-        let catQty = 0; let catVal = 0;
-        grouped[cat].forEach(m => { catQty += m.quantity; catVal += m.quantity * (m.price||0); });
-        fullTotal += catVal;
-        catHtml += `<div style="margin-bottom:20px;">
-            <div style="background:#f3f4f6; padding:10px; border-radius:8px 8px 0 0; display:flex; justify-content:space-between; font-weight:bold;">
-                <span>📁 ${cat}</span>
-                <span>Value: ${catVal.toFixed(2)} ETB</span>
+    Object.keys(grouped).forEach((cat, index) => {
+        let catQty = 0; 
+        let catRemainingVal = 0;
+        
+        grouped[cat].forEach(m => { 
+            catQty += m.quantity; 
+            catRemainingVal += m.quantity * (m.price || 0); 
+        });
+        fullTotal += catRemainingVal;
+        
+        // ✅ አዲስ ኮላፕሲብል ካርድ ለእያንዳንዱ ምድብ
+        catHtml += `<div class="section-collapsible" style="margin-bottom:15px; box-shadow:none; border:1px solid #e5e7eb;">
+            <div class="section-header" onclick="toggleSection('invCat${index}','invCatBody${index}')" style="padding:12px 16px; background:#f9fafb; border-radius:8px 8px 0 0;">
+                <div class="sec-left"><span class="sec-arrow" id="hdrInvCat${index}">▶</span><span class="sec-icon">📁</span><span class="sec-title">${cat}</span></div>
+                <span style="font-size:13px; font-weight:600; color:#10b981;">Value: ${catRemainingVal.toFixed(2)} ETB</span>
             </div>
-            <table class="data-table" style="border-radius:0 0 8px 8px;">
-                <thead><tr><th>Item Name</th><th>Branch</th><th>Batch</th><th>Qty</th><th>Price</th><th>Total Value</th></tr></thead>
-                <tbody>
-                    ${grouped[cat].map(med => `<tr><td><strong>${med.name}</strong></td><td>${med.branch||'Main'}</td><td>${med.batch||'-'}</td><td>${med.quantity}</td><td>${med.price} ETB</td><td>${(med.quantity*(med.price||0)).toFixed(2)} ETB</td></tr>`).join('')}
-                </tbody>
-            </table>
+            <div class="section-body" id="invCatBody${index}" style="padding:0; border:none;">
+                <table class="data-table" style="border-radius:0 0 8px 8px; border:none;">
+                    <thead><tr><th>Item Name</th><th>Branch</th><th>Batch</th><th>Remaining Qty</th><th>Unit Price</th><th>Remaining Value</th></tr></thead>
+                    <tbody>
+                        ${grouped[cat].map(med => `<tr>
+                            <td><strong>${med.name}</strong></td>
+                            <td>${med.branch||'Main'}</td>
+                            <td>${med.batch||'-'}</td>
+                            <td style="font-weight:bold; color:#10b981;">${med.quantity}</td>
+                            <td>${med.price} ETB</td>
+                            <td><strong>${(med.quantity*(med.price||0)).toFixed(2)} ETB</strong></td>
+                        </tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
         </div>`;
     });
 
@@ -2473,15 +2492,26 @@ window.adjustStock = async function() {
 };
 
 function calculateStockReport() {
-    let totalPurchasedQty = 0; let totalPurchasedValue = 0; let totalSold = 0; let totalRemaining = 0;
+    let totalPurchasedQty = 0; 
+    let totalPurchasedValue = 0; 
+    let totalSold = 0; 
+    let totalRemaining = 0;
     
-    allSales.forEach(s => { if (s.medicineId) totalSold += (s.quantity || 0); });
+    // ጠቅላላ የተሸጠ ብዛት ማስላት
+    allSales.forEach(s => { 
+        if (s.medicineId) totalSold += (s.quantity || 0); 
+    });
     
     allMedicines.forEach(m => {
+        // ለዚህ መድኃኒት ስንት እንደተሸጠ
         const soldForThis = allSales.filter(s => s.medicineId === m.id).reduce((sum, s) => sum + (s.quantity || 0), 0);
+        
+        // መጀመሪያ የተገዛው ብዛት = አሁን ያለው + የተሸጠው
         const purchasedQty = m.quantity + soldForThis;
+        
         totalPurchasedQty += purchasedQty;
         totalPurchasedValue += purchasedQty * (m.cost || 0);
+        
         totalRemaining += m.quantity;
     });
     
@@ -2643,6 +2673,65 @@ window.generateReport = function() {
     `;
     displayArea.innerHTML = html;
     displayArea.style.display = 'block';
+};
+
+window.renderSalesHistory = function() {
+    const listEl = document.getElementById('salesHistoryList'); if (!listEl) return;
+    const rowsPerPage = parseInt(document.getElementById('salesHistRowsPerPage').value) || 10;
+    let combined = []; allSales.forEach(s => combined.push({ ...s, _type: 'sale' })); allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
+    const filter = document.getElementById('filterSalesHistory')?.value || 'all'; 
+    const branchFilter = document.getElementById('filterBranchSalesHistory')?.value || 'all'; 
+    const startDate = document.getElementById('filterStartDate')?.value;
+    const endDate = document.getElementById('filterEndDate')?.value;
+
+    if (filter === 'detail') combined = combined.filter(c => c._type === 'sale'); 
+    if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
+    if (branchFilter !== 'all') combined = combined.filter(c => c.branch === branchFilter);
+    if (startDate) combined = combined.filter(c => c.date >= startDate);
+    if (endDate) combined = combined.filter(c => c.date <= endDate);
+
+    if (combined.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; padding:20px;">No sales history.</p>'; document.getElementById('salesHistPageInfo').innerText = `Page 1 of 1`; return; }
+    combined.sort((a, b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
+    
+    const totalPages = Math.ceil(combined.length / rowsPerPage);
+    if(salesHistPage > totalPages) salesHistPage = totalPages;
+    if(salesHistPage < 1) salesHistPage = 1;
+    const start = (salesHistPage - 1) * rowsPerPage;
+    const paginated = combined.slice(start, start + rowsPerPage);
+
+    let html = '';
+    paginated.forEach(item => {
+        const dateStr = item.date || 'Unknown';
+        if (item._type === 'quick') { 
+            html += `<div style="padding:16px; border-bottom:1px solid #e5e7eb; border-left:4px solid #f59e0b;">
+                <div style="display:flex; justify-content:space-between;"><strong style="color:#111827;">⚡ Quick Sale (${item.type})</strong><span style="font-weight:bold; color:#10b981;">${item.amount.toFixed(2)} ETB</span></div>
+                <div style="font-size:12px; color:#6b7280; margin-top:4px;">📅 ${dateStr} ${item.branch ? '| 🏢 '+item.branch : ''}</div>
+            </div>`; 
+        } else {
+            const total = item.total || 0; const paid = item.paidAmount !== undefined ? item.paidAmount : total; const pmLabel = item.paymentMethod === 'transfer' ? '🏦' : (item.paymentMethod === 'credit' ? '📝' : '💵');
+            html += `<div style="padding:16px; border-bottom:1px solid #e5e7eb;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <div><strong style="color:#111827;">${item.medicineName}</strong><div style="font-size:12px; color:#6b7280; margin-top:4px;">📅 ${dateStr} | 📦 Qty: ${item.quantity} | 🏷️ ${item.unitPrice} ETB</div></div>
+                    <div style="text-align:right;"><strong style="color:#10b981;">${paid.toFixed(2)} ETB</strong><div style="font-size:11px; color:#6b7280;">${pmLabel} ${item.paymentMethod || 'cash'} ${item.customer ? '| '+item.customer : ''}</div></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#6b7280; border-top:1px dashed #e5e7eb; padding-top:8px;">
+                    <div>${item.branch ? `🏢 ${item.branch}` : ''} ${item.receipt ? `| 🧾 ${item.receipt}` : ''}</div>
+                    <button onclick="deleteSale('${item.id}', '${item.medicineId}', ${item.quantity})" style="background: #fef2f2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🗑️ Delete</button>
+                </div>
+            </div>`;
+        }
+    });
+    listEl.innerHTML = html;
+    document.getElementById('salesHistPageInfo').innerText = `Page ${salesHistPage} of ${totalPages}`;
+    document.getElementById('btnPrevSalesHist').disabled = salesHistPage === 1;
+    document.getElementById('btnNextSalesHist').disabled = salesHistPage === totalPages;
+};
+
+window.changeSalesHistPage = function(dir) { salesHistPage += dir; renderSalesHistory(); };
+
+window.deleteSale = async function(saleId, medicineId, quantity) {
+    if (!confirm('Delete this sale? (Stock will be restored)')) return;
+    try { if (medicineId && medicineId !== 'undefined') { await updateDoc(doc(db, 'medicines', medicineId), { quantity: increment(quantity) }); } await deleteDoc(doc(db, 'sales', saleId)); alert('✅ Deleted!'); } catch(e) { alert('Error: ' + e.message); }
 };
 
 async function loadDailyReport() {
