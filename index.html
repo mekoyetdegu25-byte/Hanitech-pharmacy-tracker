@@ -1246,21 +1246,20 @@ window.switchPage = function(panelId, subPanelId, element) {
         });
     }
 
-    // Settings ሲከፈት ሳጥኑ ተከፍቶ እንዲታይ ማድረግ + ዳታ መጫን
     if(panelId === 'panel9') {
         const settingsBody = document.getElementById('bodySettings');
         const settingsHeader = document.getElementById('hdrSettings');
         if(settingsBody) settingsBody.classList.add('open');
         if(settingsHeader) settingsHeader.classList.add('open');
         
-        loadSettingsData(); // ዳታውን ጫን
+        loadSettingsData(); 
     }
 
     if(subPanelId === 'sub3_list') {
         renderAllExpensesList();
     }
     if(subPanelId === 'sub2_3') {
-        renderSalesHistory(); // Sales History ማሳያ
+        renderSalesHistory(); 
     }
 };
 
@@ -1375,7 +1374,8 @@ async function loadAllData() {
 function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
     unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); });
-        unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { 
+    // ✅ Sales Listener - loadInventory() ተጨምሯል
+    unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { 
         let temp = []; 
         snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
         allSales = temp; 
@@ -1385,7 +1385,7 @@ function setupRealtimeListeners() {
         renderSalesHistory(); 
         renderUnpaidCredits(); 
         calculateStockReport(); 
-        loadInventory(); // ✅ ይህ ተጨምሯል (ሽያጭ ሲመጣ ኢንቬንቶሪውን እንዲያድስ)
+        loadInventory(); 
     });
     unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
     unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); renderAllExpensesList(); });
@@ -2401,11 +2401,11 @@ window.loadInventory = function() {
         });
         fullTotal += catRemainingVal;
         
-                // ✅ አዲስ ኮላፕሲብል ካርድ ለእያንዳንዱ ምድብ
+        // ✅ አዲስ ኮላፕሲብል ካርድ ለእያንዳንዱ ምድብ
         catHtml += `<div class="section-collapsible" style="margin-bottom:15px; box-shadow:none; border:1px solid #e5e7eb;">
             <div class="section-header" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');" style="padding:12px 16px; background:#f9fafb; border-radius:8px 8px 0 0;">
                 <div class="sec-left"><span class="sec-arrow" id="hdrInvCat${index}">▶</span><span class="sec-icon">📁</span><span class="sec-title">${cat}</span></div>
-                <span style="font-size:13px; font-weight:600; color:#10b981;">Value: ${catRemainingVal.toFixed(2)} ETB</span>
+                <span style="font-size:13px; font-weight:700; color:#059669; background:#ecfdf5; padding:4px 8px; border-radius:6px;">Value: ${catRemainingVal.toFixed(2)} ETB</span>
             </div>
             <div class="section-body" id="invCatBody${index}" style="padding:0; border:none;">
                 <table class="data-table" style="border-radius:0 0 8px 8px; border:none;">
