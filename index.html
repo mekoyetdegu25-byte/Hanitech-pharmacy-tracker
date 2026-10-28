@@ -166,11 +166,10 @@ input:checked + .slider:before { transform: translateX(20px); }
 .rows-per-page { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6b7280; }
 .rows-per-page select { width: auto; padding: 6px 10px; font-size: 13px; }
 
- /* Settings ካርዶች ሲከፈቱ እንዲታዩ የሚያደርግ */
-#bodySettings .section-body.open,
+ /* የ Settings ካርዶች ሲከፈቱ በእርግጥ እንዲታዩ ማድረግ */
 #bodySettings .section-body[style*="display: block"] {
     display: block !important;
-}   
+}
 @media print {
     body * { visibility: hidden; }
     #panel8, #panel8 * { visibility: visible; }
@@ -1118,19 +1117,18 @@ window.switchPage = function(panelId, subPanelId, element) {
     }
 
     if(panelId === 'panel9') {
-        const settingsBody = document.getElementById('bodySettings');
-        const settingsHeader = document.getElementById('hdrSettings');
-        if(settingsBody) settingsBody.style.display = 'block';
-        if(settingsHeader) settingsHeader.classList.add('open');
-    }
-};
+    const settingsBody = document.getElementById('bodySettings');
+    const settingsHeader = document.getElementById('hdrSettings');
+    if(settingsBody) settingsBody.style.setProperty('display', 'block', 'important');
+    if(settingsHeader) settingsHeader.classList.add('open');
+}
 
 window.toggleSection = function(h, b) {
     const header = document.getElementById(h); 
     const body = document.getElementById(b); 
     if (!header || !body) return; 
     
-    // በቀጥታ በ JavaScript ስታይሉን ማስገደድ (!important)
+    // በቀጥታ ስታይሉን መቀየር (CSS እንዳያሸንፍ inline style እንጠቀማለን)
     if (body.style.display === 'block') {
         body.style.setProperty('display', 'none', 'important');
         header.classList.remove('open');
