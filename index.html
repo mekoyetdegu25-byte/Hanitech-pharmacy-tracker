@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HaniTech Pharmacy Tracker</title>
+<title>Hanitech Digital Pharmacy Tracker</title>
 <meta name="theme-color" content="#10b981">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HaniTech">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="logo.png">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2966/2966327.png">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js"></script>
 <style>
@@ -41,12 +41,13 @@ body { background: var(--bg); color: var(--text-main); font-size: 14px; margin: 
 #splashScreen { position: fixed; inset: 0; background: #111827; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s; }
 #splashScreen.fade-out { opacity: 0; pointer-events: none; }
 .logo-text { font-size: 36px; font-weight: 800; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+.logo-text span { color: #10b981; }
 .sub-text { font-size: 14px; margin-top: 8px; color: #9ca3af; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; } 
 #loginScreen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
 #loginScreen.hidden { display: none; }
-.login-box { background: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow-md); padding: 40px 32px; width: 100%; max-width: 420px; border: 1px solid var(--border); text-align: center; }
+.login-box { background: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow-md); padding: 40px 32px; width: 100%; max-width: 420px; border: 1px solid var(--border); }
 .login-box h1 { text-align: center; color: var(--text-main); font-size: 22px; margin-bottom: 24px; font-weight: 700;}
-.form-group { margin-bottom: 20px; text-align: left; }
+.form-group { margin-bottom: 20px; }
 .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
 input, select, textarea { width: 100%; padding: 12px 16px; font-size: 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--input-bg); color: var(--text-main); outline: none; transition: all 0.2s; }
 input:focus, select:focus, textarea:focus { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
@@ -62,6 +63,8 @@ header .h-brand { font-size: 12px; color: var(--text-muted); font-weight: 500; }
 .main-content-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: var(--panel-bg); }
 .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; width: 100%; } 
 .tabs { display: flex; flex-direction: column; width: 260px; background: var(--card-bg); border-right: 1px solid var(--border); padding: 16px 12px; gap: 4px; overflow-y: auto; flex-shrink: 0; height: 100%; }
+.tabs::-webkit-scrollbar { width: 4px; }
+.tabs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 .menu-group { width: 100%; margin-bottom: 4px; }
 .menu-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: all 0.2s; }
 .menu-header:hover { background: var(--bg); color: var(--text-main); }
@@ -221,12 +224,44 @@ input:checked + .slider:before { transform: translateX(20px); }
 /* ==========================================
    📱 MODERN MOBILE HEADER & DROPDOWN
    ========================================== */
-#mobileHeaderTitle { display: none; font-size: 16px; font-weight: 700; color: var(--text-main); cursor: pointer; align-items: center; gap: 8px; }
-#mobileHeaderTitle span { font-size: 12px; color: var(--text-muted); transition: transform 0.3s; }
+#mobileHeaderTitle {
+    display: none;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    align-items: center;
+    gap: 8px;
+}
+#mobileHeaderTitle span {
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: transform 0.3s;
+}
 #mobileHeaderTitle.open span { transform: rotate(180deg); }
-.modern-mobile-menu { position: absolute; top: 65px; left: 15px; right: 15px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--border); z-index: 1000; display: none; max-height: 70vh; overflow-y: auto; animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+.modern-mobile-menu {
+    position: absolute;
+    top: 65px;
+    left: 15px;
+    right: 15px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border: 1px solid var(--border);
+    z-index: 1000;
+    display: none;
+    max-height: 70vh;
+    overflow-y: auto;
+    animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
 .modern-mobile-menu.open { display: block; }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-15px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .modern-menu-section { padding: 12px 16px; border-bottom: 1px solid var(--border); }
 .modern-menu-section:last-child { border-bottom: none; }
 .modern-menu-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
@@ -251,9 +286,12 @@ input:checked + .slider:before { transform: translateX(20px); }
     header .h-brand { font-size: 11px !important; }
     header .btn-logout-hdr { padding: 6px 10px !important; font-size: 12px !important; }
     #hdrUserRole { display: none !important; }
+    
     .h-left .h-brand { display: none; }
     #mobileHeaderTitle { display: flex; }
+
     .mobile-bottom-nav { display: flex !important; position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--card-bg); border-top: 1px solid var(--border); z-index: 999; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+    
     [style*="grid-template-columns:1fr 1fr"], [style*="grid-template-columns: 1fr 1fr"], [style*="grid-template-columns:1fr 1fr 1fr"], [style*="grid-template-columns: 1fr 1fr 1fr"], [style*="grid-template-columns:repeat(4,1fr)"], [style*="grid-template-columns: repeat(4,1fr)"], [style*="grid-template-columns:repeat(3,1fr)"], [style*="grid-template-columns: repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
     .pos-layout { grid-template-columns: 1fr !important; height: auto !important; }
     .pos-products { min-height: 400px; }
@@ -274,39 +312,29 @@ input:checked + .slider:before { transform: translateX(20px); }
     .section-body { padding: 0 14px 14px 14px !important; }
     .login-box { padding: 30px 20px !important; }
     .logo-text { font-size: 28px !important; }
-    .mobile-collapse-content { display: none !important; }
-    .mobile-collapse-content.open { display: block !important; animation: slideDownFade 0.3s ease; }
-    .mobile-expand-btn { display: flex; justify-content: space-between; width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--text-main); cursor: pointer; box-shadow: var(--shadow-sm); }
-    .mobile-expand-btn span { font-size: 12px; color: var(--primary); transition: transform 0.3s; }
-    .mobile-expand-btn.open span { transform: rotate(180deg); }
-    @keyframes slideDownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 }
 @media (min-width: 769px) {
-    .mobile-bottom-nav, .modern-mobile-menu { display: none !important; }
+    .mobile-bottom-nav, .mobile-menu-overlay { display: none !important; }
     #mobileHeaderTitle { display: none !important; }
-    .mobile-collapse-content { display: block !important; }
-    .mobile-expand-btn { display: none !important; }
 }
 </style>
 </head>
 <body> 
 
 <div id="splashScreen">
-    <img src="logo.png" alt="HaniTech Logo" style="width: 120px; height: 120px; object-fit: contain; margin-bottom: 20px; border-radius: 20px;">
-    <div class="logo-text" style="font-size: 32px;">HaniTech</div>
-    <div class="sub-text">Pharmacy Tracker</div>
+<div class="logo-text">HaniTech <span>Digital</span></div>
+<div class="sub-text">Pharmacy Tracker</div>
 </div> 
 
 <div id="loginScreen" class="hidden">
 <div class="login-box">
-    <img src="logo.png" alt="HaniTech Logo" style="width: 80px; height: 80px; object-fit: contain; margin: 0 auto 15px auto; border-radius: 16px;">
-    <h1>Sign in to HaniTech</h1> 
-    <div id="loginForm">
-        <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-        <div class="form-group"><label>📧 Email Address</label><input type="email" id="email" placeholder="admin@pharmacy.com"></div>
-        <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="••••••••"></div>
-        <button class="btn-login" onclick="login()">Sign In</button>
-    </div> 
+<h1>💊 Sign in to Dashboard</h1> 
+<div id="loginForm">
+<div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
+<div class="form-group"><label>📧 Email Address</label><input type="email" id="email" placeholder="admin@pharmacy.com"></div>
+<div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="••••••••"></div>
+<button class="btn-login" onclick="login()">Sign In</button>
+</div> 
 </div>
 </div> 
 
@@ -352,10 +380,13 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div id="mainApp">
 <header>
     <div class="h-left" style="display: flex; align-items: center; gap: 12px;">
-        <img src="logo.png" alt="HaniTech" style="width: 40px; height: 40px; object-fit: contain; border-radius: 10px; flex-shrink: 0;">
+        <div style="background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; flex-shrink: 0;">
+            <span id="hdrUserInitial">A</span>
+        </div>
         <div style="display: flex; flex-direction: column; line-height: 1.3;">
             <div class="h-title" id="hdrPharmacyName">Pharmacy Name</div>
             <div class="h-brand" id="hdrUserEmail">admin@pharmacy.com</div>
+            
             <div id="mobileHeaderTitle" onclick="toggleModernMenu()">
                 <span id="currentMobileTabTitle">Medicine List</span>
                 <span>▼</span>
@@ -366,6 +397,7 @@ input:checked + .slider:before { transform: translateX(20px); }
         <span id="hdrUserRole" style="background: rgba(16, 185, 129, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">Owner</span>
         <button class="btn-logout-hdr" onclick="logout()">Sign Out</button>
     </div>
+
     <div class="modern-mobile-menu" id="modernMobileMenu"></div>
 </header> 
 
@@ -511,7 +543,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                 </div>
             </div>
-                        <div class="sub-panel" id="sub1_2">
+            <div class="sub-panel" id="sub1_2">
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrAddMed','bodyAddMed')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">Add Medicine</span></div>
@@ -920,8 +952,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                 </div>
             </div>
         </div>
-
-        <!-- PANEL 7 (Dashboard) -->
+                <!-- PANEL 7 (Dashboard) -->
         <div class="panel" id="panel7">
             <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrDash','bodyDash')">
@@ -1096,7 +1127,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                 </div>
             </div>
         </div>
-                <!-- PANEL 9 (Settings) -->
+
+        <!-- PANEL 9 (Settings) -->
         <div class="panel" id="panel9">
             <div class="settings-container" style="max-width: 100%; margin: 0 auto;">
                 <div class="section-collapsible" style="background: transparent; border: none; box-shadow: none; overflow: visible;">
@@ -1104,7 +1136,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
                     </div>
                     <div class="section-body open" id="bodySettings" style="background: var(--panel-bg);">
-                            
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyPhName').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">Pharmacy Info</span></div>
@@ -1117,23 +1148,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" onclick="savePharmacyInfo()">💾 Save Info</button>
                                 </div>
                             </div>
-                            
-                            <!-- SECURITY & PASSWORD -->
-                            <div class="section-collapsible">
-                                <div class="section-header" onclick="document.getElementById('bodyPass').classList.toggle('open'); this.classList.toggle('open');">
-                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔒</span><span class="sec-title">Security & Password</span></div>
-                                </div>
-                                <div class="section-body" id="bodyPass">
-                                    <label class="field-label">Current Password</label>
-                                    <div class="input-group"><i>🔑</i><input type="password" id="currentPasswordInput" placeholder="Enter current password"></div>
-                                    <label class="field-label">New Password</label>
-                                    <div class="input-group"><i>🔒</i><input type="password" id="newPasswordInput" placeholder="Enter new password"></div>
-                                    <label class="field-label">Confirm New Password</label>
-                                    <div class="input-group"><i>✅</i><input type="password" id="confirmPasswordInput" placeholder="Re-enter new password"></div>
-                                    <button class="btn btn-warning" onclick="changePassword()">🔄 Change Password</button>
-                                </div>
-                            </div>
-
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodySysPref').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🌍</span><span class="sec-title">System Preferences</span></div>
@@ -1143,7 +1157,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <div class="input-group"><i>💰</i><select id="settingCurrency"><option value="ETB">ETB (ብር)</option><option value="USD">USD ($)</option></select></div>
                                     <label class="field-label">Language / ቋንቋ</label>
                                     <div class="input-group"><i>🌐</i>
-                                        <select id="settingLanguage" onchange="previewLanguage(this.value)">
+                                        <select id="settingLanguage">
                                             <option value="am">🇪🇹 አማርኛ (Amharic)</option>
                                             <option value="en">🇬🇧 English</option>
                                         </select>
@@ -1158,7 +1172,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" style="margin-top: 16px;" onclick="saveSystemPrefs()">💾 Save Preferences</button>
                                 </div>
                             </div>
-                            
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyLimits').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Limits & Alerts</span></div>
@@ -1171,7 +1184,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" onclick="saveLimits()">💾 Save Limits</button>
                                 </div>
                             </div>
-                            
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyNotif').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔔</span><span class="sec-title">Notifications</span></div>
@@ -1183,7 +1195,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" style="margin-top: 16px;" onclick="saveNotifications()">💾 Save Notifications</button>
                                 </div>
                             </div>
-
                             <div class="section-collapsible" style="grid-column: 1 / -1;">
                                 <div class="section-header" onclick="document.getElementById('bodyPerms').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">Employee Permissions</span></div>
@@ -1194,7 +1205,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" style="margin-top:20px;" onclick="savePermissions()">💾 Save Permissions</button>
                                 </div>
                             </div>
-
                             <div class="section-collapsible" style="grid-column: 1 / -1;">
                                 <div class="section-header" onclick="document.getElementById('bodyAudit').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📝</span><span class="sec-title">Recent Activity (Audit Trail)</span></div>
@@ -1202,10 +1212,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <div class="section-body" id="bodyAudit">
                                     <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Track who made changes to the system and when.</p>
                                     <div class="audit-list" id="auditTrailList"></div>
-                                    <button class="btn btn-outline" style="margin-top: 20px; border-color: #ef4444; color: #ef4444;" onclick="clearAuditDisplay()">🧹 Clear Activity Display</button>
                                 </div>
                             </div>
-
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyBranchMgr').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div>
@@ -1218,7 +1226,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <div class="cat-tags" id="branchListDisplay"></div>
                                 </div>
                             </div>
-
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyCustMgr').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">Customers</span></div>
@@ -1231,7 +1238,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <div class="cat-tags" id="customerListDisplay"></div>
                                 </div>
                             </div>
-
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyBackup').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💾</span><span class="sec-title">Backup & Restore</span></div>
@@ -1244,7 +1250,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     </div>
                                 </div>
                             </div>
-
                             <div class="section-collapsible" style="grid-column: 1 / -1;">
                                 <div class="section-header" onclick="document.getElementById('bodySupport').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📞</span><span class="sec-title">Support & Help</span></div>
@@ -1270,7 +1275,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     </div>
                                 </div>
                             </div>
-
                             <div class="section-collapsible danger-zone">
                                 <div class="section-header" onclick="document.getElementById('bodyReset').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Danger Zone</span></div>
@@ -1330,7 +1334,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
 
 const firebaseConfig = {
@@ -1467,6 +1471,7 @@ window.mobileNavClick = function(panelId, subPanelId, element) {
     if (navItem) navItem.classList.add('active');
 };
 
+// Close menu when clicking outside
 document.addEventListener('click', function(event) {
     const menu = document.getElementById('modernMobileMenu');
     const title = document.getElementById('mobileHeaderTitle');
@@ -1510,6 +1515,7 @@ window.switchPage = function(panelId, subPanelId, element) {
         if(panelId === 'panel9') title = "Settings";
         if(panelId === 'panel10') title = "Credit";
         
+        // Detailed title
         if (subPanelId === 'sub1_1') title = "Medicine List";
         if (subPanelId === 'sub1_2') title = "Add Medicine";
         if (subPanelId === 'sub1_3') title = "Categories";
@@ -1538,8 +1544,6 @@ window.switchPage = function(panelId, subPanelId, element) {
     if(subPanelId === 'sub3_list') { renderAllExpensesList(); }
     if(subPanelId === 'sub2_3') { renderSalesHistory(); }
     if(subPanelId === 'sub4_3') { populateTransferMedSelect(); }
-
-    setTimeout(applyUniversalMobileCollapse, 100);
 };
 
 window.toggleSection = function(h, b) {
@@ -1596,7 +1600,7 @@ async function loadUserHeader(user) {
             const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
             if (phDoc.exists()) {
                 const phData = phDoc.data();
-                document.getElementById('hdrPharmacyName').innerText = phData.name || 'HaniTech Pharmacy'; 
+                document.getElementById('hdrPharmacyName').innerText = phData.name || 'Pharmacy Tracker'; 
                 allowedBizType = phData.bizType || 'retail';
                 currentBizType = phData.userBizType || allowedBizType; 
                 lowStockThreshold = phData.lowStockThreshold || 10; 
@@ -1606,7 +1610,6 @@ async function loadUserHeader(user) {
                     const darkToggle = document.getElementById('settingDarkMode');
                     if(darkToggle) darkToggle.checked = true;
                 }
-                applyLanguage(phData.language || 'am');
             }
         }
         await applyPermissionsToUI();
@@ -1655,24 +1658,21 @@ async function loadAllData() {
 
 function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
-    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); setTimeout(applyUniversalMobileCollapse, 100); });
+    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); });
     unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { 
         let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
         allSales = temp; 
         calculateStockReport(); loadInventory(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); 
-        setTimeout(applyUniversalMobileCollapse, 100);
     });
     unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
-    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); setTimeout(applyUniversalMobileCollapse, 100); });
+    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
     unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; renderUnpaidCredits(); });
 }
 
 // ==========================================
-// 🌐 SETTINGS, SECURITY & TRANSLATIONS
+// 🌐 SETTINGS & LANGUAGE
 // ==========================================
-window.previewLanguage = function(lang) { applyLanguage(lang); };
-
 function applyLanguage(lang) {
     const translations = {
         am: { med: "መድኃኒት", sell: "ሽያጭ", exp: "ወጪዎች", inv: "ክምችት", dash: "ዳሽቦርድ", rep: "ሪፖርቶች", settings: "ሴቲንግ", credit: "ክሬዲት" },
@@ -1688,33 +1688,6 @@ function applyLanguage(lang) {
     document.querySelectorAll('[data-lang="settings"]').forEach(el => el.innerText = t.settings);
     document.querySelectorAll('[data-lang="credit"]').forEach(el => el.innerText = t.credit);
 }
-
-window.changePassword = async function() {
-    const currentPass = document.getElementById('currentPasswordInput').value;
-    const newPass = document.getElementById('newPasswordInput').value;
-    const confirmPass = document.getElementById('confirmPasswordInput').value;
-
-    if (!currentPass || !newPass || !confirmPass) { alert('⚠️ እባክህ ሁሉንም መስኮች ሙላ።'); return; }
-    if (newPass !== confirmPass) { alert('⚠️ አዲሱ የይለፍ ቃል እና ማረጋገጫው አይመሳሰሉም።'); return; }
-    if (newPass.length < 6) { alert('⚠️ አዲሱ የይለፍ ቃል ቢያንስ 6 ፊደላት መሆን አለበት።'); return; }
-
-    try {
-        const user = auth.currentUser;
-        if (!user) return;
-        const credential = EmailAuthProvider.credential(user.email, currentPass);
-        await reauthenticateWithCredential(user, credential);
-        await updatePassword(user, newPass);
-        alert('✅ የይለፍ ቃልህ በተሳካ ሁኔታ ተቀይሯል!');
-        document.getElementById('currentPasswordInput').value = '';
-        document.getElementById('newPasswordInput').value = '';
-        document.getElementById('confirmPasswordInput').value = '';
-        logActivity(`changed account password`);
-    } catch (error) {
-        console.error(error);
-        if(error.code === 'auth/wrong-password') alert('❌ የአሁኑ የይለፍ ቃል ስህተት ነው።');
-        else alert('❌ ስህተት ተፈጥሯል: ' + error.message);
-    }
-};
 
 async function loadSupportInfo() {
     try {
@@ -1783,12 +1756,6 @@ async function logActivity(actionText) {
         loadAuditTrail(); 
     } catch (e) { console.error("Audit log failed:", e); }
 }
-
-window.clearAuditDisplay = function() {
-    if (!confirm('⚠️ በስክሪኑ ላይ ያለውን የእንቅስቃሴ መዝገብ ማጽዳት ትፈልጋለህ? (ዳታው በዳታቤዝ ውስጥ አይጠፋም)')) return;
-    const listEl = document.getElementById('auditTrailList');
-    if (listEl) listEl.innerHTML = '<p style="font-size:13px; color:var(--text-muted); text-align: center; padding: 20px;">✨ Activity display cleared. (History is still saved in the database)</p>';
-};
 
 window.savePharmacyInfo = async function() {
     const name = document.getElementById('settingPhName').value;
@@ -3092,51 +3059,46 @@ window.renderUnpaidCredits = function() {
 };
 
 // ==========================================
-// 📱 UNIVERSAL MOBILE COLLAPSE LOGIC
-// ==========================================
-window.applyUniversalMobileCollapse = function() {
-    if (window.innerWidth > 768) return;
-    const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList','expiryListDisplay','lowStockListDisplay','unpaidCreditList','dailySalesList','monthlySalesList','auditTrailList','expCatListDisplay','branchListDisplay','customerListDisplay','catTableBody'];
-    listIds.forEach(id => {
-        const el = document.getElementById(id); if (!el) return; const parent = el.parentElement; if (!parent) return; if (parent.querySelector('.mobile-expand-btn')) return;
-        const wrapper = document.createElement('div'); wrapper.className = 'mobile-collapse-wrapper'; const btn = document.createElement('div'); btn.className = 'mobile-expand-btn';
-        let btnText = '👁️ ዝርዝሩን አሳይ';
-        if (id === 'medTableBody') btnText = '💊 የመድኃኒት ዝርዝር'; if (id === 'salesHistoryList') btnText = '📜 የሽያጭ ታሪክ'; if (id === 'allExpensesListDisplay') btnText = '💸 የወጪ ዝርዝር'; if (id === 'inventoryList') btnText = '📦 የክምችት ዝርዝር'; if (id === 'unpaidCreditList') btnText = '💳 ያልተከፈሉ ዕዳዎች'; if (id === 'catTableBody') btnText = '🗂️ የምድብ ዝርዝር'; if (id === 'auditTrailList') btnText = '📝 የእንቅስቃሴ መዝገብ';
-        btn.innerHTML = `${btnText} <span>▼</span>`; const contentBox = document.createElement('div'); contentBox.className = 'mobile-collapse-content';
-        parent.insertBefore(wrapper, el); contentBox.appendChild(el); wrapper.appendChild(btn); wrapper.appendChild(contentBox);
-        btn.onclick = function(e) { e.stopPropagation(); btn.classList.toggle('open'); contentBox.classList.toggle('open'); };
-    });
-};
-
-const observer = new MutationObserver((mutations) => { if (window.innerWidth <= 768) { applyUniversalMobileCollapse(); } });
-observer.observe(document.body, { childList: true, subtree: true });
-
-window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) { document.querySelectorAll('.mobile-collapse-wrapper').forEach(wrapper => { const content = wrapper.querySelector('.mobile-collapse-content'); const btn = wrapper.querySelector('.mobile-expand-btn'); if (content && content.firstElementChild) { wrapper.parentElement.insertBefore(content.firstElementChild, wrapper); } wrapper.remove(); if (btn) btn.remove(); }); } 
-    else { applyUniversalMobileCollapse(); }
-});
-
-// ==========================================
 // 📌 INIT & EVENT LISTENERS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    const dailyDate = document.getElementById('dailyReportDate'); const dailyBranch = document.getElementById('dailyReportBranch');
-    if(dailyDate) dailyDate.addEventListener('change', () => { dailyPage = 1; loadDailyReport(); }); if(dailyBranch) dailyBranch.addEventListener('change', () => { dailyPage = 1; loadDailyReport(); });
-    const monthlyMonth = document.getElementById('monthlyReportMonth'); const monthlyBranch = document.getElementById('monthlyReportBranch');
-    if(monthlyMonth) monthlyMonth.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); }); if(monthlyBranch) monthlyBranch.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); });
-    const repType = document.getElementById('reportTypeSelect'); if(repType) repType.addEventListener('change', () => { toggleReportDatePickers(); generateReport(); });
-    const dashMonth = document.getElementById('dashMonthPicker'); const dashBranch = document.getElementById('dashBranchFilter');
-    if(dashMonth) dashMonth.addEventListener('change', () => { loadDashboard(); }); if(dashBranch) dashBranch.addEventListener('change', () => { loadDashboard(); });
+    const dailyDate = document.getElementById('dailyReportDate');
+    const dailyBranch = document.getElementById('dailyReportBranch');
+    if(dailyDate) dailyDate.addEventListener('change', () => { dailyPage = 1; loadDailyReport(); });
+    if(dailyBranch) dailyBranch.addEventListener('change', () => { dailyPage = 1; loadDailyReport(); });
+    const monthlyMonth = document.getElementById('monthlyReportMonth');
+    const monthlyBranch = document.getElementById('monthlyReportBranch');
+    if(monthlyMonth) monthlyMonth.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); });
+    if(monthlyBranch) monthlyBranch.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); });
+    const repType = document.getElementById('reportTypeSelect');
+    if(repType) repType.addEventListener('change', () => { toggleReportDatePickers(); generateReport(); });
+    const dashMonth = document.getElementById('dashMonthPicker');
+    const dashBranch = document.getElementById('dashBranchFilter');
+    if(dashMonth) dashMonth.addEventListener('change', () => { loadDashboard(); });
+    if(dashBranch) dashBranch.addEventListener('change', () => { loadDashboard(); });
 });
 
 window.importCSV = function() { alert('CSV Import: Feature coming soon'); };
 window.clearAllSales = async function() { 
     if(!confirm('Delete ALL sales? This cannot be undone!')) return;
-    try { const snap = await getDocs(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId))); let batch = writeBatch(db); let count = 0; snap.forEach(d => { batch.delete(d.ref); count++; }); if(count > 0) await batch.commit(); alert(`✅ Deleted ${count} sales.`); } catch(e) { alert('Error: ' + e.message); }
+    try {
+        const snap = await getDocs(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)));
+        let batch = writeBatch(db); let count = 0;
+        snap.forEach(d => { batch.delete(d.ref); count++; });
+        if(count > 0) await batch.commit();
+        alert(`✅ Deleted ${count} sales.`);
+    } catch(e) { alert('Error: ' + e.message); }
 };
 
-if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').then(reg => console.log('✅ SW registered')).catch(err => console.log('❌ SW failed', err)); }); }
-console.log('✅ HaniTech Tracker loaded!');
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+            .catch(err => console.log('❌ Service Worker failed:', err));
+    });
+}
+
+console.log('✅ HaniTech Pharmacy Tracker loaded successfully!');
 </script>
 </body>
 </html>
