@@ -2422,6 +2422,7 @@ window.updateCartQty = function(index, change) {
 window.removeFromCart = function(i) { cart.splice(i, 1); renderCart(); };
 window.clearCart = function() { cart = []; renderCart(); }; 
 
+// ✅ የተስተካከለው completeSale ፈንክሽን
 window.completeSale = async function() {
     if(cart.length === 0) { alert('Cart is empty'); return; }
     const date = document.getElementById('sellDate').value; 
@@ -2444,25 +2445,34 @@ window.completeSale = async function() {
     try {
         const saleIds = [];
         for(const item of cart) {
+            // ✅ የዕዳ መጠንን በትክክል ማስላት
+            const itemTotal = item.price * item.qty;
+            const itemPaid = paymentMethod === 'credit' ? (itemTotal * (paidAmount/totalAmount)) : itemTotal;
+            
             const newSaleRef = await addDoc(collection(db, 'sales'), { 
                 medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, 
-                total: item.price * item.qty, 
+                total: itemTotal, 
                 paymentMethod: paymentMethod, 
-                paidAmount: paymentMethod === 'credit' ? (item.price * item.qty) * (paidAmount/totalAmount) : (item.price * item.qty), 
+                paidAmount: itemPaid, 
                 date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
             });
             saleIds.push(newSaleRef.id);
             await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
         }
+        
         logActivity(`completed sale (Total: ${totalAmount} ETB)`);
         
-        // Receipt ማሳየት (የመጀመሪያውን ሽያጭ ID በመጠቀም)
+        // Receipt ማሳየት
         if(saleIds.length > 0) printReceipt(saleIds[0]);
         
         cart = []; renderCart(); 
         document.getElementById('sellReceipt').value = '';
         document.getElementById('sellCreditCustomer').value = '';
         document.getElementById('sellCreditPaid').value = '';
+        
+        // ✅ ሽያጭ ከተጠናቀቀ በኋላ የ Credit ዝርዝርን አድስ
+        renderUnpaidCredits();
+        
     } catch(e) { alert(e.message); }
 }; 
 
