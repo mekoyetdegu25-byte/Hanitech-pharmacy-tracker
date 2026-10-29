@@ -1,15 +1,48 @@
 {
   "name": "Hanitech Pharmacy Tracker",
   "short_name": "Pharmacy",
-  "start_url": "/",
+  "description": "Complete pharmacy management system - Medicine, Sales, Inventory, Reports",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#ffffff",
-  "theme_color": "#2b6cb0",
+  "theme_color": "#10b981",
+  "lang": "am",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "medical"],
   "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/192/2966/2966327.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "https://cdn-icons-png.flaticon.com/512/2966/2966327.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2966/2966327.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Sale",
+      "short_name": "Sale",
+      "url": "./index.html",
+      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/192/2966/2966327.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "url": "./index.html",
+      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/192/2966/2966327.png", "sizes": "192x192" }]
     }
   ]
 }
