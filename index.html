@@ -1278,16 +1278,14 @@ let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed =
 
 let codeReader = null;
 
-// Splash Screen Logic (Fixed for mobile)
-window.addEventListener('load', () => {
-    setTimeout(() => { 
-        const splash = document.getElementById('splashScreen'); 
-        if(splash) { 
-            splash.classList.add('fade-out'); 
-            setTimeout(() => { splash.style.display = 'none'; }, 500); 
-        } 
-    }, 1500); 
-});
+// ✅ Splash Screen Fix (Directly run after DOM loads, no window.load)
+setTimeout(() => { 
+    const splash = document.getElementById('splashScreen'); 
+    if(splash) { 
+        splash.classList.add('fade-out'); 
+        setTimeout(() => { splash.style.display = 'none'; }, 500); 
+    } 
+}, 1500); 
 
 // ==========================================
 // 🌟 MODERN MOBILE NAVIGATION
@@ -3027,3 +3025,5 @@ window.clearAllSales = async function() {
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').then(reg => console.log('✅ SW registered')).catch(err => console.log('❌ SW failed', err)); }); }
 console.log('✅ HaniTech Tracker loaded!');
 </script>
+</body>
+</html>
