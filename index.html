@@ -1649,7 +1649,47 @@ window.backupData = function() {
 };
 
 window.restoreData = function(event) { alert('Restore feature coming soon'); };
-window.resetAllData = function() { if(confirm('Are you absolutely sure? This deletes everything!')) alert('Reset feature coming soon'); };
+window.resetAllData = async function() {
+    if (!confirm('🚨 እርግጠኛ ነህ? ይህ ድርጊት ሁሉንም መድኃኒቶች፣ ሽያጮች፣ ወጪዎች እና ደንበኞችን በቋሚነት ያጠፋል!')) return;
+    if (!confirm('የመጨረሻ ማረጋገጫ: ዳታውን ለመሰረዝ እርግጠኛ ነህ?')) return;
+
+    try {
+        const collectionsToDelete = ['medicines', 'sales', 'quickSales', 'expenses', 'fixedExpenses', 'creditPayments'];
+        let totalDeleted = 0;
+
+        for (const colName of collectionsToDelete) {
+            const q = query(collection(db, colName), where('pharmacyId', '==', currentUserPharmacyId));
+            const snap = await getDocs(q);
+            
+            // በየ 500 ዶኩመንቶች ባች አድርጎ መሰረዝ (Firestore ገደብ ስላለው)
+            let batch = writeBatch(db);
+            let count = 0;
+
+            for (const docSnap of snap.docs) {
+                batch.delete(doc(db, colName, docSnap.id));
+                count++;
+                totalDeleted++;
+
+                if (count === 500) {
+                    await batch.commit();
+                    batch = writeBatch(db);
+                    count = 0;
+                }
+            }
+            if (count > 0) await batch.commit();
+        }
+
+        alert(`✅ ሁሉም ዳታ በተከፋፈለ መልኩ ተሰርዟል! (${totalDeleted} መዝገቦች)`);
+        logActivity(`system data reset (${totalDeleted} records deleted)`);
+        
+        // ገጹን እንደገና ማደስ
+        location.reload();
+
+    } catch (e) {
+        alert('Error deleting data: ' + e.message);
+        console.error(e);
+    }
+};
 
 
 // ==========================================
