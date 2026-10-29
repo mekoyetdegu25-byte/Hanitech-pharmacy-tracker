@@ -1278,7 +1278,16 @@ let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed =
 
 let codeReader = null;
 
-setTimeout(() => { const splash = document.getElementById('splashScreen'); if(splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; }, 500); } }, 1500); 
+// Splash Screen Logic (Fixed for mobile)
+window.addEventListener('load', () => {
+    setTimeout(() => { 
+        const splash = document.getElementById('splashScreen'); 
+        if(splash) { 
+            splash.classList.add('fade-out'); 
+            setTimeout(() => { splash.style.display = 'none'; }, 500); 
+        } 
+    }, 1500); 
+});
 
 // ==========================================
 // 🌟 MODERN MOBILE NAVIGATION
@@ -1299,55 +1308,17 @@ window.toggleModernMenu = function() {
 function buildModernMenu() {
     const menu = document.getElementById('modernMobileMenu');
     const menuData = [
-        {
-            section: '💊 Medicine', items: [
-                { id: 'sub1_1', panel: 'panel1', title: '📋 Medicine List', icon: '📋' },
-                { id: 'sub1_2', panel: 'panel1', title: '➕ Add Medicine', icon: '➕' },
-                { id: 'sub1_3', panel: 'panel1', title: '🗂️ Categories', icon: '🗂️' }
-            ]
-        },
-        {
-            section: '🛒 Sales', items: [
-                { id: 'sub2_1', panel: 'panel2', title: '🛒 New Sale', icon: '🛒' },
-                { id: 'sub2_2', panel: 'panel2', title: '⚡ Quick Sale', icon: '⚡' },
-                { id: 'sub2_3', panel: 'panel2', title: '📜 Sales History', icon: '📜' }
-            ]
-        },
-        {
-            section: '💸 Expenses', items: [
-                { id: 'sub3_1', panel: 'panel3', title: '💸 Daily Expense', icon: '💸' },
-                { id: 'sub3_2', panel: 'panel3', title: '🏢 Fixed Expense', icon: '🏢' },
-                { id: 'sub3_list', panel: 'panel3', title: '📋 Expense List', icon: '📋' },
-                { id: 'sub3_3', panel: 'panel3', title: '🗂️ Categories', icon: '🗂️' }
-            ]
-        },
-        {
-            section: '📦 Inventory', items: [
-                { id: 'sub4_1', panel: 'panel4', title: '📦 Inventory List', icon: '📦' },
-                { id: 'sub4_2', panel: 'panel4', title: '⚠️ Expiry & Low Stock', icon: '⚠️' },
-                { id: 'sub4_3', panel: 'panel4', title: '🔧 Stock Adjust', icon: '🔧' }
-            ]
-        },
-        {
-            section: '📊 Dashboard & Reports', items: [
-                { id: null, panel: 'panel7', title: '📊 Dashboard', icon: '📊' },
-                { id: 'sub8_1', panel: 'panel8', title: '📄 General Report', icon: '📄' },
-                { id: 'sub8_2', panel: 'panel8', title: '📅 Daily Report', icon: '📅' },
-                { id: 'sub8_3', panel: 'panel8', title: '📆 Monthly Report', icon: '📆' }
-            ]
-        },
-        {
-            section: '⚙️ System', items: [
-                { id: null, panel: 'panel10', title: '💳 Credit Management', icon: '💳' },
-                { id: null, panel: 'panel9', title: '⚙️ Settings', icon: '⚙️' }
-            ]
-        }
+        { section: '💊 Medicine', items: [ { id: 'sub1_1', panel: 'panel1', title: '📋 Medicine List', icon: '📋' }, { id: 'sub1_2', panel: 'panel1', title: '➕ Add Medicine', icon: '➕' }, { id: 'sub1_3', panel: 'panel1', title: '🗂️ Categories', icon: '🗂️' } ] },
+        { section: '🛒 Sales', items: [ { id: 'sub2_1', panel: 'panel2', title: '🛒 New Sale', icon: '🛒' }, { id: 'sub2_2', panel: 'panel2', title: '⚡ Quick Sale', icon: '⚡' }, { id: 'sub2_3', panel: 'panel2', title: '📜 Sales History', icon: '📜' } ] },
+        { section: '💸 Expenses', items: [ { id: 'sub3_1', panel: 'panel3', title: '💸 Daily Expense', icon: '💸' }, { id: 'sub3_2', panel: 'panel3', title: '🏢 Fixed Expense', icon: '🏢' }, { id: 'sub3_list', panel: 'panel3', title: '📋 Expense List', icon: '📋' }, { id: 'sub3_3', panel: 'panel3', title: '🗂️ Categories', icon: '🗂️' } ] },
+        { section: '📦 Inventory', items: [ { id: 'sub4_1', panel: 'panel4', title: '📦 Inventory List', icon: '📦' }, { id: 'sub4_2', panel: 'panel4', title: '⚠️ Expiry & Low Stock', icon: '⚠️' }, { id: 'sub4_3', panel: 'panel4', title: '🔧 Stock Adjust', icon: '🔧' } ] },
+        { section: '📊 Dashboard & Reports', items: [ { id: null, panel: 'panel7', title: '📊 Dashboard', icon: '📊' }, { id: 'sub8_1', panel: 'panel8', title: '📄 General Report', icon: '📄' }, { id: 'sub8_2', panel: 'panel8', title: '📅 Daily Report', icon: '📅' }, { id: 'sub8_3', panel: 'panel8', title: '📆 Monthly Report', icon: '📆' } ] },
+        { section: '⚙️ System', items: [ { id: null, panel: 'panel10', title: '💳 Credit Management', icon: '💳' }, { id: null, panel: 'panel9', title: '⚙️ Settings', icon: '⚙️' } ] }
     ];
 
     let html = '';
     menuData.forEach(group => {
-        html += `<div class="modern-menu-section">
-            <div class="modern-menu-label">${group.section}</div>`;
+        html += `<div class="modern-menu-section"><div class="modern-menu-label">${group.section}</div>`;
         group.items.forEach(item => {
             const activePanel = document.querySelector('.panel.active');
             const activeSub = document.querySelector('.panel.active .sub-panel.active');
@@ -1356,10 +1327,7 @@ function buildModernMenu() {
                 if (item.id === null && !activeSub) isActive = true;
                 else if (activeSub && activeSub.id === item.id) isActive = true;
             }
-            html += `<div class="modern-menu-item ${isActive ? 'active' : ''}" onclick="modernNavClick('${item.panel}', ${item.id ? `'${item.id}'` : 'null'}, '${item.title}')">
-                <div class="icon">${item.icon}</div>
-                <div>${item.title.replace(/^[^\s]+\s/, '')}</div>
-            </div>`;
+            html += `<div class="modern-menu-item ${isActive ? 'active' : ''}" onclick="modernNavClick('${item.panel}', ${item.id ? `'${item.id}'` : 'null'}, '${item.title}')"><div class="icon">${item.icon}</div><div>${item.title.replace(/^[^\s]+\s/, '')}</div></div>`;
         });
         html += `</div>`;
     });
@@ -3059,5 +3027,3 @@ window.clearAllSales = async function() {
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').then(reg => console.log('✅ SW registered')).catch(err => console.log('❌ SW failed', err)); }); }
 console.log('✅ HaniTech Tracker loaded!');
 </script>
-</body>
-</html>
