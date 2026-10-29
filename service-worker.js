@@ -1,20 +1,21 @@
 // ==========================================
 // 🔧 HaniTech Pharmacy Tracker - Service Worker
-// Version: 1.0.0
+// Version: 2.0.0
 // ==========================================
 
-const CACHE_NAME = 'pharmacy-v1';
-const RUNTIME_CACHE = 'pharmacy-runtime-v1';
+const CACHE_NAME = 'pharmacy-v2';
+const RUNTIME_CACHE = 'pharmacy-runtime-v2';
 
 // App Shell - በ install ጊዜ የሚቀመጡ
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './icon.png', // የአፑ አይኮን (ካለ)
   // External CDN libraries
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js',
   'https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js',
-  // Icons
+  // Default Icons (ከመስመር ላይ የሚመጡ)
   'https://cdn-icons-png.flaticon.com/192/2966/2966327.png',
   'https://cdn-icons-png.flaticon.com/512/2966/2966327.png'
 ];
@@ -23,12 +24,19 @@ const ASSETS = [
 // INSTALL - App Shell አስቀምጥ
 // ==========================================
 self.addEventListener('install', event => {
-  console.log('[SW] Installing v1...');
+  console.log('[SW] Installing v2...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('[SW] Caching app shell');
-        return cache.addAll(ASSETS);
+        // አንዳንድ ፋይሎች ካልተገኙ ስህተት እንዳይሰጥ በተናጠል እንጨምራቸው
+        return Promise.all(
+          ASSETS.map(url => {
+            return cache.add(url).catch(err => {
+              console.warn('[SW] Failed to cache:', url, err);
+            });
+          })
+        );
       })
       .then(() => {
         console.log('[SW] Skip waiting');
@@ -44,7 +52,7 @@ self.addEventListener('install', event => {
 // ACTIVATE - አሮጌ cache አጽዳ
 // ==========================================
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating v1...');
+  console.log('[SW] Activating v2...');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
@@ -154,4 +162,4 @@ self.addEventListener('message', event => {
   }
 });
 
-console.log('✅ HaniTech Service Worker loaded');
+console.log('✅ HaniTech Service Worker v2 loaded');
