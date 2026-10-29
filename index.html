@@ -55,7 +55,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); backgr
 .btn-login:hover { background: var(--primary-hover); }
 #mainApp { display: none; height: 100vh; width: 100%; flex-direction: column; }
 #mainApp.show { display: flex; }
-header { background: var(--card-bg); color: var(--text-main); height: 70px; flex-shrink: 0; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); z-index: 101; }
+header { background: var(--card-bg); color: var(--text-main); height: 70px; flex-shrink: 0; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); z-index: 102; position: relative; }
 header .h-title { font-size: 16px; font-weight: 700; }
 header .h-brand { font-size: 12px; color: var(--text-muted); font-weight: 500; }
 .btn-logout-hdr { background: var(--bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; } 
@@ -222,9 +222,62 @@ input:checked + .slider:before { transform: translateX(20px); }
 }
 
 /* ==========================================
-   📱 MOBILE RESPONSIVE DESIGN (max-width: 768px)
-   Desktop ላይ ምንም አይነካም!
+   📱 MODERN MOBILE HEADER & DROPDOWN
    ========================================== */
+#mobileHeaderTitle {
+    display: none;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    align-items: center;
+    gap: 8px;
+}
+#mobileHeaderTitle span {
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: transform 0.3s;
+}
+#mobileHeaderTitle.open span { transform: rotate(180deg); }
+
+.modern-mobile-menu {
+    position: absolute;
+    top: 65px;
+    left: 15px;
+    right: 15px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border: 1px solid var(--border);
+    z-index: 1000;
+    display: none;
+    max-height: 70vh;
+    overflow-y: auto;
+    animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modern-mobile-menu.open { display: block; }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-15px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modern-menu-section { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.modern-menu-section:last-child { border-bottom: none; }
+.modern-menu-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.modern-menu-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: all 0.2s; margin-bottom: 2px; }
+.modern-menu-item:hover { background: var(--bg); }
+.modern-menu-item.active { background: rgba(16, 185, 129, 0.1); color: var(--primary); }
+.modern-menu-item .icon { font-size: 16px; background: var(--bg); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+.modern-menu-item.active .icon { background: var(--primary); color: white; }
+
+/* Mobile Bottom Nav */
+.mobile-bottom-nav { display: none; }
+.mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 2px; color: var(--text-muted); transition: all 0.2s; border: none; background: transparent; font-family: inherit; }
+.mobile-nav-item.active { color: var(--primary); }
+.mobile-nav-item .nav-icon { font-size: 20px; }
+.mobile-nav-item .nav-label { font-size: 10px; font-weight: 600; }
+
 @media (max-width: 768px) {
     .tabs { display: none !important; }
     .panels { width: 100% !important; padding: 16px 12px 90px 12px !important; }
@@ -233,19 +286,12 @@ input:checked + .slider:before { transform: translateX(20px); }
     header .h-brand { font-size: 11px !important; }
     header .btn-logout-hdr { padding: 6px 10px !important; font-size: 12px !important; }
     #hdrUserRole { display: none !important; }
+    
+    .h-left .h-brand { display: none; }
+    #mobileHeaderTitle { display: flex; }
+
     .mobile-bottom-nav { display: flex !important; position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--card-bg); border-top: 1px solid var(--border); z-index: 999; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-    .mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 2px; color: var(--text-muted); transition: all 0.2s; border: none; background: transparent; font-family: inherit; }
-    .mobile-nav-item.active { color: var(--primary); }
-    .mobile-nav-item .nav-icon { font-size: 20px; }
-    .mobile-nav-item .nav-label { font-size: 10px; font-weight: 600; }
-    .mobile-hamburger { display: flex !important; }
-    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; }
-    .mobile-menu-overlay.open { display: block; }
-    .mobile-menu-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 280px; max-width: 80vw; background: var(--card-bg); z-index: 1501; padding: 20px; overflow-y: auto; transform: translateX(100%); transition: transform 0.3s ease; box-shadow: -5px 0 25px rgba(0,0,0,0.15); }
-    .mobile-menu-overlay.open .mobile-menu-drawer { transform: translateX(0); }
-    .mobile-menu-drawer h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 12px; font-size: 14px; font-weight: 600; color: var(--text-main); border-radius: 8px; cursor: pointer; margin-bottom: 4px; transition: background 0.2s; }
-    .mobile-menu-item:hover, .mobile-menu-item.active { background: var(--bg); color: var(--primary); }
+    
     [style*="grid-template-columns:1fr 1fr"], [style*="grid-template-columns: 1fr 1fr"], [style*="grid-template-columns:1fr 1fr 1fr"], [style*="grid-template-columns: 1fr 1fr 1fr"], [style*="grid-template-columns:repeat(4,1fr)"], [style*="grid-template-columns: repeat(4,1fr)"], [style*="grid-template-columns:repeat(3,1fr)"], [style*="grid-template-columns: repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
     .pos-layout { grid-template-columns: 1fr !important; height: auto !important; }
     .pos-products { min-height: 400px; }
@@ -268,7 +314,8 @@ input:checked + .slider:before { transform: translateX(20px); }
     .logo-text { font-size: 28px !important; }
 }
 @media (min-width: 769px) {
-    .mobile-bottom-nav, .mobile-menu-overlay, .mobile-hamburger { display: none !important; }
+    .mobile-bottom-nav, .mobile-menu-overlay { display: none !important; }
+    #mobileHeaderTitle { display: none !important; }
 }
 </style>
 </head>
@@ -332,23 +379,28 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 <div id="mainApp">
 <header>
-<div class="h-left" style="display: flex; align-items: center; gap: 12px;">
-<div style="background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; flex-shrink: 0;">
-<span id="hdrUserInitial">A</span>
-</div>
-<div style="display: flex; flex-direction: column; line-height: 1.3;">
-<div class="h-title" id="hdrPharmacyName">Pharmacy Name</div>
-<div class="h-brand" id="hdrUserEmail">admin@pharmacy.com</div>
-</div>
-</div>
-<div class="h-right" style="display: flex; align-items: center; gap: 12px;">
-<span id="hdrUserRole" style="background: rgba(16, 185, 129, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">Owner</span>
-<button class="mobile-hamburger" onclick="toggleMobileMenu()" style="display:none; background:var(--bg); border:1px solid var(--border); color:var(--text-main); width:38px; height:38px; border-radius:8px; cursor:pointer; font-size:18px; align-items:center; justify-content:center; padding:0;">☰</button>
-<button class="btn-logout-hdr" onclick="logout()">Sign Out</button>
-</div>
+    <div class="h-left" style="display: flex; align-items: center; gap: 12px;">
+        <div style="background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; flex-shrink: 0;">
+            <span id="hdrUserInitial">A</span>
+        </div>
+        <div style="display: flex; flex-direction: column; line-height: 1.3;">
+            <div class="h-title" id="hdrPharmacyName">Pharmacy Name</div>
+            <div class="h-brand" id="hdrUserEmail">admin@pharmacy.com</div>
+            
+            <div id="mobileHeaderTitle" onclick="toggleModernMenu()">
+                <span id="currentMobileTabTitle">Medicine List</span>
+                <span>▼</span>
+            </div>
+        </div>
+    </div>
+    <div class="h-right" style="display: flex; align-items: center; gap: 12px;">
+        <span id="hdrUserRole" style="background: rgba(16, 185, 129, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">Owner</span>
+        <button class="btn-logout-hdr" onclick="logout()">Sign Out</button>
+    </div>
+
+    <div class="modern-mobile-menu" id="modernMobileMenu"></div>
 </header> 
 
-<!-- 📱 Mobile Bottom Navigation -->
 <div class="mobile-bottom-nav" id="mobileBottomNav">
     <button class="mobile-nav-item active" data-tab="panel1" onclick="mobileNavClick('panel1', 'sub1_1', this)">
         <span class="nav-icon">💊</span>
@@ -366,21 +418,6 @@ input:checked + .slider:before { transform: translateX(20px); }
         <span class="nav-icon">⚙️</span>
         <span class="nav-label">Settings</span>
     </button>
-</div>
-
-<!-- 📱 Mobile Menu Drawer -->
-<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()">
-    <div class="mobile-menu-drawer" onclick="event.stopPropagation()">
-        <h3>📋 All Menus</h3>
-        <div class="mobile-menu-item" onclick="mobileNavClick('panel1', 'sub1_1', this); closeMobileMenu();"><span>💊</span> Medicine</div>
-        <div class="mobile-menu-item" onclick="mobileNavClick('panel2', 'sub2_1', this); closeMobileMenu();"><span>🛒</span> Sales</div>
-        <div class="mobile-menu-item" onclick="mobileNavClick('panel3', 'sub3_1', this); closeMobileMenu();"><span>💸</span> Expenses</div>
-        <div class="mobile-menu-item" onclick="mobileNavClick('panel4', 'sub4_1', this); closeMobileMenu();"><span>📦</span> Inventory</div>
-        <div class="mobile-menu-item" onclick="mobileNavClick('panel7', null, this); closeMobileMenu();"><span>📊</span> Dashboard</div>
-        <div class="mobile-menu-item" onclick="mobileNavClick('panel8', 'sub8_1', this); closeMobileMenu();"><span>📄</span> Reports</div>
-        <div class="mobile-menu-item" onclick="mobileNavClick('panel10', null, this); closeMobileMenu();"><span>💳</span> Credit</div>
-        <div class="mobile-menu-item" onclick="mobileNavClick('panel9', null, this); closeMobileMenu();"><span>⚙️</span> Settings</div>
-    </div>
 </div>
 
 <div class="main-content-wrapper">
@@ -460,7 +497,7 @@ input:checked + .slider:before { transform: translateX(20px); }
     </div> 
 
     <div class="panels">
-                <!-- PANEL 1 (Medicine) -->
+        <!-- PANEL 1 (Medicine) -->
         <div class="panel active" id="panel1">
             <div class="sub-panel active" id="sub1_1">
                 <div class="section-collapsible">
@@ -914,9 +951,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                 </div>
             </div>
-        </div> 
-
-        <!-- PANEL 7 (Dashboard) -->
+        </div>
+                <!-- PANEL 7 (Dashboard) -->
         <div class="panel" id="panel7">
             <div class="section-collapsible">
                 <div class="section-header open" onclick="toggleSection('hdrDash','bodyDash')">
@@ -932,6 +968,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Expenses</div><div class="dash-val-box" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><div class="dash-val-number" id="dashTotalExpense">0.00</div></div></div>
                         <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Net Profit</div><div class="dash-val-box" style="background: linear-gradient(135deg, #10b981, #059669);"><div class="dash-val-number" id="dashNetProfit">0.00</div></div></div>
                         <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Transactions</div><div class="dash-val-box" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><div class="dash-val-number" id="dashTotalSalesCount">0</div></div></div>
+                        
                         <div class="dash-card" style="grid-column: 1 / -1;">
                             <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">📈 30-Day Sales Chart</div>
                             <div class="chart-container" style="height: 300px;"><canvas id="dailyChartCanvas"></canvas></div>
@@ -1297,7 +1334,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
 
 const firebaseConfig = {
@@ -1326,6 +1363,129 @@ let codeReader = null;
 
 setTimeout(() => { const splash = document.getElementById('splashScreen'); if(splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; }, 500); } }, 1500); 
 
+// ==========================================
+// 🌟 MODERN MOBILE NAVIGATION
+// ==========================================
+window.toggleModernMenu = function() {
+    const menu = document.getElementById('modernMobileMenu');
+    const titleBtn = document.getElementById('mobileHeaderTitle');
+    if (menu.classList.contains('open')) {
+        menu.classList.remove('open');
+        titleBtn.classList.remove('open');
+    } else {
+        menu.classList.add('open');
+        titleBtn.classList.add('open');
+        buildModernMenu();
+    }
+};
+
+function buildModernMenu() {
+    const menu = document.getElementById('modernMobileMenu');
+    const menuData = [
+        {
+            section: '💊 Medicine', items: [
+                { id: 'sub1_1', panel: 'panel1', title: '📋 Medicine List', icon: '📋' },
+                { id: 'sub1_2', panel: 'panel1', title: '➕ Add Medicine', icon: '➕' },
+                { id: 'sub1_3', panel: 'panel1', title: '🗂️ Categories', icon: '🗂️' }
+            ]
+        },
+        {
+            section: '🛒 Sales', items: [
+                { id: 'sub2_1', panel: 'panel2', title: '🛒 New Sale', icon: '🛒' },
+                { id: 'sub2_2', panel: 'panel2', title: '⚡ Quick Sale', icon: '⚡' },
+                { id: 'sub2_3', panel: 'panel2', title: '📜 Sales History', icon: '📜' }
+            ]
+        },
+        {
+            section: '💸 Expenses', items: [
+                { id: 'sub3_1', panel: 'panel3', title: '💸 Daily Expense', icon: '💸' },
+                { id: 'sub3_2', panel: 'panel3', title: '🏢 Fixed Expense', icon: '🏢' },
+                { id: 'sub3_list', panel: 'panel3', title: '📋 Expense List', icon: '📋' },
+                { id: 'sub3_3', panel: 'panel3', title: '🗂️ Categories', icon: '🗂️' }
+            ]
+        },
+        {
+            section: '📦 Inventory', items: [
+                { id: 'sub4_1', panel: 'panel4', title: '📦 Inventory List', icon: '📦' },
+                { id: 'sub4_2', panel: 'panel4', title: '⚠️ Expiry & Low Stock', icon: '⚠️' },
+                { id: 'sub4_3', panel: 'panel4', title: '🔧 Stock Adjust', icon: '🔧' }
+            ]
+        },
+        {
+            section: '📊 Dashboard & Reports', items: [
+                { id: null, panel: 'panel7', title: '📊 Dashboard', icon: '📊' },
+                { id: 'sub8_1', panel: 'panel8', title: '📄 General Report', icon: '📄' },
+                { id: 'sub8_2', panel: 'panel8', title: '📅 Daily Report', icon: '📅' },
+                { id: 'sub8_3', panel: 'panel8', title: '📆 Monthly Report', icon: '📆' }
+            ]
+        },
+        {
+            section: '⚙️ System', items: [
+                { id: null, panel: 'panel10', title: '💳 Credit Management', icon: '💳' },
+                { id: null, panel: 'panel9', title: '⚙️ Settings', icon: '⚙️' }
+            ]
+        }
+    ];
+
+    let html = '';
+    menuData.forEach(group => {
+        html += `<div class="modern-menu-section">
+            <div class="modern-menu-label">${group.section}</div>`;
+        group.items.forEach(item => {
+            const activePanel = document.querySelector('.panel.active');
+            const activeSub = document.querySelector('.panel.active .sub-panel.active');
+            let isActive = false;
+            if (activePanel && activePanel.id === item.panel) {
+                if (item.id === null && !activeSub) isActive = true;
+                else if (activeSub && activeSub.id === item.id) isActive = true;
+            }
+            html += `<div class="modern-menu-item ${isActive ? 'active' : ''}" onclick="modernNavClick('${item.panel}', ${item.id ? `'${item.id}'` : 'null'}, '${item.title}')">
+                <div class="icon">${item.icon}</div>
+                <div>${item.title.replace(/^[^\s]+\s/, '')}</div>
+            </div>`;
+        });
+        html += `</div>`;
+    });
+    menu.innerHTML = html;
+}
+
+window.modernNavClick = function(panelId, subPanelId, title) {
+    document.getElementById('modernMobileMenu').classList.remove('open');
+    document.getElementById('mobileHeaderTitle').classList.remove('open');
+    document.getElementById('currentMobileTabTitle').innerText = title;
+    switchPage(panelId, subPanelId, null);
+    document.querySelectorAll('.mobile-nav-item').forEach(item => item.classList.remove('active'));
+    const navItem = document.querySelector(`.mobile-nav-item[data-tab="${panelId}"]`);
+    if (navItem) navItem.classList.add('active');
+};
+
+window.mobileNavClick = function(panelId, subPanelId, element) {
+    let title = "Dashboard";
+    if(panelId === 'panel1') title = "Medicine List";
+    if(panelId === 'panel2') title = "New Sale";
+    if(panelId === 'panel9') title = "Settings";
+    document.getElementById('currentMobileTabTitle').innerText = title;
+    switchPage(panelId, subPanelId, null);
+    document.querySelectorAll('.mobile-nav-item').forEach(item => item.classList.remove('active'));
+    const navItem = document.querySelector(`.mobile-nav-item[data-tab="${panelId}"]`);
+    if (navItem) navItem.classList.add('active');
+};
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('modernMobileMenu');
+    const title = document.getElementById('mobileHeaderTitle');
+    if (menu && menu.classList.contains('open')) {
+        if (!menu.contains(event.target) && !title.contains(event.target)) {
+            menu.classList.remove('open');
+            title.classList.remove('open');
+        }
+    }
+});
+
+// ==========================================
+// 🌟 PAGE ROUTING & UI LOGIC
+// ==========================================
 window.switchPage = function(panelId, subPanelId, element) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     const targetPanel = document.getElementById(panelId);
@@ -1343,27 +1503,47 @@ window.switchPage = function(panelId, subPanelId, element) {
             const header = parentMenu.querySelector('.menu-header');
             if(header) header.classList.add('active');
         }
-    } else {
-        const menuItems = document.querySelectorAll('.menu-header');
-        menuItems.forEach(item => {
-            if(item.innerText.includes(panelId === 'panel9' ? 'Settings' : panelId === 'panel7' ? 'Dashboard' : '')) {
-                item.classList.add('active');
-            }
-        });
     }
+    
+    if (window.innerWidth <= 768) {
+        let title = "Dashboard";
+        if(panelId === 'panel1') title = "Medicine";
+        if(panelId === 'panel2') title = "Sales";
+        if(panelId === 'panel3') title = "Expenses";
+        if(panelId === 'panel4') title = "Inventory";
+        if(panelId === 'panel8') title = "Reports";
+        if(panelId === 'panel9') title = "Settings";
+        if(panelId === 'panel10') title = "Credit";
+        
+        // Detailed title
+        if (subPanelId === 'sub1_1') title = "Medicine List";
+        if (subPanelId === 'sub1_2') title = "Add Medicine";
+        if (subPanelId === 'sub1_3') title = "Categories";
+        if (subPanelId === 'sub2_1') title = "New Sale";
+        if (subPanelId === 'sub2_2') title = "Quick Sale";
+        if (subPanelId === 'sub2_3') title = "Sales History";
+        if (subPanelId === 'sub3_1') title = "Daily Expense";
+        if (subPanelId === 'sub3_2') title = "Fixed Expense";
+        if (subPanelId === 'sub3_list') title = "Expense List";
+        if (subPanelId === 'sub3_3') title = "Expense Categories";
+        if (subPanelId === 'sub4_1') title = "Inventory List";
+        if (subPanelId === 'sub4_2') title = "Expiry & Stock";
+        if (subPanelId === 'sub4_3') title = "Stock Adjust";
+        if (subPanelId === 'sub8_1') title = "General Report";
+        if (subPanelId === 'sub8_2') title = "Daily Report";
+        if (subPanelId === 'sub8_3') title = "Monthly Report";
+        
+        document.getElementById('currentMobileTabTitle').innerText = title;
+    }
+
     if(panelId === 'panel9') {
         const settingsBody = document.getElementById('bodySettings');
-        const settingsHeader = document.getElementById('hdrSettings');
         if(settingsBody) settingsBody.classList.add('open');
-        if(settingsHeader) settingsHeader.classList.add('open');
         loadSettingsData(); 
     }
     if(subPanelId === 'sub3_list') { renderAllExpensesList(); }
     if(subPanelId === 'sub2_3') { renderSalesHistory(); }
     if(subPanelId === 'sub4_3') { populateTransferMedSelect(); }
-    
-    // Mobile drawer close
-    document.querySelectorAll('.mobile-menu-item').forEach(el => el.classList.remove('active'));
 };
 
 window.toggleSection = function(h, b) {
@@ -1394,37 +1574,14 @@ window.toggleMenu = function(element) {
     }
 };
 
-window.mobileNavClick = function(panelId, subPanelId, element) {
-    switchPage(panelId, subPanelId, null);
-    document.querySelectorAll('.mobile-nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    const navItem = document.querySelector(`.mobile-nav-item[data-tab="${panelId}"]`);
-    if (navItem) navItem.classList.add('active');
-    if (panelId === 'panel9') {
-        const settingsBody = document.getElementById('bodySettings');
-        const settingsHeader = document.getElementById('hdrSettings');
-        if(settingsBody) settingsBody.classList.add('open');
-        if(settingsHeader) settingsHeader.classList.add('open');
-        loadSettingsData();
-    }
-    if (subPanelId === 'sub3_list') { renderAllExpensesList(); }
-    if (subPanelId === 'sub2_3') { renderSalesHistory(); }
-    if (subPanelId === 'sub4_3') { populateTransferMedSelect(); }
-};
-
-window.toggleMobileMenu = function() {
-    document.getElementById('mobileMenuOverlay').classList.add('open');
-};
-window.closeMobileMenu = function() {
-    document.getElementById('mobileMenuOverlay').classList.remove('open');
-};
-
 window.onMedTypeChange = function() {
     const type = document.getElementById('medType').value;
     document.getElementById('medicineOnlyFields').style.display = type === 'cosmetic' ? 'none' : 'block';
 }; 
 
+// ==========================================
+// AUTH & LOADING
+// ==========================================
 async function loadUserHeader(user) {
     try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
@@ -1481,19 +1638,21 @@ async function loadAllData() {
     await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
     const today = new Date().toISOString().split('T')[0];
     const thisMonth = new Date().toISOString().slice(0, 7);
-    if(!document.getElementById('dashMonthPicker').value) document.getElementById('dashMonthPicker').value = thisMonth;
-    if(!document.getElementById('sellDate').value) document.getElementById('sellDate').value = today;
-    if(!document.getElementById('quickDate').value) document.getElementById('quickDate').value = today;
-    if(!document.getElementById('expDate').value) document.getElementById('expDate').value = today;
-    if(!document.getElementById('creditDate').value) document.getElementById('creditDate').value = today;
-    if(!document.getElementById('fixMonth').value) document.getElementById('fixMonth').value = thisMonth;
-    if(!document.getElementById('repDateInput').value) document.getElementById('repDateInput').value = today;
-    if(!document.getElementById('repMonthInput').value) document.getElementById('repMonthInput').value = thisMonth;
-    if(!document.getElementById('dailyReportDate').value) document.getElementById('dailyReportDate').value = today;
-    if(!document.getElementById('monthlyReportMonth').value) document.getElementById('monthlyReportMonth').value = thisMonth;
+    if(document.getElementById('dashMonthPicker') && !document.getElementById('dashMonthPicker').value) document.getElementById('dashMonthPicker').value = thisMonth;
+    if(document.getElementById('sellDate') && !document.getElementById('sellDate').value) document.getElementById('sellDate').value = today;
+    if(document.getElementById('quickDate') && !document.getElementById('quickDate').value) document.getElementById('quickDate').value = today;
+    if(document.getElementById('expDate') && !document.getElementById('expDate').value) document.getElementById('expDate').value = today;
+    if(document.getElementById('creditDate') && !document.getElementById('creditDate').value) document.getElementById('creditDate').value = today;
+    if(document.getElementById('fixMonth') && !document.getElementById('fixMonth').value) document.getElementById('fixMonth').value = thisMonth;
+    if(document.getElementById('repDateInput') && !document.getElementById('repDateInput').value) document.getElementById('repDateInput').value = today;
+    if(document.getElementById('repMonthInput') && !document.getElementById('repMonthInput').value) document.getElementById('repMonthInput').value = thisMonth;
+    if(document.getElementById('dailyReportDate') && !document.getElementById('dailyReportDate').value) document.getElementById('dailyReportDate').value = today;
+    if(document.getElementById('monthlyReportMonth') && !document.getElementById('monthlyReportMonth').value) document.getElementById('monthlyReportMonth').value = thisMonth;
+    if(document.getElementById('quickBulkDate') && !document.getElementById('quickBulkDate').value) document.getElementById('quickBulkDate').value = today;
+    
     renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); toggleReportDatePickers();
     setupRealtimeListeners();
-    renderExpenseHistory(); renderFixedExpenseHistory(); renderAllExpensesList(); renderSalesHistory();
+    renderAllExpensesList(); renderSalesHistory();
     populateTransferMedSelect();
 } 
 
@@ -1501,25 +1660,18 @@ function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
     unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); });
     unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { 
-        let temp = []; 
-        snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
+        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
         allSales = temp; 
-        calculateStockReport(); 
-        loadInventory(); 
-        loadDailyReport(); 
-        loadMonthlyReport(); 
-        loadDashboard(); 
-        renderSalesHistory(); 
-        renderUnpaidCredits(); 
+        calculateStockReport(); loadInventory(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); 
     });
     unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
-    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderExpenseHistory(); renderAllExpensesList(); });
-    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderFixedExpenseHistory(); renderAllExpensesList(); });
-    unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; loadCreditPaymentHistory(); renderUnpaidCredits(); });
+    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
+    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
+    unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; renderUnpaidCredits(); });
 }
 
 // ==========================================
-// 🌐 SETTINGS, TRANSLATIONS & LOGIC
+// 🌐 SETTINGS & LANGUAGE
 // ==========================================
 function applyLanguage(lang) {
     const translations = {
@@ -1599,10 +1751,7 @@ async function logActivity(actionText) {
         const userEmail = document.getElementById('hdrUserEmail').innerText;
         const userName = userEmail.split('@')[0]; 
         await addDoc(collection(db, 'pharmacies', currentUserPharmacyId, 'activities'), {
-            user: userName,
-            action: actionText,
-            timestamp: serverTimestamp(),
-            pharmacyId: currentUserPharmacyId
+            user: userName, action: actionText, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId
         });
         loadAuditTrail(); 
     } catch (e) { console.error("Audit log failed:", e); }
@@ -1625,9 +1774,8 @@ window.saveSystemPrefs = async function() {
     const darkMode = document.getElementById('settingDarkMode').checked;
     try {
         await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { currency, language, darkMode });
-        logActivity(`updated system preferences (Lang: ${language})`);
-        applyLanguage(language); 
-        toggleDarkMode(darkMode);
+        logActivity(`updated system preferences`);
+        applyLanguage(language); toggleDarkMode(darkMode);
         alert('✅ Preferences Saved!');
     } catch (e) { alert('Error: ' + e.message); }
 }
@@ -1638,7 +1786,7 @@ window.saveLimits = async function() {
     try {
         await updateDoc(doc(db, 'pharmacies', currentUserPharmacyId), { lowStockThreshold: stock, expiryAlertThreshold: expiry });
         lowStockThreshold = stock; 
-        logActivity(`updated limits (Stock: ${stock}, Expiry: ${expiry})`);
+        logActivity(`updated limits`);
         alert('✅ Limits Saved!');
     } catch (e) { alert('Error: ' + e.message); }
 }
@@ -1670,14 +1818,10 @@ function renderPermissionsUI(perms) {
     ];
     let html = '';
     roles.forEach(role => {
-        html += `<div class="role-card">
-            <div class="role-header"><span>${role.icon}</span><h4>${role.name}</h4></div>`;
+        html += `<div class="role-card"><div class="role-header"><span>${role.icon}</span><h4>${role.name}</h4></div>`;
         tabs.forEach(tab => {
             const checked = perms[role.id] && perms[role.id][tab.id] ? 'checked' : '';
-            html += `<div class="perm-row">
-                <span>${tab.icon} ${tab.label}</span>
-                <label class="toggle-switch"><input type="checkbox" id="perm_${role.id}_${tab.id}" ${checked}><span class="slider"></span></label>
-            </div>`;
+            html += `<div class="perm-row"><span>${tab.icon} ${tab.label}</span><label class="toggle-switch"><input type="checkbox" id="perm_${role.id}_${tab.id}" ${checked}><span class="slider"></span></label></div>`;
         });
         html += `</div>`;
     });
@@ -1690,9 +1834,7 @@ window.savePermissions = async function() {
     let newData = {};
     roles.forEach(role => {
         newData[role] = {};
-        tabs.forEach(tab => {
-            newData[role][tab] = document.getElementById(`perm_${role}_${tab}`).checked;
-        });
+        tabs.forEach(tab => { newData[role][tab] = document.getElementById(`perm_${role}_${tab}`).checked; });
     });
     try {
         await setDoc(doc(db, 'pharmacies', currentUserPharmacyId, 'settings', 'permissions'), newData);
@@ -1705,34 +1847,18 @@ async function loadAuditTrail() {
     const listEl = document.getElementById('auditTrailList');
     if (!listEl) return;
     try {
-        const q = query(
-            collection(db, 'pharmacies', currentUserPharmacyId, 'activities'),
-            orderBy('timestamp', 'desc'),
-            limit(10)
-        );
+        const q = query(collection(db, 'pharmacies', currentUserPharmacyId, 'activities'), orderBy('timestamp', 'desc'), limit(10));
         const snap = await getDocs(q);
-        if (snap.empty) {
-            listEl.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">No recent activity found.</p>';
-            return;
-        }
+        if (snap.empty) { listEl.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">No recent activity found.</p>'; return; }
         let html = '';
         snap.forEach(doc => {
             const data = doc.data();
             const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : 'Just now';
             const initials = data.user.substring(0, 2).toUpperCase();
-            html += `<div class="audit-item">
-                <div class="audit-avatar" style="background:rgba(16, 185, 129, 0.1); color:var(--primary);">${initials}</div>
-                <div class="audit-content">
-                    <div class="audit-text"><strong>${data.user}</strong> ${data.action}.</div>
-                    <div class="audit-time">${date}</div>
-                </div>
-            </div>`;
+            html += `<div class="audit-item"><div class="audit-avatar">${initials}</div><div class="audit-content"><div class="audit-text"><strong>${data.user}</strong> ${data.action}.</div><div class="audit-time">${date}</div></div></div>`;
         });
         listEl.innerHTML = html;
-    } catch (e) { 
-        console.error(e); 
-        listEl.innerHTML = '<p style="color:red; font-size:12px;">Error loading activity.</p>';
-    }
+    } catch (e) { listEl.innerHTML = '<p style="color:red; font-size:12px;">Error loading activity.</p>'; }
 }
 
 async function applyPermissionsToUI() {
@@ -1751,25 +1877,16 @@ async function applyPermissionsToUI() {
         if (!myPerms.dash) { document.getElementById('panel7').style.display = 'none'; document.getElementById('menu_dash').style.display = 'none'; }
         if (!myPerms.rep) { document.getElementById('panel8').style.display = 'none'; document.getElementById('menu_rep').style.display = 'none'; }
         if (!myPerms.credit) { document.getElementById('panel10').style.display = 'none'; document.getElementById('menu_credit').style.display = 'none'; }
-        if (!myPerms.settings) {
-            document.getElementById('panel9').style.display = 'none';
-            document.getElementById('menu_settings').style.display = 'none';
-        }
+        if (!myPerms.settings) { document.getElementById('panel9').style.display = 'none'; document.getElementById('menu_settings').style.display = 'none'; }
     } catch (e) { console.error("Error applying permissions:", e); }
 }
 
 window.backupData = function() {
     try {
-        const data = { 
-            medicines: allMedicines, categories: allCategories, branches: allBranches, customers: allCustomers, 
-            sales: allSales, quickSales: allQuickSales, expenses: allExpenses, fixedExpenses: allFixed, 
-            exportDate: new Date().toISOString() 
-        };
+        const data = { medicines: allMedicines, categories: allCategories, branches: allBranches, customers: allCustomers, sales: allSales, quickSales: allQuickSales, expenses: allExpenses, fixedExpenses: allFixed, exportDate: new Date().toISOString() };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); 
-        a.href = url; 
-        a.download = `hanitech_backup_${new Date().toISOString().split('T')[0]}.json`;
+        const a = document.createElement('a'); a.href = url; a.download = `hanitech_backup_${new Date().toISOString().split('T')[0]}.json`;
         document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
         logActivity("downloaded system backup");
     } catch (e) { alert("Error downloading backup: " + e.message); }
@@ -1786,38 +1903,28 @@ window.resetAllData = async function() {
         for (const colName of collectionsToDelete) {
             const q = query(collection(db, colName), where('pharmacyId', '==', currentUserPharmacyId));
             const snap = await getDocs(q);
-            let batch = writeBatch(db);
-            let count = 0;
+            let batch = writeBatch(db); let count = 0;
             for (const docSnap of snap.docs) {
-                batch.delete(doc(db, colName, docSnap.id));
-                count++;
-                totalDeleted++;
-                if (count === 500) {
-                    await batch.commit();
-                    batch = writeBatch(db);
-                    count = 0;
-                }
+                batch.delete(doc(db, colName, docSnap.id)); count++; totalDeleted++;
+                if (count === 500) { await batch.commit(); batch = writeBatch(db); count = 0; }
             }
             if (count > 0) await batch.commit();
         }
-        alert(`✅ ሁሉም ዳታ በተከፋፈለ መልኩ ተሰርዟል! (${totalDeleted} መዝገቦች)`);
-        logActivity(`system data reset (${totalDeleted} records deleted)`);
+        alert(`✅ ሁሉም ዳታ ተሰርዟል! (${totalDeleted} መዝገቦች)`);
+        logActivity(`system data reset`);
         location.reload();
-    } catch (e) {
-        alert('Error deleting data: ' + e.message);
-        console.error(e);
-    }
+    } catch (e) { alert('Error deleting data: ' + e.message); }
 };
 
+// ==========================================
+// 🖨️ PRINT RECEIPT & SCANNER
+// ==========================================
 window.printReceipt = function(saleId) {
     const sale = allSales.find(s => s.id === saleId);
     if (!sale) { alert('Sale not found'); return; }
     const phName = document.getElementById('hdrPharmacyName').innerText;
     const receiptHtml = `
-        <div style="text-align:center; margin-bottom: 20px;">
-            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">${phName}</h2>
-            <p style="font-size: 12px; margin: 0;">Receipt</p>
-        </div>
+        <div style="text-align:center; margin-bottom: 20px;"><h2 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">${phName}</h2><p style="font-size: 12px; margin: 0;">Receipt</p></div>
         <div style="border-bottom: 1px dashed #000; margin-bottom: 10px; padding-bottom: 10px;">
             <p style="margin: 2px 0; font-size: 12px;">Date: ${sale.date}</p>
             <p style="margin: 2px 0; font-size: 12px;">Receipt No: ${sale.receipt || sale.id.slice(-6).toUpperCase()}</p>
@@ -1830,7 +1937,7 @@ window.printReceipt = function(saleId) {
         <div style="border-top: 1px dashed #000; padding-top: 10px; font-size: 12px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Subtotal:</span><strong>${sale.total.toFixed(2)} ETB</strong></div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Paid:</span><strong>${(sale.paidAmount !== undefined ? sale.paidAmount : sale.total).toFixed(2)} ETB</strong></div>
-            ${sale.paidAmount !== undefined && sale.paidAmount < sale.total ? `<div style="display: flex; justify-content: space-between; margin-bottom: 5px; color: #000;"><span>Unpaid (Credit):</span><strong>${(sale.total - sale.paidAmount).toFixed(2)} ETB</strong></div>` : ''}
+            ${sale.paidAmount !== undefined && sale.paidAmount < sale.total ? `<div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Unpaid (Credit):</span><strong>${(sale.total - sale.paidAmount).toFixed(2)} ETB</strong></div>` : ''}
             <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Payment Method:</span><strong style="text-transform: uppercase;">${sale.paymentMethod}</strong></div>
         </div>
         <div style="text-align: center; margin-top: 20px; font-size: 11px;"><p>Thank you for your business!</p><p>Powered by HaniTech</p></div>
@@ -1850,43 +1957,29 @@ window.startScanner = function() {
             stopScanner();
             document.getElementById('barcodeModal').classList.remove('open');
             const med = allMedicines.find(m => m.name === barcodeText || m.batch === barcodeText);
-            if (med) {
-                addToCart(med.id, 1);
-            } else {
-                alert(`⚠️ Barcode "${barcodeText}" ከምንም መድኃኒት ጋር አልተገናኘም።\n\nእባክህ መድኃኒቱን በእጅ ፈልገው።`);
-                document.getElementById('searchSellInput').value = barcodeText;
-                renderSellProducts();
-            }
+            if (med) { addToCart(med.id, 1); } 
+            else { alert(`⚠️ Barcode "${barcodeText}" ከምንም መድኃኒት ጋር አልተገናኘም።`); }
         }
     });
 };
 
 window.stopScanner = function() {
-    if (codeReader) {
-        codeReader.reset();
-        codeReader = null;
-    }
+    if (codeReader) { codeReader.reset(); codeReader = null; }
 };
 
 window.showCustomerProfile = function(customerName) {
     const modalBody = document.getElementById('customerModalBody');
     const cSales = allSales.filter(s => s.customer === customerName);
-    let totalSpent = 0;
-    let totalDebt = 0;
-    let historyHtml = '';
+    let totalDebt = 0; let historyHtml = '';
     cSales.sort((a,b) => new Date(b.date) - new Date(a.date));
     cSales.forEach(s => {
         const paid = s.paidAmount !== undefined ? s.paidAmount : s.total;
         const unpaid = s.total - paid;
-        totalSpent += paid;
         if (unpaid > 0) totalDebt += unpaid;
         historyHtml += `<div style="padding: 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;"><div><div style="font-weight: 600; color: var(--text-main);">${s.medicineName}</div><div style="font-size: 12px; color: var(--text-muted);">${s.date} | Qty: ${s.quantity}</div></div><div style="text-align: right;"><div style="font-weight: 700; color: var(--primary);">${paid.toFixed(2)} ETB</div>${unpaid > 0 ? `<div style="font-size: 11px; color: #ef4444;">Debt: ${unpaid.toFixed(2)}</div>` : ''}</div></div>`;
     });
     modalBody.innerHTML = `
-        <div style="text-align: center; margin-bottom: 20px;">
-            <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 10px;">👤</div>
-            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 5px;">${customerName}</h3>
-        </div>
+        <div style="text-align: center; margin-bottom: 20px;"><div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 10px;">👤</div><h3 style="font-size: 18px; font-weight: 800; margin-bottom: 5px;">${customerName}</h3></div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
             <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; text-align: center;"><div style="font-size: 12px; color: var(--text-muted);">Total Purchases</div><div style="font-size: 18px; font-weight: 800; color: var(--text-main);">${cSales.length}</div></div>
             <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 15px; text-align: center;"><div style="font-size: 12px; color: #ef4444;">Current Debt</div><div style="font-size: 18px; font-weight: 800; color: #ef4444;">${totalDebt.toFixed(2)} ETB</div></div>
@@ -1897,14 +1990,15 @@ window.showCustomerProfile = function(customerName) {
     document.getElementById('customerModal').classList.add('open');
 };
 
+// ==========================================
+// 🔄 CATEGORIES, BRANCHES & CUSTOMERS
+// ==========================================
 window.populateTransferMedSelect = function() {
     const fromBranch = document.getElementById('transferFromBranch')?.value;
     const sel = document.getElementById('transferMedId'); if(!sel) return;
     sel.innerHTML = '<option value="">-- Select Item --</option>';
     let filtered = allMedicines.filter(m => m.quantity > 0);
-    if (fromBranch && fromBranch !== 'all') {
-        filtered = filtered.filter(m => m.branch === fromBranch);
-    }
+    if (fromBranch && fromBranch !== 'all') filtered = filtered.filter(m => m.branch === fromBranch);
     filtered.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Qty: ${m.quantity}</option>`; });
 };
 
@@ -1914,31 +2008,21 @@ window.transferStock = async function() {
     const medId = document.getElementById('transferMedId').value;
     const qty = parseInt(document.getElementById('transferQty').value);
     if (!fromBranch || !toBranch || !medId || isNaN(qty) || qty <= 0) { alert('Fill all fields correctly'); return; }
-    if (fromBranch === toBranch) { alert('Cannot transfer to the same branch'); return; }
+    if (fromBranch === toBranch) { alert('Cannot transfer to same branch'); return; }
     const med = allMedicines.find(m => m.id === medId);
     if (!med) return;
-    if (med.quantity < qty) { alert('Not enough stock in source branch'); return; }
+    if (med.quantity < qty) { alert('Not enough stock'); return; }
     try {
         await updateDoc(doc(db, 'medicines', medId), { quantity: increment(-qty) });
         const existingInDest = allMedicines.find(m => m.name === med.name && m.batch === med.batch && m.branch === toBranch);
-        if (existingInDest) {
-            await updateDoc(doc(db, 'medicines', existingInDest.id), { quantity: increment(qty) });
-        } else {
-            await addDoc(collection(db, 'medicines'), {
-                type: med.type, category: med.category, subcategory: med.subcategory, name: med.name,
-                batch: med.batch, expiry: med.expiry, supplier: med.supplier, cost: med.cost, price: med.price,
-                quantity: qty, branch: toBranch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId
-            });
-        }
+        if (existingInDest) { await updateDoc(doc(db, 'medicines', existingInDest.id), { quantity: increment(qty) }); } 
+        else { await addDoc(collection(db, 'medicines'), { type: med.type, category: med.category, subcategory: med.subcategory, name: med.name, batch: med.batch, expiry: med.expiry, supplier: med.supplier, cost: med.cost, price: med.price, quantity: qty, branch: toBranch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId }); }
         logActivity(`transferred ${qty} units of ${med.name} from ${fromBranch} to ${toBranch}`);
-        alert(`✅ Transferred ${qty} units of ${med.name} successfully!`);
+        alert(`✅ Transferred ${qty} units!`);
         document.getElementById('transferQty').value = '';
     } catch(e) { alert('Error: ' + e.message); }
 };
 
-// ==========================================
-// REST OF THE FUNCTIONS
-// ==========================================
 async function loadCategories() {
     try {
         const snap = await getDocs(query(collection(db, 'categories'), where('pharmacyId', '==', currentUserPharmacyId)));
@@ -1968,9 +2052,7 @@ window.loadSubcategoriesForSelectedCategory = function() {
     const catName = document.getElementById('medCategory').value; 
     const subList = document.getElementById('subCategoryList'); if(!subList) return;
     subList.innerHTML = '';
-    if (catName && allSubcategories[catName]) { 
-        allSubcategories[catName].forEach(sub => { subList.innerHTML += `<option value="${sub.name}">`; }); 
-    }
+    if (catName && allSubcategories[catName]) allSubcategories[catName].forEach(sub => { subList.innerHTML += `<option value="${sub.name}">`; }); 
 };
 
 function renderCategoryList() {
@@ -1984,7 +2066,7 @@ function renderCategoryList() {
     const paginated = allCategories.slice(start, start + rowsPerPage);
     let htmlTable = '';
     paginated.forEach(c => {
-        const subsHtml = (allSubcategories[c] || []).map(sub => `<span class="cat-tag" style="font-size:11px; margin:2px; background:var(--border); padding:2px 6px; border-radius:4px; display:inline-block;">${sub.name} <span class="del" onclick="deleteSubcategory('${c}', '${sub.id}', '${sub.name}')" style="cursor:pointer; color:#ef4444; font-weight:bold;">×</span></span>`).join('');
+        const subsHtml = (allSubcategories[c] || []).map(sub => `<span style="font-size:11px; margin:2px; background:var(--border); padding:2px 6px; border-radius:4px; display:inline-block;">${sub.name} <span onclick="deleteSubcategory('${c}', '${sub.id}', '${sub.name}')" style="cursor:pointer; color:#ef4444; font-weight:bold;">×</span></span>`).join('');
         htmlTable += `<tr><td><strong>${c}</strong></td><td>${subsHtml || '-'}</td><td><button class="action-btn btn-delete" onclick="deleteCategory('${c}')">🗑️ Delete</button></td></tr>`;
     });
     tableBody.innerHTML = htmlTable;
@@ -2001,7 +2083,7 @@ window.addCategoryWithSub = async function() {
     if(!catName) return alert('Please enter a main category name');
     try { 
         await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + catName), { name: catName, pharmacyId: currentUserPharmacyId }); 
-        if(subName) { await addDoc(collection(db, 'subcategories'), { name: subName, categoryName: catName, pharmacyId: currentUserPharmacyId }); }
+        if(subName) await addDoc(collection(db, 'subcategories'), { name: subName, categoryName: catName, pharmacyId: currentUserPharmacyId });
         document.getElementById('newCat').value = ''; document.getElementById('newSubCatDirect').value = '';
         loadCategories(); logActivity(`added new category: ${catName}`); alert('✅ Category added!');
     } catch(e) { alert(e.message); }
@@ -2034,15 +2116,18 @@ async function loadExpCategories() {
         renderExpCatList();
     } catch(e) { console.error(e); }
 } 
+
 function renderExpCatList() {
     const listEl = document.getElementById('expCatListDisplay'); if(!listEl) return;
     if(allExpCategories.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">No categories.</p>'; return; }
-    listEl.innerHTML = allExpCategories.map(c => `<span class="cat-tag" style="background:var(--border); padding:4px 8px; border-radius:4px; margin:2px; display:inline-block;">${c} <span class="del" onclick="deleteExpCategory('${c}')" style="cursor:pointer; color:#ef4444; font-weight:bold;">×</span></span>`).join('');
+    listEl.innerHTML = allExpCategories.map(c => `<span style="background:var(--border); padding:4px 8px; border-radius:4px; margin:2px; display:inline-block;">${c} <span onclick="deleteExpCategory('${c}')" style="cursor:pointer; color:#ef4444; font-weight:bold;">×</span></span>`).join('');
 } 
+
 window.addExpCategory = async function() {
     const name = document.getElementById('newExpCat').value.trim(); if(!name) return alert('Enter name');
     try { await setDoc(doc(db, 'expenseCategories', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newExpCat').value = ''; loadExpCategories(); } catch(e) { alert(e.message); }
 }; 
+
 window.deleteExpCategory = async function(name) {
     if(!confirm('Delete this category?')) return;
     try { await deleteDoc(doc(db, 'expenseCategories', currentUserPharmacyId + '_' + name)); loadExpCategories(); } catch(e) { alert(e.message); }
@@ -2052,21 +2137,24 @@ async function loadBranches() {
     try {
         const snap = await getDocs(query(collection(db, 'branches'), where('pharmacyId', '==', currentUserPharmacyId)));
         allBranches = []; 
-        const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch', 'transferFromBranch', 'transferToBranch'];
+        const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch', 'transferFromBranch', 'transferToBranch', 'filterBranchMed'];
         selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML = '<option value="all">All Branches</option>'; });
         snap.forEach(doc => { const bName = doc.data().name; allBranches.push(bName); selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML += `<option value="${bName}">${bName}</option>`; }); });
         renderBranchList();
     } catch(e) { console.error(e); }
 } 
+
 function renderBranchList() {
     const listEl = document.getElementById('branchListDisplay'); if(!listEl) return;
     if(allBranches.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">No branches.</p>'; return; }
-    listEl.innerHTML = allBranches.map(c => `<span class="cat-tag" style="background:var(--border); padding:4px 8px; border-radius:4px; margin:2px; display:inline-block;">${c} <span class="del" onclick="deleteBranch('${c}')" style="cursor:pointer; color:#ef4444; font-weight:bold;">×</span></span>`).join('');
+    listEl.innerHTML = allBranches.map(c => `<span style="background:var(--border); padding:4px 8px; border-radius:4px; margin:2px; display:inline-block;">${c} <span onclick="deleteBranch('${c}')" style="cursor:pointer; color:#ef4444; font-weight:bold;">×</span></span>`).join('');
 } 
+
 window.addBranch = async function() {
     const name = document.getElementById('newBranch').value.trim(); if(!name) return alert('Enter name');
     try { await setDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newBranch').value = ''; loadBranches(); logActivity(`added new branch: ${name}`); } catch(e) { alert(e.message); }
 }; 
+
 window.deleteBranch = async function(name) {
     if(!confirm('Delete this branch?')) return;
     try { await deleteDoc(doc(db, 'branches', currentUserPharmacyId + '_' + name)); loadBranches(); logActivity(`deleted branch: ${name}`); } catch(e) { alert(e.message); }
@@ -2076,31 +2164,35 @@ async function loadCustomers() {
     try {
         const snap = await getDocs(query(collection(db, 'customers'), where('pharmacyId', '==', currentUserPharmacyId)));
         allCustomers = []; 
-        const sel = document.getElementById('sellCustomer'); if (sel) sel.innerHTML = '<option value="">-- Select Customer --</option>';
         const saleCustList = document.getElementById('saleCustomerList'); if(saleCustList) saleCustList.innerHTML = '';
         snap.forEach(doc => { 
             const cName = doc.data().name; 
             allCustomers.push(cName); 
-            if (sel) sel.innerHTML += `<option value="${cName}">${cName}</option>`; 
-            if (saleCustList) saleCustList.innerHTML += `<option value="${cName}">`;
+            if(saleCustList) saleCustList.innerHTML += `<option value="${cName}">`;
         });
         renderCustomerList(); populateCreditCustomerSelect();
     } catch(e) { console.error(e); }
 } 
+
 function renderCustomerList() {
     const listEl = document.getElementById('customerListDisplay'); if(!listEl) return;
     if(allCustomers.length === 0) { listEl.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">No customers.</p>'; return; }
-    listEl.innerHTML = allCustomers.map(c => `<span class="cat-tag" style="background:var(--border); padding:4px 8px; border-radius:4px; margin:2px; display:inline-block;">${c} <span class="del" onclick="deleteCustomer('${c}')" style="cursor:pointer; color:#ef4444; font-weight:bold;">×</span></span>`).join('');
+    listEl.innerHTML = allCustomers.map(c => `<span style="background:var(--border); padding:4px 8px; border-radius:4px; margin:2px; display:inline-block;">${c} <span onclick="deleteCustomer('${c}')" style="cursor:pointer; color:#ef4444; font-weight:bold;">×</span></span>`).join('');
 } 
+
 window.addCustomer = async function() {
     const name = document.getElementById('newCustomer').value.trim(); if(!name) return alert('Enter name');
     try { await setDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name), { name, pharmacyId: currentUserPharmacyId }); document.getElementById('newCustomer').value = ''; loadCustomers(); logActivity(`added new customer: ${name}`); } catch(e) { alert(e.message); }
 }; 
+
 window.deleteCustomer = async function(name) {
     if(!confirm('Delete this customer?')) return;
     try { await deleteDoc(doc(db, 'customers', currentUserPharmacyId + '_' + name)); loadCustomers(); logActivity(`deleted customer: ${name}`); } catch(e) { alert(e.message); }
 }; 
 
+// ==========================================
+// 💊 MEDICINE CRUD
+// ==========================================
 window.addMedicine = async function() {
     const type = document.getElementById('medType').value; const category = document.getElementById('medCategory').value;
     const subcategory = document.getElementById('medSubcategory').value; 
@@ -2113,11 +2205,8 @@ window.addMedicine = async function() {
     let batch = document.getElementById('medBatch').value.trim(); 
     let expiry = document.getElementById('medExpiry').value; 
     let supplier = document.getElementById('medSupplier').value.trim(); 
-    if (type === 'medicine') { 
-        if (!batch || !expiry) { alert('Fill batch and expiry date'); return; } 
-    } else { 
-        batch = batch || '-'; expiry = expiry || '-'; supplier = supplier || '-'; 
-    }
+    if (type === 'medicine') { if (!batch || !expiry) { alert('Fill batch and expiry date'); return; } } 
+    else { batch = batch || '-'; expiry = expiry || '-'; supplier = supplier || '-'; }
     if (!category || !subcategory || !name || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) { alert('Fill all fields correctly'); return; } 
     try {
         const exists = (allSubcategories[category] || []).find(s => s.name === subcategory);
@@ -2198,6 +2287,9 @@ window.deleteMedicine = async function(id) {
     } catch(e) { alert('Error: ' + e.message); }
 };
 
+// ==========================================
+// 🛒 POS / CART / SALES
+// ==========================================
 window.toggleCreditFields = function() {
     const method = document.getElementById('sellPaymentMethod').value;
     const fields = document.getElementById('creditFields');
@@ -2295,9 +2387,7 @@ window.completeSale = async function() {
             const itemPaid = paymentMethod === 'credit' ? (itemTotal * (paidAmount/totalAmount)) : itemTotal;
             const newSaleRef = await addDoc(collection(db, 'sales'), { 
                 medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, 
-                total: itemTotal, 
-                paymentMethod: paymentMethod, 
-                paidAmount: itemPaid, 
+                total: itemTotal, paymentMethod: paymentMethod, paidAmount: itemPaid, 
                 date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
             });
             saleIds.push(newSaleRef.id);
@@ -2316,7 +2406,7 @@ window.completeSale = async function() {
 window.addQuickSale = async function() {
     const type = document.getElementById('quickType').value; const branch = document.getElementById('quickBranch').value; const date = document.getElementById('quickDate').value; const amount = parseFloat(document.getElementById('quickAmount').value);
     if(!date || isNaN(amount) || amount <= 0) { alert('Fill all fields'); return; } 
-    try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added quick sale (Amount: ${amount} ETB)`); alert('✅ Recorded!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added quick sale (${amount} ETB)`); alert('✅ Recorded!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
 
 window.bulkRowCount = 0;
@@ -2350,17 +2440,9 @@ window.updateBulkRowInfo = function(input) {
     const parts = val.split('|').map(p => p.trim());
     const searchName = parts[0].toLowerCase();
     const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
-    const med = allMedicines.find(m => 
-        (m.name && m.name.toLowerCase() === searchName) && 
-        (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch))
-    );
-    if (med) {
-        infoDiv.innerHTML = `✅ Found: <strong>${med.name}</strong> (Batch: ${med.batch || '-'}) | Available: ${med.quantity} | Price: ${med.price} ETB`;
-        infoDiv.style.color = 'var(--primary)';
-    } else {
-        infoDiv.innerHTML = `⚠️ Item not found in stock.`;
-        infoDiv.style.color = '#ef4444';
-    }
+    const med = allMedicines.find(m => (m.name && m.name.toLowerCase() === searchName) && (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch)));
+    if (med) { infoDiv.innerHTML = `✅ Found: <strong>${med.name}</strong> (Batch: ${med.batch || '-'}) | Available: ${med.quantity} | Price: ${med.price} ETB`; infoDiv.style.color = 'var(--primary)'; } 
+    else { infoDiv.innerHTML = `⚠️ Item not found in stock.`; infoDiv.style.color = '#ef4444'; }
 };
 
 window.saveBulkSales = async function() {
@@ -2368,8 +2450,7 @@ window.saveBulkSales = async function() {
     const date = document.getElementById('quickBulkDate').value;
     if (!date) { alert('Select date'); return; }
     const rows = document.querySelectorAll('[id^="bulkRow_"]');
-    let successCount = 0;
-    let errorCount = 0;
+    let successCount = 0; let errorCount = 0;
     for (const row of rows) {
         const nameInput = row.querySelector('.bulk-input-name').value;
         const qtyInput = parseInt(row.querySelector('.bulk-input-qty').value);
@@ -2378,10 +2459,7 @@ window.saveBulkSales = async function() {
         const parts = nameInput.split('|').map(p => p.trim());
         const searchName = parts[0].toLowerCase();
         const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
-        const med = allMedicines.find(m => 
-            (m.name && m.name.toLowerCase() === searchName) && 
-            (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch))
-        );
+        const med = allMedicines.find(m => (m.name && m.name.toLowerCase() === searchName) && (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch)));
         if (med && med.quantity >= qtyInput) {
             try {
                 await addDoc(collection(db, 'sales'), { 
@@ -2393,55 +2471,30 @@ window.saveBulkSales = async function() {
                 await updateDoc(doc(db, 'medicines', med.id), { quantity: increment(-qtyInput) });
                 successCount++;
             } catch(e) { errorCount++; }
-        } else {
-            errorCount++;
-        }
+        } else { errorCount++; }
     }
     if (successCount > 0) {
-        alert(`✅ ${successCount} sales recorded successfully! ${errorCount > 0 ? errorCount + ' failed due to stock/input errors.' : ''}`);
+        alert(`✅ ${successCount} sales recorded! ${errorCount > 0 ? errorCount + ' failed.' : ''}`);
         logActivity(`completed bulk sale (${successCount} items)`);
         document.getElementById('bulkEntryRows').innerHTML = '';
         addBulkRow();
-    } else {
-        alert('❌ No valid sales found. Please check item names, batches, and quantities.');
-    }
+    } else { alert('❌ No valid sales found.'); }
 };
 
+// ==========================================
+// 💸 EXPENSES
+// ==========================================
 window.addExpense = async function() {
     const cat = document.getElementById('expCat').value; const branch = document.getElementById('expBranch').value; const note = document.getElementById('expNote').value.trim(); const amount = parseFloat(document.getElementById('expAmount').value); const date = document.getElementById('expDate').value;
     if(!cat || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields'); return; }
-    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added expense: ${amount} ETB (${cat})`); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; renderExpenseHistory(); renderAllExpensesList(); } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added expense: ${amount} ETB`); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; renderAllExpensesList(); } catch(e) { alert(e.message); }
 }; 
 
 window.addFixedExpense = async function() {
     const cat = document.getElementById('fixCat').value; const branch = document.getElementById('fixBranch').value; const note = document.getElementById('fixNote').value.trim(); const amount = parseFloat(document.getElementById('fixAmount').value); const month = document.getElementById('fixMonth').value;
     if(!cat || isNaN(amount) || amount <= 0 || !month) { alert('Fill all fields'); return; }
-    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added fixed expense: ${amount} ETB (${cat})`); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; renderFixedExpenseHistory(); renderAllExpensesList(); } catch(e) { alert(e.message); }
+    try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added fixed expense: ${amount} ETB`); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; renderAllExpensesList(); } catch(e) { alert(e.message); }
 }; 
-
-function renderExpenseHistory() {
-    const expListEl = document.getElementById('expList'); 
-    if(expListEl) {
-        const selectedDate = document.getElementById('expDate')?.value;
-        let filteredExp = allExpenses;
-        if (selectedDate) filteredExp = filteredExp.filter(e => e.date === selectedDate);
-        if(filteredExp.length === 0) { expListEl.innerHTML = '<p style="text-align:center; color:var(--text-muted);">No expenses for this date.</p>'; }
-        else {
-            let expHtml = `<h4 style="margin-bottom:10px; font-size:14px;">Expenses for ${selectedDate || 'All Dates'}</h4>`;
-            filteredExp.forEach(e => { 
-                expHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                    <div><span>${e.category} - ${e.branch}</span><br><span style="font-size:12px; color:var(--text-muted);">${e.note || ''}</span></div>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <strong>${e.amount.toFixed(2)} ETB</strong>
-                        <button onclick="editExpense('${e.id}')" class="action-btn btn-edit" style="padding:4px 8px;">✏️</button>
-                        <button onclick="deleteExpense('${e.id}')" class="action-btn btn-delete" style="padding:4px 8px;">🗑️</button>
-                    </div>
-                </div>`; 
-            });
-            expListEl.innerHTML = expHtml;
-        }
-    }
-}
 
 window.editExpense = function(id) {
     const exp = allExpenses.find(e => e.id === id); if(!exp) return;
@@ -2454,49 +2507,20 @@ window.editExpense = function(id) {
     saveBtn.innerText = '🔄 Update Expense';
     saveBtn.onclick = async function() {
         try {
-            await updateDoc(doc(db, 'expenses', id), {
-                category: document.getElementById('expCat').value,
-                branch: document.getElementById('expBranch').value,
-                amount: parseFloat(document.getElementById('expAmount').value),
-                date: document.getElementById('expDate').value,
-                note: document.getElementById('expNote').value.trim()
-            });
+            await updateDoc(doc(db, 'expenses', id), { category: document.getElementById('expCat').value, branch: document.getElementById('expBranch').value, amount: parseFloat(document.getElementById('expAmount').value), date: document.getElementById('expDate').value, note: document.getElementById('expNote').value.trim() });
             logActivity(`updated expense`);
             alert('✅ Expense updated!');
             saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addExpense;
             document.getElementById('expAmount').value = ''; document.getElementById('expNote').value = '';
-            renderExpenseHistory(); renderAllExpensesList();
+            renderAllExpensesList();
         } catch(e) { alert(e.message); }
     };
 };
 
 window.deleteExpense = async function(id) {
     if(!confirm('Delete this expense?')) return;
-    try { await deleteDoc(doc(db, 'expenses', id)); logActivity(`deleted expense`); alert('✅ Deleted!'); renderExpenseHistory(); renderAllExpensesList(); } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'expenses', id)); logActivity(`deleted expense`); alert('✅ Deleted!'); renderAllExpensesList(); } catch(e) { alert(e.message); }
 };
-
-function renderFixedExpenseHistory() {
-    const fixedListEl = document.getElementById('fixedExpList');
-    if(!fixedListEl) return;
-    const selectedMonth = document.getElementById('fixMonth')?.value;
-    let filteredFixed = allFixed;
-    if (selectedMonth) filteredFixed = filteredFixed.filter(f => f.month === selectedMonth);
-    if(filteredFixed.length === 0) { fixedListEl.innerHTML = '<p style="text-align:center; color:var(--text-muted);">No fixed expenses for this month.</p>'; }
-    else {
-        let fixHtml = `<h4 style="margin-bottom:10px; font-size:14px;">Fixed Expenses for ${selectedMonth || 'All Months'}</h4>`;
-        filteredFixed.forEach(e => { 
-            fixHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                <div><span>${e.category} - ${e.branch}</span><br><span style="font-size:12px; color:var(--text-muted);">${e.note || ''}</span></div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <strong>${e.amount.toFixed(2)} ETB</strong>
-                    <button onclick="editFixedExpense('${e.id}')" class="action-btn btn-edit" style="padding:4px 8px;">✏️</button>
-                    <button onclick="deleteFixedExpense('${e.id}')" class="action-btn btn-delete" style="padding:4px 8px;">🗑️</button>
-                </div>
-            </div>`; 
-        });
-        fixedListEl.innerHTML = fixHtml;
-    }
-}
 
 window.editFixedExpense = function(id) {
     const exp = allFixed.find(e => e.id === id); if(!exp) return;
@@ -2509,25 +2533,19 @@ window.editFixedExpense = function(id) {
     saveBtn.innerText = '🔄 Update Expense';
     saveBtn.onclick = async function() {
         try {
-            await updateDoc(doc(db, 'fixedExpenses', id), {
-                category: document.getElementById('fixCat').value,
-                branch: document.getElementById('fixBranch').value,
-                amount: parseFloat(document.getElementById('fixAmount').value),
-                month: document.getElementById('fixMonth').value,
-                note: document.getElementById('fixNote').value.trim()
-            });
+            await updateDoc(doc(db, 'fixedExpenses', id), { category: document.getElementById('fixCat').value, branch: document.getElementById('fixBranch').value, amount: parseFloat(document.getElementById('fixAmount').value), month: document.getElementById('fixMonth').value, note: document.getElementById('fixNote').value.trim() });
             logActivity(`updated fixed expense`);
             alert('✅ Fixed Expense updated!');
             saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addFixedExpense;
             document.getElementById('fixAmount').value = ''; document.getElementById('fixNote').value = '';
-            renderFixedExpenseHistory(); renderAllExpensesList();
+            renderAllExpensesList();
         } catch(e) { alert(e.message); }
     };
 };
 
 window.deleteFixedExpense = async function(id) {
     if(!confirm('Delete this fixed expense?')) return;
-    try { await deleteDoc(doc(db, 'fixedExpenses', id)); logActivity(`deleted fixed expense`); alert('✅ Deleted!'); renderFixedExpenseHistory(); renderAllExpensesList(); } catch(e) { alert(e.message); }
+    try { await deleteDoc(doc(db, 'fixedExpenses', id)); logActivity(`deleted fixed expense`); alert('✅ Deleted!'); renderAllExpensesList(); } catch(e) { alert(e.message); }
 };
 
 window.renderAllExpensesList = function() {
@@ -2557,7 +2575,7 @@ window.renderAllExpensesList = function() {
     }
     combined.sort((a, b) => b._displayDate.localeCompare(a._displayDate));
     if (combined.length === 0) {
-        listEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:30px;">No expenses found for the selected filters.</p>';
+        listEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:30px;">No expenses found.</p>';
         return;
     }
     let totalAmount = 0;
@@ -2565,31 +2583,20 @@ window.renderAllExpensesList = function() {
         <div class="summary-box red" style="margin-bottom:0; padding:15px;"><div class="label">Total Expenses Count</div><div class="value" style="font-size:22px;">${combined.length}</div></div>
         <div class="summary-box red" style="margin-bottom:0; padding:15px;"><div class="label">Total Amount</div><div class="value" style="font-size:22px;">0.00 ETB</div></div>
     </div>`;
-    html += `<div style="background:var(--card-bg); border-radius:8px; border:1px solid var(--border); overflow:hidden;">`;
-    html += `<table class="data-table" style="border:none;">
-        <thead><tr><th>Type</th><th>Date/Month</th><th>Category</th><th>Branch</th><th>Note</th><th>Amount</th><th>Action</th></tr></thead>
-        <tbody>`;
+    html += `<div style="background:var(--card-bg); border-radius:8px; border:1px solid var(--border); overflow:hidden;"><table class="data-table" style="border:none;"><thead><tr><th>Type</th><th>Date/Month</th><th>Category</th><th>Branch</th><th>Note</th><th>Amount</th><th>Action</th></tr></thead><tbody>`;
     combined.forEach(e => {
         totalAmount += e.amount;
         const typeBadge = e._type === 'daily' ? '<span style="background:rgba(59, 130, 246, 0.1); color:#3b82f6; padding:2px 8px; border-radius:12px; font-size:11px;">Daily</span>' : '<span style="background:rgba(245, 158, 11, 0.1); color:#d97706; padding:2px 8px; border-radius:12px; font-size:11px;">Fixed</span>';
-        html += `<tr>
-            <td>${typeBadge}</td>
-            <td>${e._displayDate}</td>
-            <td>${e.category}</td>
-            <td>${e.branch || 'Main'}</td>
-            <td style="color:var(--text-muted); font-size:12px;">${e.note || '-'}</td>
-            <td style="font-weight:bold; color:#ef4444;">${e.amount.toFixed(2)} ETB</td>
-            <td>
-                ${e._type === 'daily' ? `<button onclick="editExpense('${e.id}')" class="action-btn btn-edit">✏️</button><button onclick="deleteExpense('${e.id}'); renderAllExpensesList();" class="action-btn btn-delete">🗑️</button>` : 
-                  `<button onclick="editFixedExpense('${e.id}')" class="action-btn btn-edit">✏️</button><button onclick="deleteFixedExpense('${e.id}'); renderAllExpensesList();" class="action-btn btn-delete">🗑️</button>`}
-            </td>
-        </tr>`;
+        html += `<tr><td>${typeBadge}</td><td>${e._displayDate}</td><td>${e.category}</td><td>${e.branch || 'Main'}</td><td style="color:var(--text-muted); font-size:12px;">${e.note || '-'}</td><td style="font-weight:bold; color:#ef4444;">${e.amount.toFixed(2)} ETB</td><td>${e._type === 'daily' ? `<button onclick="editExpense('${e.id}')" class="action-btn btn-edit">✏️</button><button onclick="deleteExpense('${e.id}'); renderAllExpensesList();" class="action-btn btn-delete">🗑️</button>` : `<button onclick="editFixedExpense('${e.id}')" class="action-btn btn-edit">✏️</button><button onclick="deleteFixedExpense('${e.id}'); renderAllExpensesList();" class="action-btn btn-delete">🗑️</button>`}</td></tr>`;
     });
     html += `</tbody></table></div>`;
     html = html.replace('0.00 ETB', totalAmount.toFixed(2) + ' ETB');
     listEl.innerHTML = html;
 };
 
+// ==========================================
+// 📦 INVENTORY
+// ==========================================
 window.loadInventory = function() {
     const listEl = document.getElementById('inventoryList');
     const filter = document.getElementById('filterTypeInv').value;
@@ -2601,21 +2608,13 @@ window.loadInventory = function() {
     if (catFilter !== 'all') filtered = filtered.filter(m => m.category === catFilter);
     if (branchFilter !== 'all') filtered = filtered.filter(m => m.branch === branchFilter);
     if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.batch||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search));
-    if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No inventory items found.</p>'; document.getElementById('invTotalValue').innerHTML = '0.00 <small>ETB</small>'; document.getElementById('invPageInfo').innerText = `Page 1 of 1`; return; }
+    if (filtered.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No inventory items found.</p>'; document.getElementById('invTotalValue').innerHTML = '0.00 <small>ETB</small>'; return; }
     const grouped = {};
-    filtered.forEach(m => {
-        if(!grouped[m.category]) grouped[m.category] = [];
-        grouped[m.category].push(m);
-    });
-    let catHtml = '';
-    let fullTotal = 0;
-    Object.keys(grouped).forEach((cat, index) => {
-        let catQty = 0; 
+    filtered.forEach(m => { if(!grouped[m.category]) grouped[m.category] = []; grouped[m.category].push(m); });
+    let catHtml = ''; let fullTotal = 0;
+    Object.keys(grouped).forEach((cat) => {
         let catRemainingVal = 0;
-        grouped[cat].forEach(m => { 
-            catQty += m.quantity; 
-            catRemainingVal += m.quantity * (m.price || 0); 
-        });
+        grouped[cat].forEach(m => { catRemainingVal += m.quantity * (m.price || 0); });
         fullTotal += catRemainingVal;
         catHtml += `<div class="section-collapsible" style="margin-bottom:15px; box-shadow:none; border:1px solid var(--border);">
             <div class="section-header" onclick="this.classList.toggle('open'); this.nextElementSibling.style.display = this.classList.contains('open') ? 'block' : 'none';" style="padding:12px 16px; background:var(--bg); border-radius:8px 8px 0 0;">
@@ -2625,23 +2624,13 @@ window.loadInventory = function() {
             <div class="section-body" style="display:none; padding:0; border:none;">
                 <table class="data-table" style="border-radius:0 0 8px 8px; border:none;">
                     <thead><tr><th>Item Name</th><th>Branch</th><th>Batch</th><th>Remaining Qty</th><th>Unit Price</th><th>Remaining Value</th></tr></thead>
-                    <tbody>
-                        ${grouped[cat].map(med => `<tr>
-                            <td><strong>${med.name}</strong></td>
-                            <td>${med.branch||'Main'}</td>
-                            <td>${med.batch||'-'}</td>
-                            <td style="font-weight:bold; color:var(--primary);">${med.quantity}</td>
-                            <td>${med.price} ETB</td>
-                            <td><strong>${(med.quantity*(med.price||0)).toFixed(2)} ETB</strong></td>
-                        </tr>`).join('')}
-                    </tbody>
+                    <tbody>${grouped[cat].map(med => `<tr><td><strong>${med.name}</strong></td><td>${med.branch||'Main'}</td><td>${med.batch||'-'}</td><td style="font-weight:bold; color:var(--primary);">${med.quantity}</td><td>${med.price} ETB</td><td><strong>${(med.quantity*(med.price||0)).toFixed(2)} ETB</strong></td></tr>`).join('')}</tbody>
                 </table>
             </div>
         </div>`;
     });
     listEl.innerHTML = catHtml;
     document.getElementById('invTotalValue').innerHTML = fullTotal.toFixed(2) + ' <small>ETB</small>';
-    document.getElementById('invPageInfo').innerText = `Showing all items`;
     const searchExpiry = (document.getElementById('searchExpiry')?.value || '').toLowerCase();
     const alertBranchFilter = document.getElementById('filterBranchAlert').value;
     let expMeds = allMedicines.filter(m => m.expiry && m.expiry !== '-');
@@ -2701,7 +2690,7 @@ window.adjustStock = async function() {
     let updateData = {};
     if(qtyVal !== '') { const qty = parseInt(qtyVal); if(isNaN(qty) || qty < 0) { alert('Invalid quantity'); return; } updateData.quantity = qty; }
     if(priceVal !== '') { const price = parseFloat(priceVal); if(isNaN(price) || price < 0) { alert('Invalid price'); return; } updateData.price = price; }
-    if(Object.keys(updateData).length === 0) { alert('Enter New Qty or New Price to update'); return; }
+    if(Object.keys(updateData).length === 0) { alert('Enter New Qty or New Price'); return; }
     try { 
         await updateDoc(doc(db, 'medicines', id), updateData); 
         logActivity(`adjusted stock for medicine ID: ${id}`);
@@ -2711,13 +2700,8 @@ window.adjustStock = async function() {
 };
 
 function calculateStockReport() {
-    let totalPurchasedQty = 0; 
-    let totalPurchasedValue = 0; 
-    let totalSold = 0; 
-    let totalRemaining = 0;
-    allSales.forEach(s => { 
-        if (s.medicineId) totalSold += (s.quantity || 0); 
-    });
+    let totalPurchasedQty = 0; let totalPurchasedValue = 0; let totalSold = 0; let totalRemaining = 0;
+    allSales.forEach(s => { if (s.medicineId) totalSold += (s.quantity || 0); });
     allMedicines.forEach(m => {
         const soldForThis = allSales.filter(s => s.medicineId === m.id).reduce((sum, s) => sum + (s.quantity || 0), 0);
         const purchasedQty = m.quantity + soldForThis;
@@ -2733,6 +2717,9 @@ function calculateStockReport() {
     }
 }
 
+// ==========================================
+// 📊 DASHBOARD & CHARTS
+// ==========================================
 async function loadDashboard() {
     if (!currentUserPharmacyId) return;
     let selectedMonth = document.getElementById('dashMonthPicker')?.value;
@@ -2746,9 +2733,11 @@ async function loadDashboard() {
         monthQuick = monthQuick.filter(q => q.branch === branchFilter);
         monthExp = monthExp.filter(e => e.branch === branchFilter);
     }
-    let totalRev = 0, totalExp = 0, totalFixed = 0; let itemsSold = 0;
-    monthSales.forEach(s => { totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total; itemsSold += s.quantity || 0; });
-    monthQuick.forEach(q => { totalRev += q.amount; }); monthExp.forEach(e => { totalExp += e.amount; }); monthFixed.forEach(f => { totalFixed += f.amount; });
+    let totalRev = 0, totalExp = 0, totalFixed = 0;
+    monthSales.forEach(s => { totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total; });
+    monthQuick.forEach(q => { totalRev += q.amount; }); 
+    monthExp.forEach(e => { totalExp += e.amount; }); 
+    monthFixed.forEach(f => { totalFixed += f.amount; });
     const netProfit = totalRev - totalExp - totalFixed;
     document.getElementById('dashGrossIncome').innerText = totalRev.toFixed(2) + ' ETB';
     document.getElementById('dashTotalExpense').innerText = (totalExp + totalFixed).toFixed(2) + ' ETB';
@@ -2789,6 +2778,9 @@ function renderCharts(selectedMonth, branchFilter) {
     }
 }
 
+// ==========================================
+// 📄 REPORTS
+// ==========================================
 window.toggleReportDatePickers = function() {
     const type = document.getElementById('reportTypeSelect').value; const dateDiv = document.getElementById('repDateDiv'); const monthDiv = document.getElementById('repMonthDiv');
     if (type === 'daily' || type === 'weekly') { dateDiv.style.display = 'block'; monthDiv.style.display = 'none'; } else { dateDiv.style.display = 'none'; monthDiv.style.display = 'block'; }
@@ -2800,7 +2792,7 @@ window.generateReport = function() {
     let startDate, endDate, title = '';
     if (type === 'daily') { let d = document.getElementById('repDateInput').value; if(!d) d = new Date().toISOString().split('T')[0]; startDate = new Date(d); endDate = new Date(d); title = `Daily Report (${d})`; } 
     else if (type === 'weekly') { let d = document.getElementById('repDateInput').value; if(!d) d = new Date().toISOString().split('T')[0]; endDate = new Date(d); startDate = new Date(d); startDate.setDate(startDate.getDate() - 7); title = `Weekly Report`; } 
-    else { let m = document.getElementById('repMonthInput').value; if(!m) m = new Date().toISOString().slice(0, 7); if (type === 'monthly') { startDate = new Date(m + '-01'); endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0); title = `Monthly Report (${m})`; } else if (type === 'quarterly') { endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0); startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 2, 1); title = `Quarterly Report (${startDate.toISOString().slice(0,7)} - ${endDate.toISOString().slice(0,7)})`; } else if (type === 'semiannual') { endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0); startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 5, 1); title = `Semi-Annual Report (${startDate.toISOString().slice(0,7)} - ${endDate.toISOString().slice(0,7)})`; } else if (type === 'yearly') { endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0); startDate = new Date(new Date(m + '-01').getFullYear() - 1, new Date(m + '-01').getMonth() + 1, 1); title = `Yearly Report`; } }
+    else { let m = document.getElementById('repMonthInput').value; if(!m) m = new Date().toISOString().slice(0, 7); if (type === 'monthly') { startDate = new Date(m + '-01'); endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0); title = `Monthly Report (${m})`; } else if (type === 'quarterly') { endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0); startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 2, 1); title = `Quarterly Report`; } else if (type === 'semiannual') { endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0); startDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() - 5, 1); title = `Semi-Annual Report`; } else if (type === 'yearly') { endDate = new Date(new Date(m + '-01').getFullYear(), new Date(m + '-01').getMonth() + 1, 0); startDate = new Date(new Date(m + '-01').getFullYear() - 1, new Date(m + '-01').getMonth() + 1, 1); title = `Yearly Report`; } }
     const sDateStr = startDate.toISOString().split('T')[0]; const eDateStr = endDate.toISOString().split('T')[0];
     let filteredSales = allSales.filter(s => s.date >= sDateStr && s.date <= eDateStr); 
     let filteredQuick = allQuickSales.filter(q => q.date >= sDateStr && q.date <= eDateStr);
@@ -2842,26 +2834,18 @@ window.generateReport = function() {
     expTableHtml += `</tbody></table>`;
     let html = `
         <div class="modern-report">
-            <div class="rep-header">
-                <div>
-                    <h2>💊 ${document.getElementById('hdrPharmacyName').innerText}</h2>
-                    <p>${title} | Generated on ${new Date().toLocaleDateString()}</p>
-                </div>
-            </div>
+            <div class="rep-header"><div><h2>💊 ${document.getElementById('hdrPharmacyName').innerText}</h2><p>${title} | Generated on ${new Date().toLocaleDateString()}</p></div></div>
             <div class="rep-grid">
                 <div class="rep-card"><div class="lbl">Total Revenue</div><div class="val">${grandTotal.toFixed(2)} ETB</div></div>
                 <div class="rep-card expense"><div class="lbl">Total Expenses</div><div class="val">${grandExp.toFixed(2)} ETB</div></div>
                 <div class="rep-card profit"><div class="lbl">Net Profit</div><div class="val">${(grandTotal - grandExp).toFixed(2)} ETB</div></div>
                 <div class="rep-card count"><div class="lbl">Transactions</div><div class="val">${filteredSales.length + filteredQuick.length}</div></div>
             </div>
-            <div class="rep-section">
-                <h3>Payment Breakdown</h3>
-                <div class="rep-payment-grid">
-                    <div class="rep-payment-box"><div style="font-size:12px; color:#6b7280;">💵 Cash</div><div style="font-size:18px; font-weight:800; color:#1e293b; margin-top:4px;">${cash.toFixed(2)} ETB</div></div>
-                    <div class="rep-payment-box"><div style="font-size:12px; color:#6b7280;">🏦 Transfer</div><div style="font-size:18px; font-weight:800; color:#1e293b; margin-top:4px;">${transfer.toFixed(2)} ETB</div></div>
-                    <div class="rep-payment-box"><div style="font-size:12px; color:#6b7280;">📝 Credit</div><div style="font-size:18px; font-weight:800; color:#1e293b; margin-top:4px;">${credit.toFixed(2)} ETB</div></div>
-                </div>
-            </div>
+            <div class="rep-section"><h3>Payment Breakdown</h3><div class="rep-payment-grid">
+                <div class="rep-payment-box"><div style="font-size:12px; color:#6b7280;">💵 Cash</div><div style="font-size:18px; font-weight:800; color:#1e293b; margin-top:4px;">${cash.toFixed(2)} ETB</div></div>
+                <div class="rep-payment-box"><div style="font-size:12px; color:#6b7280;">🏦 Transfer</div><div style="font-size:18px; font-weight:800; color:#1e293b; margin-top:4px;">${transfer.toFixed(2)} ETB</div></div>
+                <div class="rep-payment-box"><div style="font-size:12px; color:#6b7280;">📝 Credit</div><div style="font-size:18px; font-weight:800; color:#1e293b; margin-top:4px;">${credit.toFixed(2)} ETB</div></div>
+            </div></div>
             <div class="rep-section"><h3>Detailed Sales</h3>${salesTableHtml}</div>
             <div class="rep-section"><h3>Detailed Expenses</h3>${expTableHtml}</div>
         </div>
@@ -2914,9 +2898,11 @@ window.deleteSale = async function(saleId, medicineId, quantity) {
 };
 
 async function loadDailyReport() {
-    const dateInput = document.getElementById('dailyReportDate'); if(!dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
-    const selDate = dateInput.value; const branch = document.getElementById('dailyReportBranch').value; const searchDaily = (document.getElementById('searchDailySales')?.value || '').toLowerCase();
-    const rowsPerPage = parseInt(document.getElementById('dailyRowsPerPage').value) || 10;
+    const dateInput = document.getElementById('dailyReportDate'); if(dateInput && !dateInput.value) dateInput.value = new Date().toISOString().split('T')[0];
+    const selDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0]; 
+    const branch = document.getElementById('dailyReportBranch')?.value || 'all'; 
+    const searchDaily = (document.getElementById('searchDailySales')?.value || '').toLowerCase();
+    const rowsPerPage = parseInt(document.getElementById('dailyRowsPerPage')?.value) || 10;
     let daySales = allSales.filter(s => s.date === selDate); let dayQuick = allQuickSales.filter(q => q.date === selDate); let dayExp = allExpenses.filter(e => e.date === selDate);
     if (branch !== 'all') { daySales = daySales.filter(s => s.branch === branch); dayQuick = dayQuick.filter(q => q.branch === branch); dayExp = dayExp.filter(e => e.branch === branch); } 
     let totalRev = 0, totalExp = 0; let cash = 0, transfer = 0, credit = 0; let salesHtml = '';
@@ -2931,39 +2917,37 @@ async function loadDailyReport() {
     }); 
     dayQuick.forEach(q => { totalRev += q.amount; cash += q.amount; combinedSales.push({ type: 'quick', ...q, amt: q.amount }); });
     dayExp.forEach(e => { totalExp += e.amount; }); 
-    document.getElementById('dailyTotalRevenue').innerHTML = totalRev.toFixed(2);
-    document.getElementById('dailyTotalExpense').innerHTML = totalExp.toFixed(2);
-    document.getElementById('dailyNetProfit').innerHTML = (totalRev - totalExp).toFixed(2);
-    document.getElementById('dailyCash').innerHTML = cash.toFixed(2);
-    document.getElementById('dailyTransfer').innerHTML = transfer.toFixed(2);
-    document.getElementById('dailyCredit').innerHTML = credit.toFixed(2);
+    if(document.getElementById('dailyTotalRevenue')) document.getElementById('dailyTotalRevenue').innerHTML = totalRev.toFixed(2);
+    if(document.getElementById('dailyTotalExpense')) document.getElementById('dailyTotalExpense').innerHTML = totalExp.toFixed(2);
+    if(document.getElementById('dailyNetProfit')) document.getElementById('dailyNetProfit').innerHTML = (totalRev - totalExp).toFixed(2);
+    if(document.getElementById('dailyCash')) document.getElementById('dailyCash').innerHTML = cash.toFixed(2);
+    if(document.getElementById('dailyTransfer')) document.getElementById('dailyTransfer').innerHTML = transfer.toFixed(2);
+    if(document.getElementById('dailyCredit')) document.getElementById('dailyCredit').innerHTML = credit.toFixed(2);
     let filteredCombined = combinedSales.filter(c => !searchDaily || (c.medicineName && c.medicineName.toLowerCase().includes(searchDaily)) || (c.type === 'quick' && 'quick'.includes(searchDaily)));
     filteredCombined.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-    if (filteredCombined.length === 0) { document.getElementById('dailySalesList').innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No sales</p>'; document.getElementById('dailyPageInfo').innerText = `Page 1 of 1`; return; }
+    if (filteredCombined.length === 0) { if(document.getElementById('dailySalesList')) document.getElementById('dailySalesList').innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No sales</p>'; if(document.getElementById('dailyPageInfo')) document.getElementById('dailyPageInfo').innerText = `Page 1 of 1`; return; }
     const totalPages = Math.ceil(filteredCombined.length / rowsPerPage);
     if(dailyPage > totalPages) dailyPage = totalPages;
     if(dailyPage < 1) dailyPage = 1;
     const start = (dailyPage - 1) * rowsPerPage;
     filteredCombined.slice(start, start + rowsPerPage).forEach(c => {
-        if (c.type === 'quick') {
-            salesHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>⚡ Quick (${c.qtype || c.type}) 💵</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`;
-        } else {
-            const pmLabel = c.paymentMethod === 'transfer' ? '🏦' : (c.paymentMethod === 'credit' ? '📝' : '💵');
-            salesHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>${c.medicineName} (x${c.quantity}) ${pmLabel}</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`;
-        }
+        if (c.type === 'quick') { salesHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>⚡ Quick (${c.type}) 💵</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`; } 
+        else { const pmLabel = c.paymentMethod === 'transfer' ? '🏦' : (c.paymentMethod === 'credit' ? '📝' : '💵'); salesHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>${c.medicineName} (x${c.quantity}) ${pmLabel}</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`; }
     });
-    document.getElementById('dailySalesList').innerHTML = salesHtml;
-    document.getElementById('dailyPageInfo').innerText = `Page ${dailyPage} of ${totalPages}`;
-    document.getElementById('btnPrevDaily').disabled = dailyPage === 1;
-    document.getElementById('btnNextDaily').disabled = dailyPage === totalPages;
+    if(document.getElementById('dailySalesList')) document.getElementById('dailySalesList').innerHTML = salesHtml;
+    if(document.getElementById('dailyPageInfo')) document.getElementById('dailyPageInfo').innerText = `Page ${dailyPage} of ${totalPages}`;
+    if(document.getElementById('btnPrevDaily')) document.getElementById('btnPrevDaily').disabled = dailyPage === 1;
+    if(document.getElementById('btnNextDaily')) document.getElementById('btnNextDaily').disabled = dailyPage === totalPages;
 }
 
 window.changeDailyPage = function(dir) { dailyPage += dir; loadDailyReport(); };
 
 async function loadMonthlyReport() {
-    const monthInput = document.getElementById('monthlyReportMonth'); if(!monthInput.value) monthInput.value = new Date().toISOString().slice(0, 7);
-    const selMonth = monthInput.value; const branch = document.getElementById('monthlyReportBranch').value; const searchMonthly = (document.getElementById('searchMonthlySales')?.value || '').toLowerCase();
-    const rowsPerPage = parseInt(document.getElementById('monthlyRowsPerPage').value) || 10;
+    const monthInput = document.getElementById('monthlyReportMonth'); if(monthInput && !monthInput.value) monthInput.value = new Date().toISOString().slice(0, 7);
+    const selMonth = monthInput ? monthInput.value : new Date().toISOString().slice(0, 7); 
+    const branch = document.getElementById('monthlyReportBranch')?.value || 'all'; 
+    const searchMonthly = (document.getElementById('searchMonthlySales')?.value || '').toLowerCase();
+    const rowsPerPage = parseInt(document.getElementById('monthlyRowsPerPage')?.value) || 10;
     let monthSales = allSales.filter(s => s.date.startsWith(selMonth)); let monthQuick = allQuickSales.filter(q => q.date.startsWith(selMonth)); let monthExp = allExpenses.filter(e => e.date.startsWith(selMonth)); let monthFixed = allFixed.filter(f => f.month === selMonth);
     if (branch !== 'all') { monthSales = monthSales.filter(s => s.branch === branch); monthQuick = monthQuick.filter(q => q.branch === branch); monthExp = monthExp.filter(e => e.branch === branch); }
     let totalRev = 0, totalExp = 0, totalFixed = 0; let cash = 0, transfer = 0, credit = 0; let salesHtml = '';
@@ -2978,37 +2962,33 @@ async function loadMonthlyReport() {
     });
     monthQuick.forEach(q => { totalRev += q.amount; cash += q.amount; combinedSales.push({ type: 'quick', ...q, amt: q.amount }); });
     monthExp.forEach(e => { totalExp += e.amount; }); monthFixed.forEach(f => { totalFixed += f.amount; });
-    document.getElementById('monthlyTotalRevenue').innerHTML = totalRev.toFixed(2);
-    document.getElementById('monthlyTotalExpense').innerHTML = (totalExp + totalFixed).toFixed(2);
-    document.getElementById('monthlyNetProfit').innerHTML = (totalRev - totalExp - totalFixed).toFixed(2);
-    document.getElementById('monthlyCash').innerHTML = cash.toFixed(2);
-    document.getElementById('monthlyTransfer').innerHTML = transfer.toFixed(2);
-    document.getElementById('monthlyCredit').innerHTML = credit.toFixed(2);
+    if(document.getElementById('monthlyTotalRevenue')) document.getElementById('monthlyTotalRevenue').innerHTML = totalRev.toFixed(2);
+    if(document.getElementById('monthlyTotalExpense')) document.getElementById('monthlyTotalExpense').innerHTML = (totalExp + totalFixed).toFixed(2);
+    if(document.getElementById('monthlyNetProfit')) document.getElementById('monthlyNetProfit').innerHTML = (totalRev - totalExp - totalFixed).toFixed(2);
+    if(document.getElementById('monthlyCash')) document.getElementById('monthlyCash').innerHTML = cash.toFixed(2);
+    if(document.getElementById('monthlyTransfer')) document.getElementById('monthlyTransfer').innerHTML = transfer.toFixed(2);
+    if(document.getElementById('monthlyCredit')) document.getElementById('monthlyCredit').innerHTML = credit.toFixed(2);
     let filteredCombined = combinedSales.filter(c => !searchMonthly || (c.medicineName && c.medicineName.toLowerCase().includes(searchMonthly)) || (c.customer && c.customer.toLowerCase().includes(searchMonthly)) || (c.type === 'quick' && 'quick'.includes(searchMonthly)));
     filteredCombined.sort((a,b) => { const dateA = a.date || ''; const dateB = b.date || ''; if (dateA !== dateB) return dateB.localeCompare(dateA); return (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0); });
-    if (filteredCombined.length === 0) { document.getElementById('monthlySalesList').innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No sales</p>'; document.getElementById('monthlyPageInfo').innerText = `Page 1 of 1`; return; }
+    if (filteredCombined.length === 0) { if(document.getElementById('monthlySalesList')) document.getElementById('monthlySalesList').innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No sales</p>'; if(document.getElementById('monthlyPageInfo')) document.getElementById('monthlyPageInfo').innerText = `Page 1 of 1`; return; }
     const totalPages = Math.ceil(filteredCombined.length / rowsPerPage);
     if(monthlyPage > totalPages) monthlyPage = totalPages;
     if(monthlyPage < 1) monthlyPage = 1;
     const start = (monthlyPage - 1) * rowsPerPage;
     filteredCombined.slice(start, start + rowsPerPage).forEach(c => {
-        if (c.type === 'quick') {
-            salesHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>⚡ Quick (${c.qtype || c.type}) 💵</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`;
-        } else {
-            const pmLabel = c.paymentMethod === 'transfer' ? '🏦' : (c.paymentMethod === 'credit' ? '📝' : '💵');
-            salesHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>${c.medicineName} (x${c.quantity}) ${pmLabel}</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`;
-        }
+        if (c.type === 'quick') { salesHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>⚡ Quick (${c.type}) 💵</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`; } 
+        else { const pmLabel = c.paymentMethod === 'transfer' ? '🏦' : (c.paymentMethod === 'credit' ? '📝' : '💵'); salesHtml += `<div style="padding:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>${c.medicineName} (x${c.quantity}) ${pmLabel}</span> <strong>${c.amt.toFixed(2)} ETB</strong></div>`; }
     });
-    document.getElementById('monthlySalesList').innerHTML = salesHtml;
-    document.getElementById('monthlyPageInfo').innerText = `Page ${monthlyPage} of ${totalPages}`;
-    document.getElementById('btnPrevMonthly').disabled = monthlyPage === 1;
-    document.getElementById('btnNextMonthly').disabled = monthlyPage === totalPages;
+    if(document.getElementById('monthlySalesList')) document.getElementById('monthlySalesList').innerHTML = salesHtml;
+    if(document.getElementById('monthlyPageInfo')) document.getElementById('monthlyPageInfo').innerText = `Page ${monthlyPage} of ${totalPages}`;
+    if(document.getElementById('btnPrevMonthly')) document.getElementById('btnPrevMonthly').disabled = monthlyPage === 1;
+    if(document.getElementById('btnNextMonthly')) document.getElementById('btnNextMonthly').disabled = monthlyPage === totalPages;
 }
 
 window.changeMonthlyPage = function(dir) { monthlyPage += dir; loadMonthlyReport(); };
 
 // ==========================================
-// 💳 CREDIT PAYMENT
+// 💳 CREDIT
 // ==========================================
 function populateCreditCustomerSelect() {
     const sel = document.getElementById('creditCustomerSelect'); if(!sel) return;
@@ -3047,10 +3027,7 @@ window.renderUnpaidCredits = function() {
         const paidAmt = parseFloat(sale.paidAmount) || 0;
         const totalAmt = parseFloat(sale.total) || 0;
         const unpaid = totalAmt - paidAmt; 
-        if(unpaid > 0.01) { 
-            if(!customerDebts[customer]) customerDebts[customer] = 0; 
-            customerDebts[customer] += unpaid; 
-        } 
+        if(unpaid > 0.01) { if(!customerDebts[customer]) customerDebts[customer] = 0; customerDebts[customer] += unpaid; } 
     });
     allCreditPayments.forEach(payment => { 
         const customer = payment.customer; 
@@ -3081,6 +3058,9 @@ window.renderUnpaidCredits = function() {
     document.getElementById('totalUnpaidDebt').innerText = totalDebt.toFixed(2);
 };
 
+// ==========================================
+// 📌 INIT & EVENT LISTENERS
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     const dailyDate = document.getElementById('dailyReportDate');
     const dailyBranch = document.getElementById('dailyReportBranch');
@@ -3091,20 +3071,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if(monthlyMonth) monthlyMonth.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); });
     if(monthlyBranch) monthlyBranch.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); });
     const repType = document.getElementById('reportTypeSelect');
-    const repDate = document.getElementById('repDateInput');
-    const repMonth = document.getElementById('repMonthInput');
     if(repType) repType.addEventListener('change', () => { toggleReportDatePickers(); generateReport(); });
-    if(repDate) repDate.addEventListener('change', () => { generateReport(); });
-    if(repMonth) repMonth.addEventListener('change', () => { generateReport(); });
     const dashMonth = document.getElementById('dashMonthPicker');
     const dashBranch = document.getElementById('dashBranchFilter');
     if(dashMonth) dashMonth.addEventListener('change', () => { loadDashboard(); });
     if(dashBranch) dashBranch.addEventListener('change', () => { loadDashboard(); });
 });
 
-// ==========================================
-// 📱 PWA SERVICE WORKER
-// ==========================================
+window.importCSV = function() { alert('CSV Import: Feature coming soon'); };
+window.clearAllSales = async function() { 
+    if(!confirm('Delete ALL sales? This cannot be undone!')) return;
+    try {
+        const snap = await getDocs(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)));
+        let batch = writeBatch(db); let count = 0;
+        snap.forEach(d => { batch.delete(d.ref); count++; });
+        if(count > 0) await batch.commit();
+        alert(`✅ Deleted ${count} sales.`);
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')
@@ -3113,11 +3098,7 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Escape key to close mobile menu
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMobileMenu();
-});
-
+console.log('✅ HaniTech Pharmacy Tracker loaded successfully!');
 </script>
 </body>
 </html>
