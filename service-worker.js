@@ -3,8 +3,8 @@
 // Version: 2.0.0
 // ==========================================
 
-const CACHE_NAME = 'pharmacy-v2';
-const RUNTIME_CACHE = 'pharmacy-runtime-v2';
+const CACHE_NAME = 'pharmacy-v3';        // v3
+const RUNTIME_CACHE = 'pharmacy-runtime-v3';  // v3
 
 // App Shell - በ install ጊዜ የሚቀመጡ
 const ASSETS = [
