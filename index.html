@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Hanitech Digital Pharmacy Tracker</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js"></script>
 <style>
 :root {
     --primary: #10b981;
@@ -244,12 +245,21 @@ input:checked + .slider:before { transform: translateX(20px); }
 .rep-payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 .rep-payment-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; text-align: center; }
 
+/* 📱 MODAL & RECEIPT */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal-content { background: var(--card-bg); border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-md); }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-radius: 16px 16px 0 0; }
+.modal-header h3 { font-size: 16px; font-weight: 700; margin: 0; color: var(--text-main); }
+.modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+.modal-body { padding: 20px; }
+
+/* Receipt Print Styles */
 @media print {
     body * { visibility: hidden; }
-    #panel8, #panel8 * { visibility: visible; }
-    #panel8 { position: absolute; left: 0; top: 0; width: 100%; padding: 0; }
+    #printableReceipt, #printableReceipt * { visibility: visible; }
+    #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; }
     .no-print { display: none !important; }
-    .modern-report { box-shadow: none; border: none; padding: 0; }
 }
 </style>
 </head>
@@ -271,6 +281,52 @@ input:checked + .slider:before { transform: translateX(20px); }
 </div> 
 </div>
 </div> 
+
+<!-- 🖨️ Receipt Modal -->
+<div class="modal-overlay" id="receiptModal">
+    <div class="modal-content">
+        <div class="modal-header no-print">
+            <h3>🧾 Receipt</h3>
+            <button class="modal-close" onclick="document.getElementById('receiptModal').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body">
+            <div id="printableReceipt" style="font-family: monospace; color: #000; background: #fff; padding: 20px;">
+                <!-- ደረሰኙ በ JS ይሞላል -->
+            </div>
+            <div class="no-print" style="margin-top: 20px; display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="window.print()" style="margin-top:0;">🖨️ Print</button>
+                <button class="btn btn-outline" onclick="document.getElementById('receiptModal').classList.remove('open')" style="margin-top:0;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 👤 Customer Profile Modal -->
+<div class="modal-overlay" id="customerModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>👤 Customer Profile</h3>
+            <button class="modal-close" onclick="document.getElementById('customerModal').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body" id="customerModalBody">
+            <!-- JS ይሞላል -->
+        </div>
+    </div>
+</div>
+
+<!-- 📷 Barcode Scanner Modal -->
+<div class="modal-overlay" id="barcodeModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📷 Scan Barcode</h3>
+            <button class="modal-close" onclick="stopScanner(); document.getElementById('barcodeModal').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body" style="text-align: center;">
+            <div id="scannerContainer" style="width: 100%; border-radius: 8px; overflow: hidden; background: #000;"></div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">Point camera at barcode</p>
+        </div>
+    </div>
+</div>
 
 <div id="mainApp">
 <header>
@@ -545,7 +601,10 @@ input:checked + .slider:before { transform: translateX(20px); }
 
                     <div class="pos-products">
                         <div class="pos-products-header">
-                            <input type="text" id="searchSellInput" placeholder="🔍 Search Product by name or barcode..." oninput="renderSellProducts()" style="font-size:16px; padding:12px 16px;">
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" id="searchSellInput" placeholder="🔍 Search Product by name or barcode..." oninput="renderSellProducts()" style="font-size:16px; padding:12px 16px; flex:1;">
+                                <button class="btn btn-primary" onclick="startScanner()" style="width:auto; margin-top:0; padding:0 20px;">📷 Scan</button>
+                            </div>
                             <div id="categoryFilters" style="display:flex; gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px;"></div>
                         </div>
                         <div class="pos-products-grid" id="sellProductList"></div>
@@ -822,6 +881,20 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <label class="field-label">📝 Reason</label><input type="text" id="adjustReason">
                         <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="adjustStock()">🔧 Adjust Stock</button>
                         <div style="clear:both;"></div>
+                        
+                        <div style="margin-top:40px; border-top:1px dashed var(--border); padding-top:20px;">
+                            <h4 style="font-size:15px; font-weight:700; margin-bottom:15px;">🔄 Transfer to another branch</h4>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                                <div><label class="field-label">From Branch</label><select id="transferFromBranch" onchange="populateTransferMedSelect()"></select></div>
+                                <div><label class="field-label">To Branch</label><select id="transferToBranch"></select></div>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                                <div><label class="field-label">📦 Select Item</label><select id="transferMedId"></select></div>
+                                <div><label class="field-label">🔢 Transfer Qty</label><input type="number" id="transferQty" placeholder="Quantity to move"></div>
+                            </div>
+                            <button class="btn btn-primary" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="transferStock()">🔄 Transfer Stock</button>
+                            <div style="clear:both;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1274,6 +1347,9 @@ let medPage = 1, catPage = 1, expPage = 1, lowPage = 1, invPage = 1, salesHistPa
 
 let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null, unsubQuickSales = null;
 
+// Scanner Variables
+let codeReader = null;
+
 setTimeout(() => { const splash = document.getElementById('splashScreen'); if(splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; }, 500); } }, 1500); 
 
 window.switchPage = function(panelId, subPanelId, element) {
@@ -1315,12 +1391,9 @@ window.switchPage = function(panelId, subPanelId, element) {
         loadSettingsData(); 
     }
 
-    if(subPanelId === 'sub3_list') {
-        renderAllExpensesList();
-    }
-    if(subPanelId === 'sub2_3') {
-        renderSalesHistory(); 
-    }
+    if(subPanelId === 'sub3_list') { renderAllExpensesList(); }
+    if(subPanelId === 'sub2_3') { renderSalesHistory(); }
+    if(subPanelId === 'sub4_3') { populateTransferMedSelect(); }
 };
 
 window.toggleSection = function(h, b) {
@@ -1437,6 +1510,7 @@ async function loadAllData() {
     renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); toggleReportDatePickers();
     setupRealtimeListeners();
     renderExpenseHistory(); renderFixedExpenseHistory(); renderAllExpensesList(); renderSalesHistory();
+    populateTransferMedSelect();
 } 
 
 function setupRealtimeListeners() {
@@ -1778,6 +1852,218 @@ window.resetAllData = async function() {
 
 
 // ==========================================
+// 🖨️ PRINT RECEIPT
+// ==========================================
+window.printReceipt = function(saleId) {
+    const sale = allSales.find(s => s.id === saleId);
+    if (!sale) { alert('Sale not found'); return; }
+    
+    const med = allMedicines.find(m => m.id === sale.medicineId);
+    const phName = document.getElementById('hdrPharmacyName').innerText;
+
+    const receiptHtml = `
+        <div style="text-align:center; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">${phName}</h2>
+            <p style="font-size: 12px; margin: 0;">Receipt</p>
+        </div>
+        <div style="border-bottom: 1px dashed #000; margin-bottom: 10px; padding-bottom: 10px;">
+            <p style="margin: 2px 0; font-size: 12px;">Date: ${sale.date}</p>
+            <p style="margin: 2px 0; font-size: 12px;">Receipt No: ${sale.receipt || sale.id.slice(-6).toUpperCase()}</p>
+            <p style="margin: 2px 0; font-size: 12px;">Customer: ${sale.customer || 'Walk-in'}</p>
+        </div>
+        <table style="width: 100%; font-size: 12px; margin-bottom: 10px;">
+            <thead>
+                <tr style="border-bottom: 1px dashed #000;">
+                    <th style="text-align: left; padding-bottom: 5px;">Item</th>
+                    <th style="text-align: center; padding-bottom: 5px;">Qty</th>
+                    <th style="text-align: right; padding-bottom: 5px;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding-top: 5px;">${sale.medicineName}</td>
+                    <td style="text-align: center; padding-top: 5px;">${sale.quantity}</td>
+                    <td style="text-align: right; padding-top: 5px;">${sale.total.toFixed(2)}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="border-top: 1px dashed #000; padding-top: 10px; font-size: 12px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span>Subtotal:</span>
+                <strong>${sale.total.toFixed(2)} ETB</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span>Paid:</span>
+                <strong>${(sale.paidAmount !== undefined ? sale.paidAmount : sale.total).toFixed(2)} ETB</strong>
+            </div>
+            ${sale.paidAmount !== undefined && sale.paidAmount < sale.total ? `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; color: #000;">
+                <span>Unpaid (Credit):</span>
+                <strong>${(sale.total - sale.paidAmount).toFixed(2)} ETB</strong>
+            </div>` : ''}
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span>Payment Method:</span>
+                <strong style="text-transform: uppercase;">${sale.paymentMethod}</strong>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 20px; font-size: 11px;">
+            <p>Thank you for your business!</p>
+            <p>Powered by HaniTech</p>
+        </div>
+    `;
+    
+    document.getElementById('printableReceipt').innerHTML = receiptHtml;
+    document.getElementById('receiptModal').classList.add('open');
+};
+
+// ==========================================
+// 📷 BARCODE SCANNER
+// ==========================================
+window.startScanner = function() {
+    document.getElementById('barcodeModal').classList.add('open');
+    const container = document.getElementById('scannerContainer');
+    container.innerHTML = ''; 
+    
+    codeReader = new ZXing.BrowserMultiFormatReader();
+    codeReader.decodeFromVideoDevice(null, 'scannerContainer', (result, err) => {
+        if (result) {
+            const barcodeText = result.text;
+            stopScanner();
+            document.getElementById('barcodeModal').classList.remove('open');
+            
+            // ባርኮዱ ከመድኃኒቱ ስም ወይም ከ Batch ጋር እንዲመሳሰል እንፈልግ
+            const med = allMedicines.find(m => m.name === barcodeText || m.batch === barcodeText);
+            if (med) {
+                addToCart(med.id, 1);
+            } else {
+                alert(`⚠️ Barcode "${barcodeText}" ከምንም መድኃኒት ጋር አልተገናኘም።\n\nእባክህ መድኃኒቱን በእጅ ፈልገው።`);
+                document.getElementById('searchSellInput').value = barcodeText;
+                renderSellProducts();
+            }
+        }
+    });
+};
+
+window.stopScanner = function() {
+    if (codeReader) {
+        codeReader.reset();
+        codeReader = null;
+    }
+};
+
+// ==========================================
+// 👤 CUSTOMER PROFILE
+// ==========================================
+window.showCustomerProfile = function(customerName) {
+    const modalBody = document.getElementById('customerModalBody');
+    
+    const cSales = allSales.filter(s => s.customer === customerName);
+    let totalSpent = 0;
+    let totalDebt = 0;
+    
+    let historyHtml = '';
+    cSales.sort((a,b) => new Date(b.date) - new Date(a.date));
+    
+    cSales.forEach(s => {
+        const paid = s.paidAmount !== undefined ? s.paidAmount : s.total;
+        const unpaid = s.total - paid;
+        totalSpent += paid;
+        if (unpaid > 0) totalDebt += unpaid;
+        
+        historyHtml += `
+            <div style="padding: 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;">
+                <div>
+                    <div style="font-weight: 600; color: var(--text-main);">${s.medicineName}</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">${s.date} | Qty: ${s.quantity}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-weight: 700; color: var(--primary);">${paid.toFixed(2)} ETB</div>
+                    ${unpaid > 0 ? `<div style="font-size: 11px; color: #ef4444;">Debt: ${unpaid.toFixed(2)}</div>` : ''}
+                </div>
+            </div>
+        `;
+    });
+
+    modalBody.innerHTML = `
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 10px;">👤</div>
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 5px;">${customerName}</h3>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+            <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; text-align: center;">
+                <div style="font-size: 12px; color: var(--text-muted);">Total Purchases</div>
+                <div style="font-size: 18px; font-weight: 800; color: var(--text-main);">${cSales.length}</div>
+            </div>
+            <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 15px; text-align: center;">
+                <div style="font-size: 12px; color: #ef4444;">Current Debt</div>
+                <div style="font-size: 18px; font-weight: 800; color: #ef4444;">${totalDebt.toFixed(2)} ETB</div>
+            </div>
+        </div>
+
+        <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">📜 Purchase History</h4>
+        <div style="max-height: 300px; overflow-y: auto;">
+            ${historyHtml || '<p style="text-align: center; color: var(--text-muted); padding: 20px;">No purchases found.</p>'}
+        </div>
+    `;
+    
+    document.getElementById('customerModal').classList.add('open');
+};
+
+// ==========================================
+// 🔄 STOCK TRANSFER
+// ==========================================
+window.populateTransferMedSelect = function() {
+    const fromBranch = document.getElementById('transferFromBranch')?.value;
+    const sel = document.getElementById('transferMedId'); if(!sel) return;
+    sel.innerHTML = '<option value="">-- Select Item --</option>';
+    
+    let filtered = allMedicines.filter(m => m.quantity > 0);
+    if (fromBranch && fromBranch !== 'all') {
+        filtered = filtered.filter(m => m.branch === fromBranch);
+    }
+    
+    filtered.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Qty: ${m.quantity}</option>`; });
+};
+
+window.transferStock = async function() {
+    const fromBranch = document.getElementById('transferFromBranch').value;
+    const toBranch = document.getElementById('transferToBranch').value;
+    const medId = document.getElementById('transferMedId').value;
+    const qty = parseInt(document.getElementById('transferQty').value);
+    
+    if (!fromBranch || !toBranch || !medId || isNaN(qty) || qty <= 0) { alert('Fill all fields correctly'); return; }
+    if (fromBranch === toBranch) { alert('Cannot transfer to the same branch'); return; }
+    
+    const med = allMedicines.find(m => m.id === medId);
+    if (!med) return;
+    if (med.quantity < qty) { alert('Not enough stock in source branch'); return; }
+    
+    try {
+        // 1. ከድሮው ቅርንጫፍ ቀንስ
+        await updateDoc(doc(db, 'medicines', medId), { quantity: increment(-qty) });
+        
+        // 2. በአዲሱ ቅርንጫፍ ውስጥ ተመሳሳይ መድኃኒት ካለ ጨምርበት፣ ከሌለ አዲስ ፍጠር
+        const existingInDest = allMedicines.find(m => m.name === med.name && m.batch === med.batch && m.branch === toBranch);
+        
+        if (existingInDest) {
+            await updateDoc(doc(db, 'medicines', existingInDest.id), { quantity: increment(qty) });
+        } else {
+            await addDoc(collection(db, 'medicines'), {
+                type: med.type, category: med.category, subcategory: med.subcategory, name: med.name,
+                batch: med.batch, expiry: med.expiry, supplier: med.supplier, cost: med.cost, price: med.price,
+                quantity: qty, branch: toBranch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId
+            });
+        }
+        
+        logActivity(`transferred ${qty} units of ${med.name} from ${fromBranch} to ${toBranch}`);
+        alert(`✅ Transferred ${qty} units of ${med.name} successfully!`);
+        document.getElementById('transferQty').value = '';
+        
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+// ==========================================
 // REST OF THE FUNCTIONS
 // ==========================================
 async function loadCategories() {
@@ -1899,7 +2185,7 @@ async function loadBranches() {
     try {
         const snap = await getDocs(query(collection(db, 'branches'), where('pharmacyId', '==', currentUserPharmacyId)));
         allBranches = []; 
-        const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch'];
+        const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch', 'transferFromBranch', 'transferToBranch'];
         selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML = '<option value="all">All Branches</option>'; });
         snap.forEach(doc => { const bName = doc.data().name; allBranches.push(bName); selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML += `<option value="${bName}">${bName}</option>`; }); });
         renderBranchList();
@@ -2156,18 +2442,24 @@ window.completeSale = async function() {
     }
 
     try {
+        const saleIds = [];
         for(const item of cart) {
-            await addDoc(collection(db, 'sales'), { 
+            const newSaleRef = await addDoc(collection(db, 'sales'), { 
                 medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, 
                 total: item.price * item.qty, 
                 paymentMethod: paymentMethod, 
                 paidAmount: paymentMethod === 'credit' ? (item.price * item.qty) * (paidAmount/totalAmount) : (item.price * item.qty), 
                 date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
             });
+            saleIds.push(newSaleRef.id);
             await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
         }
         logActivity(`completed sale (Total: ${totalAmount} ETB)`);
-        alert('✅ Sale Completed!'); cart = []; renderCart(); 
+        
+        // Receipt ማሳየት (የመጀመሪያውን ሽያጭ ID በመጠቀም)
+        if(saleIds.length > 0) printReceipt(saleIds[0]);
+        
+        cart = []; renderCart(); 
         document.getElementById('sellReceipt').value = '';
         document.getElementById('sellCreditCustomer').value = '';
         document.getElementById('sellCreditPaid').value = '';
@@ -2721,7 +3013,6 @@ function renderCharts(selectedMonth, branchFilter) {
 window.toggleReportDatePickers = function() {
     const type = document.getElementById('reportTypeSelect').value; const dateDiv = document.getElementById('repDateDiv'); const monthDiv = document.getElementById('repMonthDiv');
     if (type === 'daily' || type === 'weekly') { dateDiv.style.display = 'block'; monthDiv.style.display = 'none'; } else { dateDiv.style.display = 'none'; monthDiv.style.display = 'block'; }
-    // ገጹ ላይ ሪፖርቱ እንዲታይ አንፈልግም
     document.getElementById('reportDisplayArea').style.display = 'none';
 };
 
@@ -2880,7 +3171,10 @@ window.renderSalesHistory = function() {
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-muted); border-top:1px dashed var(--border); padding-top:8px;">
                     <div>${item.branch ? `🏢 ${item.branch}` : ''} ${item.receipt ? `| 🧾 ${item.receipt}` : ''}</div>
-                    <button onclick="deleteSale('${item.id}', '${item.medicineId}', ${item.quantity})" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🗑️ Delete</button>
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="printReceipt('${item.id}')" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🖨️ Print</button>
+                        <button onclick="deleteSale('${item.id}', '${item.medicineId}', ${item.quantity})" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🗑️ Delete</button>
+                    </div>
                 </div>
             </div>`;
         }
