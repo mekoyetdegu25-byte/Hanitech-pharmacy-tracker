@@ -2,9 +2,11 @@
 <html lang="am">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>HaniTech Pharmacy Tracker</title>
 <meta name="theme-color" content="#10b981">
+<meta name="description" content="HaniTech Digital Pharmacy Management System">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HaniTech">
@@ -1278,7 +1280,7 @@ let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed =
 
 let codeReader = null;
 
-// ✅ Splash Screen Fix (Directly run after DOM loads, no window.load)
+// ✅ Splash Screen Fix (Directly run after DOM loads)
 setTimeout(() => { 
     const splash = document.getElementById('splashScreen'); 
     if(splash) { 
@@ -2979,28 +2981,91 @@ window.renderUnpaidCredits = function() {
 };
 
 // ==========================================
-// 📱 UNIVERSAL MOBILE COLLAPSE LOGIC
+// 📱 UNIVERSAL MOBILE COLLAPSE LOGIC (FIXED)
 // ==========================================
+let collapseTimeout = null;
+let isApplyingCollapse = false;
+
 window.applyUniversalMobileCollapse = function() {
-    if (window.innerWidth > 768) return;
-    const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList','expiryListDisplay','lowStockListDisplay','unpaidCreditList','dailySalesList','monthlySalesList','auditTrailList','expCatListDisplay','branchListDisplay','customerListDisplay','catTableBody'];
+    // በ Desktop (ከ 768px በላይ) ከሆነ ምንም አታድርግ - Desktop አቀማመጡ እንዳይነካ
+    if (window.innerWidth > 768 || isApplyingCollapse) return;
+    
+    // የገጹ ኮድ ሙሉ በሙሉ እስኪጫን ድረስ ጠብቅ
+    if (!document.getElementById('mainApp').classList.contains('show')) return; 
+
+    isApplyingCollapse = true;
+
+    const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList',
+        'expiryListDisplay','lowStockListDisplay','unpaidCreditList','dailySalesList',
+        'monthlySalesList','auditTrailList','expCatListDisplay','branchListDisplay',
+        'customerListDisplay','catTableBody'];
+
     listIds.forEach(id => {
-        const el = document.getElementById(id); if (!el) return; const parent = el.parentElement; if (!parent) return; if (parent.querySelector('.mobile-expand-btn')) return;
-        const wrapper = document.createElement('div'); wrapper.className = 'mobile-collapse-wrapper'; const btn = document.createElement('div'); btn.className = 'mobile-expand-btn';
+        const el = document.getElementById(id); 
+        if (!el) return;
+        const parent = el.parentElement; 
+        if (!parent || parent.querySelector('.mobile-expand-btn')) return;
+
+        const wrapper = document.createElement('div'); 
+        wrapper.className = 'mobile-collapse-wrapper';
+        const btn = document.createElement('div'); 
+        btn.className = 'mobile-expand-btn';
+
         let btnText = '👁️ ዝርዝሩን አሳይ';
-        if (id === 'medTableBody') btnText = '💊 የመድኃኒት ዝርዝር'; if (id === 'salesHistoryList') btnText = '📜 የሽያጭ ታሪክ'; if (id === 'allExpensesListDisplay') btnText = '💸 የወጪ ዝርዝር'; if (id === 'inventoryList') btnText = '📦 የክምችት ዝርዝር'; if (id === 'unpaidCreditList') btnText = '💳 ያልተከፈሉ ዕዳዎች'; if (id === 'catTableBody') btnText = '🗂️ የምድብ ዝርዝር'; if (id === 'auditTrailList') btnText = '📝 የእንቅስቃሴ መዝገብ';
-        btn.innerHTML = `${btnText} <span>▼</span>`; const contentBox = document.createElement('div'); contentBox.className = 'mobile-collapse-content';
-        parent.insertBefore(wrapper, el); contentBox.appendChild(el); wrapper.appendChild(btn); wrapper.appendChild(contentBox);
-        btn.onclick = function(e) { e.stopPropagation(); btn.classList.toggle('open'); contentBox.classList.toggle('open'); };
+        if (id === 'medTableBody') btnText = '💊 የመድኃኒት ዝርዝር';
+        if (id === 'salesHistoryList') btnText = '📜 የሽያጭ ታሪክ';
+        if (id === 'allExpensesListDisplay') btnText = '💸 የወጪ ዝርዝር';
+        if (id === 'inventoryList') btnText = '📦 የክምችት ዝርዝር';
+        if (id === 'unpaidCreditList') btnText = '💳 ያልተከፈሉ ዕዳዎች';
+        if (id === 'catTableBody') btnText = '🗂️ የምድብ ዝርዝር';
+        if (id === 'auditTrailList') btnText = '📝 የእንቅስቃሴ መዝገብ';
+
+        btn.innerHTML = `${btnText} <span>▼</span>`; 
+        const contentBox = document.createElement('div'); 
+        contentBox.className = 'mobile-collapse-content';
+
+        parent.insertBefore(wrapper, el); 
+        contentBox.appendChild(el); 
+        wrapper.appendChild(btn); 
+        wrapper.appendChild(contentBox);
+
+        btn.onclick = function(e) { 
+            e.stopPropagation(); 
+            btn.classList.toggle('open'); 
+            contentBox.classList.toggle('open'); 
+        };
     });
+
+    requestAnimationFrame(() => { isApplyingCollapse = false; });
 };
 
-const observer = new MutationObserver((mutations) => { if (window.innerWidth <= 768) { applyUniversalMobileCollapse(); } });
+// ✅ የተስተካከለ Observer (የስልክ ስክሪን ላይ ብቻ ይሰራል)
+const observer = new MutationObserver(() => {
+    if (window.innerWidth > 768) return; // Desktop ላይ ምንም አያድርግ
+    clearTimeout(collapseTimeout);
+    collapseTimeout = setTimeout(() => {
+        applyUniversalMobileCollapse();
+    }, 500);
+});
+
 observer.observe(document.body, { childList: true, subtree: true });
 
 window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) { document.querySelectorAll('.mobile-collapse-wrapper').forEach(wrapper => { const content = wrapper.querySelector('.mobile-collapse-content'); const btn = wrapper.querySelector('.mobile-expand-btn'); if (content && content.firstElementChild) { wrapper.parentElement.insertBefore(content.firstElementChild, wrapper); } wrapper.remove(); if (btn) btn.remove(); }); } 
-    else { applyUniversalMobileCollapse(); }
+    clearTimeout(collapseTimeout);
+    collapseTimeout = setTimeout(() => {
+        if (window.innerWidth > 768) {
+            // ወደ Desktop ሲቀየር የሞባይል ለውጦችን አጥፋ
+            document.querySelectorAll('.mobile-collapse-wrapper').forEach(wrapper => {
+                const content = wrapper.querySelector('.mobile-collapse-content');
+                if (content && content.firstElementChild) {
+                    wrapper.parentElement.insertBefore(content.firstElementChild, wrapper);
+                }
+                wrapper.remove();
+            });
+        } else {
+            applyUniversalMobileCollapse();
+        }
+    }, 300);
 });
 
 // ==========================================
@@ -3022,7 +3087,65 @@ window.clearAllSales = async function() {
     try { const snap = await getDocs(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId))); let batch = writeBatch(db); let count = 0; snap.forEach(d => { batch.delete(d.ref); count++; }); if(count > 0) await batch.commit(); alert(`✅ Deleted ${count} sales.`); } catch(e) { alert('Error: ' + e.message); }
 };
 
-if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').then(reg => console.log('✅ SW registered')).catch(err => console.log('❌ SW failed', err)); }); }
+// ==========================================
+// 🚀 PWA SERVICE WORKER REGISTRATION & SHORTCUTS
+// ==========================================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+        try {
+            const reg = await navigator.serviceWorker.register('service-worker.js', { scope: './' });
+            console.log('✅ SW registered:', reg.scope);
+
+            reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        if (confirm('🔄 አዲስ ስሪት ዝግጁ ነው! አሁን ማዘመን ትፈልጋለህ?')) {
+                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            window.location.reload();
+                        }
+                    }
+                });
+            });
+
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) { refreshing = true; window.location.reload(); }
+            });
+
+        } catch (err) {
+            console.error('❌ SW registration failed:', err);
+        }
+    });
+}
+
+// Handle PWA Shortcuts
+window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    if (!action) return;
+
+    setTimeout(() => {
+        if (!document.getElementById('mainApp').classList.contains('show')) return;
+
+        switch (action) {
+            case 'newsale':
+                switchPage('panel2', 'sub2_1', null);
+                document.getElementById('currentMobileTabTitle').innerText = 'New Sale';
+                break;
+            case 'dashboard':
+                switchPage('panel7', null, null);
+                document.getElementById('currentMobileTabTitle').innerText = 'Dashboard';
+                break;
+            case 'addmedicine':
+                switchPage('panel1', 'sub1_2', null);
+                document.getElementById('currentMobileTabTitle').innerText = 'Add Medicine';
+                break;
+        }
+        window.history.replaceState({}, '', window.location.pathname);
+    }, 3000);
+});
+
 console.log('✅ HaniTech Tracker loaded!');
 </script>
 </body>
