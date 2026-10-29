@@ -2983,17 +2983,17 @@ window.renderUnpaidCredits = function() {
 // ==========================================
 // 📱 UNIVERSAL MOBILE COLLAPSE LOGIC (FIXED)
 // ==========================================
+// ==========================================
+// 📱 UNIVERSAL MOBILE COLLAPSE LOGIC (BUG FIXED)
+// ==========================================
 let collapseTimeout = null;
-let isApplyingCollapse = false;
 
 window.applyUniversalMobileCollapse = function() {
-    // በ Desktop (ከ 768px በላይ) ከሆነ ምንም አታድርግ - Desktop አቀማመጡ እንዳይነካ
-    if (window.innerWidth > 768 || isApplyingCollapse) return;
+    // በ Desktop (ከ 768px በላይ) ከሆነ ምንም አታድርግ
+    if (window.innerWidth > 768) return;
     
     // የገጹ ኮድ ሙሉ በሙሉ እስኪጫን ድረስ ጠብቅ
     if (!document.getElementById('mainApp').classList.contains('show')) return; 
-
-    isApplyingCollapse = true;
 
     const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList',
         'expiryListDisplay','lowStockListDisplay','unpaidCreditList','dailySalesList',
@@ -3004,7 +3004,12 @@ window.applyUniversalMobileCollapse = function() {
         const el = document.getElementById(id); 
         if (!el) return;
         const parent = el.parentElement; 
-        if (!parent || parent.querySelector('.mobile-expand-btn')) return;
+        
+        // 🔥 ዋናው ማስተካከያ፡ አስቀድሞ ቁልፍ ካለው እንደገና አይፍጠር
+        if (parent.closest('.mobile-collapse-wrapper')) return;
+
+        // በቀጥታ የራሱ የሆነ ቁልፍ ካለው አይፍጠር
+        if (el.previousElementSibling && el.previousElementSibling.classList.contains('mobile-expand-btn')) return;
 
         const wrapper = document.createElement('div'); 
         wrapper.className = 'mobile-collapse-wrapper';
@@ -3035,21 +3040,36 @@ window.applyUniversalMobileCollapse = function() {
             contentBox.classList.toggle('open'); 
         };
     });
-
-    requestAnimationFrame(() => { isApplyingCollapse = false; });
 };
 
-// ✅ የተስተካከለ Observer (የስልክ ስክሪን ላይ ብቻ ይሰራል)
+// ✅ የተስተካከለ Observer
 const observer = new MutationObserver(() => {
-    if (window.innerWidth > 768) return; // Desktop ላይ ምንም አያድርግ
+    if (window.innerWidth > 768) return;
     clearTimeout(collapseTimeout);
     collapseTimeout = setTimeout(() => {
         applyUniversalMobileCollapse();
-    }, 500);
+    }, 300); // ጊዜውን ወደ 300ms ቀንሰነዋል
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
 
+window.addEventListener('resize', () => {
+    clearTimeout(collapseTimeout);
+    collapseTimeout = setTimeout(() => {
+        if (window.innerWidth > 768) {
+            // ወደ Desktop ሲቀየር የሞባይል ለውጦችን አጥፋ
+            document.querySelectorAll('.mobile-collapse-wrapper').forEach(wrapper => {
+                const content = wrapper.querySelector('.mobile-collapse-content');
+                if (content && content.firstElementChild) {
+                    wrapper.parentElement.insertBefore(content.firstElementChild, wrapper);
+                }
+                wrapper.remove();
+            });
+        } else {
+            applyUniversalMobileCollapse();
+        }
+    }, 300);
+});
 window.addEventListener('resize', () => {
     clearTimeout(collapseTimeout);
     collapseTimeout = setTimeout(() => {
