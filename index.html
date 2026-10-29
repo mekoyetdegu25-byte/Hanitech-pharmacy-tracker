@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Hanitech Digital Pharmacy Tracker</title>
+<title>HaniTech Pharmacy Tracker</title>
 <meta name="theme-color" content="#10b981">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,40 +14,23 @@
 <script src="https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js"></script>
 <style>
 :root {
-    --primary: #10b981;
-    --primary-hover: #059669;
-    --bg: #f8fafc;
-    --card-bg: #ffffff;
-    --text-main: #1e293b;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
-    --radius: 16px;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-    --panel-bg: #f3f4f6;
-    --input-bg: #f8fafc;
+    --primary: #10b981; --primary-hover: #059669; --bg: #f8fafc; --card-bg: #ffffff;
+    --text-main: #1e293b; --text-muted: #64748b; --border: #e2e8f0; --radius: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05); --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    --panel-bg: #f3f4f6; --input-bg: #f8fafc;
 }
-body.dark-mode {
-    --bg: #0f172a;
-    --card-bg: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --border: #334155;
-    --panel-bg: #0b1120;
-    --input-bg: #0f172a;
-}
+body.dark-mode { --bg: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8; --border: #334155; --panel-bg: #0b1120; --input-bg: #0f172a; }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: var(--bg); color: var(--text-main); font-size: 14px; margin: 0; min-height: 100vh; overflow: hidden; transition: background 0.3s, color 0.3s; }
 #splashScreen { position: fixed; inset: 0; background: #111827; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: #fff; transition: opacity 0.5s; }
 #splashScreen.fade-out { opacity: 0; pointer-events: none; }
 .logo-text { font-size: 36px; font-weight: 800; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
-.logo-text span { color: #10b981; }
 .sub-text { font-size: 14px; margin-top: 8px; color: #9ca3af; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; } 
 #loginScreen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
 #loginScreen.hidden { display: none; }
-.login-box { background: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow-md); padding: 40px 32px; width: 100%; max-width: 420px; border: 1px solid var(--border); }
-.login-box h1 { text-align: center; color: var(--text-main); font-size: 22px; margin-bottom: 24px; font-weight: 700;}
-.form-group { margin-bottom: 20px; }
+.login-box { background: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow-md); padding: 40px 32px; width: 100%; max-width: 420px; border: 1px solid var(--border); text-align: center; }
+.login-box h1 { text-align: center; color: var(--text-main); font-size: 20px; margin-bottom: 24px; font-weight: 700; line-height: 1.3;}
+.form-group { margin-bottom: 20px; text-align: left; }
 .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
 input, select, textarea { width: 100%; padding: 12px 16px; font-size: 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--input-bg); color: var(--text-main); outline: none; transition: all 0.2s; }
 input:focus, select:focus, textarea:focus { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
@@ -63,8 +46,6 @@ header .h-brand { font-size: 12px; color: var(--text-muted); font-weight: 500; }
 .main-content-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; background: var(--panel-bg); }
 .tabs-wrapper { display: flex; flex-direction: row; flex: 1; overflow: hidden; width: 100%; } 
 .tabs { display: flex; flex-direction: column; width: 260px; background: var(--card-bg); border-right: 1px solid var(--border); padding: 16px 12px; gap: 4px; overflow-y: auto; flex-shrink: 0; height: 100%; }
-.tabs::-webkit-scrollbar { width: 4px; }
-.tabs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 .menu-group { width: 100%; margin-bottom: 4px; }
 .menu-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: all 0.2s; }
 .menu-header:hover { background: var(--bg); color: var(--text-main); }
@@ -85,22 +66,15 @@ header .h-brand { font-size: 12px; color: var(--text-muted); font-weight: 500; }
 .sub-panel.active { display: block !important; }
 label.field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; margin-top: 12px; }
 .btn { display: block; width: 100%; padding: 12px; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; margin-top: 12px; transition: all 0.2s; }
-.btn-primary { background: #3b82f6; color: #fff; }
-.btn-primary:hover { background: #2563eb; }
-.btn-success { background: var(--primary); color: #fff; }
-.btn-success:hover { background: var(--primary-hover); }
-.btn-danger { background: #ef4444; color: #fff; }
-.btn-danger:hover { background: #dc2626; }
-.btn-warning { background: #f59e0b; color: #fff; }
-.btn-warning:hover { background: #d97706; } 
+.btn-primary { background: #3b82f6; color: #fff; } .btn-primary:hover { background: #2563eb; }
+.btn-success { background: var(--primary); color: #fff; } .btn-success:hover { background: var(--primary-hover); }
+.btn-danger { background: #ef4444; color: #fff; } .btn-danger:hover { background: #dc2626; }
+.btn-warning { background: #f59e0b; color: #fff; } .btn-warning:hover { background: #d97706; } 
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
 .btn-outline:hover { background: var(--bg); }
 .summary-box { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 16px; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-.summary-box.green { border-left: 4px solid var(--primary); }
-.summary-box.red { border-left: 4px solid #ef4444; }
-.summary-box.blue { border-left: 4px solid #3b82f6; }
-.summary-box .label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-.summary-box .value { font-size: 28px; font-weight: 800; color: var(--text-main); } 
+.summary-box.green { border-left: 4px solid var(--primary); } .summary-box.red { border-left: 4px solid #ef4444; } .summary-box.blue { border-left: 4px solid #3b82f6; }
+.summary-box .label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; } .summary-box .value { font-size: 28px; font-weight: 800; color: var(--text-main); } 
 .section-collapsible { background: var(--card-bg); border-radius: 12px; margin-bottom: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden; transition: all 0.3s ease; }
 .section-collapsible:hover { box-shadow: var(--shadow-md); }
 .section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; cursor: pointer; background: var(--card-bg); transition: background 0.2s; }
@@ -121,7 +95,6 @@ label.field-label { display: block; font-size: 13px; font-weight: 600; color: va
 .input-group { position: relative; margin-bottom: 16px; }
 .input-group i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-style: normal; }
 .input-group input, .input-group select { width: 100%; padding: 12px 14px 12px 40px; font-size: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--input-bg); color: var(--text-main); outline: none; transition: all 0.2s; }
-.input-group input:focus, .input-group select:focus { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
 .toggle-switch { position: relative; display: inline-block; width: 46px; height: 26px; }
 .toggle-switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: .3s; border-radius: 26px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
@@ -155,10 +128,8 @@ input:checked + .slider:before { transform: translateX(20px); }
 .data-table tbody tr:last-child td { border-bottom: none; }
 .data-table tbody tr:hover { background: var(--bg); }
 .action-btn { background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; margin-right: 4px; transition: background 0.2s; }
-.btn-edit { color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
-.btn-edit:hover { background: rgba(59, 130, 246, 0.2); }
-.btn-delete { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
-.btn-delete:hover { background: rgba(239, 68, 68, 0.2); }
+.btn-edit { color: #3b82f6; background: rgba(59, 130, 246, 0.1); } .btn-edit:hover { background: rgba(59, 130, 246, 0.2); }
+.btn-delete { color: #ef4444; background: rgba(239, 68, 68, 0.1); } .btn-delete:hover { background: rgba(239, 68, 68, 0.2); }
 .dash-grid { display: grid; gap: 20px; grid-template-columns: repeat(4, 1fr); }
 .dash-card { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
 .dash-val-box { border-radius: 8px; padding: 16px; text-align: center; color: #fff; }
@@ -166,175 +137,94 @@ input:checked + .slider:before { transform: translateX(20px); }
 .pos-layout { display: grid; grid-template-columns: 350px 1fr; gap: 20px; height: calc(100vh - 160px); }
 .pos-cart { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100%; }
 .pos-cart-header { padding: 16px; border-bottom: 1px solid var(--border); background: var(--bg); flex-shrink: 0; } 
-.pos-cart-items { flex: 1; padding: 16px; }
-.pos-cart-footer { padding: 16px; border-top: 1px solid var(--border); background: var(--card-bg); flex-shrink: 0; }
+.pos-cart-items { flex: 1; padding: 16px; } .pos-cart-footer { padding: 16px; border-top: 1px solid var(--border); background: var(--card-bg); flex-shrink: 0; }
 .pos-products { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
 .pos-products-header { padding: 16px; border-bottom: 1px solid var(--border); background: var(--bg); }
 .pos-products-grid { flex: 1; overflow-y: auto; padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; align-content: start; }
 .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
 .product-card:hover { border-color: var(--primary); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.product-card .p-name { font-weight: 700; font-size: 14px; color: var(--text-main); margin-bottom: 4px; }
-.product-card .p-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-.product-card .p-price { font-weight: 700; color: var(--primary); font-size: 15px; }
+.product-card .p-name { font-weight: 700; font-size: 14px; color: var(--text-main); margin-bottom: 4px; } .product-card .p-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; } .product-card .p-price { font-weight: 700; color: var(--primary); font-size: 15px; }
 .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--border); }
 .cart-item:last-child { border-bottom: none; }
-.cart-item .ci-info { flex: 1; }
-.cart-item .ci-name { font-weight: 600; font-size: 14px; color: var(--text-main); }
-.cart-item .ci-price { font-size: 12px; color: var(--text-muted); }
+.cart-item .ci-info { flex: 1; } .cart-item .ci-name { font-weight: 600; font-size: 14px; color: var(--text-main); } .cart-item .ci-price { font-size: 12px; color: var(--text-muted); }
 .cart-item .ci-qty { display: flex; align-items: center; gap: 8px; margin: 0 12px; }
 .cart-item .ci-qty button { width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-.cart-item .ci-total { font-weight: 700; color: var(--text-main); width: 60px; text-align: right; }
-.cart-item .ci-del { color: #ef4444; cursor: pointer; margin-left: 8px; font-weight: bold; }
+.cart-item .ci-total { font-weight: 700; color: var(--text-main); width: 60px; text-align: right; } .cart-item .ci-del { color: #ef4444; cursor: pointer; margin-left: 8px; font-weight: bold; }
 .pagination-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 10px; }
-.rows-per-page { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
-.rows-per-page select { width: auto; padding: 6px 10px; font-size: 13px; }
+.rows-per-page { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); } .rows-per-page select { width: auto; padding: 6px 10px; font-size: 13px; }
 .modern-report { font-family: 'Inter', sans-serif; color: #111827; background: #fff; padding: 30px; border-radius: 12px; }
 .rep-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 20px; }
-.rep-header h2 { font-size: 24px; font-weight: 800; color: #1e293b; margin: 0; }
-.rep-header p { font-size: 14px; color: #64748b; margin-top: 4px; }
+.rep-header h2 { font-size: 24px; font-weight: 800; color: #1e293b; margin: 0; } .rep-header p { font-size: 14px; color: #64748b; margin-top: 4px; }
 .rep-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
-.rep-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 15px; border-left: 4px solid #10b981; }
-.rep-card.expense { border-left-color: #ef4444; }
-.rep-card.profit { border-left-color: #3b82f6; }
-.rep-card.count { border-left-color: #f59e0b; }
-.rep-card .lbl { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; }
-.rep-card .val { font-size: 22px; font-weight: 800; color: #1e293b; margin-top: 5px; }
-.rep-section { margin-bottom: 30px; }
-.rep-section h3 { font-size: 16px; font-weight: 700; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; color: #1e293b; }
-.rep-table { width: 100%; border-collapse: collapse; }
-.rep-table th { background: #f8fafc; padding: 10px; text-align: left; font-size: 12px; color: #64748b; border-bottom: 1px solid #e2e8f0; }
-.rep-table td { padding: 10px; font-size: 13px; border-bottom: 1px solid #e2e8f0; }
-.rep-table tr:last-child td { border-bottom: none; }
-.rep-payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-.rep-payment-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; text-align: center; }
+.rep-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 15px; border-left: 4px solid #10b981; } .rep-card.expense { border-left-color: #ef4444; } .rep-card.profit { border-left-color: #3b82f6; } .rep-card.count { border-left-color: #f59e0b; }
+.rep-card .lbl { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; } .rep-card .val { font-size: 22px; font-weight: 800; color: #1e293b; margin-top: 5px; }
+.rep-section { margin-bottom: 30px; } .rep-section h3 { font-size: 16px; font-weight: 700; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; color: #1e293b; }
+.rep-table { width: 100%; border-collapse: collapse; } .rep-table th { background: #f8fafc; padding: 10px; text-align: left; font-size: 12px; color: #64748b; border-bottom: 1px solid #e2e8f0; } .rep-table td { padding: 10px; font-size: 13px; border-bottom: 1px solid #e2e8f0; } .rep-table tr:last-child td { border-bottom: none; }
+.rep-payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; } .rep-payment-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; text-align: center; }
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
 .modal-overlay.open { display: flex; }
 .modal-content { background: var(--card-bg); border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-md); }
-.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-radius: 16px 16px 0 0; }
-.modal-header h3 { font-size: 16px; font-weight: 700; margin: 0; color: var(--text-main); }
-.modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); }
-.modal-body { padding: 20px; }
-@media print {
-    body * { visibility: hidden; }
-    #printableReceipt, #printableReceipt * { visibility: visible; }
-    #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; }
-    .no-print { display: none !important; }
-}
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-radius: 16px 16px 0 0; } .modal-header h3 { font-size: 16px; font-weight: 700; margin: 0; color: var(--text-main); } .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); } .modal-body { padding: 20px; }
+@media print { body * { visibility: hidden; } #printableReceipt, #printableReceipt * { visibility: visible; } #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; } .no-print { display: none !important; } }
 
 /* ==========================================
    📱 MODERN MOBILE HEADER & DROPDOWN
    ========================================== */
-#mobileHeaderTitle {
-    display: none;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-main);
-    cursor: pointer;
-    align-items: center;
-    gap: 8px;
-}
-#mobileHeaderTitle span {
-    font-size: 12px;
-    color: var(--text-muted);
-    transition: transform 0.3s;
-}
+#mobileHeaderTitle { display: none; font-size: 16px; font-weight: 700; color: var(--text-main); cursor: pointer; align-items: center; gap: 8px; }
+#mobileHeaderTitle span { font-size: 12px; color: var(--text-muted); transition: transform 0.3s; }
 #mobileHeaderTitle.open span { transform: rotate(180deg); }
-
-.modern-mobile-menu {
-    position: absolute;
-    top: 65px;
-    left: 15px;
-    right: 15px;
-    background: var(--card-bg);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    border: 1px solid var(--border);
-    z-index: 1000;
-    display: none;
-    max-height: 70vh;
-    overflow-y: auto;
-    animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
+.modern-mobile-menu { position: absolute; top: 65px; left: 15px; right: 15px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--border); z-index: 1000; display: none; max-height: 70vh; overflow-y: auto; animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 .modern-mobile-menu.open { display: block; }
-
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-15px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.modern-menu-section { padding: 12px 16px; border-bottom: 1px solid var(--border); }
-.modern-menu-section:last-child { border-bottom: none; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.modern-menu-section { padding: 12px 16px; border-bottom: 1px solid var(--border); } .modern-menu-section:last-child { border-bottom: none; }
 .modern-menu-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .modern-menu-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: all 0.2s; margin-bottom: 2px; }
-.modern-menu-item:hover { background: var(--bg); }
-.modern-menu-item.active { background: rgba(16, 185, 129, 0.1); color: var(--primary); }
-.modern-menu-item .icon { font-size: 16px; background: var(--bg); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
-.modern-menu-item.active .icon { background: var(--primary); color: white; }
-
-/* Mobile Bottom Nav */
+.modern-menu-item:hover { background: var(--bg); } .modern-menu-item.active { background: rgba(16, 185, 129, 0.1); color: var(--primary); }
+.modern-menu-item .icon { font-size: 16px; background: var(--bg); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px; } .modern-menu-item.active .icon { background: var(--primary); color: white; }
 .mobile-bottom-nav { display: none; }
 .mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 2px; color: var(--text-muted); transition: all 0.2s; border: none; background: transparent; font-family: inherit; }
-.mobile-nav-item.active { color: var(--primary); }
-.mobile-nav-item .nav-icon { font-size: 20px; }
-.mobile-nav-item .nav-label { font-size: 10px; font-weight: 600; }
+.mobile-nav-item.active { color: var(--primary); } .mobile-nav-item .nav-icon { font-size: 20px; } .mobile-nav-item .nav-label { font-size: 10px; font-weight: 600; }
 
 @media (max-width: 768px) {
-    .tabs { display: none !important; }
-    .panels { width: 100% !important; padding: 16px 12px 90px 12px !important; }
-    header { padding: 0 12px !important; height: 60px !important; }
-    header .h-title { font-size: 14px !important; }
-    header .h-brand { font-size: 11px !important; }
-    header .btn-logout-hdr { padding: 6px 10px !important; font-size: 12px !important; }
-    #hdrUserRole { display: none !important; }
-    
-    .h-left .h-brand { display: none; }
-    #mobileHeaderTitle { display: flex; }
-
+    .tabs { display: none !important; } .panels { width: 100% !important; padding: 16px 12px 90px 12px !important; }
+    header { padding: 0 12px !important; height: 60px !important; } header .h-title { font-size: 14px !important; } header .h-brand { font-size: 11px !important; } header .btn-logout-hdr { padding: 6px 10px !important; font-size: 12px !important; }
+    #hdrUserRole { display: none !important; } .h-left .h-brand { display: none; } #mobileHeaderTitle { display: flex; }
     .mobile-bottom-nav { display: flex !important; position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--card-bg); border-top: 1px solid var(--border); z-index: 999; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-    
     [style*="grid-template-columns:1fr 1fr"], [style*="grid-template-columns: 1fr 1fr"], [style*="grid-template-columns:1fr 1fr 1fr"], [style*="grid-template-columns: 1fr 1fr 1fr"], [style*="grid-template-columns:repeat(4,1fr)"], [style*="grid-template-columns: repeat(4,1fr)"], [style*="grid-template-columns:repeat(3,1fr)"], [style*="grid-template-columns: repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
-    .pos-layout { grid-template-columns: 1fr !important; height: auto !important; }
-    .pos-products { min-height: 400px; }
-    .dash-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-    .dash-val-number { font-size: 20px !important; }
-    .dash-card { padding: 12px !important; }
-    .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    #bodySettings.open { grid-template-columns: 1fr !important; }
-    .role-grid { grid-template-columns: 1fr !important; }
-    .btn { padding: 10px !important; font-size: 13px !important; }
-    h1 { font-size: 20px !important; }
-    h2 { font-size: 18px !important; }
-    .modal-content { max-width: 95vw !important; max-height: 90vh !important; }
-    label.field-label { font-size: 12px !important; }
-    .summary-box { padding: 12px !important; }
-    .summary-box .value { font-size: 20px !important; }
-    .section-header { padding: 12px 14px !important; }
-    .section-body { padding: 0 14px 14px 14px !important; }
-    .login-box { padding: 30px 20px !important; }
-    .logo-text { font-size: 28px !important; }
+    .pos-layout { grid-template-columns: 1fr !important; height: auto !important; } .pos-products { min-height: 400px; }
+    .dash-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; } .dash-val-number { font-size: 20px !important; } .dash-card { padding: 12px !important; }
+    .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; } #bodySettings.open { grid-template-columns: 1fr !important; } .role-grid { grid-template-columns: 1fr !important; }
+    .btn { padding: 10px !important; font-size: 13px !important; } h1 { font-size: 20px !important; } h2 { font-size: 18px !important; }
+    .modal-content { max-width: 95vw !important; max-height: 90vh !important; } label.field-label { font-size: 12px !important; }
+    .summary-box { padding: 12px !important; } .summary-box .value { font-size: 20px !important; } .section-header { padding: 12px 14px !important; } .section-body { padding: 0 14px 14px 14px !important; }
+    .login-box { padding: 30px 20px !important; } .logo-text { font-size: 28px !important; }
+    .mobile-collapse-content { display: none !important; } .mobile-collapse-content.open { display: block !important; animation: slideDownFade 0.3s ease; }
+    .mobile-expand-btn { display: flex; justify-content: space-between; width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--text-main); cursor: pointer; box-shadow: var(--shadow-sm); }
+    .mobile-expand-btn span { font-size: 12px; color: var(--primary); transition: transform 0.3s; } .mobile-expand-btn.open span { transform: rotate(180deg); }
+    @keyframes slideDownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 }
 @media (min-width: 769px) {
-    .mobile-bottom-nav, .mobile-menu-overlay { display: none !important; }
-    #mobileHeaderTitle { display: none !important; }
+    .mobile-bottom-nav, .modern-mobile-menu { display: none !important; } #mobileHeaderTitle { display: none !important; }
+    .mobile-collapse-content { display: block !important; } .mobile-expand-btn { display: none !important; }
 }
 </style>
 </head>
 <body> 
 
 <div id="splashScreen">
-<div class="logo-text">HaniTech <span>Digital</span></div>
-<div class="sub-text">Pharmacy Tracker</div>
+    <div class="logo-text">HaniTech <span>Digital</span></div>
+    <div class="sub-text">Pharmacy Tracker</div>
 </div> 
 
 <div id="loginScreen" class="hidden">
 <div class="login-box">
-<h1>💊 Sign in to Dashboard</h1> 
-<div id="loginForm">
-<div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-<div class="form-group"><label>📧 Email Address</label><input type="email" id="email" placeholder="admin@pharmacy.com"></div>
-<div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="••••••••"></div>
-<button class="btn-login" onclick="login()">Sign In</button>
-</div> 
+    <h1>HaniTech Digital Pharmacy Management System</h1> 
+    <div id="loginForm">
+        <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
+        <div class="form-group"><label>📧 Email Address</label><input type="email" id="email" placeholder="admin@pharmacy.com"></div>
+        <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="••••••••"></div>
+        <button class="btn-login" onclick="login()">Sign In</button>
+    </div> 
 </div>
 </div> 
 
@@ -397,7 +287,6 @@ input:checked + .slider:before { transform: translateX(20px); }
         <span id="hdrUserRole" style="background: rgba(16, 185, 129, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">Owner</span>
         <button class="btn-logout-hdr" onclick="logout()">Sign Out</button>
     </div>
-
     <div class="modern-mobile-menu" id="modernMobileMenu"></div>
 </header> 
 
@@ -543,591 +432,591 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                 </div>
             </div>
-            <div class="sub-panel" id="sub1_2">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrAddMed','bodyAddMed')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">Add Medicine</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyAddMed">
-                        <div style="background:var(--bg); padding:16px; border-radius:8px; border:1px solid var(--border); margin-bottom:20px;">
-                            <h4 style="margin-bottom:12px; font-size:14px; font-weight:700;">Single Entry</h4>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                                <div>
-                                    <label class="field-label">📦 Type</label><select id="medType" onchange="onMedTypeChange()"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
-                                    <label class="field-label">🏢 Branch</label><select id="medBranch"></select>
-                                    <label class="field-label">📁 Category</label>
-                                    <input list="categoryList" id="medCategory" placeholder="Type to search category..." onchange="loadSubcategoriesForSelectedCategory()">
-                                    <datalist id="categoryList"></datalist>
-                                    <label class="field-label">📂 Sub Category</label>
-                                    <input list="subCategoryList" id="medSubcategory" placeholder="Type to search subcategory...">
-                                    <datalist id="subCategoryList"></datalist>
-                                    <label class="field-label">💊 Item Name</label><input type="text" id="medName" placeholder="e.g. Paracetamol"> 
-                                </div>
-                                <div id="medicineOnlyFields">
-                                    <label class="field-label">🔢 Batch No</label><input type="text" id="medBatch">
-                                    <label class="field-label">📅 Exp Date</label><input type="date" id="medExpiry">
-                                    <label class="field-label">🏭 Supplier</label><input type="text" id="medSupplier">
-                                </div> 
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top:15px;">
-                                <div><label class="field-label">💰 Purchase Price</label><input type="number" id="medCost"></div>
-                                <div><label class="field-label">🏷️ Sell Price</label><input type="number" id="medPrice"></div>
-                                <div><label class="field-label">📦 Qty</label><input type="number" id="medQty"></div>
-                            </div>
-                            <button class="btn btn-success" id="btnSaveMed" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addMedicine()">💾 Save Medicine</button>
-                            <div style="clear:both;"></div>
-                        </div>
-                        <div style="background:rgba(59, 130, 246, 0.05); padding:16px; border-radius:8px; border:1px solid rgba(59, 130, 246, 0.2);">
-                            <h4 style="margin-bottom:12px; font-size:14px; font-weight:700; color:#3b82f6;">CSV Import (Excel)</h4>
-                            <p style="font-size:12px; color:#3b82f6; margin-bottom:10px;">Upload a CSV file with columns: Item Name, Category, Subcategory, Branch, Batch, Expiry, Supplier, Cost, Price, Qty</p>
-                            <input type="file" id="csvFileInput" accept=".csv" style="margin-bottom:10px; padding:10px; border:1px dashed #60a5fa; background:var(--card-bg);">
-                            <button class="btn btn-primary" style="width:auto; padding:10px 24px;" onclick="importCSV()">Import CSV</button>
-                        </div>
-                    </div>
-                </div>
+                <div class="sub-panel" id="sub1_2">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrAddMed','bodyAddMed')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">Add Medicine</span></div>
             </div>
-            <div class="sub-panel" id="sub1_3">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Medicine Category & Subcategory</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyCatMgr">
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px; background:var(--bg); padding:16px; border-radius:8px; border:1px solid var(--border);">
-                            <div>
-                                <label class="field-label" style="margin-top:0;">Main Category</label>
-                                <input type="text" id="newCat" placeholder="e.g. Antibiotics">
-                            </div>
-                            <div>
-                                <label class="field-label" style="margin-top:0;">Sub Category (Optional)</label>
-                                <input type="text" id="newSubCatDirect" placeholder="e.g. Tablets">
-                            </div>
-                            <div style="grid-column: 1 / -1;">
-                                <button class="btn btn-primary" style="width:auto; padding:10px 24px; float:right;" onclick="addCategoryWithSub()">+ Add Category</button>
-                                <div style="clear:both;"></div>
-                            </div>
+            <div class="section-body open" id="bodyAddMed">
+                <div style="background:var(--bg); padding:16px; border-radius:8px; border:1px solid var(--border); margin-bottom:20px;">
+                    <h4 style="margin-bottom:12px; font-size:14px; font-weight:700;">Single Entry</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <label class="field-label">📦 Type</label><select id="medType" onchange="onMedTypeChange()"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
+                            <label class="field-label">🏢 Branch</label><select id="medBranch"></select>
+                            <label class="field-label">📁 Category</label>
+                            <input list="categoryList" id="medCategory" placeholder="Type to search category..." onchange="loadSubcategoriesForSelectedCategory()">
+                            <datalist id="categoryList"></datalist>
+                            <label class="field-label">📂 Sub Category</label>
+                            <input list="subCategoryList" id="medSubcategory" placeholder="Type to search subcategory...">
+                            <datalist id="subCategoryList"></datalist>
+                            <label class="field-label">💊 Item Name</label><input type="text" id="medName" placeholder="e.g. Paracetamol"> 
                         </div>
-                        <div style="overflow-x: auto;">
-                            <table class="data-table">
-                                <thead><tr><th>Category Name</th><th>Sub Categories</th><th>Action</th></tr></thead>
-                                <tbody id="catTableBody"></tbody>
-                            </table>
-                        </div>
-                        <div class="pagination-controls">
-                            <div class="rows-per-page">
-                                Show 
-                                <select id="catRowsPerPage" onchange="catPage=1; renderCategoryList()">
-                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                </select> 
-                                entries
-                            </div>
-                            <div id="catPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
-                            <div style="display:flex; gap:8px;">
-                                <button class="btn btn-outline" id="btnPrevCat" onclick="changeCatPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
-                                <button class="btn btn-outline" id="btnNextCat" onclick="changeCatPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PANEL 2 (Sales) -->
-        <div class="panel" id="panel2">
-            <div class="sub-panel active" id="sub2_1">
-                <div class="pos-layout">
-                    <div class="pos-cart">
-                        <div class="pos-cart-header">
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                                <div><label class="field-label" style="margin-top:0;">📅 Date</label><input type="date" id="sellDate" style="padding:8px;"></div>
-                                <div><label class="field-label" style="margin-top:0;">🏢 Branch</label><select id="sellBranch" style="padding:8px;"></select></div>
-                            </div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-                                <div><label class="field-label" style="margin-top:0;">💳 Payment</label><select id="sellPaymentMethod" onchange="toggleCreditFields()" style="padding:8px;"><option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit">📝 Credit</option></select></div>
-                                <div><label class="field-label" style="margin-top:0;">🧾 Receipt (Opt)</label><input type="text" id="sellReceipt" style="padding:8px;"></div>
-                            </div>
-                            <div id="creditFields" style="display:none; margin-top:10px; padding:10px; background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.3); border-radius:8px;">
-                                <label class="field-label">🏪 Customer Name</label>
-                                <input list="saleCustomerList" id="sellCreditCustomer" placeholder="Type customer name..." style="margin-bottom:8px;">
-                                <datalist id="saleCustomerList"></datalist>
-                                <label class="field-label">💰 Paid Amount (Partial)</label>
-                                <input type="number" id="sellCreditPaid" placeholder="0.00 (0 for full credit)">
-                            </div>
-                        </div>
-                        <div class="pos-cart-items" id="cartList"></div>
-                        <div class="pos-cart-footer">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                                <span style="font-size:16px; font-weight:700; color:var(--text-main);">Total:</span>
-                                <span id="cartTotal" style="font-size:24px; font-weight:800; color:var(--primary);">0.00 ETB</span>
-                            </div>
-                            <button class="btn btn-success" style="padding:16px; font-size:16px;" onclick="completeSale()">💸 Complete Sale</button>
-                            <button class="btn btn-danger" style="margin-top:8px; background:#6b7280;" onclick="clearCart()">🗑️ Clear Cart</button>
-                        </div>
-                    </div>
-                    <div class="pos-products">
-                        <div class="pos-products-header">
-                            <div style="display:flex; gap:10px;">
-                                <input type="text" id="searchSellInput" placeholder="🔍 Search Product by name or barcode..." oninput="renderSellProducts()" style="font-size:16px; padding:12px 16px; flex:1;">
-                                <button class="btn btn-primary" onclick="startScanner()" style="width:auto; margin-top:0; padding:0 20px;">📷 Scan</button>
-                            </div>
-                            <div id="categoryFilters" style="display:flex; gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px;"></div>
-                        </div>
-                        <div class="pos-products-grid" id="sellProductList"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="sub-panel" id="sub2_2">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">Quick Sale</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyQuickSale">
-                        <div class="info-banner" style="background:rgba(59, 130, 246, 0.1); color:#3b82f6; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px;">💡 Record total income directly.</div>
-                        <div style="background:var(--bg); padding:16px; border-radius:8px; border:1px solid var(--border); margin-bottom:20px;">
-                            <h4 style="margin-bottom:12px; font-size:14px; font-weight:700;">Single Entry</h4>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                                <div>
-                                    <label class="field-label">📦 Type</label><select id="quickType"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
-                                    <label class="field-label">🏢 Branch</label><select id="quickBranch"></select>
-                                    <label class="field-label">📅 Date</label><input type="date" id="quickDate">
-                                </div>
-                                <div>
-                                    <label class="field-label">💰 Amount</label><input type="number" id="quickAmount" placeholder="0.00">
-                                    <button class="btn btn-success" style="width:auto; padding:12px 32px; float:right; margin-top:36px;" onclick="addQuickSale()">+ Add Income</button>
-                                    <div style="clear:both;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="background:rgba(245, 158, 11, 0.1); padding:16px; border-radius:8px; border:1px solid rgba(245, 158, 11, 0.3);">
-                            <h4 style="margin-bottom:12px; font-size:14px; font-weight:700; color:#d97706;">Bulk Entry (Multiple Sales)</h4>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:10px;">
-                                <div><label class="field-label">🏢 Branch</label><select id="quickBulkBranch"></select></div>
-                                <div><label class="field-label">📅 Date</label><input type="date" id="quickBulkDate"></div>
-                            </div>
-                            <div id="bulkEntryRows" style="margin-bottom:10px;"></div>
-                            <button class="btn btn-outline" style="width:auto; margin-bottom:10px; font-size:13px;" onclick="addBulkRow()">+ Add Row</button>
-                            <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right;" onclick="saveBulkSales()">Save All Sales</button>
-                            <div style="clear:both;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="sub-panel" id="sub2_3">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrSalesHistory','bodySalesHistory')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Sales History</span></div>
-                    </div>
-                    <div class="section-body open" id="bodySalesHistory">
-                        <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
-                            <select id="filterSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="flex:1; min-width:150px;">
-                                <option value="all">All Sales</option><option value="detail">🛒 Detail Sales</option><option value="quick">⚡ Quick Sales</option>
-                            </select>
-                            <select id="filterBranchSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;">
-                                <option value="all">All Branches</option>
-                            </select>
-                            <input type="date" id="filterStartDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="Start Date">
-                            <input type="date" id="filterEndDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="End Date">
-                            <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 16px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
-                        </div>
-                        <div id="salesHistoryList"></div>
-                        <div class="pagination-controls">
-                            <div class="rows-per-page">
-                                Show 
-                                <select id="salesHistRowsPerPage" onchange="salesHistPage=1; renderSalesHistory()">
-                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                </select> 
-                                entries
-                            </div>
-                            <div id="salesHistPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
-                            <div style="display:flex; gap:8px;">
-                                <button class="btn btn-outline" id="btnPrevSalesHist" onclick="changeSalesHistPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
-                                <button class="btn btn-outline" id="btnNextSalesHist" onclick="changeSalesHistPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> 
-
-        <!-- PANEL 3 (Expenses) -->
-        <div class="panel" id="panel3">
-            <div class="sub-panel active" id="sub3_1">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrAddExp','bodyAddExp')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">Daily Expense</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyAddExp">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">📁 Category</label><select id="expCat"></select></div>
-                            <div><label class="field-label">🏢 Branch</label><select id="expBranch"></select></div>
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">💰 Amount</label><input type="number" id="expAmount"></div>
-                            <div><label class="field-label">📅 Date</label><input type="date" id="expDate"></div>
-                        </div>
-                        <label class="field-label">📝 Note</label><input type="text" id="expNote">
-                        <button class="btn btn-danger" id="btnSaveExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addExpense()">💾 Save Expense</button>
-                        <div style="clear:both;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="sub-panel" id="sub3_2">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Fixed Expense</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyFixedExp">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">📁 Category</label><select id="fixCat"></select></div>
-                            <div><label class="field-label">🏢 Branch</label><select id="fixBranch"></select></div>
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">💰 Amount</label><input type="number" id="fixAmount"></div>
-                            <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
-                        </div>
-                        <label class="field-label">📝 Note</label><input type="text" id="fixNote">
-                        <button class="btn btn-warning" id="btnSaveFixExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addFixedExpense()">💾 Save Expense</button>
-                        <div style="clear:both;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="sub-panel" id="sub3_list">
-                <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrExpenseList','bodyExpenseList')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">All Expenses List</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyExpenseList">
-                        <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
-                            <select id="listFilterType" onchange="renderAllExpensesList()" style="flex:1; min-width:150px;">
-                                <option value="all">All Types</option>
-                                <option value="daily">📅 Daily Expenses</option>
-                                <option value="fixed">🏢 Fixed Expenses</option>
-                            </select>
-                            <select id="listFilterBranch" onchange="renderAllExpensesList()" style="flex:1; min-width:150px;">
-                                <option value="all">All Branches</option>
-                            </select>
-                            <select id="listFilterCategory" onchange="renderAllExpensesList()" style="flex:1; min-width:150px;">
-                                <option value="all">All Categories</option>
-                            </select>
-                            <input type="date" id="listFilterDate" onchange="renderAllExpensesList()" style="flex:1;" title="Filter by Date (Daily)">
-                            <input type="month" id="listFilterMonth" onchange="renderAllExpensesList()" style="flex:1;" title="Filter by Month (Fixed)">
-                        </div>
-                        <div id="allExpensesListDisplay"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="sub-panel" id="sub3_3">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Expense Category</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyExpCatMgr">
-                        <div style="display:flex; gap:10px; margin-bottom:20px;">
-                            <input type="text" id="newExpCat" placeholder="New Expense Category">
-                            <button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addExpCategory()">+ Add</button>
-                        </div>
-                        <div class="cat-tags" id="expCatListDisplay"></div>
-                    </div>
-                </div>
-            </div>
-        </div> 
-
-        <!-- PANEL 4 (Inventory) -->
-        <div class="panel" id="panel4">
-            <div class="sub-panel active" id="sub4_1">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrInventory','bodyInventory')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory List</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyInventory">
-                        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:20px;">
-                            <div class="summary-box blue" style="margin-bottom:0; padding:15px;"><div class="label">Total Purchased Qty</div><div class="value" id="totalPurchasedQty" style="font-size:22px;">0</div></div>
-                            <div class="summary-box green" style="margin-bottom:0; padding:15px;"><div class="label">Total Purchased Value</div><div class="value" id="totalPurchasedValue" style="font-size:22px;">0.00</div></div>
-                            <div class="summary-box green" style="margin-bottom:0; padding:15px;"><div class="label">Total Sold Qty</div><div class="value" id="totalSoldQty" style="font-size:22px;">0</div></div>
-                            <div class="summary-box red" style="margin-bottom:0; padding:15px;"><div class="label">Remaining Qty</div><div class="value" id="totalRemainingQty" style="font-size:22px;">0</div></div>
-                        </div>
-                        <div class="no-print" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
-                            <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name or batch..." oninput="invPage=1; loadInventory()" style="flex:1;">
-                            <select id="filterTypeInv" onchange="invPage=1; loadInventory()" style="width:160px;">
-                                <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
-                            </select>
-                            <select id="filterCategoryInv" onchange="invPage=1; loadInventory()" style="width:160px;">
-                                <option value="all">All Categories</option>
-                            </select>
-                            <select id="filterBranchInv" onchange="invPage=1; loadInventory()" style="width:160px;">
-                                <option value="all">All Branches</option>
-                            </select>
-                        </div>
-                        <div id="inventoryList"></div>
-                        <div class="summary-box green" style="margin-top:20px;">
-                            <div class="label">Total Inventory Value</div>
-                            <div class="value" id="invTotalValue">0.00 <small>ETB</small></div>
-                        </div>
-                        <div class="pagination-controls">
-                            <div class="rows-per-page">
-                                Show 
-                                <select id="invRowsPerPage" onchange="invPage=1; loadInventory()">
-                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                </select> 
-                                entries
-                            </div>
-                            <div id="invPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
-                            <div style="display:flex; gap:8px;">
-                                <button class="btn btn-outline" id="btnPrevInv" onclick="changeInvPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
-                                <button class="btn btn-outline" id="btnNextInv" onclick="changeInvPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="sub-panel" id="sub4_2">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Expiry & Low Stock Alerts</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyExpiryList">
-                        <div style="display:flex; gap:12px; margin-bottom:20px;">
-                            <input type="text" class="search-box" id="searchExpiry" placeholder="🔍 Search..." oninput="loadInventory()" style="flex:1;">
-                            <select id="filterBranchAlert" onchange="loadInventory()" style="width:180px;">
-                                <option value="all">All Branches</option>
-                            </select>
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div>
-                                <h4 style="margin:0 0 10px; color:#f59e0b; font-size:14px;">Expiring Soon / Expired</h4>
-                                <div id="expiryListDisplay"></div>
-                                <div class="pagination-controls">
-                                    <div id="expPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
-                                    <div style="display:flex; gap:8px;">
-                                        <button class="btn btn-outline" id="btnPrevExp" onclick="changeExpPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">⬅️</button>
-                                        <button class="btn btn-outline" id="btnNextExp" onclick="changeExpPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">➡️</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 style="margin:0 0 10px; color:#ef4444; font-size:14px;">Low Stock</h4>
-                                <div id="lowStockListDisplay"></div>
-                                <div class="pagination-controls">
-                                    <div id="lowPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
-                                    <div style="display:flex; gap:8px;">
-                                        <button class="btn btn-outline" id="btnPrevLow" onclick="changeLowPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">⬅️</button>
-                                        <button class="btn btn-outline" id="btnNextLow" onclick="changeLowPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">➡️</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="sub-panel" id="sub4_3">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">Stock Adjust (Qty & Price)</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyStockAdjust">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">🏢 Branch</label><select id="adjustBranch" onchange="populateAdjustMedSelect()"></select></div>
-                            <div><label class="field-label">📦 Select Item</label><select id="adjustMedId"></select></div>
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">🔢 New Qty</label><input type="number" id="adjustQty" placeholder="Leave empty to keep current"></div>
-                            <div><label class="field-label">🏷️ New Sell Price</label><input type="number" id="adjustPrice" placeholder="Leave empty to keep current"></div>
-                        </div>
-                        <label class="field-label">📝 Reason</label><input type="text" id="adjustReason">
-                        <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="adjustStock()">🔧 Adjust Stock</button>
-                        <div style="clear:both;"></div>
-                        <div style="margin-top:40px; border-top:1px dashed var(--border); padding-top:20px;">
-                            <h4 style="font-size:15px; font-weight:700; margin-bottom:15px;">🔄 Transfer to another branch</h4>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                                <div><label class="field-label">From Branch</label><select id="transferFromBranch" onchange="populateTransferMedSelect()"></select></div>
-                                <div><label class="field-label">To Branch</label><select id="transferToBranch"></select></div>
-                            </div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                                <div><label class="field-label">📦 Select Item</label><select id="transferMedId"></select></div>
-                                <div><label class="field-label">🔢 Transfer Qty</label><input type="number" id="transferQty" placeholder="Quantity to move"></div>
-                            </div>
-                            <button class="btn btn-primary" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="transferStock()">🔄 Transfer Stock</button>
-                            <div style="clear:both;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-                <!-- PANEL 7 (Dashboard) -->
-        <div class="panel" id="panel7">
-            <div class="section-collapsible">
-                <div class="section-header open" onclick="toggleSection('hdrDash','bodyDash')">
-                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
-                </div>
-                <div class="section-body open" id="bodyDash">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px; background:var(--card-bg); padding:16px; border-radius:12px; border:1px solid var(--border);">
-                        <div><label class="field-label" style="margin-top:0;">📅 Select Month</label><input type="month" id="dashMonthPicker" onchange="loadDashboard()"></div>
-                        <div><label class="field-label" style="margin-top:0;">🏢 Select Branch</label><select id="dashBranchFilter" onchange="loadDashboard()"><option value="all">All Branches</option></select></div>
-                    </div>
-                    <div class="dash-grid">
-                        <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Revenue</div><div class="dash-val-box" style="background: linear-gradient(135deg, #3b82f6, #2563eb);"><div class="dash-val-number" id="dashGrossIncome">0.00</div></div></div>
-                        <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Expenses</div><div class="dash-val-box" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><div class="dash-val-number" id="dashTotalExpense">0.00</div></div></div>
-                        <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Net Profit</div><div class="dash-val-box" style="background: linear-gradient(135deg, #10b981, #059669);"><div class="dash-val-number" id="dashNetProfit">0.00</div></div></div>
-                        <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Transactions</div><div class="dash-val-box" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><div class="dash-val-number" id="dashTotalSalesCount">0</div></div></div>
-                        
-                        <div class="dash-card" style="grid-column: 1 / -1;">
-                            <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">📈 30-Day Sales Chart</div>
-                            <div class="chart-container" style="height: 300px;"><canvas id="dailyChartCanvas"></canvas></div>
-                        </div>
-                        <div class="dash-card" style="grid-column: 1 / -1;">
-                            <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">🥧 Expense Breakdown Chart</div>
-                            <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
-                                <div style="flex: 1; min-width: 200px; height: 200px;"><canvas id="expensePieChartCanvas"></canvas></div>
-                                <div id="expenseLegend" style="flex: 1; min-width: 200px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PANEL 8 (Reports) -->
-        <div class="panel" id="panel8">
-            <div class="sub-panel active" id="sub8_1">
-                 <div class="section-collapsible">
-                    <div class="section-header open no-print" onclick="toggleSection('hdrRepMain','bodyRepMain')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📄</span><span class="sec-title">Generate Report</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyRepMain">
-                        <div class="no-print" style="background:var(--card-bg); padding:20px; border-radius:12px; border:1px solid var(--border); margin-bottom:20px;">
-                            <label class="field-label">Report Type</label>
-                            <select id="reportTypeSelect" onchange="toggleReportDatePickers()">
-                                <option value="daily">Daily</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="quarterly">Quarterly (3 Months)</option>
-                                <option value="semiannual">Semi-Annual (6 Months)</option>
-                                <option value="yearly">Yearly</option>
-                            </select>
-                            <div id="repBranchDiv" style="margin-top:12px;">
-                                <label class="field-label">Branch Filter</label>
-                                <select id="repBranchFilter" onchange="generateReport()">
-                                    <option value="all">All Branches</option>
-                                </select>
-                            </div>
-                            <div id="repDateDiv" style="display:none; margin-top:12px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
-                            <div id="repMonthDiv" style="display:none; margin-top:12px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
-                            <button class="btn btn-primary" style="margin-top:20px;" onclick="generateReport()">👁️ Preview Report</button>
-                            <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ Print</button>
-                        </div>
-                        <div id="reportDisplayArea" style="display:none;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="sub-panel" id="sub8_2">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrDaily','bodyDaily')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">Daily Report</span></div>
-                    </div>
-                    <div class="section-body open" id="bodyDaily">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-                            <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="dailyPage=1; loadDailyReport()"></div>
-                            <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="dailyPage=1; loadDailyReport()"><option value="all">All Branches</option></select></div>
-                        </div>
-                        <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(3,1fr);">
-                            <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="dailyTotalRevenue">0.00</div></div>
-                            <div class="summary-box red"><div class="label">Expense</div><div class="value" id="dailyTotalExpense">0.00</div></div>
-                            <div class="summary-box blue"><div class="label">Profit</div><div class="value" id="dailyNetProfit">0.00</div></div>
-                        </div>
-                        <h4 style="margin:20px 0 10px; color:var(--text-main); font-size:14px; font-weight:700;">Payment Methods</h4>
-                        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;">
-                            <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
-                                <div style="font-size:12px; color:var(--text-muted);">💵 Cash</div>
-                                <div id="dailyCash" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
-                            </div>
-                            <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
-                                <div style="font-size:12px; color:var(--text-muted);">🏦 Transfer</div>
-                                <div id="dailyTransfer" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
-                            </div>
-                            <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
-                                <div style="font-size:12px; color:var(--text-muted);">📝 Credit</div>
-                                <div id="dailyCredit" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
-                            </div>
-                        </div>
-                        <div class="section-collapsible" style="box-shadow:none; border:1px solid var(--border);">
-                            <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
-                            <div class="section-body" id="bodyDailySales">
-                                <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="dailyPage=1; loadDailyReport()">
-                                <div id="dailySalesList"></div>
-                                <div class="pagination-controls">
-                                    <div class="rows-per-page">
-                                        Show 
-                                        <select id="dailyRowsPerPage" onchange="dailyPage=1; loadDailyReport()">
-                                            <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                        </select> 
-                                        entries
-                                    </div>
-                                    <div id="dailyPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
-                                    <div style="display:flex; gap:8px;">
-                                        <button class="btn btn-outline" id="btnPrevDaily" onclick="changeDailyPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
-                                        <button class="btn btn-outline" id="btnNextDaily" onclick="changeDailyPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div id="medicineOnlyFields">
+                            <label class="field-label">🔢 Batch No</label><input type="text" id="medBatch">
+                            <label class="field-label">📅 Exp Date</label><input type="date" id="medExpiry">
+                            <label class="field-label">🏭 Supplier</label><input type="text" id="medSupplier">
                         </div> 
                     </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top:15px;">
+                        <div><label class="field-label">💰 Purchase Price</label><input type="number" id="medCost"></div>
+                        <div><label class="field-label">🏷️ Sell Price</label><input type="number" id="medPrice"></div>
+                        <div><label class="field-label">📦 Qty</label><input type="number" id="medQty"></div>
+                    </div>
+                    <button class="btn btn-success" id="btnSaveMed" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addMedicine()">💾 Save Medicine</button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="background:rgba(59, 130, 246, 0.05); padding:16px; border-radius:8px; border:1px solid rgba(59, 130, 246, 0.2);">
+                    <h4 style="margin-bottom:12px; font-size:14px; font-weight:700; color:#3b82f6;">CSV Import (Excel)</h4>
+                    <p style="font-size:12px; color:#3b82f6; margin-bottom:10px;">Upload a CSV file with columns: Item Name, Category, Subcategory, Branch, Batch, Expiry, Supplier, Cost, Price, Qty</p>
+                    <input type="file" id="csvFileInput" accept=".csv" style="margin-bottom:10px; padding:10px; border:1px dashed #60a5fa; background:var(--card-bg);">
+                    <button class="btn btn-primary" style="width:auto; padding:10px 24px;" onclick="importCSV()">Import CSV</button>
                 </div>
             </div>
-            <div class="sub-panel" id="sub8_3">
-                 <div class="section-collapsible">
-                    <div class="section-header open" onclick="toggleSection('hdrMonthly','bodyMonthly')">
-                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">Monthly Report</span></div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub1_3">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrCatMgr','bodyCatMgr')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Medicine Category & Subcategory</span></div>
+            </div>
+            <div class="section-body open" id="bodyCatMgr">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px; background:var(--bg); padding:16px; border-radius:8px; border:1px solid var(--border);">
+                    <div>
+                        <label class="field-label" style="margin-top:0;">Main Category</label>
+                        <input type="text" id="newCat" placeholder="e.g. Antibiotics">
                     </div>
-                    <div class="section-body open" id="bodyMonthly">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-                            <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="monthlyPage=1; loadMonthlyReport()"></div>
-                            <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="monthlyPage=1; loadMonthlyReport()"><option value="all">All Branches</option></select></div>
+                    <div>
+                        <label class="field-label" style="margin-top:0;">Sub Category (Optional)</label>
+                        <input type="text" id="newSubCatDirect" placeholder="e.g. Tablets">
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <button class="btn btn-primary" style="width:auto; padding:10px 24px; float:right;" onclick="addCategoryWithSub()">+ Add Category</button>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead><tr><th>Category Name</th><th>Sub Categories</th><th>Action</th></tr></thead>
+                        <tbody id="catTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination-controls">
+                    <div class="rows-per-page">
+                        Show 
+                        <select id="catRowsPerPage" onchange="catPage=1; renderCategoryList()">
+                            <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                        </select> 
+                        entries
+                    </div>
+                    <div id="catPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-outline" id="btnPrevCat" onclick="changeCatPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                        <button class="btn btn-outline" id="btnNextCat" onclick="changeCatPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PANEL 2 (Sales) -->
+<div class="panel" id="panel2">
+    <div class="sub-panel active" id="sub2_1">
+        <div class="pos-layout">
+            <div class="pos-cart">
+                <div class="pos-cart-header">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div><label class="field-label" style="margin-top:0;">📅 Date</label><input type="date" id="sellDate" style="padding:8px;"></div>
+                        <div><label class="field-label" style="margin-top:0;">🏢 Branch</label><select id="sellBranch" style="padding:8px;"></select></div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                        <div><label class="field-label" style="margin-top:0;">💳 Payment</label><select id="sellPaymentMethod" onchange="toggleCreditFields()" style="padding:8px;"><option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit">📝 Credit</option></select></div>
+                        <div><label class="field-label" style="margin-top:0;">🧾 Receipt (Opt)</label><input type="text" id="sellReceipt" style="padding:8px;"></div>
+                    </div>
+                    <div id="creditFields" style="display:none; margin-top:10px; padding:10px; background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.3); border-radius:8px;">
+                        <label class="field-label">🏪 Customer Name</label>
+                        <input list="saleCustomerList" id="sellCreditCustomer" placeholder="Type customer name..." style="margin-bottom:8px;">
+                        <datalist id="saleCustomerList"></datalist>
+                        <label class="field-label">💰 Paid Amount (Partial)</label>
+                        <input type="number" id="sellCreditPaid" placeholder="0.00 (0 for full credit)">
+                    </div>
+                </div>
+                <div class="pos-cart-items" id="cartList"></div>
+                <div class="pos-cart-footer">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                        <span style="font-size:16px; font-weight:700; color:var(--text-main);">Total:</span>
+                        <span id="cartTotal" style="font-size:24px; font-weight:800; color:var(--primary);">0.00 ETB</span>
+                    </div>
+                    <button class="btn btn-success" style="padding:16px; font-size:16px;" onclick="completeSale()">💸 Complete Sale</button>
+                    <button class="btn btn-danger" style="margin-top:8px; background:#6b7280;" onclick="clearCart()">🗑️ Clear Cart</button>
+                </div>
+            </div>
+            <div class="pos-products">
+                <div class="pos-products-header">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="searchSellInput" placeholder="🔍 Search Product by name or barcode..." oninput="renderSellProducts()" style="font-size:16px; padding:12px 16px; flex:1;">
+                        <button class="btn btn-primary" onclick="startScanner()" style="width:auto; margin-top:0; padding:0 20px;">📷 Scan</button>
+                    </div>
+                    <div id="categoryFilters" style="display:flex; gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px;"></div>
+                </div>
+                <div class="pos-products-grid" id="sellProductList"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub2_2">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrQuickSale','bodyQuickSale')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚡</span><span class="sec-title">Quick Sale</span></div>
+            </div>
+            <div class="section-body open" id="bodyQuickSale">
+                <div class="info-banner" style="background:rgba(59, 130, 246, 0.1); color:#3b82f6; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px;">💡 Record total income directly.</div>
+                <div style="background:var(--bg); padding:16px; border-radius:8px; border:1px solid var(--border); margin-bottom:20px;">
+                    <h4 style="margin-bottom:12px; font-size:14px; font-weight:700;">Single Entry</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                        <div>
+                            <label class="field-label">📦 Type</label><select id="quickType"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
+                            <label class="field-label">🏢 Branch</label><select id="quickBranch"></select>
+                            <label class="field-label">📅 Date</label><input type="date" id="quickDate">
                         </div>
-                        <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(3,1fr);">
-                            <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="monthlyTotalRevenue">0.00</div></div>
-                            <div class="summary-box red"><div class="label">Expenses</div><div class="value" id="monthlyTotalExpense">0.00</div></div>
-                            <div class="summary-box blue"><div class="label">Profit</div><div class="value" id="monthlyNetProfit">0.00</div></div>
+                        <div>
+                            <label class="field-label">💰 Amount</label><input type="number" id="quickAmount" placeholder="0.00">
+                            <button class="btn btn-success" style="width:auto; padding:12px 32px; float:right; margin-top:36px;" onclick="addQuickSale()">+ Add Income</button>
+                            <div style="clear:both;"></div>
                         </div>
-                        <h4 style="margin:20px 0 10px; color:var(--text-main); font-size:14px; font-weight:700;">Payment Methods</h4>
-                        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;">
-                            <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
-                                <div style="font-size:12px; color:var(--text-muted);">💵 Cash</div>
-                                <div id="monthlyCash" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
-                            </div>
-                            <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
-                                <div style="font-size:12px; color:var(--text-muted);">🏦 Transfer</div>
-                                <div id="monthlyTransfer" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
-                            </div>
-                            <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
-                                <div style="font-size:12px; color:var(--text-muted);">📝 Credit</div>
-                                <div id="monthlyCredit" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
+                    </div>
+                </div>
+                <div style="background:rgba(245, 158, 11, 0.1); padding:16px; border-radius:8px; border:1px solid rgba(245, 158, 11, 0.3);">
+                    <h4 style="margin-bottom:12px; font-size:14px; font-weight:700; color:#d97706;">Bulk Entry (Multiple Sales)</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:10px;">
+                        <div><label class="field-label">🏢 Branch</label><select id="quickBulkBranch"></select></div>
+                        <div><label class="field-label">📅 Date</label><input type="date" id="quickBulkDate"></div>
+                    </div>
+                    <div id="bulkEntryRows" style="margin-bottom:10px;"></div>
+                    <button class="btn btn-outline" style="width:auto; margin-bottom:10px; font-size:13px;" onclick="addBulkRow()">+ Add Row</button>
+                    <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right;" onclick="saveBulkSales()">Save All Sales</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub2_3">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrSalesHistory','bodySalesHistory')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Sales History</span></div>
+            </div>
+            <div class="section-body open" id="bodySalesHistory">
+                <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                    <select id="filterSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="flex:1; min-width:150px;">
+                        <option value="all">All Sales</option><option value="detail">🛒 Detail Sales</option><option value="quick">⚡ Quick Sales</option>
+                    </select>
+                    <select id="filterBranchSalesHistory" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;">
+                        <option value="all">All Branches</option>
+                    </select>
+                    <input type="date" id="filterStartDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="Start Date">
+                    <input type="date" id="filterEndDate" onchange="salesHistPage=1; renderSalesHistory()" style="width:150px;" title="End Date">
+                    <button class="btn btn-danger" style="width:auto; margin-top:0; padding:10px 16px; font-size:13px;" onclick="clearAllSales()">🗑️ Clear All</button>
+                </div>
+                <div id="salesHistoryList"></div>
+                <div class="pagination-controls">
+                    <div class="rows-per-page">
+                        Show 
+                        <select id="salesHistRowsPerPage" onchange="salesHistPage=1; renderSalesHistory()">
+                            <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                        </select> 
+                        entries
+                    </div>
+                    <div id="salesHistPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-outline" id="btnPrevSalesHist" onclick="changeSalesHistPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                        <button class="btn btn-outline" id="btnNextSalesHist" onclick="changeSalesHistPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<!-- PANEL 3 (Expenses) -->
+<div class="panel" id="panel3">
+    <div class="sub-panel active" id="sub3_1">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrAddExp','bodyAddExp')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💸</span><span class="sec-title">Daily Expense</span></div>
+            </div>
+            <div class="section-body open" id="bodyAddExp">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div><label class="field-label">📁 Category</label><select id="expCat"></select></div>
+                    <div><label class="field-label">🏢 Branch</label><select id="expBranch"></select></div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div><label class="field-label">💰 Amount</label><input type="number" id="expAmount"></div>
+                    <div><label class="field-label">📅 Date</label><input type="date" id="expDate"></div>
+                </div>
+                <label class="field-label">📝 Note</label><input type="text" id="expNote">
+                <button class="btn btn-danger" id="btnSaveExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addExpense()">💾 Save Expense</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub3_2">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrFixedExp','bodyFixedExp')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Fixed Expense</span></div>
+            </div>
+            <div class="section-body open" id="bodyFixedExp">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div><label class="field-label">📁 Category</label><select id="fixCat"></select></div>
+                    <div><label class="field-label">🏢 Branch</label><select id="fixBranch"></select></div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div><label class="field-label">💰 Amount</label><input type="number" id="fixAmount"></div>
+                    <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
+                </div>
+                <label class="field-label">📝 Note</label><input type="text" id="fixNote">
+                <button class="btn btn-warning" id="btnSaveFixExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addFixedExpense()">💾 Save Expense</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub3_list">
+        <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrExpenseList','bodyExpenseList')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📋</span><span class="sec-title">All Expenses List</span></div>
+            </div>
+            <div class="section-body open" id="bodyExpenseList">
+                <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
+                    <select id="listFilterType" onchange="renderAllExpensesList()" style="flex:1; min-width:150px;">
+                        <option value="all">All Types</option>
+                        <option value="daily">📅 Daily Expenses</option>
+                        <option value="fixed">🏢 Fixed Expenses</option>
+                    </select>
+                    <select id="listFilterBranch" onchange="renderAllExpensesList()" style="flex:1; min-width:150px;">
+                        <option value="all">All Branches</option>
+                    </select>
+                    <select id="listFilterCategory" onchange="renderAllExpensesList()" style="flex:1; min-width:150px;">
+                        <option value="all">All Categories</option>
+                    </select>
+                    <input type="date" id="listFilterDate" onchange="renderAllExpensesList()" style="flex:1;" title="Filter by Date (Daily)">
+                    <input type="month" id="listFilterMonth" onchange="renderAllExpensesList()" style="flex:1;" title="Filter by Month (Fixed)">
+                </div>
+                <div id="allExpensesListDisplay"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub3_3">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrExpCatMgr','bodyExpCatMgr')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🗂️</span><span class="sec-title">Expense Category</span></div>
+            </div>
+            <div class="section-body open" id="bodyExpCatMgr">
+                <div style="display:flex; gap:10px; margin-bottom:20px;">
+                    <input type="text" id="newExpCat" placeholder="New Expense Category">
+                    <button class="btn btn-primary" style="width:auto; margin-top:0; padding:0 16px;" onclick="addExpCategory()">+ Add</button>
+                </div>
+                <div class="cat-tags" id="expCatListDisplay"></div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<!-- PANEL 4 (Inventory) -->
+<div class="panel" id="panel4">
+    <div class="sub-panel active" id="sub4_1">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrInventory','bodyInventory')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Inventory List</span></div>
+            </div>
+            <div class="section-body open" id="bodyInventory">
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:20px;">
+                    <div class="summary-box blue" style="margin-bottom:0; padding:15px;"><div class="label">Total Purchased Qty</div><div class="value" id="totalPurchasedQty" style="font-size:22px;">0</div></div>
+                    <div class="summary-box green" style="margin-bottom:0; padding:15px;"><div class="label">Total Purchased Value</div><div class="value" id="totalPurchasedValue" style="font-size:22px;">0.00</div></div>
+                    <div class="summary-box green" style="margin-bottom:0; padding:15px;"><div class="label">Total Sold Qty</div><div class="value" id="totalSoldQty" style="font-size:22px;">0</div></div>
+                    <div class="summary-box red" style="margin-bottom:0; padding:15px;"><div class="label">Remaining Qty</div><div class="value" id="totalRemainingQty" style="font-size:22px;">0</div></div>
+                </div>
+                <div class="no-print" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                    <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name or batch..." oninput="invPage=1; loadInventory()" style="flex:1;">
+                    <select id="filterTypeInv" onchange="invPage=1; loadInventory()" style="width:160px;">
+                        <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
+                    </select>
+                    <select id="filterCategoryInv" onchange="invPage=1; loadInventory()" style="width:160px;">
+                        <option value="all">All Categories</option>
+                    </select>
+                    <select id="filterBranchInv" onchange="invPage=1; loadInventory()" style="width:160px;">
+                        <option value="all">All Branches</option>
+                    </select>
+                </div>
+                <div id="inventoryList"></div>
+                <div class="summary-box green" style="margin-top:20px;">
+                    <div class="label">Total Inventory Value</div>
+                    <div class="value" id="invTotalValue">0.00 <small>ETB</small></div>
+                </div>
+                <div class="pagination-controls">
+                    <div class="rows-per-page">
+                        Show 
+                        <select id="invRowsPerPage" onchange="invPage=1; loadInventory()">
+                            <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                        </select> 
+                        entries
+                    </div>
+                    <div id="invPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-outline" id="btnPrevInv" onclick="changeInvPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                        <button class="btn btn-outline" id="btnNextInv" onclick="changeInvPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub4_2">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrExpiryList','bodyExpiryList')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Expiry & Low Stock Alerts</span></div>
+            </div>
+            <div class="section-body open" id="bodyExpiryList">
+                <div style="display:flex; gap:12px; margin-bottom:20px;">
+                    <input type="text" class="search-box" id="searchExpiry" placeholder="🔍 Search..." oninput="loadInventory()" style="flex:1;">
+                    <select id="filterBranchAlert" onchange="loadInventory()" style="width:180px;">
+                        <option value="all">All Branches</option>
+                    </select>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div>
+                        <h4 style="margin:0 0 10px; color:#f59e0b; font-size:14px;">Expiring Soon / Expired</h4>
+                        <div id="expiryListDisplay"></div>
+                        <div class="pagination-controls">
+                            <div id="expPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-outline" id="btnPrevExp" onclick="changeExpPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">⬅️</button>
+                                <button class="btn btn-outline" id="btnNextExp" onclick="changeExpPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">➡️</button>
                             </div>
                         </div>
-                        <div class="section-collapsible" style="box-shadow:none; border:1px solid var(--border);">
-                            <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
-                            <div class="section-body" id="bodyMonthlySales">
-                                <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="monthlyPage=1; loadMonthlyReport()">
-                                <div id="monthlySalesList"></div>
-                                <div class="pagination-controls">
-                                    <div class="rows-per-page">
-                                        Show 
-                                        <select id="monthlyRowsPerPage" onchange="monthlyPage=1; loadMonthlyReport()">
-                                            <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                        </select> 
-                                        entries
-                                    </div>
-                                    <div id="monthlyPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
-                                    <div style="display:flex; gap:8px;">
-                                        <button class="btn btn-outline" id="btnPrevMonthly" onclick="changeMonthlyPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
-                                        <button class="btn btn-outline" id="btnNextMonthly" onclick="changeMonthlyPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
-                                    </div>
-                                </div>
+                    </div>
+                    <div>
+                        <h4 style="margin:0 0 10px; color:#ef4444; font-size:14px;">Low Stock</h4>
+                        <div id="lowStockListDisplay"></div>
+                        <div class="pagination-controls">
+                            <div id="lowPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-outline" id="btnPrevLow" onclick="changeLowPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">⬅️</button>
+                                <button class="btn btn-outline" id="btnNextLow" onclick="changeLowPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:12px;">➡️</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="sub-panel" id="sub4_3">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrStockAdjust','bodyStockAdjust')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔧</span><span class="sec-title">Stock Adjust (Qty & Price)</span></div>
+            </div>
+            <div class="section-body open" id="bodyStockAdjust">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div><label class="field-label">🏢 Branch</label><select id="adjustBranch" onchange="populateAdjustMedSelect()"></select></div>
+                    <div><label class="field-label">📦 Select Item</label><select id="adjustMedId"></select></div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div><label class="field-label">🔢 New Qty</label><input type="number" id="adjustQty" placeholder="Leave empty to keep current"></div>
+                    <div><label class="field-label">🏷️ New Sell Price</label><input type="number" id="adjustPrice" placeholder="Leave empty to keep current"></div>
+                </div>
+                <label class="field-label">📝 Reason</label><input type="text" id="adjustReason">
+                <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="adjustStock()">🔧 Adjust Stock</button>
+                <div style="clear:both;"></div>
+                <div style="margin-top:40px; border-top:1px dashed var(--border); padding-top:20px;">
+                    <h4 style="font-size:15px; font-weight:700; margin-bottom:15px;">🔄 Transfer to another branch</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                        <div><label class="field-label">From Branch</label><select id="transferFromBranch" onchange="populateTransferMedSelect()"></select></div>
+                        <div><label class="field-label">To Branch</label><select id="transferToBranch"></select></div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                        <div><label class="field-label">📦 Select Item</label><select id="transferMedId"></select></div>
+                        <div><label class="field-label">🔢 Transfer Qty</label><input type="number" id="transferQty" placeholder="Quantity to move"></div>
+                    </div>
+                    <button class="btn btn-primary" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="transferStock()">🔄 Transfer Stock</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- PANEL 7 (Dashboard) -->
+<div class="panel" id="panel7">
+    <div class="section-collapsible">
+        <div class="section-header open" onclick="toggleSection('hdrDash','bodyDash')">
+            <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📊</span><span class="sec-title">Dashboard</span></div>
+        </div>
+        <div class="section-body open" id="bodyDash">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px; background:var(--card-bg); padding:16px; border-radius:12px; border:1px solid var(--border);">
+                <div><label class="field-label" style="margin-top:0;">📅 Select Month</label><input type="month" id="dashMonthPicker" onchange="loadDashboard()"></div>
+                <div><label class="field-label" style="margin-top:0;">🏢 Select Branch</label><select id="dashBranchFilter" onchange="loadDashboard()"><option value="all">All Branches</option></select></div>
+            </div>
+            <div class="dash-grid">
+                <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Revenue</div><div class="dash-val-box" style="background: linear-gradient(135deg, #3b82f6, #2563eb);"><div class="dash-val-number" id="dashGrossIncome">0.00</div></div></div>
+                <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Expenses</div><div class="dash-val-box" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><div class="dash-val-number" id="dashTotalExpense">0.00</div></div></div>
+                <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Net Profit</div><div class="dash-val-box" style="background: linear-gradient(135deg, #10b981, #059669);"><div class="dash-val-number" id="dashNetProfit">0.00</div></div></div>
+                <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Transactions</div><div class="dash-val-box" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><div class="dash-val-number" id="dashTotalSalesCount">0</div></div></div>
+                
+                <div class="dash-card" style="grid-column: 1 / -1;">
+                    <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">📈 30-Day Sales Chart</div>
+                    <div class="chart-container" style="height: 300px;"><canvas id="dailyChartCanvas"></canvas></div>
+                </div>
+                <div class="dash-card" style="grid-column: 1 / -1;">
+                    <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">🥧 Expense Breakdown Chart</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
+                        <div style="flex: 1; min-width: 200px; height: 200px;"><canvas id="expensePieChartCanvas"></canvas></div>
+                        <div id="expenseLegend" style="flex: 1; min-width: 200px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PANEL 8 (Reports) -->
+<div class="panel" id="panel8">
+    <div class="sub-panel active" id="sub8_1">
+         <div class="section-collapsible">
+            <div class="section-header open no-print" onclick="toggleSection('hdrRepMain','bodyRepMain')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📄</span><span class="sec-title">Generate Report</span></div>
+            </div>
+            <div class="section-body open" id="bodyRepMain">
+                <div class="no-print" style="background:var(--card-bg); padding:20px; border-radius:12px; border:1px solid var(--border); margin-bottom:20px;">
+                    <label class="field-label">Report Type</label>
+                    <select id="reportTypeSelect" onchange="toggleReportDatePickers()">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly (3 Months)</option>
+                        <option value="semiannual">Semi-Annual (6 Months)</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                    <div id="repBranchDiv" style="margin-top:12px;">
+                        <label class="field-label">Branch Filter</label>
+                        <select id="repBranchFilter" onchange="generateReport()">
+                            <option value="all">All Branches</option>
+                        </select>
+                    </div>
+                    <div id="repDateDiv" style="display:none; margin-top:12px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
+                    <div id="repMonthDiv" style="display:none; margin-top:12px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
+                    <button class="btn btn-primary" style="margin-top:20px;" onclick="generateReport()">👁️ Preview Report</button>
+                    <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ Print</button>
+                </div>
+                <div id="reportDisplayArea" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub8_2">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrDaily','bodyDaily')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📅</span><span class="sec-title">Daily Report</span></div>
+            </div>
+            <div class="section-body open" id="bodyDaily">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
+                    <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="dailyPage=1; loadDailyReport()"></div>
+                    <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="dailyPage=1; loadDailyReport()"><option value="all">All Branches</option></select></div>
+                </div>
+                <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(3,1fr);">
+                    <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="dailyTotalRevenue">0.00</div></div>
+                    <div class="summary-box red"><div class="label">Expense</div><div class="value" id="dailyTotalExpense">0.00</div></div>
+                    <div class="summary-box blue"><div class="label">Profit</div><div class="value" id="dailyNetProfit">0.00</div></div>
+                </div>
+                <h4 style="margin:20px 0 10px; color:var(--text-main); font-size:14px; font-weight:700;">Payment Methods</h4>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;">
+                    <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                        <div style="font-size:12px; color:var(--text-muted);">💵 Cash</div>
+                        <div id="dailyCash" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
+                    </div>
+                    <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                        <div style="font-size:12px; color:var(--text-muted);">🏦 Transfer</div>
+                        <div id="dailyTransfer" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
+                    </div>
+                    <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                        <div style="font-size:12px; color:var(--text-muted);">📝 Credit</div>
+                        <div id="dailyCredit" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
+                    </div>
+                </div>
+                <div class="section-collapsible" style="box-shadow:none; border:1px solid var(--border);">
+                    <div class="section-header" id="hdrDailySales" onclick="toggleSection('hdrDailySales','bodyDailySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
+                    <div class="section-body" id="bodyDailySales">
+                        <input type="text" class="search-box" id="searchDailySales" placeholder="🔍 Search..." oninput="dailyPage=1; loadDailyReport()">
+                        <div id="dailySalesList"></div>
+                        <div class="pagination-controls">
+                            <div class="rows-per-page">
+                                Show 
+                                <select id="dailyRowsPerPage" onchange="dailyPage=1; loadDailyReport()">
+                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div id="dailyPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-outline" id="btnPrevDaily" onclick="changeDailyPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextDaily" onclick="changeDailyPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <div class="sub-panel" id="sub8_3">
+         <div class="section-collapsible">
+            <div class="section-header open" onclick="toggleSection('hdrMonthly','bodyMonthly')">
+                <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📆</span><span class="sec-title">Monthly Report</span></div>
+            </div>
+            <div class="section-body open" id="bodyMonthly">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
+                    <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="monthlyPage=1; loadMonthlyReport()"></div>
+                    <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="monthlyPage=1; loadMonthlyReport()"><option value="all">All Branches</option></select></div>
+                </div>
+                <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(3,1fr);">
+                    <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="monthlyTotalRevenue">0.00</div></div>
+                    <div class="summary-box red"><div class="label">Expenses</div><div class="value" id="monthlyTotalExpense">0.00</div></div>
+                    <div class="summary-box blue"><div class="label">Profit</div><div class="value" id="monthlyNetProfit">0.00</div></div>
+                </div>
+                <h4 style="margin:20px 0 10px; color:var(--text-main); font-size:14px; font-weight:700;">Payment Methods</h4>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;">
+                    <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                        <div style="font-size:12px; color:var(--text-muted);">💵 Cash</div>
+                        <div id="monthlyCash" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
+                    </div>
+                    <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                        <div style="font-size:12px; color:var(--text-muted);">🏦 Transfer</div>
+                        <div id="monthlyTransfer" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
+                    </div>
+                    <div style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                        <div style="font-size:12px; color:var(--text-muted);">📝 Credit</div>
+                        <div id="monthlyCredit" style="font-size:18px; font-weight:800; color:var(--text-main);">0.00</div>
+                    </div>
+                </div>
+                <div class="section-collapsible" style="box-shadow:none; border:1px solid var(--border);">
+                    <div class="section-header" id="hdrMonthlySales" onclick="toggleSection('hdrMonthlySales','bodyMonthlySales')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🛒</span><span class="sec-title">Sales Details</span></div></div>
+                    <div class="section-body" id="bodyMonthlySales">
+                        <input type="text" class="search-box" id="searchMonthlySales" placeholder="🔍 Search..." oninput="monthlyPage=1; loadMonthlyReport()">
+                        <div id="monthlySalesList"></div>
+                        <div class="pagination-controls">
+                            <div class="rows-per-page">
+                                Show 
+                                <select id="monthlyRowsPerPage" onchange="monthlyPage=1; loadMonthlyReport()">
+                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div id="monthlyPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-outline" id="btnPrevMonthly" onclick="changeMonthlyPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextMonthly" onclick="changeMonthlyPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         <!-- PANEL 9 (Settings) -->
         <div class="panel" id="panel9">
             <div class="settings-container" style="max-width: 100%; margin: 0 auto;">
@@ -1136,6 +1025,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚙️</span><span class="sec-title">Settings</span></div>
                     </div>
                     <div class="section-body open" id="bodySettings" style="background: var(--panel-bg);">
+                            
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyPhName').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">Pharmacy Info</span></div>
@@ -1148,6 +1038,23 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" onclick="savePharmacyInfo()">💾 Save Info</button>
                                 </div>
                             </div>
+                            
+                            <!-- SECURITY & PASSWORD -->
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodyPass').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔒</span><span class="sec-title">Security & Password</span></div>
+                                </div>
+                                <div class="section-body" id="bodyPass">
+                                    <label class="field-label">Current Password</label>
+                                    <div class="input-group"><i>🔑</i><input type="password" id="currentPasswordInput" placeholder="Enter current password"></div>
+                                    <label class="field-label">New Password</label>
+                                    <div class="input-group"><i>🔒</i><input type="password" id="newPasswordInput" placeholder="Enter new password"></div>
+                                    <label class="field-label">Confirm New Password</label>
+                                    <div class="input-group"><i>✅</i><input type="password" id="confirmPasswordInput" placeholder="Re-enter new password"></div>
+                                    <button class="btn btn-warning" onclick="changePassword()">🔄 Change Password</button>
+                                </div>
+                            </div>
+
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodySysPref').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🌍</span><span class="sec-title">System Preferences</span></div>
@@ -1157,7 +1064,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <div class="input-group"><i>💰</i><select id="settingCurrency"><option value="ETB">ETB (ብር)</option><option value="USD">USD ($)</option></select></div>
                                     <label class="field-label">Language / ቋንቋ</label>
                                     <div class="input-group"><i>🌐</i>
-                                        <select id="settingLanguage">
+                                        <select id="settingLanguage" onchange="previewLanguage(this.value)">
                                             <option value="am">🇪🇹 አማርኛ (Amharic)</option>
                                             <option value="en">🇬🇧 English</option>
                                         </select>
@@ -1172,6 +1079,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" style="margin-top: 16px;" onclick="saveSystemPrefs()">💾 Save Preferences</button>
                                 </div>
                             </div>
+                            
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyLimits').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Limits & Alerts</span></div>
@@ -1184,6 +1092,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" onclick="saveLimits()">💾 Save Limits</button>
                                 </div>
                             </div>
+                            
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyNotif').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔔</span><span class="sec-title">Notifications</span></div>
@@ -1195,6 +1104,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" style="margin-top: 16px;" onclick="saveNotifications()">💾 Save Notifications</button>
                                 </div>
                             </div>
+
                             <div class="section-collapsible" style="grid-column: 1 / -1;">
                                 <div class="section-header" onclick="document.getElementById('bodyPerms').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🎯</span><span class="sec-title">Employee Permissions</span></div>
@@ -1205,6 +1115,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" style="margin-top:20px;" onclick="savePermissions()">💾 Save Permissions</button>
                                 </div>
                             </div>
+
                             <div class="section-collapsible" style="grid-column: 1 / -1;">
                                 <div class="section-header" onclick="document.getElementById('bodyAudit').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📝</span><span class="sec-title">Recent Activity (Audit Trail)</span></div>
@@ -1212,8 +1123,10 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <div class="section-body" id="bodyAudit">
                                     <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Track who made changes to the system and when.</p>
                                     <div class="audit-list" id="auditTrailList"></div>
+                                    <button class="btn btn-outline" style="margin-top: 20px; border-color: #ef4444; color: #ef4444;" onclick="clearAuditDisplay()">🧹 Clear Activity Display</button>
                                 </div>
                             </div>
+
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyBranchMgr').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏢</span><span class="sec-title">Branches</span></div>
@@ -1226,6 +1139,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <div class="cat-tags" id="branchListDisplay"></div>
                                 </div>
                             </div>
+
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyCustMgr').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏪</span><span class="sec-title">Customers</span></div>
@@ -1238,6 +1152,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <div class="cat-tags" id="customerListDisplay"></div>
                                 </div>
                             </div>
+
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyBackup').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💾</span><span class="sec-title">Backup & Restore</span></div>
@@ -1250,6 +1165,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     </div>
                                 </div>
                             </div>
+
                             <div class="section-collapsible" style="grid-column: 1 / -1;">
                                 <div class="section-header" onclick="document.getElementById('bodySupport').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📞</span><span class="sec-title">Support & Help</span></div>
@@ -1275,6 +1191,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     </div>
                                 </div>
                             </div>
+
                             <div class="section-collapsible danger-zone">
                                 <div class="section-header" onclick="document.getElementById('bodyReset').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">⚠️</span><span class="sec-title">Danger Zone</span></div>
@@ -1334,7 +1251,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
 
 const firebaseConfig = {
@@ -1471,7 +1388,6 @@ window.mobileNavClick = function(panelId, subPanelId, element) {
     if (navItem) navItem.classList.add('active');
 };
 
-// Close menu when clicking outside
 document.addEventListener('click', function(event) {
     const menu = document.getElementById('modernMobileMenu');
     const title = document.getElementById('mobileHeaderTitle');
@@ -1515,7 +1431,6 @@ window.switchPage = function(panelId, subPanelId, element) {
         if(panelId === 'panel9') title = "Settings";
         if(panelId === 'panel10') title = "Credit";
         
-        // Detailed title
         if (subPanelId === 'sub1_1') title = "Medicine List";
         if (subPanelId === 'sub1_2') title = "Add Medicine";
         if (subPanelId === 'sub1_3') title = "Categories";
@@ -1544,6 +1459,8 @@ window.switchPage = function(panelId, subPanelId, element) {
     if(subPanelId === 'sub3_list') { renderAllExpensesList(); }
     if(subPanelId === 'sub2_3') { renderSalesHistory(); }
     if(subPanelId === 'sub4_3') { populateTransferMedSelect(); }
+
+    setTimeout(applyUniversalMobileCollapse, 100);
 };
 
 window.toggleSection = function(h, b) {
@@ -1600,7 +1517,7 @@ async function loadUserHeader(user) {
             const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
             if (phDoc.exists()) {
                 const phData = phDoc.data();
-                document.getElementById('hdrPharmacyName').innerText = phData.name || 'Pharmacy Tracker'; 
+                document.getElementById('hdrPharmacyName').innerText = phData.name || 'HaniTech Pharmacy'; 
                 allowedBizType = phData.bizType || 'retail';
                 currentBizType = phData.userBizType || allowedBizType; 
                 lowStockThreshold = phData.lowStockThreshold || 10; 
@@ -1610,6 +1527,7 @@ async function loadUserHeader(user) {
                     const darkToggle = document.getElementById('settingDarkMode');
                     if(darkToggle) darkToggle.checked = true;
                 }
+                applyLanguage(phData.language || 'am');
             }
         }
         await applyPermissionsToUI();
@@ -1658,21 +1576,24 @@ async function loadAllData() {
 
 function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
-    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); });
+    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); setTimeout(applyUniversalMobileCollapse, 100); });
     unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { 
         let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
         allSales = temp; 
         calculateStockReport(); loadInventory(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); 
+        setTimeout(applyUniversalMobileCollapse, 100);
     });
     unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
-    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
+    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); setTimeout(applyUniversalMobileCollapse, 100); });
     unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
     unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; renderUnpaidCredits(); });
 }
 
 // ==========================================
-// 🌐 SETTINGS & LANGUAGE
+// 🌐 SETTINGS, SECURITY & TRANSLATIONS
 // ==========================================
+window.previewLanguage = function(lang) { applyLanguage(lang); };
+
 function applyLanguage(lang) {
     const translations = {
         am: { med: "መድኃኒት", sell: "ሽያጭ", exp: "ወጪዎች", inv: "ክምችት", dash: "ዳሽቦርድ", rep: "ሪፖርቶች", settings: "ሴቲንግ", credit: "ክሬዲት" },
@@ -1688,6 +1609,33 @@ function applyLanguage(lang) {
     document.querySelectorAll('[data-lang="settings"]').forEach(el => el.innerText = t.settings);
     document.querySelectorAll('[data-lang="credit"]').forEach(el => el.innerText = t.credit);
 }
+
+window.changePassword = async function() {
+    const currentPass = document.getElementById('currentPasswordInput').value;
+    const newPass = document.getElementById('newPasswordInput').value;
+    const confirmPass = document.getElementById('confirmPasswordInput').value;
+
+    if (!currentPass || !newPass || !confirmPass) { alert('⚠️ እባክህ ሁሉንም መስኮች ሙላ።'); return; }
+    if (newPass !== confirmPass) { alert('⚠️ አዲሱ የይለፍ ቃል እና ማረጋገጫው አይመሳሰሉም።'); return; }
+    if (newPass.length < 6) { alert('⚠️ አዲሱ የይለፍ ቃል ቢያንስ 6 ፊደላት መሆን አለበት።'); return; }
+
+    try {
+        const user = auth.currentUser;
+        if (!user) return;
+        const credential = EmailAuthProvider.credential(user.email, currentPass);
+        await reauthenticateWithCredential(user, credential);
+        await updatePassword(user, newPass);
+        alert('✅ የይለፍ ቃልህ በተሳካ ሁኔታ ተቀይሯል!');
+        document.getElementById('currentPasswordInput').value = '';
+        document.getElementById('newPasswordInput').value = '';
+        document.getElementById('confirmPasswordInput').value = '';
+        logActivity(`changed account password`);
+    } catch (error) {
+        console.error(error);
+        if(error.code === 'auth/wrong-password') alert('❌ የአሁኑ የይለፍ ቃል ስህተት ነው።');
+        else alert('❌ ስህተት ተፈጥሯል: ' + error.message);
+    }
+};
 
 async function loadSupportInfo() {
     try {
@@ -1756,6 +1704,12 @@ async function logActivity(actionText) {
         loadAuditTrail(); 
     } catch (e) { console.error("Audit log failed:", e); }
 }
+
+window.clearAuditDisplay = function() {
+    if (!confirm('⚠️ በስክሪኑ ላይ ያለውን የእንቅስቃሴ መዝገብ ማጽዳት ትፈልጋለህ? (ዳታው በዳታቤዝ ውስጥ አይጠፋም)')) return;
+    const listEl = document.getElementById('auditTrailList');
+    if (listEl) listEl.innerHTML = '<p style="font-size:13px; color:var(--text-muted); text-align: center; padding: 20px;">✨ Activity display cleared.</p>';
+};
 
 window.savePharmacyInfo = async function() {
     const name = document.getElementById('settingPhName').value;
@@ -3059,46 +3013,51 @@ window.renderUnpaidCredits = function() {
 };
 
 // ==========================================
+// 📱 UNIVERSAL MOBILE COLLAPSE LOGIC
+// ==========================================
+window.applyUniversalMobileCollapse = function() {
+    if (window.innerWidth > 768) return;
+    const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList','expiryListDisplay','lowStockListDisplay','unpaidCreditList','dailySalesList','monthlySalesList','auditTrailList','expCatListDisplay','branchListDisplay','customerListDisplay','catTableBody'];
+    listIds.forEach(id => {
+        const el = document.getElementById(id); if (!el) return; const parent = el.parentElement; if (!parent) return; if (parent.querySelector('.mobile-expand-btn')) return;
+        const wrapper = document.createElement('div'); wrapper.className = 'mobile-collapse-wrapper'; const btn = document.createElement('div'); btn.className = 'mobile-expand-btn';
+        let btnText = '👁️ ዝርዝሩን አሳይ';
+        if (id === 'medTableBody') btnText = '💊 የመድኃኒት ዝርዝር'; if (id === 'salesHistoryList') btnText = '📜 የሽያጭ ታሪክ'; if (id === 'allExpensesListDisplay') btnText = '💸 የወጪ ዝርዝር'; if (id === 'inventoryList') btnText = '📦 የክምችት ዝርዝር'; if (id === 'unpaidCreditList') btnText = '💳 ያልተከፈሉ ዕዳዎች'; if (id === 'catTableBody') btnText = '🗂️ የምድብ ዝርዝር'; if (id === 'auditTrailList') btnText = '📝 የእንቅስቃሴ መዝገብ';
+        btn.innerHTML = `${btnText} <span>▼</span>`; const contentBox = document.createElement('div'); contentBox.className = 'mobile-collapse-content';
+        parent.insertBefore(wrapper, el); contentBox.appendChild(el); wrapper.appendChild(btn); wrapper.appendChild(contentBox);
+        btn.onclick = function(e) { e.stopPropagation(); btn.classList.toggle('open'); contentBox.classList.toggle('open'); };
+    });
+};
+
+const observer = new MutationObserver((mutations) => { if (window.innerWidth <= 768) { applyUniversalMobileCollapse(); } });
+observer.observe(document.body, { childList: true, subtree: true });
+
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) { document.querySelectorAll('.mobile-collapse-wrapper').forEach(wrapper => { const content = wrapper.querySelector('.mobile-collapse-content'); const btn = wrapper.querySelector('.mobile-expand-btn'); if (content && content.firstElementChild) { wrapper.parentElement.insertBefore(content.firstElementChild, wrapper); } wrapper.remove(); if (btn) btn.remove(); }); } 
+    else { applyUniversalMobileCollapse(); }
+});
+
+// ==========================================
 // 📌 INIT & EVENT LISTENERS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    const dailyDate = document.getElementById('dailyReportDate');
-    const dailyBranch = document.getElementById('dailyReportBranch');
-    if(dailyDate) dailyDate.addEventListener('change', () => { dailyPage = 1; loadDailyReport(); });
-    if(dailyBranch) dailyBranch.addEventListener('change', () => { dailyPage = 1; loadDailyReport(); });
-    const monthlyMonth = document.getElementById('monthlyReportMonth');
-    const monthlyBranch = document.getElementById('monthlyReportBranch');
-    if(monthlyMonth) monthlyMonth.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); });
-    if(monthlyBranch) monthlyBranch.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); });
-    const repType = document.getElementById('reportTypeSelect');
-    if(repType) repType.addEventListener('change', () => { toggleReportDatePickers(); generateReport(); });
-    const dashMonth = document.getElementById('dashMonthPicker');
-    const dashBranch = document.getElementById('dashBranchFilter');
-    if(dashMonth) dashMonth.addEventListener('change', () => { loadDashboard(); });
-    if(dashBranch) dashBranch.addEventListener('change', () => { loadDashboard(); });
+    const dailyDate = document.getElementById('dailyReportDate'); const dailyBranch = document.getElementById('dailyReportBranch');
+    if(dailyDate) dailyDate.addEventListener('change', () => { dailyPage = 1; loadDailyReport(); }); if(dailyBranch) dailyBranch.addEventListener('change', () => { dailyPage = 1; loadDailyReport(); });
+    const monthlyMonth = document.getElementById('monthlyReportMonth'); const monthlyBranch = document.getElementById('monthlyReportBranch');
+    if(monthlyMonth) monthlyMonth.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); }); if(monthlyBranch) monthlyBranch.addEventListener('change', () => { monthlyPage = 1; loadMonthlyReport(); });
+    const repType = document.getElementById('reportTypeSelect'); if(repType) repType.addEventListener('change', () => { toggleReportDatePickers(); generateReport(); });
+    const dashMonth = document.getElementById('dashMonthPicker'); const dashBranch = document.getElementById('dashBranchFilter');
+    if(dashMonth) dashMonth.addEventListener('change', () => { loadDashboard(); }); if(dashBranch) dashBranch.addEventListener('change', () => { loadDashboard(); });
 });
 
 window.importCSV = function() { alert('CSV Import: Feature coming soon'); };
 window.clearAllSales = async function() { 
     if(!confirm('Delete ALL sales? This cannot be undone!')) return;
-    try {
-        const snap = await getDocs(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)));
-        let batch = writeBatch(db); let count = 0;
-        snap.forEach(d => { batch.delete(d.ref); count++; });
-        if(count > 0) await batch.commit();
-        alert(`✅ Deleted ${count} sales.`);
-    } catch(e) { alert('Error: ' + e.message); }
+    try { const snap = await getDocs(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId))); let batch = writeBatch(db); let count = 0; snap.forEach(d => { batch.delete(d.ref); count++; }); if(count > 0) await batch.commit(); alert(`✅ Deleted ${count} sales.`); } catch(e) { alert('Error: ' + e.message); }
 };
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-            .then(reg => console.log('✅ Service Worker registered:', reg.scope))
-            .catch(err => console.log('❌ Service Worker failed:', err));
-    });
-}
-
-console.log('✅ HaniTech Pharmacy Tracker loaded successfully!');
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').then(reg => console.log('✅ SW registered')).catch(err => console.log('❌ SW failed', err)); }); }
+console.log('✅ HaniTech Tracker loaded!');
 </script>
 </body>
 </html>
