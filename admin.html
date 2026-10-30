@@ -3,190 +3,342 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Super Admin Panel - Hanitech</title>
+<title>Super Admin Panel - HaniTech</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background: #f0f4f8; color: #1a202c; font-size: 15px; padding-bottom: 80px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
-  #adminLogin { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+  body { background: #f0f4f8; color: #1a202c; font-size: 15px; min-height: 100vh; overflow-x: hidden; }
+  input, select, textarea { width: 100%; padding: 12px 14px; font-size: 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #f7fafc; outline: none; transition: border-color 0.2s, background 0.2s; }
+  input:focus, select:focus, textarea:focus { border-color: #3182ce; background: #fff; }
+  label { display: block; font-size: 12px; font-weight: 700; color: #4a5568; margin-bottom: 6px; }
+
+  /* LOGIN */
+  #loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 2000; }
   .login-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px 24px; width: 100%; max-width: 400px; }
-  .login-box h1 { text-align: center; color: #1a365d; font-size: 20px; margin-bottom: 20px; font-weight: 800;}
-  .form-group { margin-bottom: 16px; }
-  input, select { width: 100%; padding: 14px; font-size: 15px; border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f7fafc; outline: none; }
-  input:focus, select:focus { border-color: #3182ce; background: #fff; }
+  .login-box h1 { text-align: center; color: #1a365d; font-size: 20px; margin-bottom: 20px; font-weight: 800; }
+  .form-group { margin-bottom: 14px; }
   .btn-login { width: 100%; padding: 15px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; cursor: pointer; margin-top: 8px; }
-  #adminApp { display: none; }
-  header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 16px; border-radius: 0 0 16px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-  header h1 { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-  .btn-logout-hdr { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
-  .container { padding: 0 14px; }
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-  .stat-card { background: #fff; border-radius: 14px; padding: 20px 10px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-  .stat-card .value { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
-  .stat-card .label { font-size: 12px; color: #718096; font-weight: 600; }
+  #loginError { color: #c53030; text-align: center; margin-bottom: 10px; font-size: 13px; display: none; }
+
+  /* APP */
+  #app { display: none; }
+  #sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 250px; background: #1a365d; color: #cbd5e0; z-index: 100; display: flex; flex-direction: column; transform: translateX(-100%); transition: transform 0.3s ease; }
+  #sidebar.open { transform: translateX(0); }
+  .sb-brand { padding: 22px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .sb-brand h1 { color: #fff; font-size: 17px; font-weight: 800; }
+  .sb-brand small { display: block; color: #718096; font-size: 11px; margin-top: 4px; font-weight: 600; }
+  .sb-nav { flex: 1; overflow-y: auto; padding: 10px 0; }
+  .sb-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 600; border-left: 3px solid transparent; transition: background 0.15s; }
+  .sb-item:hover { background: rgba(255,255,255,0.06); }
+  .sb-item.active { background: rgba(49,130,206,0.25); border-left-color: #3182ce; color: #fff; }
+  .sb-item .icon { width: 20px; text-align: center; font-size: 16px; }
+  .sb-item .badge { margin-left: auto; background: #c53030; color: #fff; padding: 1px 7px; border-radius: 10px; font-size: 10px; font-weight: 800; }
+  .sb-footer { padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .btn-logout { width: 100%; padding: 10px; background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .btn-logout:hover { background: rgba(197,48,48,0.6); }
+  .sb-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 90; }
+  .sb-overlay.show { display: block; }
+
+  #main { padding: 16px; padding-bottom: 90px; transition: margin-left 0.3s ease; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+  .topbar h2 { font-size: 20px; font-weight: 800; color: #1a365d; }
+  .hamburger { display: none; background: #fff; border: 1px solid #e2e8f0; width: 40px; height: 40px; border-radius: 10px; font-size: 18px; cursor: pointer; }
+  .user-chip { background: #fff; border: 1px solid #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; color: #4a5568; }
+
+  .section { display: none; animation: fadeIn 0.25s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card { background: #fff; border-radius: 14px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); margin-bottom: 14px; }
+  .card-title { font-size: 15px; font-weight: 800; color: #2d3748; margin-bottom: 12px; }
+
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .stat-card { background: #fff; border-radius: 14px; padding: 16px 10px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+  .stat-card .value { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .stat-card .label { font-size: 11px; color: #718096; font-weight: 700; }
   .val-blue { color: #2b6cb0; } .val-green { color: #276749; } .val-red { color: #c53030; } .val-orange { color: #dd6b20; }
-  .section-collapsible { background: #fff; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); overflow: hidden; }
-  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px; cursor: pointer; }
-  .section-header .sec-left { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; color: #2d3748; }
-  .section-header .badge { background: #c53030; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
-  .section-header .sec-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; }
-  .section-header.open .sec-arrow { transform: rotate(90deg); }
-  .section-body { display: none; padding: 0 16px 16px 16px; border-top: 1px solid #edf2f7; padding-top: 16px; }
-  .section-body.open { display: block; }
-  .btn { display: block; width: 100%; padding: 12px; font-size: 14px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; text-align: center; text-decoration: none; color: #fff; margin-bottom: 6px;}
-  .btn-sm { padding: 8px; font-size: 12px; border-radius: 6px; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 11px 14px; font-size: 13px; font-weight: 700; border: none; border-radius: 9px; cursor: pointer; color: #fff; text-decoration: none; margin-bottom: 6px; }
+  .btn:hover { opacity: 0.88; }
+  .btn-sm { padding: 7px 10px; font-size: 11px; border-radius: 7px; width: auto; }
   .btn-success { background: #276749; } .btn-primary { background: #2c5282; } .btn-danger { background: #c53030; } .btn-warning { background: #dd6b20; } .btn-info { background: #3182ce; } .btn-outline { background: transparent; border: 1.5px solid #cbd5e0; color: #4a5568; }
-  
-  .tenant-card { background: #fff; border: 1px solid #edf2f7; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.03); }
-  .tenant-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #edf2f7; padding-bottom: 10px; margin-bottom: 10px; }
-  .tenant-title { font-size: 16px; font-weight: 800; color: #2c5282; display: flex; align-items: center; gap: 6px; }
-  .tenant-website { font-size: 12px; color: #3182ce; text-decoration: none; }
-  
-  /* የተስተካከለው የኢሜይል አቀማመጥ */
-  .tenant-emails { display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 10px; background: #f7fafc; padding: 10px; border-radius: 8px; }
-  .tenant-email-item { font-size: 12px; color: #4a5568; display: flex; align-items: center; gap: 6px; word-break: break-all; }
-  .tenant-email-item strong { color: #2d3748; width: 85px; flex-shrink: 0; display: inline-block; }
-  
-  .tenant-info { font-size: 13px; margin-bottom: 6px; color: #4a5568; display: flex; align-items: center; gap: 6px; }
+
+  .collapsible { background: #fff; border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); margin-bottom: 12px; overflow: hidden; }
+  .coll-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; }
+  .coll-header .coll-title { font-weight: 700; font-size: 14px; color: #2d3748; }
+  .coll-header .coll-arrow { font-size: 12px; font-weight: 900; color: #4a5568; transition: transform 0.2s; }
+  .coll-header.open .coll-arrow { transform: rotate(90deg); }
+  .coll-body { display: none; padding: 0 16px 16px; border-top: 1px solid #edf2f7; padding-top: 14px; }
+  .coll-body.open { display: block; }
+
+  .tenant-card { background: #fff; border: 1px solid #edf2f7; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .tenant-card.expired { border-color: #fed7d7; background: #fffafa; }
+  .tenant-card.suspended { border-color: #fed7d7; background: #fff5f5; opacity: 0.85; }
+  .tenant-header { display: flex; justify-content: space-between; border-bottom: 1px dashed #edf2f7; padding-bottom: 10px; margin-bottom: 10px; gap: 8px; }
+  .tenant-title { font-size: 15px; font-weight: 800; color: #2c5282; }
+  .tenant-website { font-size: 11px; color: #3182ce; text-decoration: none; word-break: break-all; }
+  .tenant-emails { display: grid; gap: 5px; margin-bottom: 10px; background: #f7fafc; padding: 10px; border-radius: 8px; }
+  .tenant-email-item { font-size: 11px; color: #4a5568; display: flex; gap: 6px; word-break: break-all; }
+  .tenant-email-item strong { color: #2d3748; min-width: 75px; }
+  .tenant-info { font-size: 12px; margin-bottom: 5px; color: #4a5568; }
   .tenant-info strong { color: #2d3748; }
-  .badge-status { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-top: 6px; }
+  .badge-status { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; margin-top: 6px; }
   .status-active { background: #c6f6d5; color: #22543d; }
   .status-expired { background: #feebc8; color: #7b341e; }
   .status-suspended { background: #fed7d7; color: #822727; }
-  .tenant-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-  .tenant-actions .btn { margin-bottom: 0; display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .tenant-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+  .tenant-actions .btn { margin-bottom: 0; }
   .tenant-actions .btn-full { grid-column: span 2; }
+
+  .empty { text-align: center; padding: 30px 16px; color: #a0aec0; }
+  .empty .emoji { font-size: 36px; margin-bottom: 8px; }
+  .empty p { font-size: 13px; }
+  .alert-banner { display: none; background: #fff5f5; color: #c53030; padding: 14px; border-radius: 12px; border: 1px solid #fed7d7; margin-bottom: 16px; font-weight: 700; font-size: 13px; text-align: center; }
+
+  #toastContainer { position: fixed; top: 16px; right: 16px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
+  .toast { background: #2d3748; color: #fff; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); min-width: 220px; max-width: 340px; animation: slideIn 0.25s ease; }
+  .toast.success { background: #276749; } .toast.error { background: #c53030; } .toast.info { background: #2c5282; }
+  @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  #modalOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2500; align-items: center; justify-content: center; padding: 20px; }
+  #modalOverlay.show { display: flex; }
+  .modal-box { background: #fff; border-radius: 16px; padding: 24px; max-width: 400px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .modal-box h3 { font-size: 17px; font-weight: 800; margin-bottom: 10px; color: #1a365d; }
+  .modal-box p { font-size: 14px; color: #4a5568; margin-bottom: 18px; line-height: 1.5; }
+  .modal-actions { display: flex; gap: 8px; }
+
+  #bottomNav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e2e8f0; z-index: 100; box-shadow: 0 -2px 12px rgba(0,0,0,0.06); }
+  .bn-inner { display: flex; justify-content: space-around; padding: 6px 0; }
+  .bn-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px; cursor: pointer; color: #718096; font-size: 10px; font-weight: 700; position: relative; }
+  .bn-item .icon { font-size: 18px; }
+  .bn-item.active { color: #2c5282; }
+  .bn-item .badge { position: absolute; top: 2px; right: 22%; background: #c53030; color: #fff; padding: 0px 5px; border-radius: 8px; font-size: 9px; font-weight: 800; }
+
   @media (min-width: 768px) {
+    #sidebar { transform: translateX(0); }
+    #main { margin-left: 250px; padding: 24px 32px 32px; }
+    .hamburger { display: none; }
+    #bottomNav { display: none !important; }
     .stats-grid { grid-template-columns: repeat(4, 1fr); }
-    .tenant-actions { grid-template-columns: 1fr 1fr 1fr; }
+    .tenant-actions { grid-template-columns: repeat(3, 1fr); }
     .tenant-actions .btn-full { grid-column: span 1; }
+  }
+  @media (max-width: 767px) {
+    #bottomNav { display: block; }
+    .hamburger { display: block; }
   }
 </style>
 </head>
 <body>
 
-<div id="adminLogin">
+<!-- LOGIN -->
+<div id="loginScreen">
   <div class="login-box">
     <h1>👑 Super Admin Panel</h1>
-    <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-    <div class="form-group"><label>📧 Admin Email</label><input type="email" id="adminEmail" placeholder="admin@hanitech.com"></div>
-    <div class="form-group"><label>🔒 Password</label><input type="password" id="adminPassword" placeholder="••••••••"></div>
+    <div id="loginError"></div>
+    <div class="form-group">
+      <label>📧 Admin Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@hanitech.com">
+    </div>
+    <div class="form-group">
+      <label>🔒 Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••">
+    </div>
     <button class="btn-login" onclick="adminLogin()">🔓 ግባ</button>
   </div>
 </div>
 
-<div id="adminApp">
-  <header>
-    <h1>👑 Super Admin Panel</h1>
-    <button class="btn-logout-hdr" onclick="adminLogout()">ውጣ</button>
-  </header>
+<!-- APP -->
+<div id="app">
 
-  <div class="container">
-    <div id="paymentAlertBanner" style="display:none; background:#fff5f5; color:#c53030; padding:15px; border-radius:12px; border:1px solid #fed7d7; margin-bottom:16px; font-weight:bold; font-size:14px; text-align:center;">
-      ⚠️ <span id="paymentAlertText"></span>
+  <aside id="sidebar">
+    <div class="sb-brand">
+      <h1>👑 HaniTech</h1>
+      <small>Super Admin Panel</small>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-item active" data-section="dashboard" onclick="switchSection('dashboard')">
+        <span class="icon">📊</span><span>Dashboard</span>
+      </div>
+      <div class="sb-item" data-section="pharmacies" onclick="switchSection('pharmacies')">
+        <span class="icon">🏢</span><span>Pharmacies</span>
+      </div>
+      <div class="sb-item" data-section="users" onclick="switchSection('users')">
+        <span class="icon">👥</span><span>Users</span>
+      </div>
+      <div class="sb-item" data-section="billing" onclick="switchSection('billing')">
+        <span class="icon">💰</span><span>Billing</span>
+      </div>
+      <div class="sb-item" data-section="passwords" onclick="switchSection('passwords')">
+        <span class="icon">🔔</span><span>Password Requests</span>
+        <span class="badge" id="sbPassBadge" style="display:none;">0</span>
+      </div>
+      <div class="sb-item" data-section="support" onclick="switchSection('support')">
+        <span class="icon">📞</span><span>Support Info</span>
+      </div>
+      <div class="sb-item" data-section="data" onclick="switchSection('data')">
+        <span class="icon">💾</span><span>Data Management</span>
+      </div>
+    </nav>
+    <div class="sb-footer">
+      <button class="btn-logout" onclick="adminLogout()">🚪 Logout</button>
+    </div>
+  </aside>
+  <div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+
+  <main id="main">
+    <div class="topbar">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <h2 id="pageTitle">📊 Dashboard</h2>
+      </div>
+      <div class="user-chip" id="userChip">admin</div>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card"><div class="value val-blue" id="statTotalTenants">0</div><div class="label">📊 ጠቅላላ ፋርማሲዎች</div></div>
-      <div class="stat-card"><div class="value val-green" id="statActiveTenants">0</div><div class="label">✅ ተከፋዮች</div></div>
-      <div class="stat-card"><div class="value val-orange" id="statExpiredTenants">0</div><div class="label">⏳ ያለፈባቸው</div></div>
-      <div class="stat-card"><div class="value val-red" id="statSuspendedTenants">0</div><div class="label">❌ የታገዱ</div></div>
-    </div>
-    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
-      <div class="stat-card"><div class="value val-green" id="statTotalPaid">0.00</div><div class="label">💰 የተከፈለ (ብር)</div></div>
-      <div class="stat-card"><div class="value val-orange" id="statTotalUnpaid">0.00</div><div class="label">⏳ ያልተከፈለ (ብር)</div></div>
-    </div>
+    <!-- DASHBOARD -->
+    <section class="section active" id="section-dashboard">
+      <div class="alert-banner" id="paymentBanner">⚠️ <span id="paymentBannerText"></span></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="value val-blue" id="statTotalTenants">0</div><div class="label">📊 ፋርማሲዎች</div></div>
+        <div class="stat-card"><div class="value val-green" id="statActive">0</div><div class="label">✅ ንቁ</div></div>
+        <div class="stat-card"><div class="value val-orange" id="statExpired">0</div><div class="label">⏳ ጊዜው አልፏል</div></div>
+        <div class="stat-card"><div class="value val-red" id="statSuspended">0</div><div class="label">❌ የታገዱ</div></div>
+      </div>
+      <div class="stats-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="stat-card"><div class="value val-green" id="statPaid">0.00</div><div class="label">💰 የተከፈለ</div></div>
+        <div class="stat-card"><div class="value val-orange" id="statUnpaid">0.00</div><div class="label">⏳ ያልተከፈለ</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🆕 አዳዲስ ፋርማሲዎች</div>
+        <div id="recentPharmacies"></div>
+      </div>
+    </section>
 
-    <button class="btn btn-success" style="margin-bottom: 16px;" onclick="exportExcel()">📊 Excel (CSV) አውጣ</button>
-
-    <div class="section-collapsible">
-      <div class="section-header" onclick="toggleSection(this)">
-        <div class="sec-left">📞 የድጋፍ መረጃ (Support Info)</div>
-        <span class="sec-arrow">▶</span>
-      </div>
-      <div class="section-body">
-        <div class="form-group"><label>ስልክ ቁጥር</label><input type="text" id="supportPhone" placeholder="+251 9XX XXX XXX"></div>
-        <div class="form-group"><label>ኢሜይል</label><input type="email" id="supportEmail" placeholder="support@hanitech.com"></div>
-        <div class="form-group"><label>ቴሌግራም (Username)</label><input type="text" id="supportTelegram" placeholder="@hanitech_support"></div>
-        <button class="btn btn-primary" onclick="saveSupportInfo()">💾 አስቀምጥ</button>
-      </div>
-    </div>
-
-    <div class="section-collapsible">
-      <div class="section-header" onclick="toggleSection(this)">
-        <div class="sec-left">🔔 የፓስወርድ ማስተካከያ ጥያቄዎች <span class="badge" id="passReqBadge">0</span></div>
-        <span class="sec-arrow">▶</span>
-      </div>
-      <div class="section-body">
-        <div id="passwordRequestsList"></div>
-      </div>
-    </div>
-
-    <div class="section-collapsible">
-      <div class="section-header" onclick="toggleSection(this)">
-        <div class="sec-left">➕ አዲስ ፋርማሲ ጨምር</div>
-        <span class="sec-arrow">▶</span>
-      </div>
-      <div class="section-body">
-        <div class="form-group"><label>የድርጅት ስም</label><input type="text" id="newTenantName" placeholder="ለምሳሌ: Addis Pharmacy"></div>
-        <div class="form-group"><label>ድረ-ገጽ (Website)</label><input type="text" id="newTenantWebsite" placeholder="example.com"></div>
-        <div class="form-group">
-          <label>🏢 የድርጅት ዓይነት (Admin የሚፈቅደው)</label>
-          <select id="newTenantBizType">
-            <option value="retail">🛒 Retail (ችርቻሮ ብቻ)</option>
-            <option value="wholesale">🚚 Wholesale (አከፋፋይ ብቻ)</option>
-            <option value="both">🔄 Both (ሁለቱንም እንዲመርጥ)</option>
-          </select>
+    <!-- PHARMACIES -->
+    <section class="section" id="section-pharmacies">
+      <div class="collapsible">
+        <div class="coll-header" onclick="toggleColl(this)">
+          <div class="coll-title">➕ አዲስ ፋርማሲ ጨምር</div>
+          <span class="coll-arrow">▶</span>
         </div>
-        <div class="form-group"><label>የባለቤት ኢሜይል (Owner)</label><input type="email" id="newTenantOwnerEmail" placeholder="owner@example.com"></div>
-        <div class="form-group"><label>የማናጀር ኢሜይል (Manager)</label><input type="email" id="newTenantManagerEmail" placeholder="manager@example.com"></div>
-        <div class="form-group"><label>የአካውንታንት ኢሜይል (Accountant)</label><input type="email" id="newTenantAccountantEmail" placeholder="accountant@example.com"></div>
-        <div class="form-group">
-          <label>🔑 የጊዜያዊ ፓስወርድ (ለሁሉም ተጠቃሚዎች)</label>
-          <input type="text" id="newTenantTempPassword" placeholder="ለምሳሌ: 123456" value="123456">
-          <div style="font-size:11px; color:#718096; margin-top:4px;">💡 ተጠቃሚዎቹ በዚህ ፓስወርድ ገብተው ወዲያውኑ እንዲቀይሩት ይጠየቃሉ።</div>
+        <div class="coll-body">
+          <div class="form-group"><label>የድርጅት ስም</label><input type="text" id="newName" placeholder="Addis Pharmacy"></div>
+          <div class="form-group"><label>ድረ-ገጽ</label><input type="text" id="newWebsite" placeholder="example.com"></div>
+          <div class="form-group"><label>ዓይነት</label>
+            <select id="newBizType">
+              <option value="retail">🛒 Retail</option>
+              <option value="wholesale">🚚 Wholesale</option>
+              <option value="both">🔄 Both</option>
+            </select>
+          </div>
+          <div class="form-group"><label>👑 Owner Email</label><input type="email" id="newOwner" placeholder="owner@example.com"></div>
+          <div class="form-group"><label>🎯 Manager Email</label><input type="email" id="newManager" placeholder="manager@example.com"></div>
+          <div class="form-group"><label>🧰 Accountant Email</label><input type="email" id="newAccountant" placeholder="accountant@example.com"></div>
+          <div class="form-group"><label>🔑 ጊዜያዊ ፓስወርድ</label><input type="text" id="newTempPass" value="123456"></div>
+          <div class="form-group"><label>💰 ክፍያ (ብር/ወር)</label><input type="number" id="newAmount" placeholder="0"></div>
+          <div class="form-group"><label>📅 ማብቂያ ቀን</label><input type="date" id="newExpiry"></div>
+          <button class="btn btn-primary" onclick="addTenant()">💾 ፍጠር</button>
         </div>
-        <div class="form-group"><label>የክፍያ መጠን (ብር/ወር)</label><input type="number" id="newTenantAmount" placeholder="0.00"></div>
-        <div class="form-group"><label>የአገልግሎት ማብቂያ ቀን</label><input type="date" id="newTenantExpiry"></div>
-        <button class="btn btn-primary" onclick="addTenant()">💾 ፋርማሲ ፍጠር</button>
       </div>
-    </div>
 
-    <div class="section-collapsible">
-      <div class="section-header" onclick="toggleSection(this)">
-        <div class="sec-left">📋 የፋርማሲዎች ዝርዝር <span class="badge" style="background:#2b6cb0;" id="tenantListBadge">0</span></div>
-        <span class="sec-arrow">▶</span>
-      </div>
-      <div class="section-body">
+      <div class="card">
         <div style="display:flex; gap:8px; margin-bottom:12px; flex-direction:column;">
-          <input type="text" id="searchTenant" placeholder="🔍 ፋርማሲ በስም ወይም በኢሜይል ፈልግ..." oninput="renderTenantList()">
-          <select id="filterTenantStatus" onchange="renderTenantList()">
-            <option value="all">ሁሉም ሁኔታ</option>
+          <input type="text" id="searchTenant" placeholder="🔍 ፈልግ..." oninput="renderTenantList()">
+          <select id="filterStatus" onchange="renderTenantList()">
+            <option value="all">ሁሉም</option>
             <option value="active">✅ ንቁ</option>
-            <option value="expired">⏳ ጊዜው ያለፈባቸው</option>
+            <option value="expired">⏳ ጊዜው አልፏል</option>
             <option value="suspended">❌ የታገዱ</option>
           </select>
         </div>
         <div id="tenantList"></div>
       </div>
-    </div>
+    </section>
 
-    <div class="section-collapsible">
-      <div class="section-header" onclick="toggleSection(this)">
-        <div class="sec-left">💾 ዳታ ማስቀመጥ እና መመለስ (Backup / Restore)</div>
-        <span class="sec-arrow">▶</span>
+    <!-- USERS -->
+    <section class="section" id="section-users">
+      <div class="card">
+        <div class="card-title">👥 የተጠቃሚዎች ዝርዝር</div>
+        <div style="display:flex; gap:8px; margin-bottom:12px; flex-direction:column;">
+          <input type="text" id="searchUser" placeholder="🔍 በኢሜይል ፈልግ..." oninput="renderUserList()">
+          <select id="filterUserRole" onchange="renderUserList()">
+            <option value="all">ሁሉም ሚና</option>
+            <option value="owner">👑 Owner</option>
+            <option value="manager">🎯 Manager</option>
+            <option value="accountant">🧰 Accountant</option>
+            <option value="employee">👷 Employee</option>
+          </select>
+        </div>
+        <div id="userList"></div>
       </div>
-      <div class="section-body">
-        <button class="btn btn-success" style="margin-bottom:10px;" onclick="exportBackup()">📥 ዳታ አውጣ</button>
+    </section>
+
+    <!-- BILLING -->
+    <section class="section" id="section-billing">
+      <div class="card">
+        <div class="card-title">💰 የክፍያ ማጠቃለያ</div>
+        <div id="billingSummary"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📜 የክፍያ ታሪክ</div>
+        <div id="billingHistory"></div>
+      </div>
+    </section>
+
+    <!-- PASSWORDS -->
+    <section class="section" id="section-passwords">
+      <div class="card">
+        <div class="card-title">🔔 የፓስወርድ ጥያቄዎች</div>
+        <div id="passwordRequestsList"></div>
+      </div>
+    </section>
+
+    <!-- SUPPORT -->
+    <section class="section" id="section-support">
+      <div class="card">
+        <div class="card-title">📞 የድጋፍ መረጃ</div>
+        <div class="form-group"><label>ስልክ</label><input type="text" id="supportPhone" placeholder="+251 9XX XXX XXX"></div>
+        <div class="form-group"><label>ኢሜይል</label><input type="email" id="supportEmail" placeholder="support@hanitech.com"></div>
+        <div class="form-group"><label>ቴሌግራም</label><input type="text" id="supportTelegram" placeholder="@hanitech_support"></div>
+        <button class="btn btn-primary" onclick="saveSupportInfo()">💾 አስቀምጥ</button>
+      </div>
+    </section>
+
+    <!-- DATA -->
+    <section class="section" id="section-data">
+      <div class="card">
+        <div class="card-title">💾 ዳታ አስተዳደር</div>
+        <button class="btn btn-success" onclick="exportCSV()">📊 Excel (CSV) አውጣ</button>
+        <button class="btn btn-info" onclick="exportBackup()">📥 ሙሉ ባክአፕ (JSON)</button>
         <button class="btn btn-warning" onclick="document.getElementById('restoreFile').click()">📤 ዳታ መልስ</button>
         <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="importBackup(event)">
-        <div id="backupStatus" style="margin-top:10px; font-size:13px;"></div>
+        <div id="backupStatus" style="margin-top:10px; font-size:13px; font-weight:600;"></div>
       </div>
+    </section>
+
+  </main>
+
+  <nav id="bottomNav">
+    <div class="bn-inner">
+      <div class="bn-item active" data-section="dashboard" onclick="switchSection('dashboard')"><span class="icon">📊</span><span>Dash</span></div>
+      <div class="bn-item" data-section="pharmacies" onclick="switchSection('pharmacies')"><span class="icon">🏢</span><span>Pharm</span></div>
+      <div class="bn-item" data-section="users" onclick="switchSection('users')"><span class="icon">👥</span><span>Users</span></div>
+      <div class="bn-item" data-section="billing" onclick="switchSection('billing')"><span class="icon">💰</span><span>Bill</span></div>
+      <div class="bn-item" data-section="more" onclick="openMoreMenu()"><span class="icon">☰</span><span>More</span></div>
     </div>
-  </div>
+  </nav>
+
 </div>
 
+<div id="toastContainer"></div>
+<div id="modalOverlay">
+  <div class="modal-box">
+    <h3 id="modalTitle">Title</h3>
+    <p id="modalMessage">Message</p>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
 <script type="module">
-  import { initializeApp, initializeApp as initSecondaryApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+  import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
   import { getFirestore, collection, addDoc, getDocs, query, doc, updateDoc, getDoc, setDoc, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
@@ -202,36 +354,91 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const SUPER_ADMIN_EMAIL = "admin@hanitech.com";
 
-  const SUPER_ADMIN_EMAIL = "admin@hanitech.com"; 
+  let allTenants = [], allUsers = [], allPasswordRequests = [];
+  let allSupportInfo = { phone: '', email: '', telegram: '' };
 
-  let allTenants = [];
-  let allPasswordRequests = [];
-  let currentSupportInfo = { phone: '', email: '', telegram: '' };
-
-  window.toggleSection = function(header) {
-    const body = header.nextElementSibling;
-    const isOpen = body.classList.toggle('open');
-    header.classList.toggle('open', isOpen);
+  // ===== TOAST =====
+  window.toast = function(msg, type = 'info') {
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.textContent = msg;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 250); }, 3000);
   };
 
-  window.adminLogin = async function() {
-    const email = document.getElementById('adminEmail').value;
-    const password = document.getElementById('adminPassword').value;
-    const errorEl = document.getElementById('loginError');
-    errorEl.style.display = 'none';
+  // ===== MODAL =====
+  window.showModal = function(title, message, buttons) {
+    return new Promise((resolve) => {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMessage').textContent = message;
+      const actions = document.getElementById('modalActions');
+      actions.innerHTML = '';
+      buttons.forEach(btn => {
+        const b = document.createElement('button');
+        b.className = 'btn ' + (btn.class || 'btn-primary');
+        b.textContent = btn.text;
+        b.onclick = () => {
+          document.getElementById('modalOverlay').classList.remove('show');
+          resolve(btn.value !== undefined ? btn.value : true);
+        };
+        actions.appendChild(b);
+      });
+      document.getElementById('modalOverlay').classList.add('show');
+    });
+  };
 
+  // ===== SIDEBAR / NAV =====
+  window.toggleSidebar = function() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sbOverlay').classList.toggle('show');
+  };
+
+  window.switchSection = function(name) {
+    if (name === 'more') return openMoreMenu();
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const sec = document.getElementById('section-' + name);
+    if (sec) sec.classList.add('active');
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.toggle('active', i.dataset.section === name));
+    document.querySelectorAll('.bn-item').forEach(i => i.classList.toggle('active', i.dataset.section === name));
+    const titles = { dashboard: '📊 Dashboard', pharmacies: '🏢 Pharmacies', users: '👥 Users', billing: '💰 Billing', passwords: '🔔 Password Requests', support: '📞 Support Info', data: '💾 Data Management' };
+    document.getElementById('pageTitle').textContent = titles[name] || 'Admin';
+    if (window.innerWidth < 768) toggleSidebar();
+  };
+
+  window.openMoreMenu = async function() {
+    const choice = await showModal('📋 ተጨማሪ', 'የሚፈልጉትን ክፍል ይምረጡ', [
+      { text: '🔔 Passwords', class: 'btn-info', value: 'passwords' },
+      { text: '📞 Support', class: 'btn-info', value: 'support' },
+      { text: '💾 Data', class: 'btn-info', value: 'data' },
+      { text: '✖ ዝጋ', class: 'btn-outline', value: null }
+    ]);
+    if (choice) switchSection(choice);
+  };
+
+  window.toggleColl = function(header) {
+    const body = header.nextElementSibling;
+    const open = body.classList.toggle('open');
+    header.classList.toggle('open', open);
+  };
+
+  // ===== LOGIN =====
+  window.adminLogin = async function() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errEl = document.getElementById('loginError');
+    errEl.style.display = 'none';
     if (email !== SUPER_ADMIN_EMAIL) {
-      errorEl.textContent = '⚠️ እርስዎ Super Admin አይደሉም!';
-      errorEl.style.display = 'block';
+      errEl.textContent = '⚠️ እርስዎ Super Admin አይደሉም!';
+      errEl.style.display = 'block';
       return;
     }
-
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      errorEl.textContent = '⚠️ ስህተት: Email ወይም Password ትክክል አይደለም';
-      errorEl.style.display = 'block';
+      errEl.textContent = '⚠️ Email ወይም Password ትክክል አይደለም';
+      errEl.style.display = 'block';
     }
   };
 
@@ -239,434 +446,407 @@
 
   onAuthStateChanged(auth, (user) => {
     if (user && user.email === SUPER_ADMIN_EMAIL) {
-      document.getElementById('adminLogin').style.display = 'none';
-      document.getElementById('adminApp').style.display = 'block';
-      loadAdminData();
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      document.getElementById('userChip').textContent = user.email.split('@')[0];
+      loadAllData();
     } else {
-      document.getElementById('adminLogin').style.display = 'flex';
-      document.getElementById('adminApp').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
     }
   });
 
-  async function loadAdminData() {
+  // ===== LOAD ALL DATA =====
+  async function loadAllData() {
     try {
       const snap = await getDocs(collection(db, 'pharmacies'));
       allTenants = [];
       snap.forEach(d => allTenants.push({ id: d.id, ...d.data() }));
       renderStats();
       renderTenantList();
-    } catch(e) { console.error(e); }
+      renderRecentPharmacies();
+      renderBilling();
+    } catch (e) { console.error(e); toast('ፋርማሲ መጫን አልተሳካም', 'error'); }
+
+    try {
+      const snap = await getDocs(collection(db, 'users'));
+      allUsers = [];
+      snap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
+      renderUserList();
+    } catch (e) { console.error(e); }
 
     try {
       const snap = await getDocs(collection(db, 'passwordRequests'));
       allPasswordRequests = [];
       snap.forEach(d => allPasswordRequests.push({ id: d.id, ...d.data() }));
       renderPasswordRequests();
-    } catch(e) { console.error(e); }
+    } catch (e) { console.error(e); }
 
     try {
-      const supportDoc = await getDoc(doc(db, 'settings', 'support'));
-      if (supportDoc.exists()) {
-        currentSupportInfo = supportDoc.data();
-        document.getElementById('supportPhone').value = currentSupportInfo.phone || '';
-        document.getElementById('supportEmail').value = currentSupportInfo.email || '';
-        document.getElementById('supportTelegram').value = currentSupportInfo.telegram || '';
+      const s = await getDoc(doc(db, 'settings', 'support'));
+      if (s.exists()) {
+        allSupportInfo = s.data();
+        document.getElementById('supportPhone').value = allSupportInfo.phone || '';
+        document.getElementById('supportEmail').value = allSupportInfo.email || '';
+        document.getElementById('supportTelegram').value = allSupportInfo.telegram || '';
       }
-    } catch(e) { console.error("Error loading support info:", e); }
+    } catch (e) { console.error(e); }
   }
 
-  window.saveSupportInfo = async function() {
-    const phone = document.getElementById('supportPhone').value.trim();
-    const email = document.getElementById('supportEmail').value.trim();
-    const telegram = document.getElementById('supportTelegram').value.trim();
-
-    try {
-      await setDoc(doc(db, 'settings', 'support'), { phone, email, telegram }, { merge: true });
-      alert('✅ የድጋፍ መረጃ ተቀምጧል!');
-    } catch(e) {
-      alert('⚠️ ስህተት: ' + e.message);
-    }
-  };
-
+  // ===== DASHBOARD STATS =====
   function renderStats() {
-    let active = 0, expired = 0, suspended = 0, totalPaid = 0, totalUnpaid = 0;
-    let expiredNames = [];
     const today = new Date().toISOString().split('T')[0];
-
+    let active = 0, expired = 0, suspended = 0, paid = 0, unpaid = 0;
+    let expiredNames = [];
     allTenants.forEach(t => {
-      const paid = parseFloat(t.amount) || 0;
-      const expiry = t.expiryDate || '';
-
-      if (t.isSuspended) {
-        suspended++;
-        totalUnpaid += paid;
-      } else if (expiry && expiry < today) {
-        expired++;
-        totalUnpaid += paid;
-        expiredNames.push(t.name);
-      } else {
-        active++;
-        totalPaid += paid;
-      }
+      const amt = parseFloat(t.amount) || 0;
+      if (t.isSuspended) { suspended++; unpaid += amt; }
+      else if (t.expiryDate && t.expiryDate < today) { expired++; unpaid += amt; expiredNames.push(t.name); }
+      else { active++; paid += amt; }
     });
-
-    document.getElementById('statTotalTenants').innerText = allTenants.length;
-    document.getElementById('statActiveTenants').innerText = active;
-    document.getElementById('statExpiredTenants').innerText = expired;
-    document.getElementById('statSuspendedTenants').innerText = suspended;
-    document.getElementById('statTotalPaid').innerText = totalPaid.toLocaleString('en-US', {minimumFractionDigits:2});
-    document.getElementById('statTotalUnpaid').innerText = totalUnpaid.toLocaleString('en-US', {minimumFractionDigits:2});
-    document.getElementById('tenantListBadge').innerText = allTenants.length;
-
-    const banner = document.getElementById('paymentAlertBanner');
-    const textEl = document.getElementById('paymentAlertText');
+    document.getElementById('statTotalTenants').textContent = allTenants.length;
+    document.getElementById('statActive').textContent = active;
+    document.getElementById('statExpired').textContent = expired;
+    document.getElementById('statSuspended').textContent = suspended;
+    document.getElementById('statPaid').textContent = paid.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    document.getElementById('statUnpaid').textContent = unpaid.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    const banner = document.getElementById('paymentBanner');
     if (expiredNames.length > 0) {
       banner.style.display = 'block';
-      textEl.innerText = `${expiredNames.length} ፋርማሲ የክፍያ ጊዜው አልፎበታል! (${expiredNames.join(', ')})`;
-    } else {
-      banner.style.display = 'none';
-    }
+      document.getElementById('paymentBannerText').textContent = `${expiredNames.length} ፋርማሲ የክፍያ ጊዜው አልፎበታል: ${expiredNames.join(', ')}`;
+    } else banner.style.display = 'none';
   }
 
-  function renderPasswordRequests() {
-    const listEl = document.getElementById('passwordRequestsList');
-    const badge = document.getElementById('passReqBadge');
-    badge.innerText = allPasswordRequests.length;
-
-    if (allPasswordRequests.length === 0) {
-      listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ጥያቄ የለም።</p>';
-      return;
-    }
-
-    let html = '';
-    allPasswordRequests.forEach(req => {
-      html += `<div class="list-item" style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #edf2f7;">
-        <div>
-          <div style="font-weight:600; font-size:13px;">${req.email}</div>
-          <div style="font-size:11px; color:#718096;">${req.date || 'ቀን አልተጠቀሰም'}</div>
-        </div>
-        <div style="display:flex; gap:6px;">
-          <button class="btn btn-info btn-sm" style="width:auto;" onclick="sendResetLink('${req.email}')">📧 ሊንክ ላክ</button>
-          <button class="btn btn-success btn-sm" style="width:auto;" onclick="resolvePasswordRequest('${req.id}')">✅ ተፈትቷል</button>
-        </div>
-      </div>`;
-    });
-    listEl.innerHTML = html;
+  function renderRecentPharmacies() {
+    const el = document.getElementById('recentPharmacies');
+    if (allTenants.length === 0) { el.innerHTML = '<div class="empty"><div class="emoji">📭</div><p>ምንም ፋርማሲ የለም</p></div>'; return; }
+    const sorted = [...allTenants].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')).slice(0, 5);
+    el.innerHTML = sorted.map(t => `<div style="padding:10px 0; border-bottom:1px solid #edf2f7;"><strong style="color:#2c5282;">${t.name}</strong><div style="font-size:11px; color:#718096;">${t.createdAt ? new Date(t.createdAt).toLocaleDateString() : ''}</div></div>`).join('');
   }
-
-  window.sendResetLink = async function(email) {
-    try {
-      await sendPasswordResetEmail(auth, email);
-      alert(`✅ የፓስወርድ ማስተካከያ ሊንክ ወደ ${email} ተልኳል!`);
-    } catch(e) { alert('⚠️ ስህተት: ' + e.message); }
-  };
-
-  window.resolvePasswordRequest = async function(id) {
-    try {
-      await deleteDoc(doc(db, 'passwordRequests', id));
-      loadAdminData();
-      alert('✅ ጥያቄው ተነስቷል!');
-    } catch(e) { alert(e.message); }
-  };
-
-  function renderTenantList() {
-    const listEl = document.getElementById('tenantList');
-    const searchVal = (document.getElementById('searchTenant')?.value || '').toLowerCase();
-    const filterStatus = document.getElementById('filterTenantStatus')?.value || 'all';
+   // ===== PHARMACIES =====
+  window.renderTenantList = function() {
+    const el = document.getElementById('tenantList');
+    const search = (document.getElementById('searchTenant')?.value || '').toLowerCase();
+    const filter = document.getElementById('filterStatus')?.value || 'all';
     const today = new Date().toISOString().split('T')[0];
 
     let filtered = allTenants.filter(t => {
-      const matchesSearch = (t.name || '').toLowerCase().includes(searchVal) || 
-                            (t.ownerEmail || '').toLowerCase().includes(searchVal) ||
-                            (t.website || '').toLowerCase().includes(searchVal);
-      
-      let statusMatch = true;
-      if (filterStatus === 'active') statusMatch = !t.isSuspended && t.expiryDate && t.expiryDate >= today;
-      if (filterStatus === 'expired') statusMatch = !t.isSuspended && t.expiryDate && t.expiryDate < today;
-      if (filterStatus === 'suspended') statusMatch = t.isSuspended;
-
-      return matchesSearch && statusMatch;
+      const matchSearch = (t.name || '').toLowerCase().includes(search) ||
+                          (t.ownerEmail || '').toLowerCase().includes(search) ||
+                          (t.website || '').toLowerCase().includes(search);
+      let matchStatus = true;
+      if (filter === 'active') matchStatus = !t.isSuspended && t.expiryDate && t.expiryDate >= today;
+      if (filter === 'expired') matchStatus = !t.isSuspended && t.expiryDate && t.expiryDate < today;
+      if (filter === 'suspended') matchStatus = t.isSuspended;
+      return matchSearch && matchStatus;
     });
 
     if (filtered.length === 0) {
-      listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">ምንም ፋርማሲ አልተገኘም።</p>';
+      el.innerHTML = '<div class="empty"><div class="emoji">🔍</div><p>ምንም ፋርማሲ አልተገኘም</p></div>';
       return;
     }
 
-    let html = '';
-    filtered.forEach(t => {
-      let statusBadge = '';
-      let statusClass = '';
-      if (t.isSuspended) { statusBadge = '❌ የታገደ'; statusClass = 'status-suspended'; }
-      else if (t.expiryDate && t.expiryDate < today) { statusBadge = '⏳ ጊዜው አልፏል'; statusClass = 'status-expired'; }
-      else { statusBadge = '✅ ንቁ'; statusClass = 'status-active'; }
+    el.innerHTML = filtered.map(t => {
+      let badge, cls;
+      if (t.isSuspended) { badge = '❌ የታገደ'; cls = 'status-suspended'; }
+      else if (t.expiryDate && t.expiryDate < today) { badge = '⏳ ጊዜው አልፏል'; cls = 'status-expired'; }
+      else { badge = '✅ ንቁ'; cls = 'status-active'; }
+      const cardCls = t.isSuspended ? 'suspended' : (t.expiryDate && t.expiryDate < today ? 'expired' : '');
+      const bizLabel = t.bizType === 'wholesale' ? '🚚 Wholesale' : t.bizType === 'both' ? '🔄 Both' : '🛒 Retail';
 
-      let bizTypeLabel = '🛒 Retail';
-      if(t.bizType === 'wholesale') bizTypeLabel = '🚚 Wholesale';
-      else if(t.bizType === 'both') bizTypeLabel = '🔄 Both';
-
-      html += `
-      <div class="tenant-card">
+      return `
+      <div class="tenant-card ${cardCls}">
         <div class="tenant-header">
           <div class="tenant-title">🏢 ${t.name || 'ስም የለም'}</div>
-          <a href="https://${t.website || '#'}" target="_blank" class="tenant-website">🌐 ${t.website || 'ድረ-ገጽ የለም'}</a>
+          <a href="https://${t.website || '#'}" target="_blank" class="tenant-website">🌐 ${t.website || '—'}</a>
         </div>
-        
-        <div class="tenant-info">🏢 <strong>ዓይነት:</strong> ${bizTypeLabel}</div>
-        
+        <div class="tenant-info">🏢 <strong>ዓይነት:</strong> ${bizLabel}</div>
         <div class="tenant-emails">
-            <div class="tenant-email-item">👑 <strong>Owner:</strong> ${t.ownerEmail || 'አልተጠቀሰም'}</div>
-            <div class="tenant-email-item">🎯 <strong>Manager:</strong> ${t.managerEmail || 'አልተጠቀሰም'}</div>
-            <div class="tenant-email-item">🧰 <strong>Accountant:</strong> ${t.accountantEmail || 'አልተጠቀሰም'}</div>
+          <div class="tenant-email-item">👑 <strong>Owner:</strong> ${t.ownerEmail || '—'}</div>
+          <div class="tenant-email-item">🎯 <strong>Manager:</strong> ${t.managerEmail || '—'}</div>
+          <div class="tenant-email-item">🧰 <strong>Accountant:</strong> ${t.accountantEmail || '—'}</div>
         </div>
-
         <div class="tenant-info">💰 <strong>ክፍያ:</strong> ${t.amount || 0} ብር/ወር</div>
-        
-        <div class="badge-status ${statusClass}">${statusBadge} ${t.expiryDate ? `(${t.expiryDate})` : ''}</div>
-
+        <div class="badge-status ${cls}">${badge} ${t.expiryDate ? `(${t.expiryDate})` : ''}</div>
         <div class="tenant-actions">
-          <button class="btn btn-success btn-sm" onclick="markPaid('${t.id}')">💰 ክፍያ ተከፈለ</button>
+          <button class="btn btn-success btn-sm" onclick="markPaid('${t.id}')">💰 ክፍያ</button>
           <button class="btn btn-info btn-sm" onclick="editTenant('${t.id}')">✏️ አሻሽል</button>
-          <button class="btn ${t.isSuspended ? 'btn-success' : 'btn-warning'} btn-sm" onclick="toggleSuspend('${t.id}', ${t.isSuspended})">${t.isSuspended ? '✅ ፍቃድ ስጥ' : '⏸️ አቁም'}</button>
-          <button class="btn btn-primary btn-sm" onclick="viewHistory('${t.id}')">📜 ታሪክ (${t.paymentHistory ? t.paymentHistory.length : 0})</button>
+          <button class="btn ${t.isSuspended ? 'btn-success' : 'btn-warning'} btn-sm" onclick="toggleSuspend('${t.id}', ${t.isSuspended})">${t.isSuspended ? '✅ ፍቃድ' : '⏸️ አቁም'}</button>
+          <button class="btn btn-primary btn-sm" onclick="viewHistory('${t.id}')">📜 ታሪክ (${(t.paymentHistory || []).length})</button>
           <button class="btn btn-danger btn-sm btn-full" onclick="deleteTenant('${t.id}')">🗑️ አጥፋ</button>
         </div>
       </div>`;
-    });
-    listEl.innerHTML = html;
-  }
+    }).join('');
+  };
 
   window.addTenant = async function() {
-    const name = document.getElementById('newTenantName').value.trim();
-    const website = document.getElementById('newTenantWebsite').value.trim();
-    const bizType = document.getElementById('newTenantBizType').value;
-    const ownerEmail = document.getElementById('newTenantOwnerEmail').value.trim();
-    const managerEmail = document.getElementById('newTenantManagerEmail').value.trim();
-    const accountantEmail = document.getElementById('newTenantAccountantEmail').value.trim();
-    const tempPassword = document.getElementById('newTenantTempPassword').value.trim();
-    const amount = parseFloat(document.getElementById('newTenantAmount').value) || 0;
-    const expiry = document.getElementById('newTenantExpiry').value;
+    const name = document.getElementById('newName').value.trim();
+    const website = document.getElementById('newWebsite').value.trim();
+    const bizType = document.getElementById('newBizType').value;
+    const ownerEmail = document.getElementById('newOwner').value.trim();
+    const managerEmail = document.getElementById('newManager').value.trim();
+    const accountantEmail = document.getElementById('newAccountant').value.trim();
+    const tempPass = document.getElementById('newTempPass').value.trim();
+    const amount = parseFloat(document.getElementById('newAmount').value) || 0;
+    const expiry = document.getElementById('newExpiry').value;
 
-    if (!name || !ownerEmail || !expiry || !tempPassword) {
-      alert('⚠️ እባክዎ ስም፣ የባለቤት ኢሜይል፣ የማብቂያ ቀን እና የጊዜያዊ ፓስወርድ ይሙሉ!');
-      return;
+    if (!name || !ownerEmail || !expiry || !tempPass) {
+      toast('ስም፣ Owner Email፣ ማብቂያ ቀን እና ፓስወርድ ያስፈልጋሉ', 'error'); return;
     }
-    if (tempPassword.length < 6) {
-      alert('⚠️ የጊዜያዊ ፓስወርድ ቢያንስ 6 ፊደል መሆን አለበት!');
-      return;
-    }
+    if (tempPass.length < 6) { toast('ፓስወርድ ቢያንስ 6 ፊደል ይሁን', 'error'); return; }
 
     try {
-      const newPharmacyRef = await addDoc(collection(db, 'pharmacies'), {
-        name: name,
-        website: website,
-        bizType: bizType,
-        ownerEmail: ownerEmail,
-        managerEmail: managerEmail,
-        accountantEmail: accountantEmail,
-        amount: amount,
-        expiryDate: expiry,
-        isSuspended: false,
-        paymentHistory: [],
+      const ref = await addDoc(collection(db, 'pharmacies'), {
+        name, website, bizType, ownerEmail, managerEmail, accountantEmail,
+        amount, expiryDate: expiry, isSuspended: false, paymentHistory: [],
         createdAt: new Date().toISOString()
       });
-      
-      const pharmacyId = newPharmacyRef.id;
-      const emailsToCreate = [
+      const pid = ref.id;
+      const usersToCreate = [
         { email: ownerEmail, role: 'owner' },
         { email: managerEmail, role: 'manager' },
         { email: accountantEmail, role: 'accountant' }
-      ].filter(u => u.email !== '');
+      ].filter(u => u.email);
 
-      let createdCount = 0;
-      let errors = [];
-
-      const secondaryApp = initSecondaryApp(firebaseConfig, "SecondaryApp-" + Date.now());
-      const secondaryAuth = getAuth(secondaryApp);
-
+      const secondaryApp = initializeApp(firebaseConfig, 'Sec-' + Date.now());
+      const secAuth = getAuth(secondaryApp);
+      let created = 0, errors = [];
       try {
-        for (const userObj of emailsToCreate) {
+        for (const u of usersToCreate) {
           try {
-            const userCredential = await createUserWithEmailAndPassword(secondaryAuth, userObj.email, tempPassword);
-            const uid = userCredential.user.uid;
-
-            await setDoc(doc(db, 'users', uid), {
-              email: userObj.email,
-              role: userObj.role,
-              pharmacyId: pharmacyId,
-              isTempPassword: true,
-              createdAt: new Date().toISOString()
+            const cred = await createUserWithEmailAndPassword(secAuth, u.email, tempPass);
+            await setDoc(doc(db, 'users', cred.user.uid), {
+              email: u.email, role: u.role, pharmacyId: pid,
+              isTempPassword: true, createdAt: new Date().toISOString()
             });
-            createdCount++;
-          } catch(err) {
-            errors.push(`${userObj.email}: ${err.message}`);
-          }
+            created++;
+          } catch (err) { errors.push(`${u.email}: ${err.message}`); }
         }
-      } finally {
-        await deleteApp(secondaryApp);
-      }
+      } finally { await deleteApp(secondaryApp); }
 
-      if (errors.length > 0) {
-        alert(`⚠️ ፋርማሲው ተፈጥሯል ግን አንዳንድ ተጠቃሚዎች ላይ ስህተት አለ:\n${errors.join('\n')}`);
-      } else {
-        alert(`✅ ፋርማሲው እና ${createdCount} ተጠቃሚዎች በተሳካ ሁኔታ ተፈጥረዋል!`);
-      }
+      if (errors.length) toast(`ፋርማሲ ተፈጥሯል፣ ${created} ተጠቃሚ፣ ስህተቶች: ${errors.length}`, 'error');
+      else toast(`✅ ፋርማሲ + ${created} ተጠቃሚ ተፈጥረዋል`, 'success');
 
-      document.getElementById('newTenantName').value = '';
-      document.getElementById('newTenantWebsite').value = '';
-      document.getElementById('newTenantOwnerEmail').value = '';
-      document.getElementById('newTenantManagerEmail').value = '';
-      document.getElementById('newTenantAccountantEmail').value = '';
-      document.getElementById('newTenantTempPassword').value = '123456';
-      document.getElementById('newTenantAmount').value = '';
-      document.getElementById('newTenantExpiry').value = '';
-      loadAdminData();
-
-    } catch(e) { 
-      alert('⚠️ ስህተት: ' + e.message); 
-    }
+      ['newName','newWebsite','newOwner','newManager','newAccountant','newAmount','newExpiry'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('newTempPass').value = '123456';
+      loadAllData();
+    } catch (e) { toast('ስህተት: ' + e.message, 'error'); }
   };
 
   window.markPaid = async function(id) {
-    const tenant = allTenants.find(t => t.id === id);
-    if(!tenant) return;
-    
-    const months = prompt('ለስንት ወር ክፍያ ተከፍሏል? (ቁጥር ብቻ ያስገቡ)', '1');
+    const t = allTenants.find(x => x.id === id);
+    if (!t) return;
+    const months = prompt('ለስንት ወር ክፍያ?', '1');
     if (!months || isNaN(months)) return;
-
+    const method = prompt('የክፍያ ዘዴ? (Cash/Transfer/Telebirr)', 'Cash') || 'Cash';
     const today = new Date();
-    let currentExpiry = tenant.expiryDate ? new Date(tenant.expiryDate) : new Date();
-    if (currentExpiry < today) currentExpiry = today;
-    
-    currentExpiry.setMonth(currentExpiry.getMonth() + parseInt(months));
-    const newExpiry = currentExpiry.toISOString().split('T')[0];
-    
-    const monthlyAmount = parseFloat(tenant.amount) || 0;
-    const history = tenant.paymentHistory || [];
-    history.push({ date: today.toISOString().split('T')[0], amount: monthlyAmount * parseInt(months), months: parseInt(months) });
-
+    let cur = t.expiryDate ? new Date(t.expiryDate) : new Date();
+    if (cur < today) cur = today;
+    cur.setMonth(cur.getMonth() + parseInt(months));
+    const newExpiry = cur.toISOString().split('T')[0];
+    const amt = (parseFloat(t.amount) || 0) * parseInt(months);
+    const history = t.paymentHistory || [];
+    history.push({ date: today.toISOString().split('T')[0], amount: amt, months: parseInt(months), method });
     try {
-      await updateDoc(doc(db, 'pharmacies', id), { 
-        expiryDate: newExpiry, 
-        isSuspended: false,
-        paymentHistory: history
-      });
-      alert(`✅ ክፍያ ተመዝግቧል! አዲስ የማብቂያ ቀን: ${newExpiry}`);
-      loadAdminData();
-    } catch(e) { alert(e.message); }
+      await updateDoc(doc(db, 'pharmacies', id), { expiryDate: newExpiry, isSuspended: false, paymentHistory: history });
+      toast(`✅ ክፍያ ተመዝግቧል። አዲስ ማብቂያ: ${newExpiry}`, 'success');
+      loadAllData();
+    } catch (e) { toast(e.message, 'error'); }
   };
 
-  window.toggleSuspend = async function(id, currentStatus) {
-    if(!confirm('እርግጠኛ ነህ? ይህን ፋርማሲ ማቆም/ማንቃት ትፈልጋለህ?')) return;
-    
+  window.toggleSuspend = async function(id, cur) {
+    const ok = await showModal('⚠️ ማረጋገጫ', cur ? 'ፋርማሲውን ማንቃት ትፈልጋለህ?' : 'ፋርማሲውን ማቆም ትፈልጋለህ?', [
+      { text: 'አዎ', class: 'btn-danger', value: true },
+      { text: 'አይ', class: 'btn-outline', value: false }
+    ]);
+    if (!ok) return;
     try {
-      await updateDoc(doc(db, 'pharmacies', id), { isSuspended: !currentStatus });
-      
-      const usersQuery = query(collection(db, 'users'), where('pharmacyId', '==', id));
-      const usersSnap = await getDocs(usersQuery);
-      
-      if (!currentStatus) {
-        alert(`✅ ፋርማሲው ተቆልፏል! ${usersSnap.size} ተጠቃሚዎች ወደ ውጭ ይወጣሉ።`);
-      } else {
-        alert('✅ ፋርማሲው እንደገና ንቁ ሆኗል!');
-      }
-      
-      loadAdminData();
-    } catch(e) { alert('ስህተት: ' + e.message); }
+      await updateDoc(doc(db, 'pharmacies', id), { isSuspended: !cur });
+      toast(cur ? '✅ ንቁ ሆኗል' : '⏸️ ተቆልፏል', 'success');
+      loadAllData();
+    } catch (e) { toast(e.message, 'error'); }
   };
 
   window.deleteTenant = async function(id) {
-    if(!confirm('🚨 እርግጠኛ ነዎት? ይህን ፋርማሲ እና ተጠቃሚዎቹን ማጥፋት ትፈልጋለህ? ይህ ተግባር አይመለስም!')) return;
+    const ok = await showModal('🚨 አደጋ!', 'ፋርማሲውን እና ተጠቃሚዎቹን ማጥፋት? አይመለስም!', [
+      { text: 'አጥፋ', class: 'btn-danger', value: true },
+      { text: 'ተወው', class: 'btn-outline', value: false }
+    ]);
+    if (!ok) return;
     try {
-      const usersQuery = query(collection(db, 'users'), where('pharmacyId', '==', id));
-      const usersSnap = await getDocs(usersQuery);
-      for (const userDoc of usersSnap.docs) {
-        await deleteDoc(doc(db, 'users', userDoc.id));
-      }
-      
+      const us = await getDocs(query(collection(db, 'users'), where('pharmacyId', '==', id)));
+      for (const u of us.docs) await deleteDoc(doc(db, 'users', u.id));
       await deleteDoc(doc(db, 'pharmacies', id));
-      
-      loadAdminData();
-      alert('✅ ፋርማሲው እና ተጠቃሚዎቹ ተጠፍተዋል!');
-    } catch(e) { alert(e.message); }
+      toast('✅ ተጠፍቷል', 'success');
+      loadAllData();
+    } catch (e) { toast(e.message, 'error'); }
   };
 
-  window.editTenant = function(id) {
+  window.editTenant = async function(id) {
     const t = allTenants.find(x => x.id === id);
-    if(!t) return;
-    const newName = prompt('አዲስ የፋርማሲ ስም:', t.name);
-    const newWebsite = prompt('አዲስ ድረ-ገጽ:', t.website);
-    const newAmount = prompt('አዲስ የክፍያ መጠን:', t.amount);
-    
-    if (newName !== null) {
-      updateDoc(doc(db, 'pharmacies', id), { 
-        name: newName, 
-        website: newWebsite || '', 
-        amount: parseFloat(newAmount) || 0 
-      }).then(() => { alert('✅ ተስተካክሏል!'); loadAdminData(); }).catch(e => alert(e.message));
-    }
+    if (!t) return;
+    const name = prompt('ስም:', t.name) ?? null;
+    if (name === null) return;
+    const website = prompt('ድረ-ገጽ:', t.website || '') ?? t.website;
+    const amount = prompt('ክፍያ (ብር):', t.amount || 0) ?? t.amount;
+    try {
+      await updateDoc(doc(db, 'pharmacies', id), { name, website, amount: parseFloat(amount) || 0 });
+      toast('✅ ተስተካክሏል', 'success');
+      loadAllData();
+    } catch (e) { toast(e.message, 'error'); }
   };
 
   window.viewHistory = function(id) {
     const t = allTenants.find(x => x.id === id);
-    if(!t || !t.paymentHistory || t.paymentHistory.length === 0) {
-      alert('📜 እስካሁን ምንም የክፍያ ታሪክ የለም።');
-      return;
-    }
-    let historyText = '📜 የክፍያ ታሪክ:\n\n';
-    t.paymentHistory.forEach(h => {
-      historyText += `📅 ${h.date} - ${h.amount} ብር (${h.months} ወር)\n`;
-    });
-    alert(historyText);
+    const h = t?.paymentHistory || [];
+    if (!h.length) { toast('ምንም ታሪክ የለም', 'info'); return; }
+    const txt = h.map(x => `${x.date} — ${x.amount} ብር (${x.months} ወር, ${x.method || '—'})`).join('\n');
+    showModal('📜 የክፍያ ታሪክ', txt, [{ text: 'ዝጋ', class: 'btn-primary' }]);
   };
 
-  window.exportExcel = function() {
-    if (allTenants.length === 0) { alert('ውሂብ የለም'); return; }
-    let csv = '\uFEFFስም,ድረ-ገጽ,ዓይነት,ባለቤት,ማናጀር,አካውንታንት,የክፍያ መጠን,የማብቂያ ቀን,ሁኔታ\n';
+  // ===== USERS =====
+  window.renderUserList = function() {
+    const el = document.getElementById('userList');
+    const search = (document.getElementById('searchUser')?.value || '').toLowerCase();
+    const role = document.getElementById('filterUserRole')?.value || 'all';
+    let filtered = allUsers.filter(u => {
+      const ms = (u.email || '').toLowerCase().includes(search);
+      const mr = role === 'all' || u.role === role;
+      return ms && mr;
+    });
+    if (!filtered.length) { el.innerHTML = '<div class="empty"><div class="emoji">👤</div><p>ምንም ተጠቃሚ የለም</p></div>'; return; }
+    el.innerHTML = filtered.map(u => {
+      const ph = allTenants.find(t => t.id === u.pharmacyId);
+      const roleIcon = u.role === 'owner' ? '👑' : u.role === 'manager' ? '🎯' : u.role === 'accountant' ? '🧰' : '👷';
+      return `<div style="padding:12px; border-bottom:1px solid #edf2f7;">
+        <div style="font-weight:700; color:#2c5282; font-size:13px;">${roleIcon} ${u.email}</div>
+        <div style="font-size:11px; color:#718096; margin-top:4px;">🏢 ${ph?.name || u.pharmacyId || '—'} • ${u.role}</div>
+        <div style="display:flex; gap:6px; margin-top:8px;">
+          <button class="btn btn-info btn-sm" onclick="sendResetLink('${u.email}')">📧 Reset</button>
+          <button class="btn btn-warning btn-sm" onclick="changeRole('${u.id}','${u.role}')">🔄 Role</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">🗑️</button>
+        </div>
+      </div>`;
+    }).join('');
+  };
+
+  window.sendResetLink = async function(email) {
+    try { await sendPasswordResetEmail(auth, email); toast(`📧 ሊንክ ወደ ${email} ተልኳል`, 'success'); }
+    catch (e) { toast(e.message, 'error'); }
+  };
+
+  window.changeRole = async function(id, cur) {
+    const newRole = prompt('አዲስ ሚና (owner/manager/accountant/employee):', cur);
+    if (!newRole || !['owner','manager','accountant','employee'].includes(newRole)) { toast('ልክ ያልሆነ ሚና', 'error'); return; }
+    try { await updateDoc(doc(db, 'users', id), { role: newRole }); toast('✅ ተቀይሯል', 'success'); loadAllData(); }
+    catch (e) { toast(e.message, 'error'); }
+  };
+
+  window.deleteUser = async function(id) {
+    const ok = await showModal('⚠️', 'ተጠቃሚውን ማጥፋት?', [
+      { text: 'አጥፋ', class: 'btn-danger', value: true }, { text: 'ተወው', class: 'btn-outline', value: false }
+    ]);
+    if (!ok) return;
+    try { await deleteDoc(doc(db, 'users', id)); toast('✅ ተጠፍቷል', 'success'); loadAllData(); }
+    catch (e) { toast(e.message, 'error'); }
+  };
+
+  // ===== BILLING =====
+  function renderBilling() {
+    const sumEl = document.getElementById('billingSummary');
+    const histEl = document.getElementById('billingHistory');
+    let total = 0, count = 0;
+    allTenants.forEach(t => (t.paymentHistory || []).forEach(p => { total += p.amount || 0; count++; }));
+    sumEl.innerHTML = `<div class="stats-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="stat-card"><div class="value val-green">${total.toLocaleString()}</div><div class="label">💰 ጠቅላላ ገቢ (ብር)</div></div>
+      <div class="stat-card"><div class="value val-blue">${count}</div><div class="label">📜 ክፍያዎች</div></div>
+    </div>`;
+
+    let all = [];
+    allTenants.forEach(t => (t.paymentHistory || []).forEach(p => all.push({ ...p, tenant: t.name })));
+    all.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    if (!all.length) { histEl.innerHTML = '<div class="empty"><div class="emoji">💰</div><p>ምንም ክፍያ የለም</p></div>'; return; }
+    histEl.innerHTML = all.slice(0, 50).map(p => `<div style="padding:10px 0; border-bottom:1px solid #edf2f7; display:flex; justify-content:space-between;">
+      <div><strong style="color:#2c5282; font-size:13px;">${p.tenant}</strong><div style="font-size:11px; color:#718096;">${p.date} • ${p.method || '—'}</div></div>
+      <div style="color:#276749; font-weight:800;">${p.amount} ብር</div>
+    </div>`).join('');
+  }
+
+  // ===== PASSWORDS =====
+  function renderPasswordRequests() {
+    const el = document.getElementById('passwordRequestsList');
+    const badge = document.getElementById('sbPassBadge');
+    if (allPasswordRequests.length) { badge.style.display = 'inline-block'; badge.textContent = allPasswordRequests.length; }
+    else badge.style.display = 'none';
+    if (!allPasswordRequests.length) { el.innerHTML = '<div class="empty"><div class="emoji">✅</div><p>ምንም ጥያቄ የለም</p></div>'; return; }
+    el.innerHTML = allPasswordRequests.map(r => `<div style="padding:12px; border-bottom:1px solid #edf2f7; display:flex; justify-content:space-between; gap:8px;">
+      <div><div style="font-weight:700; font-size:13px;">${r.email}</div><div style="font-size:11px; color:#718096;">${r.date || '—'}</div></div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-info btn-sm" onclick="sendResetLink('${r.email}')">📧</button>
+        <button class="btn btn-success btn-sm" onclick="resolveReq('${r.id}')">✅</button>
+      </div>
+    </div>`).join('');
+  }
+
+  window.resolveReq = async function(id) {
+    try { await deleteDoc(doc(db, 'passwordRequests', id)); toast('✅ ተፈትቷል', 'success'); loadAllData(); }
+    catch (e) { toast(e.message, 'error'); }
+  };
+
+  // ===== SUPPORT =====
+  window.saveSupportInfo = async function() {
+    const phone = document.getElementById('supportPhone').value.trim();
+    const email = document.getElementById('supportEmail').value.trim();
+    const telegram = document.getElementById('supportTelegram').value.trim();
+    try { await setDoc(doc(db, 'settings', 'support'), { phone, email, telegram }, { merge: true }); toast('✅ ተቀምጧል', 'success'); }
+    catch (e) { toast(e.message, 'error'); }
+  };
+
+  // ===== DATA =====
+  window.exportCSV = function() {
+    if (!allTenants.length) { toast('ዳታ የለም', 'error'); return; }
+    let csv = '\uFEFFስም,ድረ-ገጽ,ዓይነት,ባለቤት,ማናጀር,አካውንታንት,ክፍያ,ማብቂያ,ሁኔታ\n';
     allTenants.forEach(t => {
-      const status = t.isSuspended ? 'የታገደ' : 'ንቁ';
-      let bType = 'Retail';
-      if(t.bizType === 'wholesale') bType = 'Wholesale';
-      else if(t.bizType === 'both') bType = 'Both';
-      
-      csv += `"${t.name}","${t.website||''}","${bType}","${t.ownerEmail||''}","${t.managerEmail||''}","${t.accountantEmail||''}",${t.amount || 0},"${t.expiryDate || ''}","${status}"\n`;
+      const st = t.isSuspended ? 'የታገደ' : 'ንቁ';
+      csv += `"${t.name}","${t.website || ''}","${t.bizType || ''}","${t.ownerEmail || ''}","${t.managerEmail || ''}","${t.accountantEmail || ''}",${t.amount || 0},"${t.expiryDate || ''}","${st}"\n`;
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `admin-pharmacies-${new Date().toISOString().split('T')[0]}.csv`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    const a = document.createElement('a'); a.href = url; a.download = `pharmacies-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click(); URL.revokeObjectURL(url);
+    toast('✅ CSV ወርዷል', 'success');
   };
 
-  window.exportBackup = async function() {
-    const statusEl = document.getElementById('backupStatus');
-    statusEl.textContent = '⏳ ዳታ በመሰብሰብ ላይ...';
-    try {
-      const data = { tenants: allTenants, passwordRequests: allPasswordRequests };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = `admin-backup-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-      statusEl.textContent = '✅ ዳታ ወርዷል!'; statusEl.style.color = '#38a169';
-    } catch(e) { statusEl.textContent = '❌ ' + e.message; statusEl.style.color = '#c53030'; }
+  window.exportBackup = function() {
+    const data = { tenants: allTenants, users: allUsers, passwordRequests: allPasswordRequests, support: allSupportInfo, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click(); URL.revokeObjectURL(url);
+    toast('✅ ባክአፕ ወርዷል', 'success');
   };
 
-  window.importBackup = function(event) {
+  window.importBackup = async function(event) {
     const file = event.target.files[0]; if (!file) return;
-    if (!confirm('⚠️ ዳታ መመለስ አሁን ያለውን ዳታ ይተካል! እርግጠኛ ነህ?')) { event.target.value = ''; return; }
-    const statusEl = document.getElementById('backupStatus');
-    statusEl.textContent = '⏳ በመመለስ ላይ...';
+    const ok = await showModal('⚠️ ማረጋገጫ', 'ዳታ መመለስ አሁን ያለውን ይተካል!', [
+      { text: 'መልስ', class: 'btn-danger', value: true }, { text: 'ተወው', class: 'btn-outline', value: false }
+    ]);
+    if (!ok) { event.target.value = ''; return; }
+    const status = document.getElementById('backupStatus');
+    status.textContent = '⏳ በመመለስ ላይ...'; status.style.color = '#dd6b20';
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        for (const t of data.tenants || []) { const { id, ...rest } = t; await setDoc(doc(db, 'pharmacies', id), rest); }
-        statusEl.textContent = '✅ ዳታ ተመልሷል!'; statusEl.style.color = '#38a169';
-        loadAdminData();
-      } catch(err) { statusEl.textContent = '❌ ' + err.message; statusEl.style.color = '#c53030'; }
+        for (const t of (data.tenants || [])) { const { id, ...rest } = t; await setDoc(doc(db, 'pharmacies', id), rest); }
+        status.textContent = '✅ ተመልሷል'; status.style.color = '#276749';
+        toast('✅ ዳታ ተመልሷል', 'success');
+        loadAllData();
+      } catch (err) { status.textContent = '❌ ' + err.message; status.style.color = '#c53030'; }
     };
     reader.readAsText(file); event.target.value = '';
   };
-</script>
 
+</script>
 </body>
 </html>
