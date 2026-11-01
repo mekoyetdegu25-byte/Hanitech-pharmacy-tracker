@@ -861,9 +861,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyStockAdjust">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">🏢 Branch</label><select id="adjustBranch" onchange="populateAdjustMedSelect()"></select></div>
-                            <div><label class="field-label">📦 Select Item</label><select id="adjustMedId"></select></div>
-                        </div>
+    <div><label class="field-label">🏢 Branch</label><select id="adjustBranch" onchange="populateAdjustMedSelect()"></select></div>
+    <div>
+        <label class="field-label">🔍 Search Item (Name/Batch)</label>
+        <input type="text" id="adjustSearchInput" placeholder="Type to search..." oninput="populateAdjustMedSelect()" style="margin-bottom: 8px;">
+        <label class="field-label">📦 Select Item</label>
+        <select id="adjustMedId"></select>
+    </div>
+</div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                             <div><label class="field-label">🔢 New Qty</label><input type="number" id="adjustQty" placeholder="Leave empty to keep current"></div>
                             <div><label class="field-label">🏷️ New Sell Price</label><input type="number" id="adjustPrice" placeholder="Leave empty to keep current"></div>
@@ -878,9 +883,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <div><label class="field-label">To Branch</label><select id="transferToBranch"></select></div>
                             </div>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                                <div><label class="field-label">📦 Select Item</label><select id="transferMedId"></select></div>
-                                <div><label class="field-label">🔢 Transfer Qty</label><input type="number" id="transferQty" placeholder="Quantity to move"></div>
-                            </div>
+    <div>
+        <label class="field-label">🔍 Search Item (Name/Batch)</label>
+        <input type="text" id="transferSearchInput" placeholder="Type to search..." oninput="populateTransferMedSelect()" style="margin-bottom: 8px;">
+        <label class="field-label">📦 Select Item</label>
+        <select id="transferMedId"></select>
+    </div>
+    <div><label class="field-label">🔢 Transfer Qty</label><input type="number" id="transferQty" placeholder="Quantity to move"></div>
+</div>
                             <button class="btn btn-primary" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="transferStock()">🔄 Transfer Stock</button>
                             <div style="clear:both;"></div>
                         </div>
@@ -1968,11 +1978,25 @@ window.showCustomerProfile = function(customerName) {
 // ==========================================
 window.populateTransferMedSelect = function() {
     const fromBranch = document.getElementById('transferFromBranch')?.value;
+    const searchVal = (document.getElementById('transferSearchInput')?.value || '').toLowerCase();
     const sel = document.getElementById('transferMedId'); if(!sel) return;
+    
     sel.innerHTML = '<option value="">-- Select Item --</option>';
     let filtered = allMedicines.filter(m => m.quantity > 0);
+    
     if (fromBranch && fromBranch !== 'all') filtered = filtered.filter(m => m.branch === fromBranch);
-    filtered.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Qty: ${m.quantity}</option>`; });
+    
+    // ✅ በስም ወይም በBatch ማጣራት
+    if (searchVal) {
+        filtered = filtered.filter(m => 
+            (m.name||'').toLowerCase().includes(searchVal) || 
+            (m.batch||'').toLowerCase().includes(searchVal)
+        );
+    }
+    
+    filtered.forEach(m => { 
+        sel.innerHTML += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Batch: ${m.batch || '-'} - Qty: ${m.quantity}</option>`; 
+    });
 };
 
 window.transferStock = async function() {
@@ -2692,11 +2716,25 @@ window.changeLowPage = function(dir) { lowPage += dir; loadInventory(); };
 
 window.populateAdjustMedSelect = function() {
     const branch = document.getElementById('adjustBranch').value;
+    const searchVal = (document.getElementById('adjustSearchInput')?.value || '').toLowerCase();
     const sel = document.getElementById('adjustMedId'); if(!sel) return;
+    
     sel.innerHTML = '<option value="">-- Select Item --</option>';
     let filtered = allMedicines;
+    
     if (branch !== 'all') filtered = filtered.filter(m => m.branch === branch);
-    filtered.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Qty: ${m.quantity} - Price: ${m.price}</option>`; });
+    
+    // ✅ በስም ወይም በBatch ማጣራት
+    if (searchVal) {
+        filtered = filtered.filter(m => 
+            (m.name||'').toLowerCase().includes(searchVal) || 
+            (m.batch||'').toLowerCase().includes(searchVal)
+        );
+    }
+    
+    filtered.forEach(m => { 
+        sel.innerHTML += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Batch: ${m.batch || '-'} - Qty: ${m.quantity} - Price: ${m.price}</option>`; 
+    });
 };
 
 window.adjustStock = async function() {
