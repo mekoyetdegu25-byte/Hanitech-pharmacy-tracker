@@ -958,13 +958,45 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">📈 30-Day Sales Chart</div>
                             <div class="chart-container" style="height: 300px;"><canvas id="dailyChartCanvas"></canvas></div>
                         </div>
-                        <div class="dash-card" style="grid-column: 1 / -1;">
+                                                <div class="dash-card" style="grid-column: 1 / -1;">
                             <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">🥧 Expense Breakdown Chart</div>
                             <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
                                 <div style="flex: 1; min-width: 200px; height: 200px;"><canvas id="expensePieChartCanvas"></canvas></div>
                                 <div id="expenseLegend" style="flex: 1; min-width: 200px;"></div>
                             </div>
                         </div>
+                        
+                        <!-- ✅ Top 10 ሰንጠረዦች -->
+                        <div class="dash-card" style="grid-column: 1 / -1;">
+                            <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">🏆 Top 10 Selling & Revenue Generating (This Month)</div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" class="responsive-table-container">
+                                
+                                <div>
+                                    <h4 style="font-size:14px; margin-bottom:10px; color:var(--primary);">🔥 Top 10 Selling (Qty)</h4>
+                                    <!-- ID ለሞባይል መታጠፊያ -->
+                                    <div id="topSellingWrapper">
+                                        <table class="data-table" style="width:100%;">
+                                            <thead><tr><th>Medicine</th><th>Qty Sold</th></tr></thead>
+                                            <tbody id="topSellingTableBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 style="font-size:14px; margin-bottom:10px; color:#f59e0b;">💰 Top 10 Revenue (ETB)</h4>
+                                    <!-- ID ለሞባይል መታጠፊያ -->
+                                    <div id="topRevenueWrapper">
+                                        <table class="data-table" style="width:100%;">
+                                            <thead><tr><th>Medicine</th><th>Revenue</th></tr></thead>
+                                            <tbody id="topRevenueTableBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -2970,9 +3002,65 @@ async function loadDashboard() {
     document.getElementById('dashGrossIncome').innerText = totalRev.toFixed(2) + ' ETB';
     document.getElementById('dashTotalExpense').innerText = (totalExp + totalFixed).toFixed(2) + ' ETB';
     document.getElementById('dashNetProfit').innerText = netProfit.toFixed(2) + ' ETB';
-    document.getElementById('dashTotalSalesCount').innerText = monthSales.length + monthQuick.length;
+        document.getElementById('dashTotalSalesCount').innerText = monthSales.length + monthQuick.length;
     renderCharts(selectedMonth, branchFilter);
+    
+    // ✅ Top 10 ሰንጠረዦችን ሞላ
+    renderTopSellingTables(monthSales, branchFilter);
 }
+
+// ✅ Top 10 ማሳያ ተግባር
+window.renderTopSellingTables = function(monthSales, branchFilter) {
+    const sellingTbody = document.getElementById('topSellingTableBody');
+    const revenueTbody = document.getElementById('topRevenueTableBody');
+    if (!sellingTbody || !revenueTbody) return;
+
+    // የእያንዳንዱን መድኃኒት ሽያጭ መሰብሰብ
+    let medStats = {};
+    monthSales.forEach(sale => {
+        if (branchFilter !== 'all' && sale.branch !== branchFilter) return;
+        
+        const name = sale.medicineName;
+        const qty = sale.quantity || 0;
+        const rev = sale.paidAmount !== undefined ? sale.paidAmount : sale.total;
+
+        if (!medStats[name]) medStats[name] = { qty: 0, revenue: 0 };
+        medStats[name].qty += qty;
+        medStats[name].revenue += rev;
+    });
+
+    let statsArray = Object.keys(medStats).map(name => ({
+        name: name,
+        qty: medStats[name].qty,
+        revenue: medStats[name].revenue
+    }));
+
+    // 1. Top 10 Selling (በብዛት)
+    let topSelling = [...statsArray].sort((a, b) => b.qty - a.qty).slice(0, 10);
+    if (topSelling.length === 0) {
+        sellingTbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:gray;">No data</td></tr>';
+    } else {
+        sellingTbody.innerHTML = topSelling.map((item, index) => `
+            <tr>
+                <td><strong>${index + 1}.</strong> ${item.name}</td>
+                <td style="color:var(--primary); font-weight:bold;">${item.qty}</td>
+            </tr>
+        `).join('');
+    }
+
+    // 2. Top 10 Revenue (በገቢ)
+    let topRevenue = [...statsArray].sort((a, b) => b.revenue - a.revenue).slice(0, 10);
+    if (topRevenue.length === 0) {
+        revenueTbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:gray;">No data</td></tr>';
+    } else {
+        revenueTbody.innerHTML = topRevenue.map((item, index) => `
+            <tr>
+                <td><strong>${index + 1}.</strong> ${item.name}</td>
+                <td style="color:#f59e0b; font-weight:bold;">${item.revenue.toFixed(2)} ETB</td>
+            </tr>
+        `).join('');
+    }
+};
 
 function renderCharts(selectedMonth, branchFilter) {
     const ctx = document.getElementById('dailyChartCanvas');
@@ -3394,11 +3482,11 @@ window.applyUniversalMobileCollapse = function() {
     // የገጹ ኮድ ሙሉ በሙሉ እስኪጫን ድረስ ጠብቅ
     if (!document.getElementById('mainApp').classList.contains('show')) return; 
 
-        const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList',
+            const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList',
         'expiryListDisplay','lowStockListDisplay','unpaidCreditList','dailySalesList',
         'monthlySalesList','auditTrailList','expCatListDisplay','branchListDisplay',
-        'customerListDisplay','catTableBody','purchaseHistoryList'];
-
+        'customerListDisplay','catTableBody','purchaseHistoryList',
+        'topSellingWrapper', 'topRevenueWrapper'];
     listIds.forEach(id => {
         const el = document.getElementById(id); 
         if (!el) return;
@@ -3423,7 +3511,9 @@ window.applyUniversalMobileCollapse = function() {
         if (id === 'unpaidCreditList') btnText = '💳 ያልተከፈሉ ዕዳዎች';
                 if (id === 'catTableBody') btnText = '🗂️ የምድብ ዝርዝር';
         if (id === 'auditTrailList') btnText = '📝 የእንቅስቃሴ መዝገብ';
-        if (id === 'purchaseHistoryList') btnText = '📥 የግዢ ታሪክ (Purchase History)';
+                if (id === 'purchaseHistoryList') btnText = '📥 የግዢ ታሪክ (Purchase History)';
+        if (id === 'topSellingWrapper') btnText = '🔥 በብዛት የተሸጡ 10';
+        if (id === 'topRevenueWrapper') btnText = '💰 ከፍተኛ ገቢ ያስገኙ 10';
 
         btn.innerHTML = `${btnText} <span>▼</span>`; 
         const contentBox = document.createElement('div'); 
