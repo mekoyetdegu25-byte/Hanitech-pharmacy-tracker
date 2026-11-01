@@ -922,16 +922,32 @@ input:checked + .slider:before { transform: translateX(20px); }
                 </div>
                         </div>
             <!-- ✅ አዲስ የተጨመረ: Purchase History -->
-            <div class="sub-panel" id="sub4_4">
+                        <div class="sub-panel" id="sub4_4">
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrPurchaseHist','bodyPurchaseHist')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📥</span><span class="sec-title">Purchase History (Restock)</span></div>
                     </div>
                     <div class="section-body open" id="bodyPurchaseHist">
-                                                <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
-                            <input type="text" class="search-box" id="searchPurchaseHist" placeholder="🔍 Search by item, batch or supplier..." oninput="renderPurchaseHistory()" style="flex:1;">
+                        <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                            <input type="text" class="search-box" id="searchPurchaseHist" placeholder="🔍 Search by item, batch or supplier..." oninput="purchaseHistPage=1; renderPurchaseHistory()" style="flex:1;">
                         </div>
                         <div id="purchaseHistoryList" class="responsive-table-container"></div>
+                        
+                        <!-- ✅ Pagination ለ Purchase History -->
+                        <div class="pagination-controls" style="margin-top:15px;">
+                            <div class="rows-per-page">
+                                Show 
+                                <select id="purchaseHistRowsPerPage" onchange="purchaseHistPage=1; renderPurchaseHistory()">
+                                    <option value="10">10</option><option value="25">25</option><option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div id="purchaseHistPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-outline" id="btnPrevPurchaseHist" onclick="changePurchaseHistPage(-1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextPurchaseHist" onclick="changePurchaseHistPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1407,6 +1423,7 @@ let dailyChartInstance = null, expensePieChartInstance = null;
 let currentCategoryFilter = 'all';
 
 let medPage = 1, catPage = 1, expPage = 1, lowPage = 1, invPage = 1, salesHistPage = 1, dailyPage = 1, monthlyPage = 1;
+let purchaseHistPage = 1, reorderPage = 1;
 
 let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed = null, unsubCredit = null, unsubQuickSales = null;
 
@@ -2912,6 +2929,8 @@ window.renderPurchaseHistory = async function() {
     if (!listEl) return;
     
     const searchVal = (document.getElementById('searchPurchaseHist')?.value || '').toLowerCase();
+    const rowsPerPage = parseInt(document.getElementById('purchaseHistRowsPerPage')?.value) || 10;
+    
     listEl.innerHTML = '<p style="text-align:center; padding:20px;">Loading purchases...</p>';
     
     try {
@@ -2920,7 +2939,6 @@ window.renderPurchaseHistory = async function() {
         let purchases = [];
         snap.forEach(doc => purchases.push({ id: doc.id, ...doc.data() }));
         
-        // ከአዲስ ወደ አሮጌ መደርደር
         purchases.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
         
         if (searchVal) {
@@ -2933,14 +2951,23 @@ window.renderPurchaseHistory = async function() {
         
         if (purchases.length === 0) {
             listEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No purchase history found.</p>';
+            document.getElementById('purchaseHistPageInfo').innerText = `Page 1 of 1`;
             return;
         }
         
+        // ✅ Pagination
+        const totalPages = Math.ceil(purchases.length / rowsPerPage);
+        if (purchaseHistPage > totalPages) purchaseHistPage = totalPages;
+        if (purchaseHistPage < 1) purchaseHistPage = 1;
+        
+        const start = (purchaseHistPage - 1) * rowsPerPage;
+        const paginated = purchases.slice(start, start + rowsPerPage);
+
         let html = `<div style="overflow-x:auto;"><table class="data-table"><thead><tr>
             <th>Date</th><th>Item Name</th><th>Batch</th><th>Supplier</th><th>Qty Added</th><th>Unit Cost</th>
         </tr></thead><tbody>`;
         
-        purchases.forEach(p => {
+        paginated.forEach(p => {
             html += `<tr>
                 <td>${p.date}</td>
                 <td><strong>${p.name}</strong></td>
@@ -2953,11 +2980,20 @@ window.renderPurchaseHistory = async function() {
         html += `</tbody></table></div>`;
         
         listEl.innerHTML = html;
+        
+        // ✅ የገጽ መረጃ ማሳያ
+        document.getElementById('purchaseHistPageInfo').innerText = `Page ${purchaseHistPage} of ${totalPages}`;
+        document.getElementById('btnPrevPurchaseHist').disabled = purchaseHistPage === 1;
+        document.getElementById('btnNextPurchaseHist').disabled = purchaseHistPage === totalPages;
+        
     } catch(e) {
         console.error(e);
         listEl.innerHTML = '<p style="color:red; text-align:center;">Error loading purchase history.</p>';
     }
 };
+
+// ✅ የገጽ መቀየሪያ ተግባር
+window.changePurchaseHistPage = function(dir) { purchaseHistPage += dir; renderPurchaseHistory(); };
 
 function calculateStockReport() {
     let totalPurchasedQty = 0; let totalPurchasedValue = 0; let totalSold = 0; let totalRemaining = 0;
@@ -3513,7 +3549,8 @@ window.applyUniversalMobileCollapse = function() {
         if (id === 'auditTrailList') btnText = '📝 የእንቅስቃሴ መዝገብ';
                 if (id === 'purchaseHistoryList') btnText = '📥 የግዢ ታሪክ (Purchase History)';
         if (id === 'topSellingWrapper') btnText = '🔥 በብዛት የተሸጡ 10';
-        if (id === 'topRevenueWrapper') btnText = '💰 ከፍተኛ ገቢ ያስገኙ 10';
+                if (id === 'topRevenueWrapper') btnText = '💰 ከፍተኛ ገቢ ያስገኙ 10';
+        if (id === 'purchaseHistoryList') btnText = '📥 የግዢ ታሪክ';
 
         btn.innerHTML = `${btnText} <span>▼</span>`; 
         const contentBox = document.createElement('div'); 
