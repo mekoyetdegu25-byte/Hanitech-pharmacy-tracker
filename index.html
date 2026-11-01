@@ -399,8 +399,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
                             <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search by name or batch..." oninput="medPage=1; renderMedList()" style="flex: 1; min-width: 200px;">
                             <select id="filterTypeMed" onchange="medPage=1; renderMedList()" style="width: 180px;">
-                                <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
-                            </select>
+    <option value="all">All Types</option>
+    <option value="medicine">💊 Medicine</option>
+    <option value="cosmetic">🧴 Cosmetics</option>
+    <option value="medical_equipment">🩺 Medical Equipment</option>
+    <option value="supplements">🧪 Supplements</option>
+    <option value="baby_care">👶 Baby Care</option>
+    <option value="home_personal_care">🏠 Home & Personal Care</option>
+</select>
                             <select id="filterBranchMed" onchange="medPage=1; renderMedList()" style="width: 180px;">
                                 <option value="all">All Branches</option>
                             </select>
@@ -444,7 +450,15 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <h4 style="margin-bottom:12px; font-size:14px; font-weight:700;">Single Entry</h4>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                                 <div>
-                                    <label class="field-label">📦 Type</label><select id="medType" onchange="onMedTypeChange()"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
+                                    <label class="field-label">📦 Type</label>
+<select id="medType" onchange="onMedTypeChange()">
+    <option value="medicine">💊 Medicine</option>
+    <option value="cosmetic">🧴 Cosmetics</option>
+    <option value="medical_equipment">🩺 Medical Equipment</option>
+    <option value="supplements">🧪 Supplements</option>
+    <option value="baby_care">👶 Baby Care</option>
+    <option value="home_personal_care">🏠 Home & Personal Care</option>
+</select>
                                     <label class="field-label">🏢 Branch</label><select id="medBranch"></select>
                                     <label class="field-label">📁 Category</label>
                                     <input list="categoryList" id="medCategory" placeholder="Type to search category..." onchange="loadSubcategoriesForSelectedCategory()">
@@ -455,10 +469,10 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <label class="field-label">💊 Item Name</label><input type="text" id="medName" placeholder="e.g. Paracetamol"> 
                                 </div>
                                 <div id="medicineOnlyFields">
-                                    <label class="field-label">🔢 Batch No</label><input type="text" id="medBatch">
-                                    <label class="field-label">📅 Exp Date</label><input type="date" id="medExpiry">
-                                    <label class="field-label">🏭 Supplier</label><input type="text" id="medSupplier">
-                                </div> 
+    <label class="field-label">🔢 Batch No <span id="lblBatchOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="text" id="medBatch">
+    <label class="field-label">📅 Exp Date <span id="lblExpiryOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="date" id="medExpiry">
+    <label class="field-label">🏭 Supplier <span id="lblSupplierOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="text" id="medSupplier">
+</div>  
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top:15px;">
                                 <div><label class="field-label">💰 Purchase Price</label><input type="number" id="medCost"></div>
@@ -470,7 +484,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                         </div>
                         <div style="background:rgba(59, 130, 246, 0.05); padding:16px; border-radius:8px; border:1px solid rgba(59, 130, 246, 0.2);">
                             <h4 style="margin-bottom:12px; font-size:14px; font-weight:700; color:#3b82f6;">CSV Import (Excel)</h4>
-                            <p style="font-size:12px; color:#3b82f6; margin-bottom:10px;">Upload a CSV file with columns: Item Name, Category, Subcategory, Branch, Batch, Expiry, Supplier, Cost, Price, Qty</p>
+                            <p style="font-size:12px; color:#3b82f6; margin-bottom:10px;">Upload a CSV file with columns: <b>Branch, Type, Category, Subcategory, Item Name, Batch, Expiry, Supplier, Cost, Price, Qty</b><br><i style="color:#6b7280; font-size:11px;">(Batch, Expiry, Supplier ባዶ ከሆኑ በራሱ '-' ይሆናሉ)</i></p>
                             <input type="file" id="csvFileInput" accept=".csv" style="margin-bottom:10px; padding:10px; border:1px dashed #60a5fa; background:var(--card-bg);">
                             <button class="btn btn-primary" style="width:auto; padding:10px 24px;" onclick="importCSV()">Import CSV</button>
                         </div>
@@ -557,12 +571,19 @@ input:checked + .slider:before { transform: translateX(20px); }
                     <div class="pos-products">
                         <div class="pos-products-header">
                             <div style="display:flex; gap:10px;">
-                                <input type="text" id="searchSellInput" placeholder="🔍 Search Product by name or barcode..." oninput="renderSellProducts()" style="font-size:16px; padding:12px 16px; flex:1;">
+                                <input type="text" id="searchSellInput" placeholder="🔍 Search Product by name or barcode..." oninput="posPage=1; renderSellProducts()" style="font-size:16px; padding:12px 16px; flex:1;">
                                 <button class="btn btn-primary" onclick="startScanner()" style="width:auto; margin-top:0; padding:0 20px;">📷 Scan</button>
                             </div>
                             <div id="categoryFilters" style="display:flex; gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px;"></div>
                         </div>
                         <div class="pos-products-grid" id="sellProductList"></div>
+<div class="pos-pagination" style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-top:1px solid var(--border); background:var(--bg); flex-shrink:0; gap:10px;">
+    <div style="font-size:12px; color:var(--text-muted);" id="posPageInfo">Page 1 of 1</div>
+    <div style="display:flex; gap:8px;">
+        <button class="btn btn-outline" id="btnPrevPos" onclick="changePosPage(-1)" style="width:auto; margin-top:0; padding:6px 14px; font-size:13px;">⬅️ Prev</button>
+        <button class="btn btn-outline" id="btnNextPos" onclick="changePosPage(1)" style="width:auto; margin-top:0; padding:6px 14px; font-size:13px;">Next ➡️</button>
+    </div>
+</div>
                     </div>
                 </div>
             </div>
@@ -577,7 +598,15 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <h4 style="margin-bottom:12px; font-size:14px; font-weight:700;">Single Entry</h4>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                                 <div>
-                                    <label class="field-label">📦 Type</label><select id="quickType"><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option></select>
+                                    <label class="field-label">📦 Type</label>
+<select id="quickType">
+    <option value="medicine">💊 Medicine</option>
+    <option value="cosmetic">🧴 Cosmetics</option>
+    <option value="medical_equipment">🩺 Medical Equipment</option>
+    <option value="supplements">🧪 Supplements</option>
+    <option value="baby_care">👶 Baby Care</option>
+    <option value="home_personal_care">🏠 Home & Personal Care</option>
+</select>
                                     <label class="field-label">🏢 Branch</label><select id="quickBranch"></select>
                                     <label class="field-label">📅 Date</label><input type="date" id="quickDate">
                                 </div>
@@ -739,8 +768,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="no-print" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
                             <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name or batch..." oninput="invPage=1; loadInventory()" style="flex:1;">
                             <select id="filterTypeInv" onchange="invPage=1; loadInventory()" style="width:160px;">
-                                <option value="all">All Types</option><option value="medicine">💊 Medicine</option><option value="cosmetic">🧴 Cosmetics</option>
-                            </select>
+    <option value="all">All Types</option>
+    <option value="medicine">💊 Medicine</option>
+    <option value="cosmetic">🧴 Cosmetics</option>
+    <option value="medical_equipment">🩺 Medical Equipment</option>
+    <option value="supplements">🧪 Supplements</option>
+    <option value="baby_care">👶 Baby Care</option>
+    <option value="home_personal_care">🏠 Home & Personal Care</option>
+</select>
                             <select id="filterCategoryInv" onchange="invPage=1; loadInventory()" style="width:160px;">
                                 <option value="all">All Categories</option>
                             </select>
@@ -1461,8 +1496,15 @@ window.toggleMenu = function(element) {
 
 window.onMedTypeChange = function() {
     const type = document.getElementById('medType').value;
-    document.getElementById('medicineOnlyFields').style.display = type === 'cosmetic' ? 'none' : 'block';
-}; 
+    document.getElementById('medicineOnlyFields').style.display = 'block';
+    const optText = type === 'medicine' ? '' : '(Optional)';
+    const lblBatch = document.getElementById('lblBatchOpt');
+    const lblExpiry = document.getElementById('lblExpiryOpt');
+    const lblSupplier = document.getElementById('lblSupplierOpt');
+    if (lblBatch) lblBatch.innerText = optText;
+    if (lblExpiry) lblExpiry.innerText = optText;
+    if (lblSupplier) lblSupplier.innerText = optText;
+};  
 
 // ==========================================
 // AUTH & LOADING
@@ -2127,8 +2169,13 @@ window.addMedicine = async function() {
     let batch = document.getElementById('medBatch').value.trim(); 
     let expiry = document.getElementById('medExpiry').value; 
     let supplier = document.getElementById('medSupplier').value.trim(); 
-    if (type === 'medicine') { if (!batch || !expiry) { alert('Fill batch and expiry date'); return; } } 
-    else { batch = batch || '-'; expiry = expiry || '-'; supplier = supplier || '-'; }
+    if (type === 'medicine') { 
+    if (!batch || !expiry) { alert('Fill batch and expiry date'); return; } 
+} else { 
+    batch = batch || '-'; 
+    expiry = expiry || '-'; 
+    supplier = supplier || '-'; 
+}
     if (!category || !subcategory || !name || isNaN(cost) || isNaN(price) || isNaN(qty) || qty <= 0) { alert('Fill all fields correctly'); return; } 
     try {
         const exists = (allSubcategories[category] || []).find(s => s.name === subcategory);
@@ -2140,7 +2187,18 @@ window.addMedicine = async function() {
         loadCategories();
     } catch (err) { alert('Error: ' + err.message); }
 }; 
-
+window.formatMedType = function(type) {
+    const map = {
+        medicine: '💊 Medicine',
+        cosmetic: '🧴 Cosmetics',
+        medical_equipment: '🩺 Medical Equipment',
+        supplements: '🧪 Supplements',
+        baby_care: '👶 Baby Care',
+        home_personal_care: '🏠 Home & Personal Care'
+    };
+    return map[type] || '💊 Medicine';
+};
+    
 window.renderMedList = function() {
     const filter = document.getElementById('filterTypeMed').value; 
     const branchFilter = document.getElementById('filterBranchMed').value;
@@ -2161,7 +2219,7 @@ window.renderMedList = function() {
     paginated.forEach(m => {
         const isLowStock = m.quantity <= lowStockThreshold; const qtyColor = isLowStock ? 'color: #ef4444; font-weight: bold;' : 'color: var(--primary); font-weight: bold;';
         tableHtml += `<tr>
-            <td>${m.branch || 'Main'}</td><td>${m.type === 'cosmetic' ? '🧴 Cosmetic' : '💊 Medicine'}</td>
+            <td>${m.branch || 'Main'}</td><td>${formatMedType(m.type)}</td>
             <td>${m.category || '-'}</td><td>${m.subcategory || '-'}</td>
             <td><strong>${m.name}</strong></td><td>${m.batch || '-'}</td><td>${m.expiry || '-'}</td>
             <td>${m.supplier || '-'}</td><td>${m.cost || 0} ETB</td><td>${m.price} ETB</td>
@@ -2219,32 +2277,60 @@ window.toggleCreditFields = function() {
     else { fields.style.display = 'none'; }
 };
 
+let posPage = 1;
+const posRowsPerPage = 12;
+
 window.renderSellProducts = function() {
-    const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase(); const listEl = document.getElementById('sellProductList'); if(!listEl) return; 
+    const search = (document.getElementById('searchSellInput')?.value || '').toLowerCase(); 
+    const listEl = document.getElementById('sellProductList'); 
+    if(!listEl) return; 
     const catFiltersEl = document.getElementById('categoryFilters');
     if(catFiltersEl && catFiltersEl.innerHTML === '') {
-        let catHtml = `<button class="btn ${currentCategoryFilter === 'all' ? 'btn-primary' : 'btn-outline'}" style="width:auto; padding:6px 16px; border-radius:20px; font-size:12px; margin-top:0;" onclick="setCategoryFilter('all')">All</button>`;
+        let catHtml = `<button class="btn ${currentCategoryFilter === 'all' ? 'btn-primary' : 'btn-outline'}" style="width:auto; padding:6px 16px; border-radius:20px; font-size:12px; margin-top:0; white-space:nowrap;" onclick="setCategoryFilter('all')">All</button>`;
         allCategories.forEach(c => {
-            catHtml += `<button class="btn ${currentCategoryFilter === c ? 'btn-primary' : 'btn-outline'}" style="width:auto; padding:6px 16px; border-radius:20px; font-size:12px; margin-top:0;" onclick="setCategoryFilter('${c}')">${c}</button>`;
+            catHtml += `<button class="btn ${currentCategoryFilter === c ? 'btn-primary' : 'btn-outline'}" style="width:auto; padding:6px 16px; border-radius:20px; font-size:12px; margin-top:0; white-space:nowrap;" onclick="setCategoryFilter('${c}')">${c}</button>`;
         });
         catFiltersEl.innerHTML = catHtml;
     }
     let filtered = allMedicines.filter(m => m.quantity > 0); 
     if (currentCategoryFilter !== 'all') filtered = filtered.filter(m => m.category === currentCategoryFilter);
     if (search) filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(search) || (m.category||'').toLowerCase().includes(search) || (m.batch||'').toLowerCase().includes(search)); 
-    if (filtered.length === 0) { listEl.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:20px;">No products found.</div>'; return; } 
+    if (filtered.length === 0) { 
+        listEl.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:20px;">No products found.</div>'; 
+        const info = document.getElementById('posPageInfo'); if (info) info.innerText = 'Page 1 of 1';
+        const prev = document.getElementById('btnPrevPos'); if (prev) prev.disabled = true;
+        const next = document.getElementById('btnNextPos'); if (next) next.disabled = true;
+        return; 
+    } 
+    const totalPages = Math.ceil(filtered.length / posRowsPerPage);
+    if (posPage > totalPages) posPage = totalPages;
+    if (posPage < 1) posPage = 1;
+    const start = (posPage - 1) * posRowsPerPage;
+    const paginated = filtered.slice(start, start + posRowsPerPage);
     let html = '';
-    filtered.forEach(m => { 
+    paginated.forEach(m => { 
         html += `<div class="product-card" onclick="addToCart('${m.id}', 1)">
             <div><div class="p-name">${m.name}</div><div class="p-meta">${m.category} | Stock: ${m.quantity}</div></div>
             <div class="p-price">${m.price} ETB</div>
         </div>`;
     });
     listEl.innerHTML = html;
+    const info = document.getElementById('posPageInfo');
+    if (info) info.innerText = `Page ${posPage} of ${totalPages} (${filtered.length} items)`;
+    const prev = document.getElementById('btnPrevPos'); if (prev) prev.disabled = (posPage === 1);
+    const next = document.getElementById('btnNextPos'); if (next) next.disabled = (posPage === totalPages);
 }; 
+
+window.changePosPage = function(dir) {
+    posPage += dir;
+    renderSellProducts();
+    const grid = document.getElementById('sellProductList');
+    if (grid) grid.scrollTop = 0;
+};
 
 window.setCategoryFilter = function(cat) {
     currentCategoryFilter = cat;
+    posPage = 1;
     document.getElementById('categoryFilters').innerHTML = ''; 
     renderSellProducts();
 };
@@ -2255,7 +2341,7 @@ window.addToCart = function(id, qty) {
     const existing = cart.find(c => c.id === id); 
     if(existing) { if(existing.qty + qty > med.quantity) { alert('Not enough stock'); return; } existing.qty += qty; } 
     else cart.push({ id, name: med.name, price: med.price, qty }); 
-    renderCart(); document.getElementById('searchSellInput').value = ''; renderSellProducts();
+    renderCart(); document.getElementById('searchSellInput').value = ''; posPage = 1; renderSellProducts();
 }; 
 
 function renderCart() {
@@ -3101,7 +3187,94 @@ document.addEventListener('DOMContentLoaded', () => {
     if(dashMonth) dashMonth.addEventListener('change', () => { loadDashboard(); }); if(dashBranch) dashBranch.addEventListener('change', () => { loadDashboard(); });
 });
 
-window.importCSV = function() { alert('CSV Import: Feature coming soon'); };
+window.importCSV = async function() {
+    const fileInput = document.getElementById('csvFileInput');
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        alert('⚠️ እባክህ CSV ፋይል ምረጥ።');
+        return;
+    }
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        try {
+            const text = e.target.result;
+            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+            if (lines.length < 2) { alert('⚠️ CSV ፋይሉ ባዶ ነው።'); return; }
+            function parseCSVLine(line) {
+                const result = []; let cur = ''; let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const ch = line[i];
+                    if (ch === '"') {
+                        if (inQuotes && line[i+1] === '"') { cur += '"'; i++; }
+                        else inQuotes = !inQuotes;
+                    } else if (ch === ',' && !inQuotes) { result.push(cur); cur = ''; }
+                    else { cur += ch; }
+                }
+                result.push(cur);
+                return result;
+            }
+            const header = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase());
+            let colMap = {};
+            header.forEach((h, i) => { colMap[h.replace(/[^a-z ]/g, '').trim()] = i; });
+            function getVal(row, ...names) {
+                for (const n of names) {
+                    if (colMap[n] !== undefined && row[colMap[n]] !== undefined) return row[colMap[n]].trim();
+                }
+                return '';
+            }
+            const batchEntries = [];
+            let errorCount = 0;
+            for (let i = 1; i < lines.length; i++) {
+                const row = parseCSVLine(lines[i]);
+                if (row.length < 5) continue;
+                const branch = getVal(row, 'branch') || 'Main';
+                const category = getVal(row, 'category');
+                const subcategory = getVal(row, 'subcategory', 'sub category') || '-';
+                const name = getVal(row, 'item name', 'name');
+                let type = getVal(row, 'type').toLowerCase() || 'medicine';
+                const typeMap = {
+                    'medicine': 'medicine', 'cosmetic': 'cosmetic', 'cosmetics': 'cosmetic',
+                    'medical equipment': 'medical_equipment', 'medical_equipment': 'medical_equipment',
+                    'supplements': 'supplements', 'supplement': 'supplements',
+                    'baby care': 'baby_care', 'baby_care': 'baby_care',
+                    'home personal care': 'home_personal_care', 'home_personal_care': 'home_personal_care',
+                    'home & personal care': 'home_personal_care'
+                };
+                type = typeMap[type] || 'medicine';
+                const batch = getVal(row, 'batch', 'batch no') || '-';
+                const expiry = getVal(row, 'expiry', 'exp date', 'expiry date') || '-';
+                const supplier = getVal(row, 'supplier') || '-';
+                const costNum = parseFloat(getVal(row, 'cost', 'purchase price')) || 0;
+                const priceNum = parseFloat(getVal(row, 'price', 'sell price')) || 0;
+                const qtyNum = parseInt(getVal(row, 'qty', 'quantity')) || 0;
+                if (!name || !category || qtyNum <= 0) { errorCount++; continue; }
+                if (type === 'medicine' && (batch === '-' || expiry === '-')) { errorCount++; continue; }
+                batchEntries.push({ type, category, subcategory, name, batch, expiry, supplier, cost: costNum, price: priceNum, quantity: qtyNum, branch });
+            }
+            if (batchEntries.length === 0) { alert('⚠️ ምንም ትክክለኛ መረጃ አልተገኘም።'); return; }
+            const CHUNK = 400; let successCount = 0;
+            for (let start = 0; start < batchEntries.length; start += CHUNK) {
+                const chunk = batchEntries.slice(start, start + CHUNK);
+                const wb = writeBatch(db);
+                for (const item of chunk) {
+                    const newRef = doc(collection(db, 'medicines'));
+                    wb.set(newRef, { ...item, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+                    successCount++;
+                }
+                await wb.commit();
+            }
+            const uniqueCats = [...new Set(batchEntries.map(b => b.category))];
+            for (const cat of uniqueCats) {
+                try { await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + cat), { name: cat, pharmacyId: currentUserPharmacyId }, { merge: true }); } catch(e) {}
+            }
+            logActivity(`imported ${successCount} items from CSV`);
+            alert(`✅ Import ተጠናቅቋል!\n\n✔️ የተጨመሩ: ${successCount}\n❌ ያልተሳኩ: ${errorCount}`);
+            fileInput.value = '';
+            loadCategories();
+        } catch (err) { console.error(err); alert('❌ Import ስህተት: ' + err.message); }
+    };
+    reader.readAsText(file);
+};
 window.clearAllSales = async function() { 
     if(!confirm('Delete ALL sales? This cannot be undone!')) return;
     try { const snap = await getDocs(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId))); let batch = writeBatch(db); let count = 0; snap.forEach(d => { batch.delete(d.ref); count++; }); if(count > 0) await batch.commit(); alert(`✅ Deleted ${count} sales.`); } catch(e) { alert('Error: ' + e.message); }
