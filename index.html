@@ -3330,10 +3330,34 @@ window.importCSV = async function() {
                 }
                 await wb.commit();
             }
+                        // ✅ 1. ካቴጎሪዎችን መመዝገብ
             const uniqueCats = [...new Set(batchEntries.map(b => b.category))];
             for (const cat of uniqueCats) {
-                try { await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + cat), { name: cat, pharmacyId: currentUserPharmacyId }, { merge: true }); } catch(e) {}
+                try { 
+                    await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + cat), { name: cat, pharmacyId: currentUserPharmacyId }, { merge: true }); 
+                } catch(e) {}
             }
+
+            // ✅ 2. ሳብ ካቴጎሪዎችን (Subcategories) መመዝገብ (አዲስ የተጨመረ)
+            const uniqueSubCats = [...new Set(batchEntries.map(b => b.category + '|' + b.subcategory))];
+            for (const combo of uniqueSubCats) {
+                const [cat, sub] = combo.split('|');
+                if (sub && sub !== '-') {
+                    try {
+                        // ሳብ ካቴጎሪው አስቀድሞ ካለ ደግመን አንጨምርም፣ ከሌለ እንጨምራለን
+                        const existsQuery = query(collection(db, 'subcategories'), where('pharmacyId', '==', currentUserPharmacyId), where('categoryName', '==', cat), where('name', '==', sub));
+                        const existsSnap = await getDocs(existsQuery);
+                        if (existsSnap.empty) {
+                            await addDoc(collection(db, 'subcategories'), { 
+                                name: sub, 
+                                categoryName: cat, 
+                                pharmacyId: currentUserPharmacyId 
+                            });
+                        }
+                    } catch(e) { console.log("Subcategory save error:", e); }
+                }
+            }
+            
             logActivity(`imported ${successCount} items from CSV`);
             alert(`✅ Import ተጠናቅቋል!\n\n✔️ የተጨመሩ: ${successCount}\n❌ ያልተሳኩ: ${errorCount}`);
             fileInput.value = '';
