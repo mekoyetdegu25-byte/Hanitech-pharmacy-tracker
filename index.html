@@ -167,7 +167,17 @@ input:checked + .slider:before { transform: translateX(20px); }
 .modal-overlay.open { display: flex; }
 .modal-content { background: var(--card-bg); border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-md); }
 .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-radius: 16px 16px 0 0; } .modal-header h3 { font-size: 16px; font-weight: 700; margin: 0; color: var(--text-main); } .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); } .modal-body { padding: 20px; }
-@media print { body * { visibility: hidden; } #printableReceipt, #printableReceipt * { visibility: visible; } #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; } .no-print { display: none !important; } }
+@media print { 
+    body * { visibility: hidden; } 
+    #printableReceipt, #printableReceipt * { visibility: visible; } 
+    #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; } 
+    
+    /* 👇 አዲስ የተጨመረ፡ የሪፖርት ገጹ በፕሪንት ላይ እንዲታይ */
+    #reportDisplayArea, #reportDisplayArea * { visibility: visible; } 
+    #reportDisplayArea { position: absolute; left: 0; top: 0; width: 100%; } 
+    
+    .no-print { display: none !important; } 
+}
 
 /* ==========================================
    📱 MODERN MOBILE HEADER & DROPDOWN
@@ -938,8 +948,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                             </div>
                             <div id="repDateDiv" style="display:none; margin-top:12px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
                             <div id="repMonthDiv" style="display:none; margin-top:12px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
-                            <button class="btn btn-primary" style="margin-top:20px;" onclick="generateReport()">👁️ Preview Report</button>
-                            <button class="btn btn-success" style="margin-top:10px;" onclick="window.print()">🖨️ Print</button>
+                            <button class="btn btn-success" style="margin-top:20px; padding: 12px;" onclick="previewAndPrintReport()">🖨️ Print / Preview Report</button>
                         </div>
                         <div id="reportDisplayArea" style="display:none;"></div>
                     </div>
@@ -2858,8 +2867,28 @@ window.generateReport = function() {
             <div class="rep-section"><h3>Detailed Expenses</h3>${expTableHtml}</div>
         </div>
     `;
-    displayArea.innerHTML = html;
+        displayArea.innerHTML = html;
     displayArea.style.display = 'block';
+};
+
+// ✅ አዲሱ የ Print / Preview ተግባር
+window.previewAndPrintReport = function() {
+    generateReport(); // መጀመሪያ ሪፖርቱን አዘጋጅ
+    
+    const displayArea = document.getElementById('reportDisplayArea');
+    if (displayArea) {
+        // ሪፖርቱ ለፕሪንት ሲስተሙ ብቻ እንዲታይ ለትንሽ ጊዜ ክፈተው
+        displayArea.style.display = 'block';
+        
+        setTimeout(() => {
+            window.print(); // የህትመት መስኮቱን ክፈት (ከዚህ ውስጥ ፕሪቪው ይታያል)
+            
+            // ፕሪንት ካደረገ ወይም ካንሰል ካደረገ በኋላ ሪፖርቱን በስክሪኑ ላይ ደብቀው
+            setTimeout(() => {
+                displayArea.style.display = 'none';
+            }, 500);
+        }, 150); 
+    }
 };
 
 window.renderSalesHistory = function() {
