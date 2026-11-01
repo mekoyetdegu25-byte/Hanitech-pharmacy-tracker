@@ -234,6 +234,22 @@ input:checked + .slider:before { transform: translateX(20px); }
     <div class="sub-text">Pharmacy Tracker</div>
 </div> 
 
+<!-- ✅ አዲስ የተጨመረ: የማሳወቂያ ሳጥን (Alert Modal) -->
+<div class="modal-overlay" id="systemAlertModal">
+    <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-header" style="background: #fef3c7; border-bottom: 1px solid #fcd34d;">
+            <h3 style="color: #d97706; display: flex; align-items: center; gap: 8px;">🔔 System Alerts</h3>
+            <button class="modal-close" onclick="document.getElementById('systemAlertModal').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body" id="systemAlertBody" style="max-height: 60vh; overflow-y: auto;">
+            <!-- ማሳወቂያዎቹ በኮድ እዚህ ይገባሉ -->
+        </div>
+        <div style="padding: 15px 20px; border-top: 1px solid var(--border); text-align: right; background: var(--bg); border-radius: 0 0 16px 16px;">
+            <button class="btn btn-primary" onclick="document.getElementById('systemAlertModal').classList.remove('open')" style="width: auto; margin-top: 0; padding: 8px 24px;">Got it</button>
+        </div>
+    </div>
+</div> 
+
 <div id="loginScreen" class="hidden">
 <div class="login-box">
     <h1>HaniTech Digital Pharmacy Management System</h1> 
@@ -1630,9 +1646,65 @@ async function loadAllData() {
     
     renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); toggleReportDatePickers();
     setupRealtimeListeners();
-    renderAllExpensesList(); renderSalesHistory();
+        renderAllExpensesList(); renderSalesHistory();
     populateTransferMedSelect();
+    
+    // ✅ ማሳወቂያዎችን ለመፈተሽ ይጠራል
+    setTimeout(checkSystemAlerts, 2000); // ዳታው ከተጫነ ከ2 ሰከንድ በኋላ
 } 
+
+// ✅ አዲስ የተጨመረ ተግባር
+window.checkSystemAlerts = function() {
+    if (!allMedicines || allMedicines.length === 0) return; // እቃ ከሌለ አያስፈልግም
+
+    let lowStockAlerts = [];
+    let expiryAlerts = [];
+    
+    const today = new Date();
+    const thresholdDays = 30; // ከ30 ቀናት በታች የቀሩት እንዲታዩ
+
+    allMedicines.forEach(m => {
+        // 1. Low Stock ማሳወቂያ
+        if (m.quantity <= lowStockThreshold && m.quantity > 0) {
+            lowStockAlerts.push(`📦 <b>${m.name}</b> (Batch: ${m.batch || '-'}) - የቀረው ብዛት: <span style="color:#ef4444; font-weight:bold;">${m.quantity}</span>`);
+        } else if (m.quantity === 0) {
+            lowStockAlerts.push(`🚫 <b>${m.name}</b> (Batch: ${m.batch || '-'}) - <span style="color:#ef4444; font-weight:bold;">ከክምችት አልቋል!</span>`);
+        }
+
+        // 2. Expiry ማሳወቂያ
+        if (m.expiry && m.expiry !== '-') {
+            const expDate = new Date(m.expiry);
+            const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) {
+                expiryAlerts.push(`⚠️ <b>${m.name}</b> (Batch: ${m.batch || '-'}) - <span style="color:#ef4444; font-weight:bold;">ጊዜው አልፏል!</span> (${m.expiry})`);
+            } else if (diffDays <= thresholdDays) {
+                expiryAlerts.push(`⏳ <b>${m.name}</b> (Batch: ${m.batch || '-'}) - <span style="color:#f59e0b; font-weight:bold;">${diffDays} ቀናት ብቻ ቀርተዋል</span> (${m.expiry})`);
+            }
+        }
+    });
+
+    let alertHtml = '';
+
+    if (lowStockAlerts.length > 0) {
+        alertHtml += `<h4 style="color:#ef4444; margin-bottom:10px; border-bottom:1px solid #fee2e2; padding-bottom:5px;">📉 በክምችት እጥረት ላይ ያሉ (${lowStockAlerts.length})</h4>`;
+        alertHtml += `<ul style="font-size:13px; margin-bottom:20px; padding-left:15px; line-height:1.6;">${lowStockAlerts.map(a => `<li>${a}</li>`).join('')}</ul>`;
+    }
+
+    if (expiryAlerts.length > 0) {
+        alertHtml += `<h4 style="color:#f59e0b; margin-bottom:10px; border-bottom:1px solid #fef3c7; padding-bottom:5px;">📅 ጊዜያቸው ሊያልቅ የቀሩ (${expiryAlerts.length})</h4>`;
+        alertHtml += `<ul style="font-size:13px; padding-left:15px; line-height:1.6;">${expiryAlerts.map(a => `<li>${a}</li>`).join('')}</ul>`;
+    }
+
+    // ማሳወቂያ ካለ ብቻ ሳጥኑን ክፈት
+    if (alertHtml !== '') {
+        const bodyEl = document.getElementById('systemAlertBody');
+        if (bodyEl) {
+            bodyEl.innerHTML = alertHtml;
+            document.getElementById('systemAlertModal').classList.add('open');
+        }
+    }
+}; 
 
 function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
