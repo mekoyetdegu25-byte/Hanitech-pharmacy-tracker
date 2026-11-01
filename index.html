@@ -205,7 +205,13 @@ input:checked + .slider:before { transform: translateX(20px); }
     [style*="grid-template-columns:1fr 1fr"], [style*="grid-template-columns: 1fr 1fr"], [style*="grid-template-columns:1fr 1fr 1fr"], [style*="grid-template-columns: 1fr 1fr 1fr"], [style*="grid-template-columns:repeat(4,1fr)"], [style*="grid-template-columns: repeat(4,1fr)"], [style*="grid-template-columns:repeat(3,1fr)"], [style*="grid-template-columns: repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
     .pos-layout { grid-template-columns: 1fr !important; height: auto !important; } .pos-products { min-height: 400px; }
     .dash-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; } .dash-val-number { font-size: 20px !important; } .dash-card { padding: 12px !important; }
-    .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; } #bodySettings.open { grid-template-columns: 1fr !important; } .role-grid { grid-template-columns: 1fr !important; }
+        .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; } 
+    #bodySettings.open { grid-template-columns: 1fr !important; } 
+    .role-grid { grid-template-columns: 1fr !important; }
+    
+    /* ✅ አዲስ የተጨመረ፡ ሰንጠረዦች በሞባይል ላይ እንዳይጨናነቁ */
+    .responsive-table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .responsive-table-container table { min-width: 600px; }
     .btn { padding: 10px !important; font-size: 13px !important; } h1 { font-size: 20px !important; } h2 { font-size: 18px !important; }
     .modal-content { max-width: 95vw !important; max-height: 90vh !important; } label.field-label { font-size: 12px !important; }
     .summary-box { padding: 12px !important; } .summary-box .value { font-size: 20px !important; } .section-header { padding: 12px 14px !important; } .section-body { padding: 0 14px 14px 14px !important; }
@@ -365,8 +371,9 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
             <div class="sub-menu">
                 <label onclick="switchPage('panel4', 'sub4_1', this)">📦 Inventory List</label>
-                <label onclick="switchPage('panel4', 'sub4_2', this)">⚠️ Expiry & Low Stock</label>
-                <label onclick="switchPage('panel4', 'sub4_3', this)">🔧 Stock Adjust</label>
+<label onclick="switchPage('panel4', 'sub4_2', this)">⚠️ Expiry & Low Stock</label>
+<label onclick="switchPage('panel4', 'sub4_3', this)">🔧 Stock Adjust</label>
+<label onclick="switchPage('panel4', 'sub4_4', this)">📥 Purchase History</label>
             </div>
         </div>
         <div class="menu-group" id="menu_dash">
@@ -897,6 +904,20 @@ input:checked + .slider:before { transform: translateX(20px); }
                         </div>
                     </div>
                 </div>
+                        </div>
+            <!-- ✅ አዲስ የተጨመረ: Purchase History -->
+            <div class="sub-panel" id="sub4_4">
+                 <div class="section-collapsible">
+                    <div class="section-header open" onclick="toggleSection('hdrPurchaseHist','bodyPurchaseHist')">
+                        <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📥</span><span class="sec-title">Purchase History (Restock)</span></div>
+                    </div>
+                    <div class="section-body open" id="bodyPurchaseHist">
+                                                <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                            <input type="text" class="search-box" id="searchPurchaseHist" placeholder="🔍 Search by item, batch or supplier..." oninput="renderPurchaseHistory()" style="flex:1;">
+                        </div>
+                        <div id="purchaseHistoryList" class="responsive-table-container"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1374,7 +1395,7 @@ function buildModernMenu() {
         { section: '💊 Medicine', items: [ { id: 'sub1_1', panel: 'panel1', title: '📋 Medicine List', icon: '📋' }, { id: 'sub1_2', panel: 'panel1', title: '➕ Add Medicine', icon: '➕' }, { id: 'sub1_3', panel: 'panel1', title: '🗂️ Categories', icon: '🗂️' } ] },
         { section: '🛒 Sales', items: [ { id: 'sub2_1', panel: 'panel2', title: '🛒 New Sale', icon: '🛒' }, { id: 'sub2_2', panel: 'panel2', title: '⚡ Quick Sale', icon: '⚡' }, { id: 'sub2_3', panel: 'panel2', title: '📜 Sales History', icon: '📜' } ] },
         { section: '💸 Expenses', items: [ { id: 'sub3_1', panel: 'panel3', title: '💸 Daily Expense', icon: '💸' }, { id: 'sub3_2', panel: 'panel3', title: '🏢 Fixed Expense', icon: '🏢' }, { id: 'sub3_list', panel: 'panel3', title: '📋 Expense List', icon: '📋' }, { id: 'sub3_3', panel: 'panel3', title: '🗂️ Categories', icon: '🗂️' } ] },
-        { section: '📦 Inventory', items: [ { id: 'sub4_1', panel: 'panel4', title: '📦 Inventory List', icon: '📦' }, { id: 'sub4_2', panel: 'panel4', title: '⚠️ Expiry & Low Stock', icon: '⚠️' }, { id: 'sub4_3', panel: 'panel4', title: '🔧 Stock Adjust', icon: '🔧' } ] },
+        { section: '📦 Inventory', items: [ { id: 'sub4_1', panel: 'panel4', title: '📦 Inventory List', icon: '📦' }, { id: 'sub4_2', panel: 'panel4', title: '⚠️ Expiry & Low Stock', icon: '⚠️' }, { id: 'sub4_3', panel: 'panel4', title: '🔧 Stock Adjust', icon: '🔧' }, { id: 'sub4_4', panel: 'panel4', title: '📥 Purchase History', icon: '📥' } ] },
         { section: '📊 Dashboard & Reports', items: [ { id: null, panel: 'panel7', title: '📊 Dashboard', icon: '📊' }, { id: 'sub8_1', panel: 'panel8', title: '📄 General Report', icon: '📄' }, { id: 'sub8_2', panel: 'panel8', title: '📅 Daily Report', icon: '📅' }, { id: 'sub8_3', panel: 'panel8', title: '📆 Monthly Report', icon: '📆' } ] },
         { section: '⚙️ System', items: [ { id: null, panel: 'panel10', title: '💳 Credit Management', icon: '💳' }, { id: null, panel: 'panel9', title: '⚙️ Settings', icon: '⚙️' } ] }
     ];
@@ -1489,7 +1510,8 @@ window.switchPage = function(panelId, subPanelId, element) {
     }
     if(subPanelId === 'sub3_list') { renderAllExpensesList(); }
     if(subPanelId === 'sub2_3') { renderSalesHistory(); }
-    if(subPanelId === 'sub4_3') { populateTransferMedSelect(); }
+        if(subPanelId === 'sub4_3') { populateTransferMedSelect(); }
+    if(subPanelId === 'sub4_4') { renderPurchaseHistory(); }
 
     setTimeout(applyUniversalMobileCollapse, 100);
 };
@@ -2760,8 +2782,77 @@ window.adjustStock = async function() {
         await updateDoc(doc(db, 'medicines', id), updateData); 
         logActivity(`adjusted stock for medicine ID: ${id}`);
         alert('✅ Adjusted successfully!'); 
-        document.getElementById('adjustQty').value = ''; document.getElementById('adjustPrice').value = ''; document.getElementById('adjustReason').value = ''; 
+                document.getElementById('adjustQty').value = ''; document.getElementById('adjustPrice').value = ''; document.getElementById('adjustReason').value = ''; 
+        
+        // ✅ ወደ Purchase History መመዝገብ (አዲስ እቃ ሲገባ ብቻ)
+        if (updateData.quantity !== undefined) {
+            const med = allMedicines.find(m => m.id === id);
+            await addDoc(collection(db, 'purchases'), {
+                medicineId: id,
+                name: med ? med.name : 'Unknown',
+                batch: med ? med.batch : '-',
+                supplier: med ? med.supplier : '-',
+                qtyAdded: updateData.quantity,
+                cost: updateData.price || (med ? med.cost : 0),
+                date: new Date().toISOString().split('T')[0],
+                timestamp: serverTimestamp(),
+                pharmacyId: currentUserPharmacyId
+            });
+        }
     } catch(e) { alert(e.message); }
+};
+
+// ✅ የግዢ ታሪክን ማሳያ ተግባር
+window.renderPurchaseHistory = async function() {
+    const listEl = document.getElementById('purchaseHistoryList');
+    if (!listEl) return;
+    
+    const searchVal = (document.getElementById('searchPurchaseHist')?.value || '').toLowerCase();
+    listEl.innerHTML = '<p style="text-align:center; padding:20px;">Loading purchases...</p>';
+    
+    try {
+        const q = query(collection(db, 'purchases'), where('pharmacyId', '==', currentUserPharmacyId));
+        const snap = await getDocs(q);
+        let purchases = [];
+        snap.forEach(doc => purchases.push({ id: doc.id, ...doc.data() }));
+        
+        // ከአዲስ ወደ አሮጌ መደርደር
+        purchases.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+        
+        if (searchVal) {
+            purchases = purchases.filter(p => 
+                (p.name||'').toLowerCase().includes(searchVal) || 
+                (p.batch||'').toLowerCase().includes(searchVal) ||
+                (p.supplier||'').toLowerCase().includes(searchVal)
+            );
+        }
+        
+        if (purchases.length === 0) {
+            listEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">No purchase history found.</p>';
+            return;
+        }
+        
+        let html = `<div style="overflow-x:auto;"><table class="data-table"><thead><tr>
+            <th>Date</th><th>Item Name</th><th>Batch</th><th>Supplier</th><th>Qty Added</th><th>Unit Cost</th>
+        </tr></thead><tbody>`;
+        
+        purchases.forEach(p => {
+            html += `<tr>
+                <td>${p.date}</td>
+                <td><strong>${p.name}</strong></td>
+                <td>${p.batch || '-'}</td>
+                <td>${p.supplier || '-'}</td>
+                <td style="color:var(--primary); font-weight:bold;">+${p.qtyAdded}</td>
+                <td>${parseFloat(p.cost).toFixed(2)} ETB</td>
+            </tr>`;
+        });
+        html += `</tbody></table></div>`;
+        
+        listEl.innerHTML = html;
+    } catch(e) {
+        console.error(e);
+        listEl.innerHTML = '<p style="color:red; text-align:center;">Error loading purchase history.</p>';
+    }
 };
 
 function calculateStockReport() {
@@ -3231,10 +3322,10 @@ window.applyUniversalMobileCollapse = function() {
     // የገጹ ኮድ ሙሉ በሙሉ እስኪጫን ድረስ ጠብቅ
     if (!document.getElementById('mainApp').classList.contains('show')) return; 
 
-    const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList',
+        const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList',
         'expiryListDisplay','lowStockListDisplay','unpaidCreditList','dailySalesList',
         'monthlySalesList','auditTrailList','expCatListDisplay','branchListDisplay',
-        'customerListDisplay','catTableBody'];
+        'customerListDisplay','catTableBody','purchaseHistoryList'];
 
     listIds.forEach(id => {
         const el = document.getElementById(id); 
@@ -3258,8 +3349,9 @@ window.applyUniversalMobileCollapse = function() {
         if (id === 'allExpensesListDisplay') btnText = '💸 የወጪ ዝርዝር';
         if (id === 'inventoryList') btnText = '📦 የክምችት ዝርዝር';
         if (id === 'unpaidCreditList') btnText = '💳 ያልተከፈሉ ዕዳዎች';
-        if (id === 'catTableBody') btnText = '🗂️ የምድብ ዝርዝር';
+                if (id === 'catTableBody') btnText = '🗂️ የምድብ ዝርዝር';
         if (id === 'auditTrailList') btnText = '📝 የእንቅስቃሴ መዝገብ';
+        if (id === 'purchaseHistoryList') btnText = '📥 የግዢ ታሪክ (Purchase History)';
 
         btn.innerHTML = `${btnText} <span>▼</span>`; 
         const contentBox = document.createElement('div'); 
