@@ -477,6 +477,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <input list="subCategoryList" id="medSubcategory" placeholder="Type to search subcategory...">
                                     <datalist id="subCategoryList"></datalist>
                                     <label class="field-label">💊 Item Name</label><input type="text" id="medName" placeholder="e.g. Paracetamol"> 
+<label class="field-label">📷 Barcode (Optional)</label><input type="text" id="medBarcode" placeholder="Scan or type barcode..."> 
                                 </div>
                                 <div id="medicineOnlyFields">
     <label class="field-label">🔢 Batch No <span id="lblBatchOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="text" id="medBatch">
@@ -959,6 +960,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div id="repDateDiv" style="display:none; margin-top:12px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
                             <div id="repMonthDiv" style="display:none; margin-top:12px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
                             <button class="btn btn-success" style="margin-top:20px; padding: 12px;" onclick="previewAndPrintReport()">🖨️ Print / Preview Report</button>
+<button class="btn btn-primary" style="margin-top:10px; padding: 12px; background:#059669;" onclick="exportReportToCSV()">📥 Download as Excel (CSV)</button> 
                         </div>
                         <div id="reportDisplayArea" style="display:none;"></div>
                     </div>
@@ -1293,8 +1295,15 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <div><label class="field-label">📅 Date</label><input type="date" id="creditDate"></div>
                                 <div><label class="field-label">💰 Amount</label><input type="number" id="creditAmount" placeholder="0.00"></div>
                             </div>
-                            <button class="btn btn-success" style="width:auto; padding:10px 20px; float:right; margin-top:15px;" onclick="addCreditPayment()">💾 Record Payment</button>
+                                                        <button class="btn btn-success" style="width:auto; padding:10px 20px; float:right; margin-top:15px;" onclick="addCreditPayment()">💾 Record Payment</button>
                             <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    <!-- ✅ አዲስ የተጨመረ: የክፍያ ታሪክ -->
+                    <div class="section-collapsible" style="box-shadow:none; border:1px solid var(--border); margin-top:20px;">
+                        <div class="section-header open" onclick="toggleSection('hdrCreditHistory','bodyCreditHistory')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Payment History</span></div></div>
+                        <div class="section-body open" id="bodyCreditHistory">
+                            <div id="creditHistoryListDisplay" style="max-height: 300px; overflow-y: auto;"></div>
                         </div>
                     </div>
                 </div>
@@ -1939,7 +1948,7 @@ window.startScanner = function() {
             const barcodeText = result.text;
             stopScanner();
             document.getElementById('barcodeModal').classList.remove('open');
-            const med = allMedicines.find(m => m.name === barcodeText || m.batch === barcodeText);
+            const med = allMedicines.find(m => m.barcode === barcodeText || m.name === barcodeText || m.batch === barcodeText);
             if (med) { addToCart(med.id, 1); } 
             else { alert(`⚠️ Barcode "${barcodeText}" ከምንም መድኃኒት ጋር አልተገናኘም።`); }
         }
@@ -2213,7 +2222,8 @@ window.addMedicine = async function() {
     try {
         const exists = (allSubcategories[category] || []).find(s => s.name === subcategory);
         if (!exists) { await addDoc(collection(db, 'subcategories'), { name: subcategory, categoryName: category, pharmacyId: currentUserPharmacyId }); }
-        await addDoc(collection(db, 'medicines'), { type, category, subcategory, name, batch, expiry, supplier, cost, price, quantity: qty, branch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+        const barcode = document.getElementById('medBarcode').value.trim();
+await addDoc(collection(db, 'medicines'), { type, category, subcategory, name, barcode, batch, expiry, supplier, cost, price, quantity: qty, branch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId });
         logActivity(`added medicine: ${name} (Qty: ${qty})`);
         alert('✅ Medicine saved!');
         document.getElementById('medName').value = ''; document.getElementById('medBatch').value = ''; document.getElementById('medExpiry').value = ''; document.getElementById('medSupplier').value = ''; document.getElementById('medCost').value = ''; document.getElementById('medPrice').value = ''; document.getElementById('medQty').value = '';
@@ -2925,8 +2935,52 @@ window.previewAndPrintReport = function() {
             setTimeout(() => {
                 displayArea.style.display = 'none';
             }, 500);
-        }, 150); 
+            }, 150); 
+};
+
+// ✅ ሪፖርትን ወደ Excel (CSV) ማውረድ
+window.exportReportToCSV = function() {
+    const displayArea = document.getElementById('reportDisplayArea');
+    if (!displayArea || displayArea.innerHTML.trim() === '') {
+        alert('⚠️ እባክህ መጀመሪያ "Preview Report" ተጫንና ሪፖርቱ እንዲዘጋጅ አድርግ።');
+        return;
     }
+    
+    // በሪፖርቱ ውስጥ ያሉትን ሰንጠረዦች (Tables) መሰብሰብ
+    const tables = displayArea.querySelectorAll('.rep-table');
+    if (tables.length === 0) {
+        alert('⚠️ ምንም ዳታ አልተገኘም።');
+        return;
+    }
+
+    let csvContent = "\uFEFF"; // ለ Excel የአማርኛ ፊደል እንዳይበላሽ
+
+    tables.forEach(table => {
+        const rows = table.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cols = row.querySelectorAll('th, td');
+            let rowData = [];
+            cols.forEach(col => {
+                // በጽሑፉ ውስጥ ኮማ (,) ካለ በ double quote እንሸፍነው
+                let text = col.innerText.replace(/"/g, '""');
+                rowData.push(`"${text}"`);
+            });
+            csvContent += rowData.join(",") + "\n";
+        });
+        csvContent += "\n"; // በሰንጠረዦች መካከል ክፍተት
+    });
+
+    // ፋይሉን ማውረድ
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Pharmacy_Report_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+};
 };
 
 window.renderSalesHistory = function() {
@@ -3129,8 +3183,37 @@ window.renderUnpaidCredits = function() {
             </div>`; 
         } 
     });
-    listEl.innerHTML = html; 
+        listEl.innerHTML = html; 
     document.getElementById('totalUnpaidDebt').innerText = totalDebt.toFixed(2);
+    
+    // ✅ የክፍያ ታሪክንም አብሮ እንዲያሳይ
+    renderCreditHistory();
+};
+
+// ✅ አዲስ የተጨመረ ተግባር
+window.renderCreditHistory = function() {
+    const listEl = document.getElementById('creditHistoryListDisplay'); 
+    if(!listEl) return;
+    
+    if(allCreditPayments.length === 0) { 
+        listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">No payments yet.</p>'; 
+        return; 
+    }
+    
+    // ከአዲስ ወደ አሮጌ መደርደር
+    let sorted = [...allCreditPayments].sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+    
+    let html = '<table class="data-table"><thead><tr><th>Date</th><th>Customer</th><th>Branch</th><th>Amount Paid</th></tr></thead><tbody>';
+    sorted.forEach(p => { 
+        html += `<tr>
+            <td>${p.date}</td>
+            <td>🏪 ${p.customer}</td>
+            <td>${p.branch || '-'}</td>
+            <td style="color:var(--primary); font-weight:bold;">+ ${parseFloat(p.amount).toFixed(2)} ETB</td>
+        </tr>`; 
+    }); 
+    html += '</tbody></table>';
+    listEl.innerHTML = html;
 };
 
 // ==========================================
