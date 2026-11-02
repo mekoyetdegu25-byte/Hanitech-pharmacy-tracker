@@ -3192,6 +3192,7 @@ window.renderAutoReorder = function() {
 window.changeReorderPage = function(dir) { reorderPage += dir; renderAutoReorder(); };
 
 // ✅ 4. PDF ማውረጃ
+// ✅ የተስተካከለ: Purchase Order ን በቀጥታ PDF አድርጎ ማውረድ
 window.downloadPurchaseOrderPDF = function() {
     const tbody = document.getElementById('reorderTableBody');
     if (!tbody || tbody.innerHTML.includes('ማዘዝ የሚያስፈልግ እቃ የለም') || tbody.innerHTML.includes('🎉')) {
@@ -3199,8 +3200,8 @@ window.downloadPurchaseOrderPDF = function() {
         return;
     }
 
-    // ✅ ለተጠቃሚው ማሳወቂያ መስጠት
-    alert('⏳ እባክህ ጥቂት ሰከንዶች ጠብቅ... PDF እየተዘጋጀ ነው።');
+    // ለተጠቃሚው ማሳወቂያ መስጠት
+    showToast('⏳ PDF እየተዘጋጀ ነው... እባክህ ጥቂት ሰከንዶች ጠብቅ።', 'success');
 
     const phName = document.getElementById('hdrPharmacyName').innerText;
     const dateStr = new Date().toLocaleDateString();
@@ -3222,7 +3223,8 @@ window.downloadPurchaseOrderPDF = function() {
         supplierOrders[supplier].push({ name, batch, qty });
     });
 
-    let pdfHtml = `<div style="font-family: Arial, sans-serif; padding: 40px; color: #000; max-width: 800px; margin: 0 auto; background: #fff;">`;
+    // የ PDF ገጽ አቀማመጥ (ዲዛይን)
+    let pdfHtml = `<div style="font-family: Arial, sans-serif; padding: 30px; color: #000; background: #fff;">`;
     pdfHtml += `<h2 style="text-align:center; margin-bottom: 5px; color: #10b981;">${phName}</h2>`;
     pdfHtml += `<h3 style="text-align:center; font-size:18px; margin-top:0; border-bottom: 2px solid #10b981; padding-bottom: 10px;">Purchase Order</h3>`;
     pdfHtml += `<p style="text-align:right; font-size:14px;">Date: ${dateStr}</p>`;
@@ -3243,33 +3245,38 @@ window.downloadPurchaseOrderPDF = function() {
     }
     pdfHtml += `</div>`;
 
-    // ✅ ላይብረሪው መጫኑን ማረጋገጥ
+    // ✅ ላይብረሪው መኖሩን ማረጋገጥ እና ፋይሉን ማውረድ
     if (typeof html2pdf === 'undefined') {
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
         script.onload = generatePDF;
-        script.onerror = function() { alert('❌ ኢንተርኔት ስለሌለ PDF ማውረድ አልተቻለም።'); };
+        script.onerror = function() { 
+            alert('❌ ኢንተርኔት ስለሌለ PDF ማውረድ አልተቻለም።'); 
+        };
         document.head.appendChild(script);
     } else {
         generatePDF();
     }
 
     function generatePDF() {
+        // የፋይሉ ስም
         const filename = `Purchase_Order_${new Date().toISOString().split('T')[0]}.pdf`;
+        
+        // ወደ PDF ቀይሮ ማውረድ
         html2pdf().set({
             margin: 10,
             filename: filename,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
+            html2canvas: { scale: 2, useCORS: true },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         }).fromHTML(pdfHtml).save().then(() => {
-            // ማውረዱ ሲጠናቀቅ (አማራጭ)
+            showToast('✅ PDF በተሳካ ሁኔታ ወርዷል!', 'success');
         }).catch(err => {
-            alert('❌ PDF ማውረድ አልተቻለም። እባክህ እንደገና ሞክር።');
+            console.error(err);
+            showToast('❌ PDF ማውረድ አልተቻለም። እባክህ እንደገና ሞክር።', 'error');
         });
     }
 };
-
 function calculateStockReport() {
     let totalPurchasedQty = 0; let totalPurchasedValue = 0; let totalSold = 0; let totalRemaining = 0;
     allSales.forEach(s => { if (s.medicineId) totalSold += (s.quantity || 0); });
