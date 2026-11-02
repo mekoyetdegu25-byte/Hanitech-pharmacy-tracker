@@ -300,7 +300,24 @@ input:checked + .slider:before { transform: translateX(20px); }
         </div>
     </div>
 </div>
-
+<!-- ✅ አዲስ የተጨመረ: PDF Download Modal -->
+<div class="modal-overlay" id="pdfDownloadModal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3>📄 Purchase Order (PDF)</h3>
+            <button class="modal-close" onclick="document.getElementById('pdfDownloadModal').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body" style="padding: 0;">
+            <!-- የ PDF ገጹ እዚህ ይታያል -->
+            <iframe id="pdfIframe" style="width: 100%; height: 60vh; border: none; border-bottom: 1px solid var(--border);"></iframe>
+        </div>
+        <div style="padding: 15px 20px; display: flex; gap: 10px; justify-content: flex-end; background: var(--bg); border-radius: 0 0 16px 16px;">
+            <a id="pdfDownloadLink" class="btn btn-success" href="#" download="Purchase_Order.pdf" style="width: auto; margin-top: 0; padding: 10px 24px; text-decoration: none; display: flex; align-items: center; justify-content: center;">📥 Download File</a>
+            <button class="btn btn-outline" onclick="document.getElementById('pdfDownloadModal').classList.remove('open')" style="width: auto; margin-top: 0; padding: 10px 24px;">Close</button>
+        </div>
+    </div>
+</div>
+    
 <div class="modal-overlay" id="customerModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -3192,7 +3209,7 @@ window.renderAutoReorder = function() {
 window.changeReorderPage = function(dir) { reorderPage += dir; renderAutoReorder(); };
 
 // ✅ 4. PDF ማውረጃ
-// ✅ የተስተካከለ: Purchase Order ን በቀጥታ PDF አድርጎ ማውረድ
+// ✅ የተስተካከለ: Purchase Order ን ፈጥሮ በሞዳል ማሳየት
 window.downloadPurchaseOrderPDF = function() {
     const tbody = document.getElementById('reorderTableBody');
     if (!tbody || tbody.innerHTML.includes('ማዘዝ የሚያስፈልግ እቃ የለም') || tbody.innerHTML.includes('🎉')) {
@@ -3200,7 +3217,6 @@ window.downloadPurchaseOrderPDF = function() {
         return;
     }
 
-    // ለተጠቃሚው ማሳወቂያ መስጠት
     showToast('⏳ PDF እየተዘጋጀ ነው... እባክህ ጥቂት ሰከንዶች ጠብቅ።', 'success');
 
     const phName = document.getElementById('hdrPharmacyName').innerText;
@@ -3223,57 +3239,62 @@ window.downloadPurchaseOrderPDF = function() {
         supplierOrders[supplier].push({ name, batch, qty });
     });
 
-    // የ PDF ገጽ አቀማመጥ (ዲዛይን)
-    let pdfHtml = `<div style="font-family: Arial, sans-serif; padding: 30px; color: #000; background: #fff;">`;
+    let pdfHtml = `<div style="font-family: Arial, sans-serif; padding: 20px; color: #000; background: #fff; width: 100%; box-sizing: border-box;">`;
     pdfHtml += `<h2 style="text-align:center; margin-bottom: 5px; color: #10b981;">${phName}</h2>`;
-    pdfHtml += `<h3 style="text-align:center; font-size:18px; margin-top:0; border-bottom: 2px solid #10b981; padding-bottom: 10px;">Purchase Order</h3>`;
-    pdfHtml += `<p style="text-align:right; font-size:14px;">Date: ${dateStr}</p>`;
+    pdfHtml += `<h3 style="text-align:center; font-size:16px; margin-top:0; border-bottom: 2px solid #10b981; padding-bottom: 10px;">Purchase Order</h3>`;
+    pdfHtml += `<p style="text-align:right; font-size:12px;">Date: ${dateStr}</p>`;
 
     for (const [supplier, items] of Object.entries(supplierOrders)) {
-        pdfHtml += `<div style="margin-top: 30px; page-break-inside: avoid;">`;
-        pdfHtml += `<h4 style="background: #f3f4f6; padding: 10px; border-radius: 5px; border-left: 4px solid #10b981;">To Supplier: ${supplier}</h4>`;
-        pdfHtml += `<table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px;">`;
-        pdfHtml += `<thead><tr style="background:#f8fafc; border-bottom: 2px solid #cbd5e1;"><th style="padding:10px; text-align:left;">Item Name</th><th style="padding:10px; text-align:left;">Batch</th><th style="padding:10px; text-align:center;">Order Qty</th></tr></thead><tbody>`;
+        pdfHtml += `<div style="margin-top: 20px; page-break-inside: avoid;">`;
+        pdfHtml += `<h4 style="background: #f3f4f6; padding: 8px; border-radius: 5px; border-left: 4px solid #10b981; font-size:14px;">To Supplier: ${supplier}</h4>`;
+        pdfHtml += `<table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px;">`;
+        pdfHtml += `<thead><tr style="background:#f8fafc; border-bottom: 2px solid #cbd5e1;"><th style="padding:8px; text-align:left;">Item Name</th><th style="padding:8px; text-align:left;">Batch</th><th style="padding:8px; text-align:center;">Order Qty</th></tr></thead><tbody>`;
         
         items.forEach(item => {
-            pdfHtml += `<tr><td style="border-bottom: 1px solid #e2e8f0; padding:10px;">${item.name}</td><td style="border-bottom: 1px solid #e2e8f0; padding:10px;">${item.batch}</td><td style="border-bottom: 1px solid #e2e8f0; padding:10px; text-align:center; font-weight:bold;">${item.qty}</td></tr>`;
+            pdfHtml += `<tr><td style="border-bottom: 1px solid #e2e8f0; padding:8px;">${item.name}</td><td style="border-bottom: 1px solid #e2e8f0; padding:8px;">${item.batch}</td><td style="border-bottom: 1px solid #e2e8f0; padding:8px; text-align:center; font-weight:bold;">${item.qty}</td></tr>`;
         });
         
         pdfHtml += `</tbody></table>`;
-        pdfHtml += `<div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 13px;"><div>_______________________<br><br>Prepared By</div><div>_______________________<br><br>Received By</div></div>`;
+        pdfHtml += `<div style="margin-top: 30px; display: flex; justify-content: space-between; font-size: 11px;"><div>_______________________<br><br>Prepared By</div><div>_______________________<br><br>Received By</div></div>`;
         pdfHtml += `</div>`;
     }
     pdfHtml += `</div>`;
 
-    // ✅ ላይብረሪው መኖሩን ማረጋገጥ እና ፋይሉን ማውረድ
     if (typeof html2pdf === 'undefined') {
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
         script.onload = generatePDF;
-        script.onerror = function() { 
-            alert('❌ ኢንተርኔት ስለሌለ PDF ማውረድ አልተቻለም።'); 
-        };
+        script.onerror = function() { alert('❌ ኢንተርኔት ስለሌለ PDF ማውረድ አልተቻለም።'); };
         document.head.appendChild(script);
     } else {
         generatePDF();
     }
 
     function generatePDF() {
-        // የፋይሉ ስም
         const filename = `Purchase_Order_${new Date().toISOString().split('T')[0]}.pdf`;
         
-        // ወደ PDF ቀይሮ ማውረድ
+        // PDF አዘጋጅቶ Blob (ፋይል) መፍጠር
         html2pdf().set({
             margin: 10,
             filename: filename,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        }).fromHTML(pdfHtml).save().then(() => {
-            showToast('✅ PDF በተሳካ ሁኔታ ወርዷል!', 'success');
-        }).catch(err => {
-            console.error(err);
-            showToast('❌ PDF ማውረድ አልተቻለም። እባክህ እንደገና ሞክር።', 'error');
+        }).fromHTML(pdfHtml).toPdf().get('pdf').then(function (pdf) {
+            // የ PDF ፋይሉን አድራሻ (URL) መፍጠር
+            const blobUrl = pdf.output('bloburl');
+            
+            // ሞዳሉ ውስጥ አሳይ
+            document.getElementById('pdfIframe').src = blobUrl;
+            
+            // የ Download ሊንኩን አዘጋጅ
+            const downloadLink = document.getElementById('pdfDownloadLink');
+            downloadLink.href = blobUrl;
+            downloadLink.download = filename;
+            
+            // ሞዳሉን ክፈት
+            document.getElementById('pdfDownloadModal').classList.add('open');
+            showToast('✅ PDF ተዘጋጅቷል!', 'success');
         });
     }
 };
