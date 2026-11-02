@@ -3258,17 +3258,54 @@ window.downloadPurchaseOrderPDF = function() {
     }
     pdfHtml += `</div>`;
 
-    // ✅ ወረቀቱን በራሱ ወደ ፕሪንት መስኮት ይወስዳል (ከዚያ Save as PDF ይቻላል)
+        // ✅ አዲስ ትር ከፍቶ የራሱን የፕሪንት ቁልፍ ይዞ እንዲመጣ
     const printWindow = window.open('', '_blank');
-    printWindow.document.write('<html><head><title>Purchase Order</title></head><body>');
-    printWindow.document.write(pdfHtml);
-    printWindow.document.write('</body></html>');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Purchase Order</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body { margin: 0; padding: 0; background: #f3f4f6; }
+                .print-btn-container {
+                    position: sticky;
+                    top: 0;
+                    background: #10b981;
+                    padding: 15px;
+                    text-align: center;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                    z-index: 100;
+                }
+                .print-btn {
+                    background: white;
+                    color: #10b981;
+                    border: none;
+                    padding: 12px 24px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                }
+                .pdf-content { padding: 20px; background: white; margin: 15px; border-radius: 8px; }
+                @media print {
+                    .print-btn-container { display: none; }
+                    .pdf-content { margin: 0; padding: 0; }
+                    body { background: white; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="print-btn-container">
+                <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+            </div>
+            <div class="pdf-content">
+                ${pdfHtml}
+            </div>
+        </body>
+        </html>
+    `);
     printWindow.document.close();
-    
-    printWindow.onload = function() {
-        printWindow.focus();
-        printWindow.print();
-    };
 };
 function calculateStockReport() {
     let totalPurchasedQty = 0; let totalPurchasedValue = 0; let totalSold = 0; let totalRemaining = 0;
