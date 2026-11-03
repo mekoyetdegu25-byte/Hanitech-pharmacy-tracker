@@ -1944,10 +1944,23 @@ async function loadUserHeader(user) {
 } 
 
 window.login = async function() {
-    const email = document.getElementById('email').value.trim(); const password = document.getElementById('password').value; const errorEl = document.getElementById('loginError'); errorEl.style.display = 'none'; 
-    try { await signInWithEmailAndPassword(auth, email, password); } 
-    catch (err) { errorEl.textContent = '⚠️ Invalid Email or Password'; errorEl.style.display = 'block'; }
-}; 
+    const email = document.getElementById('email').value.trim(); 
+    const password = document.getElementById('password').value; 
+    const errorEl = document.getElementById('loginError'); errorEl.style.display = 'none'; 
+    const loginBtn = document.querySelector('.btn-login');
+    
+    // ✅ ቁልፉ ላይ "በመግባት ላይ..." ብሎ እንዲመስል
+    if(loginBtn) { loginBtn.innerText = '⏳ በመግባት ላይ...'; loginBtn.disabled = true; }
+
+    try { 
+        await signInWithEmailAndPassword(auth, email, password); 
+    } 
+    catch (err) { 
+        errorEl.textContent = '⚠️ Invalid Email or Password'; errorEl.style.display = 'block'; 
+        // ❌ ስህተት ካለ ቁልፉን ወደ ነበረበት መልስ
+        if(loginBtn) { loginBtn.innerText = 'Sign In'; loginBtn.disabled = false; }
+    }
+};  
 
 // ✅ አዲስ የተጨመረ: የይለፍ ቃል መርሳት (በቀጥታ ኢሜል ይላካል)
 window.forgotPassword = async function(e) {
@@ -2056,10 +2069,11 @@ window.softRefresh = function() {
     
 onAuthStateChanged(auth, async (user) => {
     if (user) { 
-        document.getElementById('loginScreen').classList.add('hidden'); 
-        // ✅ mainApp ን ወዲያውኑ እናሳይ (ነጩ ገጽ እንዳይታይ)
-        document.getElementById('mainApp').classList.add('show'); 
+        // 1. ዳታውን በሙሉ ጫን (የ Login ገጹ አሁንም ከፊት ሆኖ ይጠብቃል)
         await loadUserHeader(user); 
+        
+        // 2. ዳታው ሙሉ በሙሉ ሲጫን ብቻ የ Login ገጹን ደብቅ
+        document.getElementById('loginScreen').classList.add('hidden'); 
     } 
     else { 
         document.getElementById('loginScreen').classList.remove('hidden'); 
@@ -2067,11 +2081,18 @@ onAuthStateChanged(auth, async (user) => {
         document.getElementById('lockoutScreen').style.display = 'none';
         currentUserPharmacyId = null; currentUserRole = 'employee'; 
     }
-});  
+});   
 
 async function loadAllData() {
     if (!currentUserPharmacyId) return; 
-    await loadCategories(); await loadExpCategories(); await loadBranches(); await loadCustomers();
+    
+    // ✅ ሁሉንም ዳታዎች በአንድ ጊዜ (Parallel) ጫን - ፍጥነትን ይጨምራል
+    await Promise.all([
+        loadCategories(),
+        loadExpCategories(),
+        loadBranches(),
+        loadCustomers()
+    ]);
     const today = new Date().toISOString().split('T')[0];
     const thisMonth = new Date().toISOString().slice(0, 7);
     if(document.getElementById('dashMonthPicker') && !document.getElementById('dashMonthPicker').value) document.getElementById('dashMonthPicker').value = thisMonth;
