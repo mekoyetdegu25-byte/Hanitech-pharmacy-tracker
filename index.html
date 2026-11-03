@@ -1755,30 +1755,59 @@ async function loadUserHeader(user) {
                             lowStockThreshold = phData.lowStockThreshold || 10; 
                             if (phData.isSuspended) { document.getElementById('mainApp').classList.remove('show'); document.getElementById('loginScreen').classList.remove('hidden'); await signOut(auth); return; }
                             
-                            // ✅ አዲስ የተጨመረ: ከ Admin Panel የሚመጣ የክፍያ መልእክት ማሳየት
+                                                        // ✅ AUTO BANNER LOGIC: በራሱ የሚሰራ የክፍያ ማሳወቂያ
                             const banner = document.getElementById('subscriptionBanner');
                             const bannerText = document.getElementById('subscriptionBannerText');
+                            
                             if (banner && bannerText) {
+                                let showBanner = false;
+                                let msg = '';
+                                let bgColor = '#fef3c7', textColor = '#d97706', borderColor = '#fcd34d'; // Default Warning (Yellow)
+
+                                // 1. አድሚኑ ልዩ መልእክት ፅፎ ካስቀመጠ (Manual Override)
                                 if (phData.subscriptionMessage && phData.subscriptionMessage.trim() !== '') {
-                                    bannerText.innerHTML = `🔔 ${phData.subscriptionMessage}`;
-                                    banner.style.display = 'block';
+                                    showBanner = true;
+                                    msg = `🔔 ${phData.subscriptionMessage}`;
                                     
-                                    // በ Admin Panel ላይ በተመረጠው ሁኔታ መሰረት ቀለሙን መቀየር
                                     if (phData.subscriptionStatus === 'expired') {
-                                        banner.style.background = '#fee2e2';
-                                        banner.style.color = '#ef4444';
-                                        banner.style.borderBottomColor = '#fca5a5';
+                                        bgColor = '#fee2e2'; textColor = '#ef4444'; borderColor = '#fca5a5';
                                     } else if (phData.subscriptionStatus === 'success') {
-                                        banner.style.background = '#dcfce7';
-                                        banner.style.color = '#166534';
-                                        banner.style.borderBottomColor = '#86efac';
-                                    } else {
-                                        banner.style.background = '#fef3c7'; // warning (default)
-                                        banner.style.color = '#d97706';
-                                        banner.style.borderBottomColor = '#fcd34d';
+                                        bgColor = '#dcfce7'; textColor = '#166534'; borderColor = '#86efac';
                                     }
+                                } 
+                                // 2. መልእክት ከሌለ (Auto Calculate ከ ማብቂያ ቀን)
+                                else if (phData.expiryDate) {
+                                    const today = new Date();
+                                    today.setHours(0, 0, 0, 0); // ሰዓቱን አጥፋ
+                                    
+                                    const expDate = new Date(phData.expiryDate);
+                                    expDate.setHours(0, 0, 0, 0);
+
+                                    const diffTime = expDate - today;
+                                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                                    if (diffDays < 0) {
+                                        // ጊዜው አልፏል (Expired)
+                                        showBanner = true;
+                                        msg = `🚨 የአገልግሎት ክፍያዎ ጊዜው አልፏል! እባክዎ ወዲያውኑ ይክፈሉ።`;
+                                        bgColor = '#fee2e2'; textColor = '#ef4444'; borderColor = '#fca5a5';
+                                    } else if (diffDays <= 5) {
+                                        // በ5 ቀናት ውስጥ ያበቃል (Warning)
+                                        showBanner = true;
+                                        msg = `⏳ የአገልግሎት ክፍያዎ በ ${diffDays} ቀናት ውስጥ ያበቃል! እባክዎ ይክፈሉ።`;
+                                        bgColor = '#fef3c7'; textColor = '#d97706'; borderColor = '#fcd34d';
+                                    }
+                                    // diffDays > 5 ከሆነ ምንም አያሳይም (showBanner = false ሆኖ ይቀራል)
+                                }
+
+                                if (showBanner) {
+                                    bannerText.innerHTML = msg;
+                                    banner.style.background = bgColor;
+                                    banner.style.color = textColor;
+                                    banner.style.borderBottomColor = borderColor;
+                                    banner.style.display = 'block';
                                 } else {
-                                    banner.style.display = 'none'; // መልእክት ከሌለ ደብቀው
+                                    banner.style.display = 'none';
                                 }
                             }
 
