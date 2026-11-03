@@ -1949,18 +1949,18 @@ window.login = async function() {
     const errorEl = document.getElementById('loginError'); errorEl.style.display = 'none'; 
     const loginBtn = document.querySelector('.btn-login');
     
-    // ✅ ቁልፉ ላይ "በመግባት ላይ..." ብሎ እንዲመስል
     if(loginBtn) { loginBtn.innerText = '⏳ በመግባት ላይ...'; loginBtn.disabled = true; }
 
     try { 
         await signInWithEmailAndPassword(auth, email, password); 
+        // ✅ ስኬታማ ከሆነ ቁልፉን ወዲያውኑ መልሰው (ምክንያቱም ገጹ ወዲያውኑ ስለሚቀያየር)
+        if(loginBtn) { loginBtn.innerText = 'Sign In'; loginBtn.disabled = false; }
     } 
     catch (err) { 
         errorEl.textContent = '⚠️ Invalid Email or Password'; errorEl.style.display = 'block'; 
-        // ❌ ስህተት ካለ ቁልፉን ወደ ነበረበት መልስ
         if(loginBtn) { loginBtn.innerText = 'Sign In'; loginBtn.disabled = false; }
     }
-};  
+};   
 
 // ✅ አዲስ የተጨመረ: የይለፍ ቃል መርሳት (በቀጥታ ኢሜል ይላካል)
 window.forgotPassword = async function(e) {
@@ -2069,11 +2069,12 @@ window.softRefresh = function() {
     
 onAuthStateChanged(auth, async (user) => {
     if (user) { 
-        // 1. ዳታውን በሙሉ ጫን (የ Login ገጹ አሁንም ከፊት ሆኖ ይጠብቃል)
-        await loadUserHeader(user); 
-        
-        // 2. ዳታው ሙሉ በሙሉ ሲጫን ብቻ የ Login ገጹን ደብቅ
+        // 1. ወዲያውኑ የ Login ገጹን ደብቀን ዋናውን ገጽ እናሳይ (በፍጥነት እንዲገባ)
         document.getElementById('loginScreen').classList.add('hidden'); 
+        document.getElementById('mainApp').classList.add('show'); 
+        
+        // 2. ዳታውን በስተጀርባ ጫን (ገጹ ሳይቆለፍ ዳታው እየመጣ ይሆናል)
+        loadUserHeader(user); 
     } 
     else { 
         document.getElementById('loginScreen').classList.remove('hidden'); 
@@ -2081,18 +2082,12 @@ onAuthStateChanged(auth, async (user) => {
         document.getElementById('lockoutScreen').style.display = 'none';
         currentUserPharmacyId = null; currentUserRole = 'employee'; 
         
-        // ✅ አዲስ የተጨመረ፡ ተጠቃሚው ሲወጣ የ Login ቁልፉን ወደ መጀመሪያው ሁኔታ መመለስ
         const loginBtn = document.querySelector('.btn-login');
-        if (loginBtn) { 
-            loginBtn.innerText = 'Sign In'; 
-            loginBtn.disabled = false; 
-        }
-        
-        // ✅ አዲስ የተጨመረ፡ የፓስወርድ ሳጥኑን ማጽዳት (ለደህንነት)
+        if (loginBtn) { loginBtn.innerText = 'Sign In'; loginBtn.disabled = false; }
         document.getElementById('email').value = '';
         document.getElementById('password').value = '';
     }
-});    
+});     
 
 async function loadAllData() {
     if (!currentUserPharmacyId) return; 
