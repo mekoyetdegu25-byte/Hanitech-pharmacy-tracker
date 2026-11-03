@@ -2785,16 +2785,36 @@ window.addBulkRow = function() {
 };
 
 window.updateBulkRowInfo = function(input) {
-    const val = input.value;
+    const val = input.value.trim();
     const row = input.closest('[id^="bulkRow_"]');
     const infoDiv = row.querySelector('.bulk-row-info');
     if(!val) { infoDiv.innerHTML = ''; return; }
-    const parts = val.split('|').map(p => p.trim());
-    const searchName = parts[0].toLowerCase();
-    const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
-    const med = allMedicines.find(m => (m.name && m.name.toLowerCase() === searchName) && (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch)));
-    if (med) { infoDiv.innerHTML = `✅ Found: <strong>${med.name}</strong> (Batch: ${med.batch || '-'}) | Available: ${med.quantity} | Price: ${med.price} ETB`; infoDiv.style.color = 'var(--primary)'; } 
-    else { infoDiv.innerHTML = `⚠️ Item not found in stock.`; infoDiv.style.color = '#ef4444'; }
+    
+    let med = null;
+    // 1. በ Datalist አማራጭ መልክ (Name | Batch) ከተመረጠ
+    if (val.includes('|')) {
+        const parts = val.split('|').map(p => p.trim());
+        const searchName = parts[0].toLowerCase();
+        const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
+        med = allMedicines.find(m => (m.name && m.name.toLowerCase() === searchName) && (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch)));
+    } 
+    // 2. በእጅ ከተፃፈ (በስም ወይም በባች) መፈለግ
+    else {
+        const lowerVal = val.toLowerCase();
+        med = allMedicines.find(m => (m.batch || '').toLowerCase() === lowerVal) ||
+              allMedicines.find(m => (m.name || '').toLowerCase() === lowerVal) ||
+              allMedicines.find(m => (m.batch || '').toLowerCase().includes(lowerVal)) ||
+              allMedicines.find(m => (m.name || '').toLowerCase().includes(lowerVal));
+    }
+
+    if (med) { 
+        infoDiv.innerHTML = `✅ Found: <strong>${med.name}</strong> (Batch: ${med.batch || '-'}) | Available: ${med.quantity} | Price: ${med.price} ETB`; 
+        infoDiv.style.color = 'var(--primary)'; 
+    } 
+    else { 
+        infoDiv.innerHTML = `⚠️ Item not found in stock.`; 
+        infoDiv.style.color = '#ef4444'; 
+    }
 };
 
 window.saveBulkSales = async function() {
@@ -2808,10 +2828,21 @@ window.saveBulkSales = async function() {
         const qtyInput = parseInt(row.querySelector('.bulk-input-qty').value);
         const paymentType = row.querySelector('.bulk-input-payment').value;
         if (!nameInput || isNaN(qtyInput) || qtyInput <= 0) continue;
-        const parts = nameInput.split('|').map(p => p.trim());
-        const searchName = parts[0].toLowerCase();
-        const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
-        const med = allMedicines.find(m => (m.name && m.name.toLowerCase() === searchName) && (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch)));
+                let med = null;
+        const nameInputTrimmed = nameInput.trim();
+        
+        if (nameInputTrimmed.includes('|')) {
+            const parts = nameInputTrimmed.split('|').map(p => p.trim());
+            const searchName = parts[0].toLowerCase();
+            const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
+            med = allMedicines.find(m => (m.name && m.name.toLowerCase() === searchName) && (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch)));
+        } else {
+            const lowerVal = nameInputTrimmed.toLowerCase();
+            med = allMedicines.find(m => (m.batch || '').toLowerCase() === lowerVal) ||
+                  allMedicines.find(m => (m.name || '').toLowerCase() === lowerVal) ||
+                  allMedicines.find(m => (m.batch || '').toLowerCase().includes(lowerVal)) ||
+                  allMedicines.find(m => (m.name || '').toLowerCase().includes(lowerVal));
+        }
         if (med && med.quantity >= qtyInput) {
             try {
                 await addDoc(collection(db, 'sales'), { 
