@@ -2080,8 +2080,19 @@ onAuthStateChanged(auth, async (user) => {
         document.getElementById('mainApp').classList.remove('show'); 
         document.getElementById('lockoutScreen').style.display = 'none';
         currentUserPharmacyId = null; currentUserRole = 'employee'; 
+        
+        // ✅ አዲስ የተጨመረ፡ ተጠቃሚው ሲወጣ የ Login ቁልፉን ወደ መጀመሪያው ሁኔታ መመለስ
+        const loginBtn = document.querySelector('.btn-login');
+        if (loginBtn) { 
+            loginBtn.innerText = 'Sign In'; 
+            loginBtn.disabled = false; 
+        }
+        
+        // ✅ አዲስ የተጨመረ፡ የፓስወርድ ሳጥኑን ማጽዳት (ለደህንነት)
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
     }
-});   
+});    
 
 async function loadAllData() {
     if (!currentUserPharmacyId) return; 
