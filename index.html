@@ -367,8 +367,13 @@ input:checked + .slider:before { transform: translateX(20px); }
 
         <button class="btn-logout-hdr" onclick="logout()">Sign Out</button>
     </div>
-    <div class="modern-mobile-menu" id="modernMobileMenu"></div>
+        <div class="modern-mobile-menu" id="modernMobileMenu"></div>
 </header> 
+
+<!-- ✅ አዲስ የተጨመረ: የ Admin Panel መልእክት ማሳያ ባነር -->
+<div id="subscriptionBanner" style="display:none; background:#fef3c7; color:#d97706; border-bottom:1px solid #fcd34d; padding:10px 16px; text-align:center; font-size:13px; font-weight:600; z-index:100; position:relative;">
+    <span id="subscriptionBannerText"></span>
+</div>
 
 <div class="mobile-bottom-nav" id="mobileBottomNav">
     <button class="mobile-nav-item active" data-tab="panel1" onclick="mobileNavClick('panel1', 'sub1_1', this)">
@@ -1740,16 +1745,44 @@ async function loadUserHeader(user) {
         if (currentUserRole === 'owner') { roleElement.innerText = '👑 Owner'; roleElement.style.background = 'rgba(16, 185, 129, 0.1)'; roleElement.style.color = 'var(--primary)'; } 
         else if (currentUserRole === 'manager') { roleElement.innerText = '🎯 Manager'; roleElement.style.background = 'rgba(59, 130, 246, 0.1)'; roleElement.style.color = '#3b82f6'; } 
         else { roleElement.innerText = '👤 Employee'; roleElement.style.background = 'var(--border)'; roleElement.style.color = 'var(--text-main)'; } 
-        if (currentUserPharmacyId) {
-            const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
-            if (phDoc.exists()) {
-                const phData = phDoc.data();
-                document.getElementById('hdrPharmacyName').innerText = phData.name || 'HaniTech Pharmacy'; 
-                allowedBizType = phData.bizType || 'retail';
-                currentBizType = phData.userBizType || allowedBizType; 
-                lowStockThreshold = phData.lowStockThreshold || 10; 
-                if (phData.isSuspended) { document.getElementById('mainApp').classList.remove('show'); document.getElementById('loginScreen').classList.remove('hidden'); await signOut(auth); return; }
-                if (phData.darkMode) {
+                            if (currentUserPharmacyId) {
+                        const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
+                        if (phDoc.exists()) {
+                            const phData = phDoc.data();
+                            document.getElementById('hdrPharmacyName').innerText = phData.name || 'HaniTech Pharmacy'; 
+                            allowedBizType = phData.bizType || 'retail';
+                            currentBizType = phData.userBizType || allowedBizType; 
+                            lowStockThreshold = phData.lowStockThreshold || 10; 
+                            if (phData.isSuspended) { document.getElementById('mainApp').classList.remove('show'); document.getElementById('loginScreen').classList.remove('hidden'); await signOut(auth); return; }
+                            
+                            // ✅ አዲስ የተጨመረ: ከ Admin Panel የሚመጣ የክፍያ መልእክት ማሳየት
+                            const banner = document.getElementById('subscriptionBanner');
+                            const bannerText = document.getElementById('subscriptionBannerText');
+                            if (banner && bannerText) {
+                                if (phData.subscriptionMessage && phData.subscriptionMessage.trim() !== '') {
+                                    bannerText.innerHTML = `🔔 ${phData.subscriptionMessage}`;
+                                    banner.style.display = 'block';
+                                    
+                                    // በ Admin Panel ላይ በተመረጠው ሁኔታ መሰረት ቀለሙን መቀየር
+                                    if (phData.subscriptionStatus === 'expired') {
+                                        banner.style.background = '#fee2e2';
+                                        banner.style.color = '#ef4444';
+                                        banner.style.borderBottomColor = '#fca5a5';
+                                    } else if (phData.subscriptionStatus === 'success') {
+                                        banner.style.background = '#dcfce7';
+                                        banner.style.color = '#166534';
+                                        banner.style.borderBottomColor = '#86efac';
+                                    } else {
+                                        banner.style.background = '#fef3c7'; // warning (default)
+                                        banner.style.color = '#d97706';
+                                        banner.style.borderBottomColor = '#fcd34d';
+                                    }
+                                } else {
+                                    banner.style.display = 'none'; // መልእክት ከሌለ ደብቀው
+                                }
+                            }
+
+                            if (phData.darkMode) {
                     document.body.classList.add('dark-mode');
                     const darkToggle = document.getElementById('settingDarkMode');
                     if(darkToggle) darkToggle.checked = true;
