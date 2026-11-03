@@ -568,11 +568,13 @@
         </div>
         <div class="tenant-info">💰 <strong>ክፍያ:</strong> ${t.amount || 0} ብር/ወር</div>
         <div class="badge-status ${cls}">${badge} ${t.expiryDate ? `(${t.expiryDate})` : ''}</div>
-        <div class="tenant-actions">
+                <div class="tenant-actions">
           <button class="btn btn-success btn-sm" onclick="markPaid('${t.id}')">💰 ክፍያ</button>
           <button class="btn btn-info btn-sm" onclick="editTenant('${t.id}')">✏️ አሻሽል</button>
           <button class="btn ${t.isSuspended ? 'btn-success' : 'btn-warning'} btn-sm" onclick="toggleSuspend('${t.id}', ${t.isSuspended})">${t.isSuspended ? '✅ ፍቃድ' : '⏸️ አቁም'}</button>
           <button class="btn btn-primary btn-sm" onclick="viewHistory('${t.id}')">📜 ታሪክ (${(t.paymentHistory || []).length})</button>
+          <!-- ✅ አዲስ የተጨመረ፡ የክፍያ ማሳወቂያ መላኪያ -->
+          <button class="btn btn-info btn-sm" onclick="sendBannerToPharmacy('${t.id}')">📢 Banner ላክ</button>
           <button class="btn btn-danger btn-sm btn-full" onclick="deleteTenant('${t.id}')">🗑️ አጥፋ</button>
         </div>
       </div>`;
@@ -696,12 +698,29 @@
     } catch (e) { toast(e.message, 'error'); }
   };
 
-  window.viewHistory = function(id) {
+    window.viewHistory = function(id) {
     const t = allTenants.find(x => x.id === id);
     const h = t?.paymentHistory || [];
     if (!h.length) { toast('ምንም ታሪክ የለም', 'info'); return; }
     const txt = h.map(x => `${x.date} — ${x.amount} ብር (${x.months} ወር, ${x.method || '—'})`).join('\n');
     showModal('📜 የክፍያ ታሪክ', txt, [{ text: 'ዝጋ', class: 'btn-primary' }]);
+  };
+
+  // ✅ አዲስ የተጨመረ፡ የክፍያ ማሳወቂያ መላኪያ
+  window.sendBannerToPharmacy = async function(id) {
+    const t = allTenants.find(x => x.id === id);
+    if (!t) return;
+    const msg = prompt('ለፋርማሲው የሚላክ መልእክት (ባዶ ብትለው ይወገዳል):', t.subscriptionMessage || '');
+    if (msg === null) return; // Cancel
+    const status = prompt('ሁኔታ (warning / expired / success):', t.subscriptionStatus || 'warning');
+    try {
+      await updateDoc(doc(db, 'pharmacies', id), {
+        subscriptionMessage: msg.trim(),
+        subscriptionStatus: status || 'warning'
+      });
+      toast('✅ ማሳወቂያ ተልኳል', 'success');
+      loadAllData();
+    } catch (e) { toast(e.message, 'error'); }
   };
 
   // ===== USERS =====
