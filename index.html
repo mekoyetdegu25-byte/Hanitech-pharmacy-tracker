@@ -952,7 +952,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <label class="field-label">📝 Reason</label><input type="text" id="adjustReason">
                         <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="adjustStock()">🔧 Adjust Stock</button>
                         <div style="clear:both;"></div>
-                        <div style="margin-top:40px; border-top:1px dashed var(--border); padding-top:20px;">
+                                                <div id="stockTransferSection" style="margin-top:40px; border-top:1px dashed var(--border); padding-top:20px;">
                             <h4 style="font-size:15px; font-weight:700; margin-bottom:15px;">🔄 Transfer to another branch</h4>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                                 <div><label class="field-label">From Branch</label><select id="transferFromBranch" onchange="populateTransferMedSelect()"></select></div>
@@ -1568,7 +1568,13 @@ function buildModernMenu() {
         { section: '💸 Expenses', items: [ { id: 'sub3_1', panel: 'panel3', title: '💸 Daily Expense', icon: '💸' }, { id: 'sub3_2', panel: 'panel3', title: '🏢 Fixed Expense', icon: '🏢' }, { id: 'sub3_list', panel: 'panel3', title: '📋 Expense List', icon: '📋' }, { id: 'sub3_3', panel: 'panel3', title: '🗂️ Categories', icon: '🗂️' } ] },
         { section: '📦 Inventory', items: [ { id: 'sub4_1', panel: 'panel4', title: '📦 Inventory List', icon: '📦' }, { id: 'sub4_2', panel: 'panel4', title: '⚠️ Expiry & Low Stock', icon: '⚠️' }, { id: 'sub4_3', panel: 'panel4', title: '🔧 Stock Adjust', icon: '🔧' }, { id: 'sub4_4', panel: 'panel4', title: '📥 Purchase History', icon: '📥' }, { id: 'sub4_5', panel: 'panel4', title: '🛒 Auto Re-order', icon: '🛒' } ] },
         { section: '📊 Dashboard & Reports', items: [ { id: null, panel: 'panel7', title: '📊 Dashboard', icon: '📊' }, { id: 'sub8_1', panel: 'panel8', title: '📄 General Report', icon: '📄' }, { id: 'sub8_2', panel: 'panel8', title: '📅 Daily Report', icon: '📅' }, { id: 'sub8_3', panel: 'panel8', title: '📆 Monthly Report', icon: '📆' } ] },
-        { section: '⚙️ System', items: [ { id: null, panel: 'panel10', title: '💳 Credit Management', icon: '💳' }, { id: null, panel: 'panel9', title: '⚙️ Settings', icon: '⚙️' } ] }
+                        // ✅ በትክክል የተስተካከለው የስርዓት ሴክሽን
+        { 
+            section: '⚙️ System', 
+            items: (window.currentUserPlan === 'basic') 
+                ? [ { id: null, panel: 'panel9', title: '⚙️ Settings', icon: '⚙️' } ] 
+                : [ { id: null, panel: 'panel10', title: '💳 Credit Management', icon: '💳' }, { id: null, panel: 'panel9', title: '⚙️ Settings', icon: '⚙️' } ] 
+        }
     ];
 
     let html = '';
@@ -1753,9 +1759,44 @@ async function loadUserHeader(user) {
                             allowedBizType = phData.bizType || 'retail';
                             currentBizType = phData.userBizType || allowedBizType; 
                             lowStockThreshold = phData.lowStockThreshold || 10; 
-                            if (phData.isSuspended) { document.getElementById('mainApp').classList.remove('show'); document.getElementById('loginScreen').classList.remove('hidden'); await signOut(auth); return; }
+                                                        if (phData.isSuspended) { document.getElementById('mainApp').classList.remove('show'); document.getElementById('loginScreen').classList.remove('hidden'); await signOut(auth); return; }
                             
-                                                        // ✅ AUTO BANNER LOGIC: በራሱ የሚሰራ የክፍያ ማሳወቂያ
+                                                        // ✅ AUTO BANNER LOGIC እና PLAN RESTRICTIONS
+                            window.currentUserPlan = phData.plan || 'basic'; // ለሜኑ እንዲጠቀም
+                            const currentPlan = window.currentUserPlan;
+                            
+                            // 1. Credit Tab መገደብ
+                            const creditMenu = document.getElementById('menu_credit');
+                            const creditPanel = document.getElementById('panel10');
+                            if (creditMenu && creditPanel) {
+                                if (currentPlan === 'basic') {
+                                    creditMenu.style.setProperty('display', 'none', 'important');
+                                    creditPanel.style.setProperty('display', 'none', 'important');
+                                    if (creditPanel.classList.contains('active')) {
+                                        switchPage('panel7', null, null); // ካለ ወደ ዳሽቦርድ መልሰው
+                                    }
+                                } else {
+                                    creditMenu.style.setProperty('display', 'block', 'important');
+                                    creditPanel.style.setProperty('display', 'block', 'important');
+                                }
+                            }
+
+                            // 2. Branch መጨመሪያ መደበቅ (Basic)
+                            const branchInput = document.getElementById('newBranch');
+                            if (branchInput) {
+                                const flexContainer = branchInput.closest('.input-group')?.parentElement;
+                                if (flexContainer) {
+                                    flexContainer.style.display = (currentPlan === 'basic') ? 'none' : 'flex';
+                                }
+                            }
+
+                            // 3. Stock Transfer መደበቅ (Basic)
+                            const stockTransferSection = document.getElementById('stockTransferSection');
+                            if (stockTransferSection) {
+                                stockTransferSection.style.display = (currentPlan === 'basic') ? 'none' : 'block';
+                            }
+
+                            // ✅ AUTO BANNER LOGIC: በራሱ የሚሰራ የክፍያ ማሳወቂያ
                             const banner = document.getElementById('subscriptionBanner');
                             const bannerText = document.getElementById('subscriptionBannerText');
                             
