@@ -223,11 +223,10 @@
         <div class="coll-body">
           <div class="form-group"><label>የድርጅት ስም</label><input type="text" id="newName" placeholder="Addis Pharmacy"></div>
           <div class="form-group"><label>ድረ-ገጽ</label><input type="text" id="newWebsite" placeholder="example.com"></div>
-          <div class="form-group"><label>ዓይነት</label>
-            <select id="newBizType">
-              <option value="retail">🛒 Retail</option>
-              <option value="wholesale">🚚 Wholesale</option>
-              <option value="both">🔄 Both</option>
+                    <div class="form-group"><label>📦 የአገልግሎት ፕላን (Plan)</label>
+            <select id="newPlan">
+              <option value="basic">🟢 Basic (1 Branch, No Credit)</option>
+              <option value="pro">🔵 Pro (Multi-Branch, Credit)</option>
             </select>
           </div>
           <div class="form-group"><label>👑 Owner Email</label><input type="email" id="newOwner" placeholder="owner@example.com"></div>
@@ -243,11 +242,16 @@
       <div class="card">
         <div style="display:flex; gap:8px; margin-bottom:12px; flex-direction:column;">
           <input type="text" id="searchTenant" placeholder="🔍 ፈልግ..." oninput="renderTenantList()">
-          <select id="filterStatus" onchange="renderTenantList()">
-            <option value="all">ሁሉም</option>
+                    <select id="filterStatus" onchange="renderTenantList()">
+            <option value="all">ሁሉም ሁኔታ</option>
             <option value="active">✅ ንቁ</option>
             <option value="expired">⏳ ጊዜው አልፏል</option>
             <option value="suspended">❌ የታገዱ</option>
+          </select>
+          <select id="filterPlan" onchange="renderTenantList()">
+            <option value="all">ሁሉም ፕላኖች</option>
+            <option value="basic">🟢 Basic</option>
+            <option value="pro">🔵 Pro</option>
           </select>
         </div>
         <div id="tenantList"></div>
@@ -524,10 +528,11 @@
     el.innerHTML = sorted.map(t => `<div style="padding:10px 0; border-bottom:1px solid #edf2f7;"><strong style="color:#2c5282;">${t.name}</strong><div style="font-size:11px; color:#718096;">${t.createdAt ? new Date(t.createdAt).toLocaleDateString() : ''}</div></div>`).join('');
   }
    // ===== PHARMACIES =====
-  window.renderTenantList = function() {
+    window.renderTenantList = function() {
     const el = document.getElementById('tenantList');
     const search = (document.getElementById('searchTenant')?.value || '').toLowerCase();
     const filter = document.getElementById('filterStatus')?.value || 'all';
+    const filterPlan = document.getElementById('filterPlan')?.value || 'all';
     const today = new Date().toISOString().split('T')[0];
 
     let filtered = allTenants.filter(t => {
@@ -538,7 +543,11 @@
       if (filter === 'active') matchStatus = !t.isSuspended && t.expiryDate && t.expiryDate >= today;
       if (filter === 'expired') matchStatus = !t.isSuspended && t.expiryDate && t.expiryDate < today;
       if (filter === 'suspended') matchStatus = t.isSuspended;
-      return matchSearch && matchStatus;
+      
+      let matchPlan = true;
+      if (filterPlan !== 'all') matchPlan = (t.plan || 'basic') === filterPlan;
+      
+      return matchSearch && matchStatus && matchPlan;
     });
 
     if (filtered.length === 0) {
@@ -551,16 +560,18 @@
       if (t.isSuspended) { badge = '❌ የታገደ'; cls = 'status-suspended'; }
       else if (t.expiryDate && t.expiryDate < today) { badge = '⏳ ጊዜው አልፏል'; cls = 'status-expired'; }
       else { badge = '✅ ንቁ'; cls = 'status-active'; }
-      const cardCls = t.isSuspended ? 'suspended' : (t.expiryDate && t.expiryDate < today ? 'expired' : '');
-      const bizLabel = t.bizType === 'wholesale' ? '🚚 Wholesale' : t.bizType === 'both' ? '🔄 Both' : '🛒 Retail';
+            const cardCls = t.isSuspended ? 'suspended' : (t.expiryDate && t.expiryDate < today ? 'expired' : '');
+      const plan = t.plan || 'basic';
+      const planBadge = plan === 'pro' ? '<span style="background:#bee3f8; color:#2b6cb0; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:800;">🔵 PRO</span>' : '<span style="background:#c6f6d5; color:#22543d; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:800;">🟢 BASIC</span>';
 
       return `
       <div class="tenant-card ${cardCls}">
         <div class="tenant-header">
-          <div class="tenant-title">🏢 ${t.name || 'ስም የለም'}</div>
+          <div class="tenant-title" style="display:flex; align-items:center; gap:8px;">
+            🏢 ${t.name || 'ስም የለም'} ${planBadge}
+          </div>
           <a href="https://${t.website || '#'}" target="_blank" class="tenant-website">🌐 ${t.website || '—'}</a>
         </div>
-        <div class="tenant-info">🏢 <strong>ዓይነት:</strong> ${bizLabel}</div>
         <div class="tenant-emails">
           <div class="tenant-email-item">👑 <strong>Owner:</strong> ${t.ownerEmail || '—'}</div>
           <div class="tenant-email-item">🎯 <strong>Manager:</strong> ${t.managerEmail || '—'}</div>
@@ -568,13 +579,14 @@
         </div>
         <div class="tenant-info">💰 <strong>ክፍያ:</strong> ${t.amount || 0} ብር/ወር</div>
         <div class="badge-status ${cls}">${badge} ${t.expiryDate ? `(${t.expiryDate})` : ''}</div>
-                <div class="tenant-actions">
+                        <div class="tenant-actions">
           <button class="btn btn-success btn-sm" onclick="markPaid('${t.id}')">💰 ክፍያ</button>
           <button class="btn btn-info btn-sm" onclick="editTenant('${t.id}')">✏️ አሻሽል</button>
           <button class="btn ${t.isSuspended ? 'btn-success' : 'btn-warning'} btn-sm" onclick="toggleSuspend('${t.id}', ${t.isSuspended})">${t.isSuspended ? '✅ ፍቃድ' : '⏸️ አቁም'}</button>
           <button class="btn btn-primary btn-sm" onclick="viewHistory('${t.id}')">📜 ታሪክ (${(t.paymentHistory || []).length})</button>
-          <!-- ✅ አዲስ የተጨመረ፡ የክፍያ ማሳወቂያ መላኪያ -->
-          <button class="btn btn-info btn-sm" onclick="sendBannerToPharmacy('${t.id}')">📢 Banner ላክ</button>
+          <button class="btn btn-info btn-sm" onclick="sendBannerToPharmacy('${t.id}')">📢 Banner</button>
+          <button class="btn btn-warning btn-sm" onclick="changeTenantPlan('${t.id}', '${plan}')">🔄 Plan ቀይር</button>
+          <button class="btn btn-primary btn-sm" onclick="addEmployeeToTenant('${t.id}', '${t.name}')">👷 Employee ጨምር</button>
           <button class="btn btn-danger btn-sm btn-full" onclick="deleteTenant('${t.id}')">🗑️ አጥፋ</button>
         </div>
       </div>`;
@@ -584,7 +596,7 @@
   window.addTenant = async function() {
     const name = document.getElementById('newName').value.trim();
     const website = document.getElementById('newWebsite').value.trim();
-    const bizType = document.getElementById('newBizType').value;
+        const plan = document.getElementById('newPlan').value;
     const ownerEmail = document.getElementById('newOwner').value.trim();
     const managerEmail = document.getElementById('newManager').value.trim();
     const accountantEmail = document.getElementById('newAccountant').value.trim();
@@ -598,8 +610,8 @@
     if (tempPass.length < 6) { toast('ፓስወርድ ቢያንስ 6 ፊደል ይሁን', 'error'); return; }
 
     try {
-      const ref = await addDoc(collection(db, 'pharmacies'), {
-        name, website, bizType, ownerEmail, managerEmail, accountantEmail,
+            const ref = await addDoc(collection(db, 'pharmacies'), {
+        name, website, plan, ownerEmail, managerEmail, accountantEmail,
         amount, expiryDate: expiry, isSuspended: false, paymentHistory: [],
         createdAt: new Date().toISOString()
       });
@@ -722,7 +734,45 @@
       loadAllData();
     } catch (e) { toast(e.message, 'error'); }
   };
+  // ✅ አዲስ የተጨመረ: Plan መቀየሪያ
+  window.changeTenantPlan = async function(id, currentPlan) {
+    const newPlan = currentPlan === 'basic' ? 'pro' : 'basic';
+    const msg = `ፕላኑን ከ ${currentPlan.toUpperCase()} ወደ ${newPlan.toUpperCase()} መቀየር ትፈልጋለህ?`;
+    const ok = await showModal('🔄 ፕላን ቀይር', msg, [
+      { text: 'አዎ', class: 'btn-primary', value: true },
+      { text: 'አይ', class: 'btn-outline', value: false }
+    ]);
+    if (!ok) return;
+    try {
+      await updateDoc(doc(db, 'pharmacies', id), { plan: newPlan });
+      toast(`✅ ፕላኑ ወደ ${newPlan.toUpperCase()} ተቀይሯል`, 'success');
+      loadAllData();
+    } catch (e) { toast(e.message, 'error'); }
+  };
 
+  // ✅ አዲስ የተጨመረ: Employee መጨመሪያ
+  window.addEmployeeToTenant = async function(pharmacyId, pharmacyName) {
+    const email = prompt(`ለ "${pharmacyName}" አዲስ Employee ኢሜይል አስገባ:`);
+    if (!email || !email.includes('@')) return;
+    const pass = prompt('ጊዜያዊ ፓስወርድ (ቢያንስ 6 ፊደል):', '123456');
+    if (!pass || pass.length < 6) { toast('ፓስወርድ ቢያንስ 6 ፊደል ይሁን', 'error'); return; }
+
+    try {
+      const secondaryApp = initializeApp(firebaseConfig, 'Sec-' + Date.now());
+      const secAuth = getAuth(secondaryApp);
+      const cred = await createUserWithEmailAndPassword(secAuth, email.trim(), pass);
+      
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        email: email.trim(), role: 'employee', pharmacyId: pharmacyId,
+        isTempPassword: true, createdAt: new Date().toISOString()
+      });
+      
+      await deleteApp(secondaryApp);
+      toast(`✅ Employee ተጨምሯል!`, 'success');
+      loadAllData();
+    } catch (e) { toast('ስህተት: ' + e.message, 'error'); }
+  };
+ 
   // ===== USERS =====
   window.renderUserList = function() {
     const el = document.getElementById('userList');
