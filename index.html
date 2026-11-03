@@ -359,7 +359,17 @@ input:checked + .slider:before { transform: translateX(20px); }
         </div>
     </div>
 </div>
-    
+
+<!-- ✅ አዲስ የተጨመረ: የክፍያ ማብቂያ ገጽ (Lockout Screen) -->
+<div id="lockoutScreen" style="display:none; position:fixed; inset:0; background:#f8fafc; z-index:9999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;">
+    <div style="background:#fff; padding:40px 30px; border-radius:20px; box-shadow:0 10px 25px rgba(0,0,0,0.1); max-width:400px; width:100%; border-top:5px solid #ef4444;">
+        <div style="font-size:60px; margin-bottom:20px;">🚫</div>
+        <h1 style="font-size:24px; font-weight:800; color:#1e293b; margin-bottom:10px;">አገልግሎት ተቋርጧል</h1>
+        <p id="lockoutReason" style="font-size:14px; color:#64748b; margin-bottom:30px; line-height:1.6;">የአገልግሎት ጊዜዎ አልፏል ወይም አካውንትዎ ተቆልፏል።</p>
+        <button onclick="logout()" style="width:100%; padding:14px; background:#ef4444; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer;">Sign Out</button>
+    </div>
+</div>
+
 <div id="mainApp">
 <header>
     <div class="h-left" style="display: flex; align-items: center; gap: 12px;">
@@ -1785,7 +1795,46 @@ async function loadUserHeader(user) {
                             allowedBizType = phData.bizType || 'retail';
                             currentBizType = phData.userBizType || allowedBizType; 
                             lowStockThreshold = phData.lowStockThreshold || 10; 
-                                                        if (phData.isSuspended) { document.getElementById('mainApp').classList.remove('show'); document.getElementById('loginScreen').classList.remove('hidden'); await signOut(auth); return; }
+                                                                                    // ✅ አዲስ የተጨመረ: የ 5 ቀናት ጸጋ ጊዜ (Grace Period) ስሌት
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            
+                            let isLockedOut = phData.isSuspended || false;
+                            const graceDays = 5; // የጸጋ ጊዜ ቀናት
+
+                            if (phData.expiryDate) {
+                                const expDate = new Date(phData.expiryDate);
+                                expDate.setHours(0, 0, 0, 0);
+                                
+                                const diffTime = today - expDate;
+                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                                
+                                // ከ 5 ቀናት በላይ ካለፈ ብቻ ቆልፍ
+                                if (diffDays > graceDays) {
+                                    isLockedOut = true;
+                                }
+                            }
+
+                            if (isLockedOut) { 
+                                document.getElementById('mainApp').classList.remove('show'); 
+                                document.getElementById('loginScreen').classList.add('hidden'); 
+                                
+                                const lockScreen = document.getElementById('lockoutScreen');
+                                const lockReason = document.getElementById('lockoutReason');
+                                
+                                if (lockScreen && lockReason) {
+                                    if (phData.isSuspended) {
+                                        lockReason.innerText = "አካውንትዎ በአስተዳዳሪው ተቆልፏል። እባክዎ ለተጨማሪ መረጃ ያግኙን።";
+                                    } else {
+                                        lockReason.innerText = `የአገልግሎት ጊዜዎ በ ${phData.expiryDate} አልቋል። የ 5 ቀናት ጸጋ ጊዜውም አልፏል። ሶፍትዌሩን ለመጠቀም እባክዎ ክፍያዎን ያሟሉ።`;
+                                    }
+                                    lockScreen.style.display = 'flex';
+                                }
+                                return; 
+                            } else {
+                                document.getElementById('lockoutScreen').style.display = 'none';
+                                document.getElementById('mainApp').classList.add('show');
+                            }
                             
                                                         // ✅ AUTO BANNER LOGIC እና PLAN RESTRICTIONS
                             window.currentUserPlan = phData.plan || 'basic'; // ለሜኑ እንዲጠቀም
@@ -1886,8 +1935,11 @@ async function loadUserHeader(user) {
                 applyLanguage(phData.language || 'am');
             }
         }
-        await applyPermissionsToUI();
+                await applyPermissionsToUI();
         await loadSupportInfo();
+        
+        // ሁሉም ነገር ከተረጋገጠ በኋላ ዳታውን ጫን
+        await loadAllData();
     } catch (err) { console.error('loadUserHeader error:', err); }
 } 
 
@@ -2003,9 +2055,18 @@ window.softRefresh = function() {
 };
     
 onAuthStateChanged(auth, async (user) => {
-    if (user) { document.getElementById('loginScreen').classList.add('hidden'); document.getElementById('mainApp').classList.add('show'); await loadUserHeader(user); await loadAllData(); } 
-    else { document.getElementById('loginScreen').classList.remove('hidden'); document.getElementById('mainApp').classList.remove('show'); currentUserPharmacyId = null; currentUserRole = 'employee'; }
-}); 
+    if (user) { 
+        document.getElementById('loginScreen').classList.add('hidden'); 
+        // ማሳሰቢያ፡ mainApp ን እዚህ አናሳይም። loadUserHeader ካረጋገጠ በኋላ ነው የሚታየው
+        await loadUserHeader(user); 
+    } 
+    else { 
+        document.getElementById('loginScreen').classList.remove('hidden'); 
+        document.getElementById('mainApp').classList.remove('show'); 
+        document.getElementById('lockoutScreen').style.display = 'none';
+        currentUserPharmacyId = null; currentUserRole = 'employee'; 
+    }
+});  
 
 async function loadAllData() {
     if (!currentUserPharmacyId) return; 
