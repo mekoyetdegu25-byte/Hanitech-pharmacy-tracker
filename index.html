@@ -1839,14 +1839,13 @@ window.showToast = function(message, type = 'success') {
 };
 
 // ✅ አዲስ የተጨመረ: የ Refresh ተግባር
-window.softRefresh = function() {
-    const btn = event.currentTarget;
-    const svg = btn.querySelector('svg');
+window.softRefresh = function(event) {
+    const btn = (event && event.currentTarget) || (window.event && window.event.currentTarget);
+    const svg = btn ? btn.querySelector('svg') : null;
     
-    // ምልክቱ እንዲሽከረከር
     if (svg) svg.style.animation = 'spin 1s linear infinite';
     
-    // ዳታውን እንደገና ጫን
+    // ✅ ዳታውን እንደገና ጫን (ከ3 ወር ወደ አሁን ያለውን ብቻ)
     loadAllData().then(() => {
         if (svg) svg.style.animation = 'none';
         showToast('✅ ዳታው በተሳካ ሁኔታ ታድሷል!', 'success');
@@ -1854,7 +1853,7 @@ window.softRefresh = function() {
         if (svg) svg.style.animation = 'none';
         showToast('❌ ዳታውን ማደስ አልተቻለም።', 'error');
     });
-}; 
+};
 // ✅ አዲስ የተጨመረ: ገጹን ሳይዘጋ ዳታውን ብቻ አድስ
 window.softRefresh = function() {
     // የ Refresh ቁልፉን እያሽከረከረ እንዲመስል
@@ -1959,17 +1958,77 @@ window.checkSystemAlerts = function() {
 
 function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
-    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); setTimeout(applyUniversalMobileCollapse, 100); });
-    unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { 
+
+    // ✅ አዲስ የተጨመረ፦ የመጨረሻ 3 ወር ዳታ ብቻ እንዲመጣ (Index ን ለመጠቀም)
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+    const dateLimit = threeMonthsAgo.toISOString().split('T')[0];
+
+    // 💊 መድኃኒቶች (ሁሉንም እንፈልጋለን)
+    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { 
+        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
+        temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); 
+        allMedicines = temp; 
+        renderMedList(); loadInventory(); renderSellProducts(); 
+        setTimeout(applyUniversalMobileCollapse, 100); 
+    });
+
+    // 🛒 ሽያጮች (የመጨረሻ 3 ወር ብቻ)
+    unsubSales = onSnapshot(query(
+        collection(db, 'sales'), 
+        where('pharmacyId', '==', currentUserPharmacyId),
+        where('date', '>=', dateLimit) // ✅ ቀንን መጠቀም
+    ), (snapshot) => { 
         let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
         allSales = temp; 
         calculateStockReport(); loadInventory(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); 
         setTimeout(applyUniversalMobileCollapse, 100);
     });
-    unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
-    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); setTimeout(applyUniversalMobileCollapse, 100); });
-    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
-    unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; renderUnpaidCredits(); });
+
+    // ⚡ ፈጣን ሽያጮች (የመጨረሻ 3 ወር ብቻ)
+    unsubQuickSales = onSnapshot(query(
+        collection(db, 'quickSales'), 
+        where('pharmacyId', '==', currentUserPharmacyId),
+        where('date', '>=', dateLimit) // ✅ ቀንን መጠቀም
+    ), (snapshot) => { 
+        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
+        allQuickSales = temp; 
+        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); 
+    });
+
+    // 💸 ወጪዎች (የመጨረሻ 3 ወር ብቻ)
+    unsubExpenses = onSnapshot(query(
+        collection(db, 'expenses'), 
+        where('pharmacyId', '==', currentUserPharmacyId),
+        where('date', '>=', dateLimit) // ✅ ቀንን መጠቀም
+    ), (snapshot) => { 
+        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
+        allExpenses = temp; 
+        loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); 
+        setTimeout(applyUniversalMobileCollapse, 100); 
+    });
+
+    // 🏢 ቋሚ ወጪዎች (የመጨረሻ 3 ወር ብቻ)
+    unsubFixed = onSnapshot(query(
+        collection(db, 'fixedExpenses'), 
+        where('pharmacyId', '==', currentUserPharmacyId),
+        where('month', '>=', dateLimit.slice(0,7)) // ✅ ወርን መጠቀም
+    ), (snapshot) => { 
+        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
+        allFixed = temp; 
+        loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); 
+    });
+
+    // 💳 ክሬዲት ክፍያዎች (የመጨረሻ 3 ወር ብቻ)
+    unsubCredit = onSnapshot(query(
+        collection(db, 'creditPayments'), 
+        where('pharmacyId', '==', currentUserPharmacyId),
+        where('date', '>=', dateLimit) // ✅ ቀንን መጠቀም
+    ), (snapshot) => { 
+        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
+        allCreditPayments = temp; 
+        renderUnpaidCredits(); 
+    });
 }
 
 // ==========================================
