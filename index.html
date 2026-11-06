@@ -167,43 +167,11 @@ input:checked + .slider:before { transform: translateX(20px); }
 .modal-overlay.open { display: flex; }
 .modal-content { background: var(--card-bg); border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-md); }
 .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-radius: 16px 16px 0 0; } .modal-header h3 { font-size: 16px; font-weight: 700; margin: 0; color: var(--text-main); } .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); } .modal-body { padding: 20px; }
-/* ✅ አዲስ የተጨመረ: የማሳወቂያ (Toast) እና የማሽከርከሪያ ስታይል */
-.toast-notification {
-    position: fixed;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-20px);
-    background: #10b981;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    font-weight: 600;
-    font-size: 14px;
-    z-index: 9999;
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.toast-notification.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-.toast-notification.error {
-    background: #ef4444;
-}
-@keyframes spin {
-    100% { transform: rotate(360deg); }
-}
-
+.toast-notification { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #10b981; color: white; padding: 12px 24px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-weight: 600; font-size: 14px; z-index: 9999; opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); pointer-events: none; display: flex; align-items: center; gap: 10px; }
+.toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast-notification.error { background: #ef4444; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
 @media print { body * { visibility: hidden; } #printableReceipt, #printableReceipt * { visibility: visible; } #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; } .no-print { display: none !important; } }
-
-/* ==========================================
-   📱 MODERN MOBILE HEADER & DROPDOWN
-   ========================================== */
 #mobileHeaderTitle { display: none; font-size: 16px; font-weight: 700; color: var(--text-main); cursor: pointer; align-items: center; gap: 8px; }
 #mobileHeaderTitle span { font-size: 12px; color: var(--text-muted); transition: transform 0.3s; }
 #mobileHeaderTitle.open span { transform: rotate(180deg); }
@@ -218,23 +186,17 @@ input:checked + .slider:before { transform: translateX(20px); }
 .mobile-bottom-nav { display: none; }
 .mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 2px; color: var(--text-muted); transition: all 0.2s; border: none; background: transparent; font-family: inherit; }
 .mobile-nav-item.active { color: var(--primary); } .mobile-nav-item .nav-icon { font-size: 20px; } .mobile-nav-item .nav-label { font-size: 10px; font-weight: 600; }
-
 @media (max-width: 768px) {
     .tabs { display: none !important; } .panels { width: 100% !important; padding: 16px 12px 90px 12px !important; }
     header { padding: 0 12px !important; height: 60px !important; } header .h-title { font-size: 14px !important; } header .h-brand { font-size: 11px !important; } header .btn-logout-hdr { padding: 6px 10px !important; font-size: 12px !important; }
-        /* #hdrUserRole { display: none !important; } -- አሁን በሞባይልም ይታያል */
     #hdrUserRole { display: inline-block !important; padding: 4px 8px !important; font-size: 11px !important; } .h-left .h-brand { display: none; } #mobileHeaderTitle { display: flex; }
     .mobile-bottom-nav { display: flex !important; position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--card-bg); border-top: 1px solid var(--border); z-index: 999; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
     [style*="grid-template-columns:1fr 1fr"], [style*="grid-template-columns: 1fr 1fr"], [style*="grid-template-columns:1fr 1fr 1fr"], [style*="grid-template-columns: 1fr 1fr 1fr"], [style*="grid-template-columns:repeat(4,1fr)"], [style*="grid-template-columns: repeat(4,1fr)"], [style*="grid-template-columns:repeat(3,1fr)"], [style*="grid-template-columns: repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
     .pos-layout { grid-template-columns: 1fr !important; height: auto !important; } .pos-products { min-height: 400px; }
     .dash-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; } .dash-val-number { font-size: 20px !important; } .dash-card { padding: 12px !important; }
-        .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; } 
-    #bodySettings.open { grid-template-columns: 1fr !important; } 
-    .role-grid { grid-template-columns: 1fr !important; }
-    
-    /* ✅ አዲስ የተጨመረ፡ ሰንጠረዦች በሞባይል ላይ እንዳይጨናነቁ */
-    .responsive-table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .responsive-table-container table { min-width: 600px; }
+    .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; } 
+    #bodySettings.open { grid-template-columns: 1fr !important; } .role-grid { grid-template-columns: 1fr !important; }
+    .responsive-table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; } .responsive-table-container table { min-width: 600px; }
     .btn { padding: 10px !important; font-size: 13px !important; } h1 { font-size: 20px !important; } h2 { font-size: 18px !important; }
     .modal-content { max-width: 95vw !important; max-height: 90vh !important; } label.field-label { font-size: 12px !important; }
     .summary-box { padding: 12px !important; } .summary-box .value { font-size: 20px !important; } .section-header { padding: 12px 14px !important; } .section-body { padding: 0 14px 14px 14px !important; }
@@ -257,7 +219,7 @@ input:checked + .slider:before { transform: translateX(20px); }
     <div class="sub-text">Pharmacy Tracker</div>
 </div> 
 
-<!-- ✅ አዲስ የተጨመረ: የማሳወቂያ ሳጥን (Alert Modal) -->
+<!-- ✅ የማሳወቂያ ሳጥን (Alert Modal) -->
 <div class="modal-overlay" id="systemAlertModal">
     <div class="modal-content" style="max-width: 450px;">
         <div class="modal-header" style="background: #fef3c7; border-bottom: 1px solid #fcd34d;">
@@ -278,9 +240,9 @@ input:checked + .slider:before { transform: translateX(20px); }
     <h1>HaniTech Digital Pharmacy Management System</h1> 
     <div id="loginForm">
         <div id="loginError" style="color:red; text-align:center; margin-bottom:10px; font-size:13px; display:none;"></div>
-        <div class="form-group"><label>📧 Email Address</label><input type="email" id="email" placeholder="admin@pharmacy.com"></div>
-        <div class="form-group"><label>🔒 Password</label><input type="password" id="password" placeholder="••••••••"></div>
-                <button class="btn-login" onclick="login()">Sign In</button>
+        <div class="form-group"><label for="email">📧 Email Address</label><input type="email" id="email" placeholder="admin@pharmacy.com"></div>
+        <div class="form-group"><label for="password">🔒 Password</label><input type="password" id="password" placeholder="••••••••"></div>
+        <button class="btn-login" onclick="login()">Sign In</button>
         <div style="text-align: center; margin-top: 15px;">
             <a href="#" onclick="forgotPassword(event)" style="color: var(--primary); font-size: 13px; font-weight: 600; text-decoration: none;">Forgot Password?</a>
         </div>
@@ -303,7 +265,7 @@ input:checked + .slider:before { transform: translateX(20px); }
         </div>
     </div>
 </div>
-<!-- ✅ አዲስ የተጨመረ: PDF Download Modal -->
+
 <div class="modal-overlay" id="pdfDownloadModal">
     <div class="modal-content" style="max-width: 600px;">
         <div class="modal-header">
@@ -311,7 +273,6 @@ input:checked + .slider:before { transform: translateX(20px); }
             <button class="modal-close" onclick="document.getElementById('pdfDownloadModal').classList.remove('open')">×</button>
         </div>
         <div class="modal-body" style="padding: 0;">
-            <!-- የ PDF ገጹ እዚህ ይታያል -->
             <iframe id="pdfIframe" style="width: 100%; height: 60vh; border: none; border-bottom: 1px solid var(--border);"></iframe>
         </div>
         <div style="padding: 15px 20px; display: flex; gap: 10px; justify-content: flex-end; background: var(--bg); border-radius: 0 0 16px 16px;">
@@ -343,7 +304,7 @@ input:checked + .slider:before { transform: translateX(20px); }
         </div>
     </div>
 </div>
-<!-- ✅ አዲስ የተጨመረ: የጊዜያዊ ፓስወርድ መቀየሪያ ሳጥን -->
+
 <div class="modal-overlay" id="tempPasswordModal">
     <div class="modal-content" style="max-width: 400px;">
         <div class="modal-header" style="background: #fef3c7;">
@@ -351,16 +312,15 @@ input:checked + .slider:before { transform: translateX(20px); }
         </div>
         <div class="modal-body">
             <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">እባክህ ጊዜያዊ ፓስወርድህን ቀይረህ ወደ ሲስተሙ ግባ።</p>
-            <label class="field-label">🔒 New Password</label>
+            <label class="field-label" for="newPassInput">🔒 New Password</label>
             <input type="password" id="newPassInput" placeholder="Enter new password (min 6 chars)">
-            <label class="field-label">✅ Confirm Password</label>
+            <label class="field-label" for="confirmPassInput">✅ Confirm Password</label>
             <input type="password" id="confirmPassInput" placeholder="Re-enter new password">
             <button class="btn btn-primary" style="margin-top: 20px;" onclick="updateTempPassword()">Update Password</button>
         </div>
     </div>
 </div>
 
-<!-- ✅ አዲስ የተጨመረ: የክፍያ ማብቂያ ገጽ (Lockout Screen) -->
 <div id="lockoutScreen" style="display:none; position:fixed; inset:0; background:#f8fafc; z-index:9999; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;">
     <div style="background:#fff; padding:40px 30px; border-radius:20px; box-shadow:0 10px 25px rgba(0,0,0,0.1); max-width:400px; width:100%; border-top:5px solid #ef4444;">
         <div style="font-size:60px; margin-bottom:20px;">🚫</div>
@@ -386,40 +346,34 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
         </div>
     </div>
-        <div class="h-right" style="display: flex; align-items: center; gap: 8px;">
+    <div class="h-right" style="display: flex; align-items: center; gap: 8px;">
         <span id="hdrUserRole" style="background: rgba(16, 185, 129, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">Owner</span>
         
-                <!-- ✅ የተስተካከለ: Soft Refresh ቁልፍ -->
         <button onclick="softRefresh()" title="Refresh Data" style="background:transparent; border:1px solid var(--border); border-radius:8px; width:36px; height:36px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text-main); transition:all 0.2s;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
         </button>
 
         <button class="btn-logout-hdr" onclick="logout()">Sign Out</button>
     </div>
-        <div class="modern-mobile-menu" id="modernMobileMenu"></div>
+    <div class="modern-mobile-menu" id="modernMobileMenu"></div>
 </header> 
 
-<!-- ✅ አዲስ የተጨመረ: የ Admin Panel መልእክት ማሳያ ባነር -->
 <div id="subscriptionBanner" style="display:none; background:#fef3c7; color:#d97706; border-bottom:1px solid #fcd34d; padding:10px 16px; text-align:center; font-size:13px; font-weight:600; z-index:100; position:relative;">
     <span id="subscriptionBannerText"></span>
 </div>
 
 <div class="mobile-bottom-nav" id="mobileBottomNav">
     <button class="mobile-nav-item active" data-tab="panel1" onclick="mobileNavClick('panel1', 'sub1_1', this)">
-        <span class="nav-icon">💊</span>
-        <span class="nav-label">Medicine</span>
+        <span class="nav-icon">💊</span><span class="nav-label">Medicine</span>
     </button>
     <button class="mobile-nav-item" data-tab="panel2" onclick="mobileNavClick('panel2', 'sub2_1', this)">
-        <span class="nav-icon">🛒</span>
-        <span class="nav-label">Sales</span>
+        <span class="nav-icon">🛒</span><span class="nav-label">Sales</span>
     </button>
     <button class="mobile-nav-item" data-tab="panel7" onclick="mobileNavClick('panel7', null, this)">
-        <span class="nav-icon">📊</span>
-        <span class="nav-label">Dashboard</span>
+        <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
     </button>
     <button class="mobile-nav-item" data-tab="panel9" onclick="mobileNavClick('panel9', null, this)">
-        <span class="nav-icon">⚙️</span>
-        <span class="nav-label">Settings</span>
+        <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
     </button>
 </div>
 
@@ -467,10 +421,10 @@ input:checked + .slider:before { transform: translateX(20px); }
             </div>
             <div class="sub-menu">
                 <label onclick="switchPage('panel4', 'sub4_1', this)">📦 Inventory List</label>
-<label onclick="switchPage('panel4', 'sub4_2', this)">⚠️ Expiry & Low Stock</label>
-<label onclick="switchPage('panel4', 'sub4_3', this)">🔧 Stock Adjust</label>
-<label onclick="switchPage('panel4', 'sub4_4', this)">📥 Purchase History</label>
-<label onclick="switchPage('panel4', 'sub4_5', this)">🛒 Auto Re-order</label>
+                <label onclick="switchPage('panel4', 'sub4_2', this)">⚠️ Expiry & Low Stock</label>
+                <label onclick="switchPage('panel4', 'sub4_3', this)">🔧 Stock Adjust</label>
+                <label onclick="switchPage('panel4', 'sub4_4', this)">📥 Purchase History</label>
+                <label onclick="switchPage('panel4', 'sub4_5', this)">🛒 Auto Re-order</label>
             </div>
         </div>
         <div class="menu-group" id="menu_dash">
@@ -513,14 +467,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
                             <input type="text" class="search-box" id="searchMedList" placeholder="🔍 Search by name or batch..." oninput="medPage=1; renderMedList()" style="flex: 1; min-width: 200px;">
                             <select id="filterTypeMed" onchange="medPage=1; renderMedList()" style="width: 180px;">
-    <option value="all">All Types</option>
-    <option value="medicine">💊 Medicine</option>
-    <option value="cosmetic">🧴 Cosmetics</option>
-    <option value="medical_equipment">🩺 Medical Equipment</option>
-    <option value="supplements">🧪 Supplements</option>
-    <option value="baby_care">👶 Baby Care</option>
-    <option value="home_personal_care">🏠 Home & Personal Care</option>
-</select>
+                                <option value="all">All Types</option>
+                                <option value="medicine">💊 Medicine</option>
+                                <option value="cosmetic">🧴 Cosmetics</option>
+                                <option value="medical_equipment">🩺 Medical Equipment</option>
+                                <option value="supplements">🧪 Supplements</option>
+                                <option value="baby_care">👶 Baby Care</option>
+                                <option value="home_personal_care">🏠 Home & Personal Care</option>
+                            </select>
                             <select id="filterBranchMed" onchange="medPage=1; renderMedList()" style="width: 180px;">
                                 <option value="all">All Branches</option>
                             </select>
@@ -542,8 +496,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 Show 
                                 <select id="medRowsPerPage" onchange="medPage=1; renderMedList()">
                                     <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                </select> 
-                                entries
+                                </select> entries
                             </div>
                             <div id="medPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                             <div style="display:flex; gap:8px;">
@@ -554,7 +507,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                 </div>
             </div>
-                        <div class="sub-panel" id="sub1_2">
+            <div class="sub-panel" id="sub1_2">
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrAddMed','bodyAddMed')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">➕</span><span class="sec-title">Add Medicine</span></div>
@@ -564,35 +517,35 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <h4 style="margin-bottom:12px; font-size:14px; font-weight:700;">Single Entry</h4>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                                 <div>
-                                    <label class="field-label">📦 Type</label>
-<select id="medType" onchange="onMedTypeChange()">
-    <option value="medicine">💊 Medicine</option>
-    <option value="cosmetic">🧴 Cosmetics</option>
-    <option value="medical_equipment">🩺 Medical Equipment</option>
-    <option value="supplements">🧪 Supplements</option>
-    <option value="baby_care">👶 Baby Care</option>
-    <option value="home_personal_care">🏠 Home & Personal Care</option>
-</select>
-                                    <label class="field-label">🏢 Branch</label><select id="medBranch"></select>
-                                    <label class="field-label">📁 Category</label>
+                                    <label class="field-label" for="medType">📦 Type</label>
+                                    <select id="medType" onchange="onMedTypeChange()">
+                                        <option value="medicine">💊 Medicine</option>
+                                        <option value="cosmetic">🧴 Cosmetics</option>
+                                        <option value="medical_equipment">🩺 Medical Equipment</option>
+                                        <option value="supplements">🧪 Supplements</option>
+                                        <option value="baby_care">👶 Baby Care</option>
+                                        <option value="home_personal_care">🏠 Home & Personal Care</option>
+                                    </select>
+                                    <label class="field-label" for="medBranch">🏢 Branch</label><select id="medBranch"></select>
+                                    <label class="field-label" for="medCategory">📁 Category</label>
                                     <input list="categoryList" id="medCategory" placeholder="Type to search category..." onchange="loadSubcategoriesForSelectedCategory()">
                                     <datalist id="categoryList"></datalist>
-                                    <label class="field-label">📂 Sub Category</label>
+                                    <label class="field-label" for="medSubcategory">📂 Sub Category</label>
                                     <input list="subCategoryList" id="medSubcategory" placeholder="Type to search subcategory...">
                                     <datalist id="subCategoryList"></datalist>
-                                    <label class="field-label">💊 Item Name</label><input type="text" id="medName" placeholder="e.g. Paracetamol"> 
-<label class="field-label">📷 Barcode (Optional)</label><input type="text" id="medBarcode" placeholder="Scan or type barcode..."> 
+                                    <label class="field-label" for="medName">💊 Item Name</label><input type="text" id="medName" placeholder="e.g. Paracetamol"> 
+                                    <label class="field-label" for="medBarcode">📷 Barcode (Optional)</label><input type="text" id="medBarcode" placeholder="Scan or type barcode..."> 
                                 </div>
                                 <div id="medicineOnlyFields">
-    <label class="field-label">🔢 Batch No <span id="lblBatchOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="text" id="medBatch">
-    <label class="field-label">📅 Exp Date <span id="lblExpiryOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="date" id="medExpiry">
-    <label class="field-label">🏭 Supplier <span id="lblSupplierOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="text" id="medSupplier">
-</div>  
+                                    <label class="field-label" for="medBatch">🔢 Batch No <span id="lblBatchOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="text" id="medBatch">
+                                    <label class="field-label" for="medExpiry">📅 Exp Date <span id="lblExpiryOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="date" id="medExpiry">
+                                    <label class="field-label" for="medSupplier">🏭 Supplier <span id="lblSupplierOpt" style="color:var(--text-muted); font-weight:400; font-size:11px;"></span></label><input type="text" id="medSupplier">
+                                </div>  
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top:15px;">
-                                <div><label class="field-label">💰 Purchase Price</label><input type="number" id="medCost"></div>
-                                <div><label class="field-label">🏷️ Sell Price</label><input type="number" id="medPrice"></div>
-                                <div><label class="field-label">📦 Qty</label><input type="number" id="medQty"></div>
+                                <div><label class="field-label" for="medCost">💰 Purchase Price</label><input type="number" id="medCost"></div>
+                                <div><label class="field-label" for="medPrice">🏷️ Sell Price</label><input type="number" id="medPrice"></div>
+                                <div><label class="field-label" for="medQty">📦 Qty</label><input type="number" id="medQty"></div>
                             </div>
                             <button class="btn btn-success" id="btnSaveMed" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addMedicine()">💾 Save Medicine</button>
                             <div style="clear:both;"></div>
@@ -614,11 +567,11 @@ input:checked + .slider:before { transform: translateX(20px); }
                     <div class="section-body open" id="bodyCatMgr">
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px; background:var(--bg); padding:16px; border-radius:8px; border:1px solid var(--border);">
                             <div>
-                                <label class="field-label" style="margin-top:0;">Main Category</label>
+                                <label class="field-label" style="margin-top:0;" for="newCat">Main Category</label>
                                 <input type="text" id="newCat" placeholder="e.g. Antibiotics">
                             </div>
                             <div>
-                                <label class="field-label" style="margin-top:0;">Sub Category (Optional)</label>
+                                <label class="field-label" style="margin-top:0;" for="newSubCatDirect">Sub Category (Optional)</label>
                                 <input type="text" id="newSubCatDirect" placeholder="e.g. Tablets">
                             </div>
                             <div style="grid-column: 1 / -1;">
@@ -637,8 +590,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 Show 
                                 <select id="catRowsPerPage" onchange="catPage=1; renderCategoryList()">
                                     <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                </select> 
-                                entries
+                                </select> entries
                             </div>
                             <div id="catPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                             <div style="display:flex; gap:8px;">
@@ -658,18 +610,18 @@ input:checked + .slider:before { transform: translateX(20px); }
                     <div class="pos-cart">
                         <div class="pos-cart-header">
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                                <div><label class="field-label" style="margin-top:0;">📅 Date</label><input type="date" id="sellDate" style="padding:8px;"></div>
-                                <div><label class="field-label" style="margin-top:0;">🏢 Branch</label><select id="sellBranch" style="padding:8px;"></select></div>
+                                <div><label class="field-label" style="margin-top:0;" for="sellDate">📅 Date</label><input type="date" id="sellDate" style="padding:8px;"></div>
+                                <div><label class="field-label" style="margin-top:0;" for="sellBranch">🏢 Branch</label><select id="sellBranch" style="padding:8px;"></select></div>
                             </div>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-                                <div><label class="field-label" style="margin-top:0;">💳 Payment</label><select id="sellPaymentMethod" onchange="toggleCreditFields()" style="padding:8px;"><option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit">📝 Credit</option></select></div>
-                                <div><label class="field-label" style="margin-top:0;">🧾 Receipt (Opt)</label><input type="text" id="sellReceipt" style="padding:8px;"></div>
+                                <div><label class="field-label" style="margin-top:0;" for="sellPaymentMethod">💳 Payment</label><select id="sellPaymentMethod" onchange="toggleCreditFields()" style="padding:8px;"><option value="cash">💵 Cash</option><option value="transfer">🏦 Transfer</option><option value="credit">📝 Credit</option></select></div>
+                                <div><label class="field-label" style="margin-top:0;" for="sellReceipt">🧾 Receipt (Opt)</label><input type="text" id="sellReceipt" style="padding:8px;"></div>
                             </div>
                             <div id="creditFields" style="display:none; margin-top:10px; padding:10px; background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.3); border-radius:8px;">
-                                <label class="field-label">🏪 Customer Name</label>
+                                <label class="field-label" for="sellCreditCustomer">🏪 Customer Name</label>
                                 <input list="saleCustomerList" id="sellCreditCustomer" placeholder="Type customer name..." style="margin-bottom:8px;">
                                 <datalist id="saleCustomerList"></datalist>
-                                <label class="field-label">💰 Paid Amount (Partial)</label>
+                                <label class="field-label" for="sellCreditPaid">💰 Paid Amount (Partial)</label>
                                 <input type="number" id="sellCreditPaid" placeholder="0.00 (0 for full credit)">
                             </div>
                         </div>
@@ -692,13 +644,13 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div id="categoryFilters" style="display:flex; gap:8px; margin-top:12px; overflow-x:auto; padding-bottom:4px;"></div>
                         </div>
                         <div class="pos-products-grid" id="sellProductList"></div>
-<div class="pos-pagination" style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-top:1px solid var(--border); background:var(--bg); flex-shrink:0; gap:10px;">
-    <div style="font-size:12px; color:var(--text-muted);" id="posPageInfo">Page 1 of 1</div>
-    <div style="display:flex; gap:8px;">
-        <button class="btn btn-outline" id="btnPrevPos" onclick="changePosPage(-1)" style="width:auto; margin-top:0; padding:6px 14px; font-size:13px;">⬅️ Prev</button>
-        <button class="btn btn-outline" id="btnNextPos" onclick="changePosPage(1)" style="width:auto; margin-top:0; padding:6px 14px; font-size:13px;">Next ➡️</button>
-    </div>
-</div>
+                        <div class="pos-pagination" style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-top:1px solid var(--border); background:var(--bg); flex-shrink:0; gap:10px;">
+                            <div style="font-size:12px; color:var(--text-muted);" id="posPageInfo">Page 1 of 1</div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn btn-outline" id="btnPrevPos" onclick="changePosPage(-1)" style="width:auto; margin-top:0; padding:6px 14px; font-size:13px;">⬅️ Prev</button>
+                                <button class="btn btn-outline" id="btnNextPos" onclick="changePosPage(1)" style="width:auto; margin-top:0; padding:6px 14px; font-size:13px;">Next ➡️</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -713,20 +665,20 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <h4 style="margin-bottom:12px; font-size:14px; font-weight:700;">Single Entry</h4>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                                 <div>
-                                    <label class="field-label">📦 Type</label>
-<select id="quickType">
-    <option value="medicine">💊 Medicine</option>
-    <option value="cosmetic">🧴 Cosmetics</option>
-    <option value="medical_equipment">🩺 Medical Equipment</option>
-    <option value="supplements">🧪 Supplements</option>
-    <option value="baby_care">👶 Baby Care</option>
-    <option value="home_personal_care">🏠 Home & Personal Care</option>
-</select>
-                                    <label class="field-label">🏢 Branch</label><select id="quickBranch"></select>
-                                    <label class="field-label">📅 Date</label><input type="date" id="quickDate">
+                                    <label class="field-label" for="quickType">📦 Type</label>
+                                    <select id="quickType">
+                                        <option value="medicine">💊 Medicine</option>
+                                        <option value="cosmetic">🧴 Cosmetics</option>
+                                        <option value="medical_equipment">🩺 Medical Equipment</option>
+                                        <option value="supplements">🧪 Supplements</option>
+                                        <option value="baby_care">👶 Baby Care</option>
+                                        <option value="home_personal_care">🏠 Home & Personal Care</option>
+                                    </select>
+                                    <label class="field-label" for="quickBranch">🏢 Branch</label><select id="quickBranch"></select>
+                                    <label class="field-label" for="quickDate">📅 Date</label><input type="date" id="quickDate">
                                 </div>
                                 <div>
-                                    <label class="field-label">💰 Amount</label><input type="number" id="quickAmount" placeholder="0.00">
+                                    <label class="field-label" for="quickAmount">💰 Amount</label><input type="number" id="quickAmount" placeholder="0.00">
                                     <button class="btn btn-success" style="width:auto; padding:12px 32px; float:right; margin-top:36px;" onclick="addQuickSale()">+ Add Income</button>
                                     <div style="clear:both;"></div>
                                 </div>
@@ -735,8 +687,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div style="background:rgba(245, 158, 11, 0.1); padding:16px; border-radius:8px; border:1px solid rgba(245, 158, 11, 0.3);">
                             <h4 style="margin-bottom:12px; font-size:14px; font-weight:700; color:#d97706;">Bulk Entry (Multiple Sales)</h4>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:10px;">
-                                <div><label class="field-label">🏢 Branch</label><select id="quickBulkBranch"></select></div>
-                                <div><label class="field-label">📅 Date</label><input type="date" id="quickBulkDate"></div>
+                                <div><label class="field-label" for="quickBulkBranch">🏢 Branch</label><select id="quickBulkBranch"></select></div>
+                                <div><label class="field-label" for="quickBulkDate">📅 Date</label><input type="date" id="quickBulkDate"></div>
                             </div>
                             <div id="bulkEntryRows" style="margin-bottom:10px;"></div>
                             <button class="btn btn-outline" style="width:auto; margin-bottom:10px; font-size:13px;" onclick="addBulkRow()">+ Add Row</button>
@@ -769,8 +721,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 Show 
                                 <select id="salesHistRowsPerPage" onchange="salesHistPage=1; renderSalesHistory()">
                                     <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                </select> 
-                                entries
+                                </select> entries
                             </div>
                             <div id="salesHistPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                             <div style="display:flex; gap:8px;">
@@ -792,14 +743,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyAddExp">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">📁 Category</label><select id="expCat"></select></div>
-                            <div><label class="field-label">🏢 Branch</label><select id="expBranch"></select></div>
+                            <div><label class="field-label" for="expCat">📁 Category</label><select id="expCat"></select></div>
+                            <div><label class="field-label" for="expBranch">🏢 Branch</label><select id="expBranch"></select></div>
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">💰 Amount</label><input type="number" id="expAmount"></div>
-                            <div><label class="field-label">📅 Date</label><input type="date" id="expDate"></div>
+                            <div><label class="field-label" for="expAmount">💰 Amount</label><input type="number" id="expAmount"></div>
+                            <div><label class="field-label" for="expDate">📅 Date</label><input type="date" id="expDate"></div>
                         </div>
-                        <label class="field-label">📝 Note</label><input type="text" id="expNote">
+                        <label class="field-label" for="expNote">📝 Note</label><input type="text" id="expNote">
                         <button class="btn btn-danger" id="btnSaveExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addExpense()">💾 Save Expense</button>
                         <div style="clear:both;"></div>
                     </div>
@@ -812,14 +763,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyFixedExp">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">📁 Category</label><select id="fixCat"></select></div>
-                            <div><label class="field-label">🏢 Branch</label><select id="fixBranch"></select></div>
+                            <div><label class="field-label" for="fixCat">📁 Category</label><select id="fixCat"></select></div>
+                            <div><label class="field-label" for="fixBranch">🏢 Branch</label><select id="fixBranch"></select></div>
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">💰 Amount</label><input type="number" id="fixAmount"></div>
-                            <div><label class="field-label">📅 Month</label><input type="month" id="fixMonth"></div>
+                            <div><label class="field-label" for="fixAmount">💰 Amount</label><input type="number" id="fixAmount"></div>
+                            <div><label class="field-label" for="fixMonth">📅 Month</label><input type="month" id="fixMonth"></div>
                         </div>
-                        <label class="field-label">📝 Note</label><input type="text" id="fixNote">
+                        <label class="field-label" for="fixNote">📝 Note</label><input type="text" id="fixNote">
                         <button class="btn btn-warning" id="btnSaveFixExp" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="addFixedExpense()">💾 Save Expense</button>
                         <div style="clear:both;"></div>
                     </div>
@@ -883,14 +834,14 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="no-print" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
                             <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name or batch..." oninput="invPage=1; loadInventory()" style="flex:1;">
                             <select id="filterTypeInv" onchange="invPage=1; loadInventory()" style="width:160px;">
-    <option value="all">All Types</option>
-    <option value="medicine">💊 Medicine</option>
-    <option value="cosmetic">🧴 Cosmetics</option>
-    <option value="medical_equipment">🩺 Medical Equipment</option>
-    <option value="supplements">🧪 Supplements</option>
-    <option value="baby_care">👶 Baby Care</option>
-    <option value="home_personal_care">🏠 Home & Personal Care</option>
-</select>
+                                <option value="all">All Types</option>
+                                <option value="medicine">💊 Medicine</option>
+                                <option value="cosmetic">🧴 Cosmetics</option>
+                                <option value="medical_equipment">🩺 Medical Equipment</option>
+                                <option value="supplements">🧪 Supplements</option>
+                                <option value="baby_care">👶 Baby Care</option>
+                                <option value="home_personal_care">🏠 Home & Personal Care</option>
+                            </select>
                             <select id="filterCategoryInv" onchange="invPage=1; loadInventory()" style="width:160px;">
                                 <option value="all">All Categories</option>
                             </select>
@@ -908,8 +859,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 Show 
                                 <select id="invRowsPerPage" onchange="invPage=1; loadInventory()">
                                     <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                </select> 
-                                entries
+                                </select> entries
                             </div>
                             <div id="invPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                             <div style="display:flex; gap:8px;">
@@ -966,44 +916,43 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyStockAdjust">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-    <div><label class="field-label">🏢 Branch</label><select id="adjustBranch" onchange="populateAdjustMedSelect()"></select></div>
-    <div>
-        <label class="field-label">🔍 Search Item (Name/Batch)</label>
-        <input type="text" id="adjustSearchInput" placeholder="Type to search..." oninput="populateAdjustMedSelect()" style="margin-bottom: 8px;">
-        <label class="field-label">📦 Select Item</label>
-        <select id="adjustMedId"></select>
-    </div>
-</div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div><label class="field-label">🔢 New Qty</label><input type="number" id="adjustQty" placeholder="Leave empty to keep current"></div>
-                            <div><label class="field-label">🏷️ New Sell Price</label><input type="number" id="adjustPrice" placeholder="Leave empty to keep current"></div>
+                            <div><label class="field-label" for="adjustBranch">🏢 Branch</label><select id="adjustBranch" onchange="populateAdjustMedSelect()"></select></div>
+                            <div>
+                                <label class="field-label" for="adjustSearchInput">🔍 Search Item (Name/Batch)</label>
+                                <input type="text" id="adjustSearchInput" placeholder="Type to search..." oninput="populateAdjustMedSelect()" style="margin-bottom: 8px;">
+                                <label class="field-label" for="adjustMedId">📦 Select Item</label>
+                                <select id="adjustMedId"></select>
+                            </div>
                         </div>
-                        <label class="field-label">📝 Reason</label><input type="text" id="adjustReason">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                            <div><label class="field-label" for="adjustQty">🔢 New Qty</label><input type="number" id="adjustQty" placeholder="Leave empty to keep current"></div>
+                            <div><label class="field-label" for="adjustPrice">🏷️ New Sell Price</label><input type="number" id="adjustPrice" placeholder="Leave empty to keep current"></div>
+                        </div>
+                        <label class="field-label" for="adjustReason">📝 Reason</label><input type="text" id="adjustReason">
                         <button class="btn btn-warning" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="adjustStock()">🔧 Adjust Stock</button>
                         <div style="clear:both;"></div>
-                                                <div id="stockTransferSection" style="margin-top:40px; border-top:1px dashed var(--border); padding-top:20px;">
+                        <div id="stockTransferSection" style="margin-top:40px; border-top:1px dashed var(--border); padding-top:20px;">
                             <h4 style="font-size:15px; font-weight:700; margin-bottom:15px;">🔄 Transfer to another branch</h4>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                                <div><label class="field-label">From Branch</label><select id="transferFromBranch" onchange="populateTransferMedSelect()"></select></div>
-                                <div><label class="field-label">To Branch</label><select id="transferToBranch"></select></div>
+                                <div><label class="field-label" for="transferFromBranch">From Branch</label><select id="transferFromBranch" onchange="populateTransferMedSelect()"></select></div>
+                                <div><label class="field-label" for="transferToBranch">To Branch</label><select id="transferToBranch"></select></div>
                             </div>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-    <div>
-        <label class="field-label">🔍 Search Item (Name/Batch)</label>
-        <input type="text" id="transferSearchInput" placeholder="Type to search..." oninput="populateTransferMedSelect()" style="margin-bottom: 8px;">
-        <label class="field-label">📦 Select Item</label>
-        <select id="transferMedId"></select>
-    </div>
-    <div><label class="field-label">🔢 Transfer Qty</label><input type="number" id="transferQty" placeholder="Quantity to move"></div>
-</div>
+                                <div>
+                                    <label class="field-label" for="transferSearchInput">🔍 Search Item (Name/Batch)</label>
+                                    <input type="text" id="transferSearchInput" placeholder="Type to search..." oninput="populateTransferMedSelect()" style="margin-bottom: 8px;">
+                                    <label class="field-label" for="transferMedId">📦 Select Item</label>
+                                    <select id="transferMedId"></select>
+                                </div>
+                                <div><label class="field-label" for="transferQty">🔢 Transfer Qty</label><input type="number" id="transferQty" placeholder="Quantity to move"></div>
+                            </div>
                             <button class="btn btn-primary" style="width:auto; padding:12px 32px; float:right; margin-top:20px;" onclick="transferStock()">🔄 Transfer Stock</button>
                             <div style="clear:both;"></div>
                         </div>
                     </div>
                 </div>
-                        </div>
-            <!-- ✅ አዲስ የተጨመረ: Purchase History -->
-                        <div class="sub-panel" id="sub4_4">
+            </div>
+            <div class="sub-panel" id="sub4_4">
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrPurchaseHist','bodyPurchaseHist')">
                         <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📥</span><span class="sec-title">Purchase History (Restock)</span></div>
@@ -1013,15 +962,12 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <input type="text" class="search-box" id="searchPurchaseHist" placeholder="🔍 Search by item, batch or supplier..." oninput="purchaseHistPage=1; renderPurchaseHistory()" style="flex:1;">
                         </div>
                         <div id="purchaseHistoryList" class="responsive-table-container"></div>
-                        
-                                                <!-- ✅ Pagination ለ Purchase History -->
                         <div class="pagination-controls" style="margin-top:15px;">
                             <div class="rows-per-page">
                                 Show 
                                 <select id="purchaseHistRowsPerPage" onchange="purchaseHistPage=1; renderPurchaseHistory()">
                                     <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                </select> 
-                                entries
+                                </select> entries
                             </div>
                             <div id="purchaseHistPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                             <div style="display:flex; gap:8px;">
@@ -1032,8 +978,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                 </div>
             </div>
-
-            <!-- ✅ 3. Auto Re-order -->
             <div class="sub-panel" id="sub4_5">
                  <div class="section-collapsible">
                     <div class="section-header open" onclick="toggleSection('hdrReorder','bodyReorder')">
@@ -1043,13 +987,11 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div style="background:rgba(59, 130, 246, 0.1); color:#3b82f6; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px;">
                             💡 ይህ ገጽ ክምችታቸው አናሳ የሆኑ ወይም ያለቁ መድኃኒቶችን ለይቶ ያሳያል። ለሻጮች (Suppliers) የግዢ ትዕዛዝ በPDF ለማውረድ ይጠቀሙበት።
                         </div>
-                        
                         <div style="margin-bottom: 16px; display:flex; gap:10px; flex-wrap:wrap;">
                             <select id="reorderSupplierFilter" onchange="reorderPage=1; renderAutoReorder()" style="flex:1; padding:10px;">
                                 <option value="all">🏭 All Suppliers</option>
                             </select>
                         </div>
-
                         <div class="responsive-table-container" id="reorderTableWrapper">
                             <table class="data-table" id="reorderTable">
                                 <thead>
@@ -1064,15 +1006,12 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <tbody id="reorderTableBody"></tbody>
                             </table>
                         </div>
-                        
-                        <!-- ✅ Pagination ለ Auto Re-order -->
                         <div class="pagination-controls" style="margin-top:15px; margin-bottom:15px;">
                             <div class="rows-per-page">
                                 Show 
                                 <select id="reorderRowsPerPage" onchange="reorderPage=1; renderAutoReorder()">
                                     <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                </select> 
-                                entries
+                                </select> entries
                             </div>
                             <div id="reorderPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                             <div style="display:flex; gap:8px;">
@@ -1080,7 +1019,6 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <button class="btn btn-outline" id="btnNextReorder" onclick="changeReorderPage(1)" style="width:auto; margin-top:0; padding:6px 12px; font-size:13px;">Next ➡️</button>
                             </div>
                         </div>
-                        
                         <button class="btn btn-primary" style="margin-top:20px; width:auto; float:right; background:#dc2626;" onclick="downloadPurchaseOrderPDF()">📥 Download as PDF</button>
                         <div style="clear:both;"></div>
                     </div>
@@ -1096,8 +1034,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                 </div>
                 <div class="section-body open" id="bodyDash">
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px; background:var(--card-bg); padding:16px; border-radius:12px; border:1px solid var(--border);">
-                        <div><label class="field-label" style="margin-top:0;">📅 Select Month</label><input type="month" id="dashMonthPicker" onchange="loadDashboard()"></div>
-                        <div><label class="field-label" style="margin-top:0;">🏢 Select Branch</label><select id="dashBranchFilter" onchange="loadDashboard()"><option value="all">All Branches</option></select></div>
+                        <div><label class="field-label" style="margin-top:0;" for="dashMonthPicker">📅 Select Month</label><input type="month" id="dashMonthPicker" onchange="loadDashboard()"></div>
+                        <div><label class="field-label" style="margin-top:0;" for="dashBranchFilter">🏢 Select Branch</label><select id="dashBranchFilter" onchange="loadDashboard()"><option value="all">All Branches</option></select></div>
                     </div>
                     <div class="dash-grid">
                         <div class="dash-card"><div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">Revenue</div><div class="dash-val-box" style="background: linear-gradient(135deg, #3b82f6, #2563eb);"><div class="dash-val-number" id="dashGrossIncome">0.00</div></div></div>
@@ -1109,7 +1047,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                             <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">📈 30-Day Sales Chart</div>
                             <div class="chart-container" style="height: 300px;"><canvas id="dailyChartCanvas"></canvas></div>
                         </div>
-                                                <div class="dash-card" style="grid-column: 1 / -1;">
+                        <div class="dash-card" style="grid-column: 1 / -1;">
                             <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">🥧 Expense Breakdown Chart</div>
                             <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
                                 <div style="flex: 1; min-width: 200px; height: 200px;"><canvas id="expensePieChartCanvas"></canvas></div>
@@ -1117,15 +1055,11 @@ input:checked + .slider:before { transform: translateX(20px); }
                             </div>
                         </div>
                         
-                        <!-- ✅ Top 10 ሰንጠረዦች -->
                         <div class="dash-card" style="grid-column: 1 / -1;">
                             <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">🏆 Top 10 Selling & Revenue Generating (This Month)</div>
-                            
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" class="responsive-table-container">
-                                
                                 <div>
                                     <h4 style="font-size:14px; margin-bottom:10px; color:var(--primary);">🔥 Top 10 Selling (Qty)</h4>
-                                    <!-- ID ለሞባይል መታጠፊያ -->
                                     <div id="topSellingWrapper">
                                         <table class="data-table" style="width:100%;">
                                             <thead><tr><th>Medicine</th><th>Qty Sold</th></tr></thead>
@@ -1133,10 +1067,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                                         </table>
                                     </div>
                                 </div>
-
                                 <div>
                                     <h4 style="font-size:14px; margin-bottom:10px; color:#f59e0b;">💰 Top 10 Revenue (ETB)</h4>
-                                    <!-- ID ለሞባይል መታጠፊያ -->
                                     <div id="topRevenueWrapper">
                                         <table class="data-table" style="width:100%;">
                                             <thead><tr><th>Medicine</th><th>Revenue</th></tr></thead>
@@ -1144,10 +1076,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                                         </table>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -1162,7 +1092,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyRepMain">
                         <div class="no-print" style="background:var(--card-bg); padding:20px; border-radius:12px; border:1px solid var(--border); margin-bottom:20px;">
-                            <label class="field-label">Report Type</label>
+                            <label class="field-label" for="reportTypeSelect">Report Type</label>
                             <select id="reportTypeSelect" onchange="toggleReportDatePickers()">
                                 <option value="daily">Daily</option>
                                 <option value="weekly">Weekly</option>
@@ -1172,15 +1102,15 @@ input:checked + .slider:before { transform: translateX(20px); }
                                 <option value="yearly">Yearly</option>
                             </select>
                             <div id="repBranchDiv" style="margin-top:12px;">
-                                <label class="field-label">Branch Filter</label>
+                                <label class="field-label" for="repBranchFilter">Branch Filter</label>
                                 <select id="repBranchFilter" onchange="generateReport()">
                                     <option value="all">All Branches</option>
                                 </select>
                             </div>
-                            <div id="repDateDiv" style="display:none; margin-top:12px;"><label class="field-label">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
-                            <div id="repMonthDiv" style="display:none; margin-top:12px;"><label class="field-label">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
+                            <div id="repDateDiv" style="display:none; margin-top:12px;"><label class="field-label" for="repDateInput">Date</label><input type="date" id="repDateInput" onchange="generateReport()"></div>
+                            <div id="repMonthDiv" style="display:none; margin-top:12px;"><label class="field-label" for="repMonthInput">Month</label><input type="month" id="repMonthInput" onchange="generateReport()"></div>
                             <button class="btn btn-success" style="margin-top:20px; padding: 12px;" onclick="previewAndPrintReport()">🖨️ Print / Preview Report</button>
-<button class="btn btn-primary" style="margin-top:10px; padding: 12px; background:#059669;" onclick="exportReportToCSV()">📥 Download as Excel (CSV)</button> 
+                            <button class="btn btn-primary" style="margin-top:10px; padding: 12px; background:#059669;" onclick="exportReportToCSV()">📥 Download as Excel (CSV)</button> 
                         </div>
                         <div id="reportDisplayArea" style="display:none;"></div>
                     </div>
@@ -1193,8 +1123,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyDaily">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-                            <div><label class="field-label">Date</label><input type="date" id="dailyReportDate" onchange="dailyPage=1; loadDailyReport()"></div>
-                            <div><label class="field-label">Branch</label><select id="dailyReportBranch" onchange="dailyPage=1; loadDailyReport()"><option value="all">All Branches</option></select></div>
+                            <div><label class="field-label" for="dailyReportDate">Date</label><input type="date" id="dailyReportDate" onchange="dailyPage=1; loadDailyReport()"></div>
+                            <div><label class="field-label" for="dailyReportBranch">Branch</label><select id="dailyReportBranch" onchange="dailyPage=1; loadDailyReport()"><option value="all">All Branches</option></select></div>
                         </div>
                         <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(3,1fr);">
                             <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="dailyTotalRevenue">0.00</div></div>
@@ -1226,8 +1156,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                         Show 
                                         <select id="dailyRowsPerPage" onchange="dailyPage=1; loadDailyReport()">
                                             <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                        </select> 
-                                        entries
+                                        </select> entries
                                     </div>
                                     <div id="dailyPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                                     <div style="display:flex; gap:8px;">
@@ -1247,8 +1176,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodyMonthly">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-                            <div><label class="field-label">Month</label><input type="month" id="monthlyReportMonth" onchange="monthlyPage=1; loadMonthlyReport()"></div>
-                            <div><label class="field-label">Branch</label><select id="monthlyReportBranch" onchange="monthlyPage=1; loadMonthlyReport()"><option value="all">All Branches</option></select></div>
+                            <div><label class="field-label" for="monthlyReportMonth">Month</label><input type="month" id="monthlyReportMonth" onchange="monthlyPage=1; loadMonthlyReport()"></div>
+                            <div><label class="field-label" for="monthlyReportBranch">Branch</label><select id="monthlyReportBranch" onchange="monthlyPage=1; loadMonthlyReport()"><option value="all">All Branches</option></select></div>
                         </div>
                         <div class="dash-grid" style="margin-bottom:20px; grid-template-columns: repeat(3,1fr);">
                             <div class="summary-box green"><div class="label">Revenue</div><div class="value" id="monthlyTotalRevenue">0.00</div></div>
@@ -1280,8 +1209,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                                         Show 
                                         <select id="monthlyRowsPerPage" onchange="monthlyPage=1; loadMonthlyReport()">
                                             <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-                                        </select> 
-                                        entries
+                                        </select> entries
                                     </div>
                                     <div id="monthlyPageInfo" style="font-size:13px; color:#6b7280;">Page 1 of 1</div>
                                     <div style="display:flex; gap:8px;">
@@ -1295,7 +1223,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                 </div>
             </div>
         </div>
-                <!-- PANEL 9 (Settings) -->
+
+        <!-- PANEL 9 (Settings) -->
         <div class="panel" id="panel9">
             <div class="settings-container" style="max-width: 100%; margin: 0 auto;">
                 <div class="section-collapsible" style="background: transparent; border: none; box-shadow: none; overflow: visible;">
@@ -1304,30 +1233,75 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
                     <div class="section-body open" id="bodySettings" style="background: var(--panel-bg);">
                             
+                            <!-- PHARMACY INFO -->
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyPhName').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🏥</span><span class="sec-title">Pharmacy Info</span></div>
                                 </div>
                                 <div class="section-body" id="bodyPhName">
-                                    <label class="field-label">Pharmacy Name</label>
+                                    <label class="field-label" for="settingPhName">Pharmacy Name</label>
                                     <div class="input-group"><i>🏥</i><input type="text" id="settingPhName" placeholder="e.g. HaniTech Pharmacy"></div>
-                                    <label class="field-label">Phone Number</label>
+                                    <label class="field-label" for="settingPhPhone">Phone Number</label>
                                     <div class="input-group"><i>📞</i><input type="text" id="settingPhPhone" placeholder="+251 ..."></div>
                                     <button class="btn btn-primary" onclick="savePharmacyInfo()">💾 Save Info</button>
                                 </div>
                             </div>
                             
+                            <!-- EMPLOYEE MANAGEMENT (NEW) -->
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodyEmployeeMgr').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">👥</span><span class="sec-title">Employee Management</span></div>
+                                </div>
+                                <div class="section-body" id="bodyEmployeeMgr">
+                                    <div style="background: var(--bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px;">
+                                        <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--primary);" id="empFormTitle">➕ Add New Employee</h4>
+                                        <input type="hidden" id="editEmpId">
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                            <div><label class="field-label" for="empEmail">📧 Email</label><input type="email" id="empEmail" placeholder="employee@pharmacy.com"></div>
+                                            <div><label class="field-label" for="empPassword">🔒 Password</label><input type="password" id="empPassword" placeholder="Min 6 characters"></div>
+                                            <div>
+                                                <label class="field-label" for="empRole">👤 Role</label>
+                                                <select id="empRole">
+                                                    <option value="employee">👤 Employee</option>
+                                                    <option value="manager">🎯 Manager</option>
+                                                    <option value="accountant">📊 Accountant</option>
+                                                </select>
+                                            </div>
+                                            <div id="empBranchWrapper">
+                                                <label class="field-label" for="empBranch">🏢 Assigned Branch</label>
+                                                <select id="empBranch"></select>
+                                            </div>
+                                        </div>
+                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 15px; padding: 10px; background: rgba(16, 185, 129, 0.05); border-radius: 8px;">
+                                            <div>
+                                                <div style="font-weight:600; font-size:13px;">View All Branches</div>
+                                                <div style="font-size:11px; color:var(--text-muted);">Allow this user to see data from all branches.</div>
+                                            </div>
+                                            <label class="toggle-switch"><input type="checkbox" id="empViewAllBranches" onchange="toggleEmpBranchField()"><span class="slider"></span></label>
+                                        </div>
+                                        <div style="display:flex; gap: 10px; margin-top:15px; justify-content: flex-end;">
+                                            <button class="btn btn-outline" style="width:auto; padding:10px 24px; margin-top:0; display:none;" onclick="resetEmployeeForm()" id="btnCancelEdit">Cancel</button>
+                                            <button class="btn btn-success" style="width:auto; padding:10px 24px; margin-top:0;" onclick="saveEmployee()" id="btnSaveEmp">➕ Create Employee</button>
+                                        </div>
+                                    </div>
+                                    <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">📋 Current Employees</h4>
+                                    <div id="employeeListDisplay" class="responsive-table-container">
+                                        <p style="text-align:center; color:var(--text-muted);">Loading employees...</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- SECURITY & PASSWORD -->
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyPass').classList.toggle('open'); this.classList.toggle('open');">
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🔒</span><span class="sec-title">Security & Password</span></div>
                                 </div>
                                 <div class="section-body" id="bodyPass">
-                                    <label class="field-label">Current Password</label>
+                                    <label class="field-label" for="currentPasswordInput">Current Password</label>
                                     <div class="input-group"><i>🔑</i><input type="password" id="currentPasswordInput" placeholder="Enter current password"></div>
-                                    <label class="field-label">New Password</label>
+                                    <label class="field-label" for="newPasswordInput">New Password</label>
                                     <div class="input-group"><i>🔒</i><input type="password" id="newPasswordInput" placeholder="Enter new password"></div>
-                                    <label class="field-label">Confirm New Password</label>
+                                    <label class="field-label" for="confirmPasswordInput">Confirm New Password</label>
                                     <div class="input-group"><i>✅</i><input type="password" id="confirmPasswordInput" placeholder="Re-enter new password"></div>
                                     <button class="btn btn-warning" onclick="changePassword()">🔄 Change Password</button>
                                 </div>
@@ -1338,9 +1312,9 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">🌍</span><span class="sec-title">System Preferences</span></div>
                                 </div>
                                 <div class="section-body" id="bodySysPref">
-                                    <label class="field-label">Currency</label>
+                                    <label class="field-label" for="settingCurrency">Currency</label>
                                     <div class="input-group"><i>💰</i><select id="settingCurrency"><option value="ETB">ETB (ብር)</option><option value="USD">USD ($)</option></select></div>
-                                    <label class="field-label">Language / ቋንቋ</label>
+                                    <label class="field-label" for="settingLanguage">Language / ቋንቋ</label>
                                     <div class="input-group"><i>🌐</i>
                                         <select id="settingLanguage" onchange="previewLanguage(this.value)">
                                             <option value="am">🇪🇹 አማርኛ (Amharic)</option>
@@ -1349,8 +1323,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     </div>
                                     <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-top:1px solid var(--border); margin-top:16px;">
                                         <div>
-                                            <div style="font-weight:600; font-size:14px;">Dark Mode</div>
-                                            <div style="font-size:12px; color:var(--text-muted);">Switch to dark theme</div>
+                                            <span style="display:block; font-weight:600; font-size:14px;">Dark Mode</span>
+                                            <span style="display:block; font-size:12px; color:var(--text-muted);">Switch to dark theme</span>
                                         </div>
                                         <label class="toggle-switch"><input type="checkbox" id="settingDarkMode" onchange="toggleDarkMode(this.checked)"><span class="slider"></span></label>
                                     </div>
@@ -1363,9 +1337,9 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📦</span><span class="sec-title">Limits & Alerts</span></div>
                                 </div>
                                 <div class="section-body" id="bodyLimits">
-                                    <label class="field-label">Low Stock Limit (Qty)</label>
+                                    <label class="field-label" for="settingStockLimit">Low Stock Limit (Qty)</label>
                                     <div class="input-group"><i>⚠️</i><input type="number" id="settingStockLimit" placeholder="e.g. 10"></div>
-                                    <label class="field-label">Expiry Alert Limit (Days)</label>
+                                    <label class="field-label" for="settingExpiryLimit">Expiry Alert Limit (Days)</label>
                                     <div class="input-group"><i>📅</i><input type="number" id="settingExpiryLimit" placeholder="e.g. 30"></div>
                                     <button class="btn btn-primary" onclick="saveLimits()">💾 Save Limits</button>
                                 </div>
@@ -1508,18 +1482,18 @@ input:checked + .slider:before { transform: translateX(20px); }
                         <div class="section-header open" onclick="toggleSection('hdrAddCredit','bodyAddCredit')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">💵</span><span class="sec-title">Add Credit Payment</span></div></div>
                         <div class="section-body open" id="bodyAddCredit">
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                                <div><label class="field-label">🏪 Customer</label><select id="creditCustomerSelect"></select></div>
-                                <div><label class="field-label">🏢 Branch</label><select id="creditBranchSelect"></select></div>
+                                <div><label class="field-label" for="creditCustomerSelect">🏪 Customer</label><select id="creditCustomerSelect"></select></div>
+                                <div><label class="field-label" for="creditBranchSelect">🏢 Branch</label><select id="creditBranchSelect"></select></div>
                             </div>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                                <div><label class="field-label">📅 Date</label><input type="date" id="creditDate"></div>
-                                <div><label class="field-label">💰 Amount</label><input type="number" id="creditAmount" placeholder="0.00"></div>
+                                <div><label class="field-label" for="creditDate">📅 Date</label><input type="date" id="creditDate"></div>
+                                <div><label class="field-label" for="creditAmount">💰 Amount</label><input type="number" id="creditAmount" placeholder="0.00"></div>
                             </div>
-                                                        <button class="btn btn-success" style="width:auto; padding:10px 20px; float:right; margin-top:15px;" onclick="addCreditPayment()">💾 Record Payment</button>
+                            <button class="btn btn-success" style="width:auto; padding:10px 20px; float:right; margin-top:15px;" onclick="addCreditPayment()">💾 Record Payment</button>
                             <div style="clear:both;"></div>
                         </div>
                     </div>
-                    <!-- ✅ አዲስ የተጨመረ: የክፍያ ታሪክ -->
+                    <!-- ✅ የክፍያ ታሪክ -->
                     <div class="section-collapsible" style="box-shadow:none; border:1px solid var(--border); margin-top:20px;">
                         <div class="section-header open" onclick="toggleSection('hdrCreditHistory','bodyCreditHistory')"><div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📜</span><span class="sec-title">Payment History</span></div></div>
                         <div class="section-body open" id="bodyCreditHistory">
@@ -1533,10 +1507,9 @@ input:checked + .slider:before { transform: translateX(20px); }
 </div> <!-- End Tabs wrapper -->
 </div> <!-- End main-content-wrapper -->
 </div> <!-- End mainApp -->
-
-<script type="module">
+    <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
 
 const firebaseConfig = {
@@ -1553,7 +1526,7 @@ const auth = getAuth(app);
 const db = getFirestore(app); 
 
 let allMedicines = [], allCategories = [], allSubcategories = {}, allExpCategories = [], allBranches = [], allCustomers = [], allSales = [], allQuickSales = [], allExpenses = [], allFixed = [], allCreditPayments = [], cart = [];
-let currentUserPharmacyId = null, currentUserRole = 'employee', currentBizType = 'retail', allowedBizType = 'retail', lowStockThreshold = 10;
+let currentUserPharmacyId = null, currentUserRole = 'employee', currentUserBranch = 'all', currentBizType = 'retail', allowedBizType = 'retail', lowStockThreshold = 10;
 let dailyChartInstance = null, expensePieChartInstance = null;
 let currentCategoryFilter = 'all';
 
@@ -1564,7 +1537,7 @@ let unsubMedicines = null, unsubSales = null, unsubExpenses = null, unsubFixed =
 
 let codeReader = null;
 
-// ✅ Splash Screen Fix (Directly run after DOM loads)
+// ✅ Splash Screen Fix
 setTimeout(() => { 
     const splash = document.getElementById('splashScreen'); 
     if(splash) { 
@@ -1597,7 +1570,6 @@ function buildModernMenu() {
         { section: '💸 Expenses', items: [ { id: 'sub3_1', panel: 'panel3', title: '💸 Daily Expense', icon: '💸' }, { id: 'sub3_2', panel: 'panel3', title: '🏢 Fixed Expense', icon: '🏢' }, { id: 'sub3_list', panel: 'panel3', title: '📋 Expense List', icon: '📋' }, { id: 'sub3_3', panel: 'panel3', title: '🗂️ Categories', icon: '🗂️' } ] },
         { section: '📦 Inventory', items: [ { id: 'sub4_1', panel: 'panel4', title: '📦 Inventory List', icon: '📦' }, { id: 'sub4_2', panel: 'panel4', title: '⚠️ Expiry & Low Stock', icon: '⚠️' }, { id: 'sub4_3', panel: 'panel4', title: '🔧 Stock Adjust', icon: '🔧' }, { id: 'sub4_4', panel: 'panel4', title: '📥 Purchase History', icon: '📥' }, { id: 'sub4_5', panel: 'panel4', title: '🛒 Auto Re-order', icon: '🛒' } ] },
         { section: '📊 Dashboard & Reports', items: [ { id: null, panel: 'panel7', title: '📊 Dashboard', icon: '📊' }, { id: 'sub8_1', panel: 'panel8', title: '📄 General Report', icon: '📄' }, { id: 'sub8_2', panel: 'panel8', title: '📅 Daily Report', icon: '📅' }, { id: 'sub8_3', panel: 'panel8', title: '📆 Monthly Report', icon: '📆' } ] },
-                        // ✅ በትክክል የተስተካከለው የስርዓት ሴክሽን
         { 
             section: '⚙️ System', 
             items: (window.currentUserPlan === 'basic') 
@@ -1716,8 +1688,8 @@ window.switchPage = function(panelId, subPanelId, element) {
     }
     if(subPanelId === 'sub3_list') { renderAllExpensesList(); }
     if(subPanelId === 'sub2_3') { renderSalesHistory(); }
-        if(subPanelId === 'sub4_3') { populateTransferMedSelect(); }
-        if(subPanelId === 'sub4_4') { renderPurchaseHistory(); }
+    if(subPanelId === 'sub4_3') { populateTransferMedSelect(); }
+    if(subPanelId === 'sub4_4') { renderPurchaseHistory(); }
     if(subPanelId === 'sub4_5') { renderAutoReorder(); }
 
     setTimeout(applyUniversalMobileCollapse, 100);
@@ -1768,166 +1740,124 @@ window.onMedTypeChange = function() {
 // ==========================================
 async function loadUserHeader(user) {
     try {
-                const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (!userDoc.exists()) return;
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (!userDoc.exists()) {
+            // ሰራተኛው ከዳታቤዝ ከተሰረዘ (Patch 8) እዚህ ይይዛል
+            alert("⚠️ ይህ አካውንት ከሲስተሙ ተሰርዟል ወይም አልተፈቀደም።");
+            signOut(auth);
+            return;
+        }
         const userData = userDoc.data();
         currentUserPharmacyId = userData.pharmacyId;
         
-        // ✅ አዲስ የተጨመረ: የጊዜያዊ ፓስወርድ ማሳወቂያ
         if (userData.isTempPassword) {
             setTimeout(() => {
                 document.getElementById('tempPasswordModal').classList.add('open');
             }, 500);
         }
+        
         currentUserRole = (userData.role || 'employee').toString().toLowerCase().trim(); 
+        
+        // ✅ Patch 10: viewAllBranches መብትን መተግበር
+        const userViewAll = userData.viewAllBranches === true;
+        currentUserBranch = userViewAll ? 'all' : (userData.branch || 'all');
+
         const userEmail = userData.email || user.email || '';
         document.getElementById('hdrUserEmail').innerText = userEmail;
         document.getElementById('hdrUserInitial').innerText = userEmail.charAt(0).toUpperCase() || 'U'; 
         const roleElement = document.getElementById('hdrUserRole'); 
         if (currentUserRole === 'owner') { roleElement.innerText = '👑 Owner'; roleElement.style.background = 'rgba(16, 185, 129, 0.1)'; roleElement.style.color = 'var(--primary)'; } 
         else if (currentUserRole === 'manager') { roleElement.innerText = '🎯 Manager'; roleElement.style.background = 'rgba(59, 130, 246, 0.1)'; roleElement.style.color = '#3b82f6'; } 
+        else if (currentUserRole === 'accountant') { roleElement.innerText = '📊 Accountant'; roleElement.style.background = 'rgba(139, 92, 246, 0.1)'; roleElement.style.color = '#8b5cf6'; } 
         else { roleElement.innerText = '👤 Employee'; roleElement.style.background = 'var(--border)'; roleElement.style.color = 'var(--text-main)'; } 
-                            if (currentUserPharmacyId) {
-                        const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
-                        if (phDoc.exists()) {
-                            const phData = phDoc.data();
-                            document.getElementById('hdrPharmacyName').innerText = phData.name || 'HaniTech Pharmacy'; 
-                            allowedBizType = phData.bizType || 'retail';
-                            currentBizType = phData.userBizType || allowedBizType; 
-                            lowStockThreshold = phData.lowStockThreshold || 10; 
-                                                                                    // ✅ አዲስ የተጨመረ: የ 5 ቀናት ጸጋ ጊዜ (Grace Period) ስሌት
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0);
-                            
-                            let isLockedOut = phData.isSuspended || false;
-                            const graceDays = 5; // የጸጋ ጊዜ ቀናት
+        
+        if (currentUserPharmacyId) {
+            const phDoc = await getDoc(doc(db, 'pharmacies', currentUserPharmacyId));
+            if (phDoc.exists()) {
+                const phData = phDoc.data();
+                document.getElementById('hdrPharmacyName').innerText = phData.name || 'HaniTech Pharmacy'; 
+                allowedBizType = phData.bizType || 'retail';
+                currentBizType = phData.userBizType || allowedBizType; 
+                lowStockThreshold = phData.lowStockThreshold || 10; 
+                
+                // Grace Period Logic
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                let isLockedOut = phData.isSuspended || false;
+                const graceDays = 5;
 
-                            if (phData.expiryDate) {
-                                const expDate = new Date(phData.expiryDate);
-                                expDate.setHours(0, 0, 0, 0);
-                                
-                                const diffTime = today - expDate;
-                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                                
-                                // ከ 5 ቀናት በላይ ካለፈ ብቻ ቆልፍ
-                                if (diffDays > graceDays) {
-                                    isLockedOut = true;
-                                }
-                            }
+                if (phData.expiryDate) {
+                    const expDate = new Date(phData.expiryDate);
+                    expDate.setHours(0, 0, 0, 0);
+                    const diffTime = today - expDate;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    if (diffDays > graceDays) isLockedOut = true;
+                }
 
-                            if (isLockedOut) { 
-                                document.getElementById('mainApp').classList.remove('show'); 
-                                document.getElementById('loginScreen').classList.add('hidden'); 
-                                
-                                const lockScreen = document.getElementById('lockoutScreen');
-                                const lockReason = document.getElementById('lockoutReason');
-                                
-                                if (lockScreen && lockReason) {
-                                    if (phData.isSuspended) {
-                                        lockReason.innerText = "አካውንትዎ በአስተዳዳሪው ተቆልፏል። እባክዎ ለተጨማሪ መረጃ ያግኙን።";
-                                    } else {
-                                        lockReason.innerText = `የአገልግሎት ጊዜዎ በ ${phData.expiryDate} አልቋል። የ 5 ቀናት ጸጋ ጊዜውም አልፏል። ሶፍትዌሩን ለመጠቀም እባክዎ ክፍያዎን ያሟሉ።`;
-                                    }
-                                    lockScreen.style.display = 'flex';
-                                }
-                                return; 
-                            } else {
-                                document.getElementById('lockoutScreen').style.display = 'none';
-                                document.getElementById('mainApp').classList.add('show');
-                            }
-                            
-                                                        // ✅ AUTO BANNER LOGIC እና PLAN RESTRICTIONS
-                            window.currentUserPlan = phData.plan || 'basic'; // ለሜኑ እንዲጠቀም
-                            const currentPlan = window.currentUserPlan;
-                            
-                            // 1. Credit Tab መገደብ
-                            const creditMenu = document.getElementById('menu_credit');
-                            const creditPanel = document.getElementById('panel10');
-                            if (creditMenu && creditPanel) {
-                                if (currentPlan === 'basic') {
-                                    creditMenu.style.setProperty('display', 'none', 'important');
-                                    creditPanel.style.setProperty('display', 'none', 'important');
-                                    if (creditPanel.classList.contains('active')) {
-                                        switchPage('panel7', null, null); // ካለ ወደ ዳሽቦርድ መልሰው
-                                    }
-                                } else {
-                                    creditMenu.style.setProperty('display', 'block', 'important');
-                                    creditPanel.style.setProperty('display', 'block', 'important');
-                                }
-                            }
+                if (isLockedOut) { 
+                    document.getElementById('mainApp').classList.remove('show'); 
+                    document.getElementById('loginScreen').classList.add('hidden'); 
+                    const lockScreen = document.getElementById('lockoutScreen');
+                    const lockReason = document.getElementById('lockoutReason');
+                    if (lockScreen && lockReason) {
+                        if (phData.isSuspended) lockReason.innerText = "አካውንትዎ በአስተዳዳሪው ተቆልፏል። እባክዎ ለተጨማሪ መረጃ ያግኙን።";
+                        else lockReason.innerText = `የአገልግሎት ጊዜዎ በ ${phData.expiryDate} አልቋል። የ 5 ቀናት ጸጋ ጊዜውም አልፏል። ሶፍትዌሩን ለመጠቀም እባክዎ ክፍያዎን ያሟሉ።`;
+                        lockScreen.style.display = 'flex';
+                    }
+                    return; 
+                } else {
+                    document.getElementById('lockoutScreen').style.display = 'none';
+                    document.getElementById('mainApp').classList.add('show');
+                }
+                
+                // AUTO BANNER LOGIC እና PLAN RESTRICTIONS
+                window.currentUserPlan = phData.plan || 'basic'; 
+                const currentPlan = window.currentUserPlan;
+                
+                const creditMenu = document.getElementById('menu_credit');
+                const creditPanel = document.getElementById('panel10');
+                if (creditMenu && creditPanel) {
+                    if (currentPlan === 'basic') {
+                        creditMenu.style.setProperty('display', 'none', 'important');
+                        creditPanel.style.setProperty('display', 'none', 'important');
+                        if (creditPanel.classList.contains('active')) switchPage('panel7', null, null); 
+                    } else {
+                        creditMenu.style.setProperty('display', 'block', 'important');
+                        creditPanel.style.setProperty('display', 'block', 'important');
+                    }
+                }
 
-                            // 2. Branch መጨመሪያ መደበቅ (Basic)
-                            const branchInput = document.getElementById('newBranch');
-                            if (branchInput) {
-                                const flexContainer = branchInput.closest('.input-group')?.parentElement;
-                                if (flexContainer) {
-                                    flexContainer.style.display = (currentPlan === 'basic') ? 'none' : 'flex';
-                                }
-                            }
+                const branchInput = document.getElementById('newBranch');
+                if (branchInput) {
+                    const flexContainer = branchInput.closest('.input-group')?.parentElement;
+                    if (flexContainer) flexContainer.style.display = (currentPlan === 'basic') ? 'none' : 'flex';
+                }
 
-                            // 3. Stock Transfer መደበቅ (Basic)
-                            const stockTransferSection = document.getElementById('stockTransferSection');
-                            if (stockTransferSection) {
-                                stockTransferSection.style.display = (currentPlan === 'basic') ? 'none' : 'block';
-                            }
+                const stockTransferSection = document.getElementById('stockTransferSection');
+                if (stockTransferSection) stockTransferSection.style.display = (currentPlan === 'basic') ? 'none' : 'block';
 
-                            // ✅ AUTO BANNER LOGIC: በራሱ የሚሰራ የክፍያ ማሳወቂያ
-                            const banner = document.getElementById('subscriptionBanner');
-                            const bannerText = document.getElementById('subscriptionBannerText');
-                            
-                            if (banner && bannerText) {
-                                let showBanner = false;
-                                let msg = '';
-                                let bgColor = '#fef3c7', textColor = '#d97706', borderColor = '#fcd34d'; // Default Warning (Yellow)
+                const banner = document.getElementById('subscriptionBanner');
+                const bannerText = document.getElementById('subscriptionBannerText');
+                
+                if (banner && bannerText) {
+                    let showBanner = false, msg = '';
+                    let bgColor = '#fef3c7', textColor = '#d97706', borderColor = '#fcd34d';
+                    if (phData.subscriptionMessage && phData.subscriptionMessage.trim() !== '') {
+                        showBanner = true; msg = `🔔 ${phData.subscriptionMessage}`;
+                        if (phData.subscriptionStatus === 'expired') { bgColor = '#fee2e2'; textColor = '#ef4444'; borderColor = '#fca5a5'; } 
+                        else if (phData.subscriptionStatus === 'success') { bgColor = '#dcfce7'; textColor = '#166534'; borderColor = '#86efac'; }
+                    } else if (phData.expiryDate) {
+                        const today2 = new Date(); today2.setHours(0, 0, 0, 0); 
+                        const expDate = new Date(phData.expiryDate); expDate.setHours(0, 0, 0, 0);
+                        const diffDays = Math.ceil((expDate - today2) / (1000 * 60 * 60 * 24));
+                        if (diffDays < 0) { showBanner = true; msg = `🚨 የአገልግሎት ክፍያዎ ጊዜው አልፏል! እባክዎ ወዲያውኑ ይክፈሉ።`; bgColor = '#fee2e2'; textColor = '#ef4444'; borderColor = '#fca5a5'; } 
+                        else if (diffDays <= 5) { showBanner = true; msg = `⏳ የአገልግሎት ክፍያዎ በ ${diffDays} ቀናት ውስጥ ያበቃል! እባክዎ ይክፈሉ።`; }
+                    }
+                    if (showBanner) { bannerText.innerHTML = msg; banner.style.background = bgColor; banner.style.color = textColor; banner.style.borderBottomColor = borderColor; banner.style.display = 'block'; } 
+                    else { banner.style.display = 'none'; }
+                }
 
-                                // 1. አድሚኑ ልዩ መልእክት ፅፎ ካስቀመጠ (Manual Override)
-                                if (phData.subscriptionMessage && phData.subscriptionMessage.trim() !== '') {
-                                    showBanner = true;
-                                    msg = `🔔 ${phData.subscriptionMessage}`;
-                                    
-                                    if (phData.subscriptionStatus === 'expired') {
-                                        bgColor = '#fee2e2'; textColor = '#ef4444'; borderColor = '#fca5a5';
-                                    } else if (phData.subscriptionStatus === 'success') {
-                                        bgColor = '#dcfce7'; textColor = '#166534'; borderColor = '#86efac';
-                                    }
-                                } 
-                                // 2. መልእክት ከሌለ (Auto Calculate ከ ማብቂያ ቀን)
-                                else if (phData.expiryDate) {
-                                    const today = new Date();
-                                    today.setHours(0, 0, 0, 0); // ሰዓቱን አጥፋ
-                                    
-                                    const expDate = new Date(phData.expiryDate);
-                                    expDate.setHours(0, 0, 0, 0);
-
-                                    const diffTime = expDate - today;
-                                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                                    if (diffDays < 0) {
-                                        // ጊዜው አልፏል (Expired)
-                                        showBanner = true;
-                                        msg = `🚨 የአገልግሎት ክፍያዎ ጊዜው አልፏል! እባክዎ ወዲያውኑ ይክፈሉ።`;
-                                        bgColor = '#fee2e2'; textColor = '#ef4444'; borderColor = '#fca5a5';
-                                    } else if (diffDays <= 5) {
-                                        // በ5 ቀናት ውስጥ ያበቃል (Warning)
-                                        showBanner = true;
-                                        msg = `⏳ የአገልግሎት ክፍያዎ በ ${diffDays} ቀናት ውስጥ ያበቃል! እባክዎ ይክፈሉ።`;
-                                        bgColor = '#fef3c7'; textColor = '#d97706'; borderColor = '#fcd34d';
-                                    }
-                                    // diffDays > 5 ከሆነ ምንም አያሳይም (showBanner = false ሆኖ ይቀራል)
-                                }
-
-                                if (showBanner) {
-                                    bannerText.innerHTML = msg;
-                                    banner.style.background = bgColor;
-                                    banner.style.color = textColor;
-                                    banner.style.borderBottomColor = borderColor;
-                                    banner.style.display = 'block';
-                                } else {
-                                    banner.style.display = 'none';
-                                }
-                            }
-
-                            if (phData.darkMode) {
+                if (phData.darkMode) {
                     document.body.classList.add('dark-mode');
                     const darkToggle = document.getElementById('settingDarkMode');
                     if(darkToggle) darkToggle.checked = true;
@@ -1935,10 +1865,25 @@ async function loadUserHeader(user) {
                 applyLanguage(phData.language || 'am');
             }
         }
-                await applyPermissionsToUI();
+
+        // ✅ Patch 10: የቅርንጫፍ መምረጫዎችን መቆለፍ (ለራሱ ቅርንጫፍ ብቻ ላለው)
+        if (currentUserBranch !== 'all') {
+            const branchSelects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch', 'transferFromBranch', 'transferToBranch', 'filterBranchMed'];
+            setTimeout(() => {
+                branchSelects.forEach(id => {
+                    const sel = document.getElementById(id);
+                    if (sel) {
+                        sel.value = currentUserBranch;
+                        sel.disabled = true;
+                        sel.style.opacity = '0.7';
+                        sel.style.cursor = 'not-allowed';
+                    }
+                });
+            }, 1000);
+        }
+
+        await applyPermissionsToUI();
         await loadSupportInfo();
-        
-        // ሁሉም ነገር ከተረጋገጠ በኋላ ዳታውን ጫን
         await loadAllData();
     } catch (err) { console.error('loadUserHeader error:', err); }
 } 
@@ -1948,62 +1893,40 @@ window.login = async function() {
     const password = document.getElementById('password').value; 
     const errorEl = document.getElementById('loginError'); errorEl.style.display = 'none'; 
     const loginBtn = document.querySelector('.btn-login');
-    
     if(loginBtn) { loginBtn.innerText = '⏳ በመግባት ላይ...'; loginBtn.disabled = true; }
-
     try { 
         await signInWithEmailAndPassword(auth, email, password); 
-        // ✅ ስኬታማ ከሆነ ቁልፉን ወዲያውኑ መልሰው (ምክንያቱም ገጹ ወዲያውኑ ስለሚቀያየር)
         if(loginBtn) { loginBtn.innerText = 'Sign In'; loginBtn.disabled = false; }
-    } 
-    catch (err) { 
+    } catch (err) { 
         errorEl.textContent = '⚠️ Invalid Email or Password'; errorEl.style.display = 'block'; 
         if(loginBtn) { loginBtn.innerText = 'Sign In'; loginBtn.disabled = false; }
     }
 };   
 
-// ✅ አዲስ የተጨመረ: የይለፍ ቃል መርሳት (በቀጥታ ኢሜል ይላካል)
 window.forgotPassword = async function(e) {
     if(e) e.preventDefault();
     const email = document.getElementById('email').value.trim();
-    if (!email) {
-        alert('⚠️ እባክህ መጀመሪያ የኢሜል አድራሻህን በሳጥኑ ውስጥ ጻፍ።');
-        return;
-    }
+    if (!email) { alert('⚠️ እባክህ መጀመሪያ የኢሜል አድራሻህን በሳጥኑ ውስጥ ጻፍ።'); return; }
     try {
         await sendPasswordResetEmail(auth, email);
         alert(`✅ የይለፍ ቃል መቀየሪያ ሊንክ ወደ ${email} ተልኳል። እባክህ ኢሜልህን አረጋግጥ።`);
-    } catch (error) {
-        alert('❌ ስህተት: ' + error.message);
-    }
+    } catch (error) { alert('❌ ስህተት: ' + error.message); }
 };
 
-// ✅ አዲስ የተጨመረ: የጊዜያዊ ፓስወርድ መቀየሪያ
 window.updateTempPassword = async function() {
     const newPass = document.getElementById('newPassInput').value;
     const confirmPass = document.getElementById('confirmPassInput').value;
-    
-    if (!newPass || newPass.length < 6) {
-        alert('⚠️ አዲሱ ፓስወርድ ቢያንስ 6 ፊደላት መሆን አለበት።');
-        return;
-    }
-    if (newPass !== confirmPass) {
-        alert('⚠️ ፓስወርዶቹ አይመሳሰሉም።');
-        return;
-    }
+    if (!newPass || newPass.length < 6) { alert('⚠️ አዲሱ ፓስወርድ ቢያንስ 6 ፊደላት መሆን አለበት።'); return; }
+    if (newPass !== confirmPass) { alert('⚠️ ፓስወርዶቹ አይመሳሰሉም።'); return; }
     try {
         const user = auth.currentUser;
         if (!user) return;
         await updatePassword(user, newPass);
-        // ዳታቤዙን ማደስ (isTempPassword ን false ማድረግ)
         await updateDoc(doc(db, 'users', user.uid), { isTempPassword: false });
-        
         alert('✅ ፓስወርድህ በተሳካ ሁኔታ ተቀይሯል!');
         document.getElementById('tempPasswordModal').classList.remove('open');
-        location.reload(); // ገጹን አድሶ ወደ ሲስተሙ እንዲገባ
-    } catch (error) {
-        alert('❌ ስህተት: ' + error.message);
-    }
+        location.reload(); 
+    } catch (error) { alert('❌ ስህተት: ' + error.message); }
 };
 
 window.logout = function() { 
@@ -2011,78 +1934,41 @@ window.logout = function() {
     signOut(auth); 
 }; 
 
-// ✅ አዲስ የተጨመረ: የማሳወቂያ (Toast) ተግባር
 window.showToast = function(message, type = 'success') {
     const existing = document.querySelector('.toast-notification');
     if (existing) existing.remove();
-
     const toast = document.createElement('div');
     toast.className = `toast-notification ${type === 'error' ? 'error' : ''}`;
-    
     const icon = type === 'error' ? '❌' : '✅';
     toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-    
     document.body.appendChild(toast);
-    
     setTimeout(() => toast.classList.add('show'), 10);
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
 };
 
-// ✅ አዲስ የተጨመረ: የ Refresh ተግባር
-window.softRefresh = function() {
-    const btn = event.currentTarget;
-    const svg = btn.querySelector('svg');
-    
-    // ምልክቱ እንዲሽከረከር
-    if (svg) svg.style.animation = 'spin 1s linear infinite';
-    
-    // ዳታውን እንደገና ጫን
-    loadAllData().then(() => {
-        if (svg) svg.style.animation = 'none';
-        showToast('✅ ዳታው በተሳካ ሁኔታ ታድሷል!', 'success');
-    }).catch(err => {
-        if (svg) svg.style.animation = 'none';
-        showToast('❌ ዳታውን ማደስ አልተቻለም።', 'error');
-    });
-}; 
-    // ✅ አዲስ የተጨመረ: ቁጥሮችን በኮማ የሚለይ ተግባር
 window.formatMoney = function(num) {
     if (num === null || num === undefined || isNaN(num)) return '0.00';
     return parseFloat(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
-// ለኢንቲጀር ቁጥሮች (ለምሳሌ ብዛት)
 window.formatNum = function(num) {
     if (num === null || num === undefined || isNaN(num)) return '0';
     return parseInt(num).toLocaleString('en-US');
 };
 
-// 🟢 አዲስ የተጨመረ (Patch 1 ማሻሻያ): በኮዱ ውስጥ ያሉትን ሁሉንም .toFixed() ቁጥሮች 
-// በራሳቸው ኮማ (Comma) እንዲይዙ በራሱ ላይ ማስተካከል
 const originalToFixed = Number.prototype.toFixed;
 Number.prototype.toFixed = function(digits) {
     let num = Number(this);
     if (isNaN(num)) return originalToFixed.call(this, digits);
-    return num.toLocaleString('en-US', {
-        minimumFractionDigits: digits,
-        maximumFractionDigits: digits
-    });
+    return num.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 };
-// ✅ አዲስ የተጨመረ: ገጹን ሳይዘጋ ዳታውን ብቻ አድስ
+
 window.softRefresh = function() {
-    // የ Refresh ቁልፉን እያሽከረከረ እንዲመስል
     const btn = event.currentTarget;
     const svg = btn.querySelector('svg');
     if (svg) svg.style.animation = 'spin 1s linear infinite';
-    
-    // ዳታውን ከዳታቤዙ እንደገና ጫን
     loadAllData().then(() => {
         if (svg) svg.style.animation = 'none';
-        // ለተጠቃሚው አጭር ማሳወቂያ መስጠት
         showToast('✅ ዳታው በተሳካ ሁኔታ ታድሷል!', 'success');
     }).catch(err => {
         if (svg) svg.style.animation = 'none';
@@ -2092,19 +1978,15 @@ window.softRefresh = function() {
     
 onAuthStateChanged(auth, async (user) => {
     if (user) { 
-        // 1. ወዲያውኑ የ Login ገጹን ደብቀን ዋናውን ገጽ እናሳይ (በፍጥነት እንዲገባ)
         document.getElementById('loginScreen').classList.add('hidden'); 
         document.getElementById('mainApp').classList.add('show'); 
-        
-        // 2. ዳታውን በስተጀርባ ጫን (ገጹ ሳይቆለፍ ዳታው እየመጣ ይሆናል)
         loadUserHeader(user); 
     } 
     else { 
         document.getElementById('loginScreen').classList.remove('hidden'); 
         document.getElementById('mainApp').classList.remove('show'); 
         document.getElementById('lockoutScreen').style.display = 'none';
-        currentUserPharmacyId = null; currentUserRole = 'employee'; 
-        
+        currentUserPharmacyId = null; currentUserRole = 'employee'; currentUserBranch = 'all';
         const loginBtn = document.querySelector('.btn-login');
         if (loginBtn) { loginBtn.innerText = 'Sign In'; loginBtn.disabled = false; }
         document.getElementById('email').value = '';
@@ -2114,14 +1996,7 @@ onAuthStateChanged(auth, async (user) => {
 
 async function loadAllData() {
     if (!currentUserPharmacyId) return; 
-    
-    // ✅ ሁሉንም ዳታዎች በአንድ ጊዜ (Parallel) ጫን - ፍጥነትን ይጨምራል
-    await Promise.all([
-        loadCategories(),
-        loadExpCategories(),
-        loadBranches(),
-        loadCustomers()
-    ]);
+    await Promise.all([ loadCategories(), loadExpCategories(), loadBranches(), loadCustomers() ]);
     const today = new Date().toISOString().split('T')[0];
     const thisMonth = new Date().toISOString().slice(0, 7);
     if(document.getElementById('dashMonthPicker') && !document.getElementById('dashMonthPicker').value) document.getElementById('dashMonthPicker').value = thisMonth;
@@ -2138,96 +2013,72 @@ async function loadAllData() {
     
     renderMedList(); loadInventory(); renderSellProducts(); renderCart(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); toggleReportDatePickers();
     setupRealtimeListeners();
-        renderAllExpensesList(); renderSalesHistory();
+    renderAllExpensesList(); renderSalesHistory();
     populateTransferMedSelect();
-    
-    // ✅ ማሳወቂያዎችን ለመፈተሽ ይጠራል
-    setTimeout(checkSystemAlerts, 2000); // ዳታው ከተጫነ ከ2 ሰከንድ በኋላ
+    setTimeout(checkSystemAlerts, 2000);
 } 
 
-// ✅ አዲስ የተጨመረ ተግባር
 window.checkSystemAlerts = function() {
-    if (!allMedicines || allMedicines.length === 0) return; // እቃ ከሌለ አያስፈልግም
-
+    if (!allMedicines || allMedicines.length === 0) return; 
     let lowStockAlerts = [];
     let expiryAlerts = [];
-    
     const today = new Date();
-    const thresholdDays = 30; // ከ30 ቀናት በታች የቀሩት እንዲታዩ
-
+    const thresholdDays = 30; 
     allMedicines.forEach(m => {
-        // 1. Low Stock ማሳወቂያ
         if (m.quantity <= lowStockThreshold && m.quantity > 0) {
             lowStockAlerts.push(`📦 <b>${m.name}</b> (Batch: ${m.batch || '-'}) - የቀረው ብዛት: <span style="color:#ef4444; font-weight:bold;">${m.quantity}</span>`);
         } else if (m.quantity === 0) {
             lowStockAlerts.push(`🚫 <b>${m.name}</b> (Batch: ${m.batch || '-'}) - <span style="color:#ef4444; font-weight:bold;">ከክምችት አልቋል!</span>`);
         }
-
-        // 2. Expiry ማሳወቂያ
         if (m.expiry && m.expiry !== '-') {
             const expDate = new Date(m.expiry);
             const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
-            
-            if (diffDays < 0) {
-                expiryAlerts.push(`⚠️ <b>${m.name}</b> (Batch: ${m.batch || '-'}) - <span style="color:#ef4444; font-weight:bold;">ጊዜው አልፏል!</span> (${m.expiry})`);
-            } else if (diffDays <= thresholdDays) {
-                expiryAlerts.push(`⏳ <b>${m.name}</b> (Batch: ${m.batch || '-'}) - <span style="color:#f59e0b; font-weight:bold;">${diffDays} ቀናት ብቻ ቀርተዋል</span> (${m.expiry})`);
-            }
+            if (diffDays < 0) expiryAlerts.push(`⚠️ <b>${m.name}</b> (Batch: ${m.batch || '-'}) - <span style="color:#ef4444; font-weight:bold;">ጊዜው አልፏል!</span> (${m.expiry})`);
+            else if (diffDays <= thresholdDays) expiryAlerts.push(`⏳ <b>${m.name}</b> (Batch: ${m.batch || '-'}) - <span style="color:#f59e0b; font-weight:bold;">${diffDays} ቀናት ብቻ ቀርተዋል</span> (${m.expiry})`);
         }
     });
-
     let alertHtml = '';
-
     if (lowStockAlerts.length > 0) {
         alertHtml += `<h4 style="color:#ef4444; margin-bottom:10px; border-bottom:1px solid #fee2e2; padding-bottom:5px;">📉 በክምችት እጥረት ላይ ያሉ (${lowStockAlerts.length})</h4>`;
         alertHtml += `<ul style="font-size:13px; margin-bottom:20px; padding-left:15px; line-height:1.6;">${lowStockAlerts.map(a => `<li>${a}</li>`).join('')}</ul>`;
     }
-
     if (expiryAlerts.length > 0) {
         alertHtml += `<h4 style="color:#f59e0b; margin-bottom:10px; border-bottom:1px solid #fef3c7; padding-bottom:5px;">📅 ጊዜያቸው ሊያልቅ የቀሩ (${expiryAlerts.length})</h4>`;
         alertHtml += `<ul style="font-size:13px; padding-left:15px; line-height:1.6;">${expiryAlerts.map(a => `<li>${a}</li>`).join('')}</ul>`;
     }
-
-    // ማሳወቂያ ካለ ብቻ ሳጥኑን ክፈት
     if (alertHtml !== '') {
         const bodyEl = document.getElementById('systemAlertBody');
-        if (bodyEl) {
-            bodyEl.innerHTML = alertHtml;
-            document.getElementById('systemAlertModal').classList.add('open');
-        }
+        if (bodyEl) { bodyEl.innerHTML = alertHtml; document.getElementById('systemAlertModal').classList.add('open'); }
     }
 }; 
 
 function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
 
-    // ✅ የቅርብ 3 ወራት ቀን ማስላት
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
     const dateLimit = threeMonthsAgo.toISOString().split('T')[0];
     
-    // መድኃኒቶች ገደብ የላቸውም (ሁሉም ያስፈልጋሉ)
-    unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); setTimeout(applyUniversalMobileCollapse, 100); });
+    // ✅ Patch 9: ሰራተኛ ከሆነ የራሱን ቅርንጫፍ ብቻ የሚያመጣ የፍለጋ ሁኔታ
+    const isRestricted = (currentUserBranch && currentUserBranch !== 'all');
+
+    let medQuery = isRestricted ? query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId), where('branch', '==', currentUserBranch)) : query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId));
+    unsubMedicines = onSnapshot(medQuery, (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); setTimeout(applyUniversalMobileCollapse, 100); });
     
-    // ✅ ሽያጮች፦ የቅርብ 3 ወር ብቻ
-    unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit)), (snapshot) => { 
-        let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
-        allSales = temp; 
-        calculateStockReport(); loadInventory(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); 
-        setTimeout(applyUniversalMobileCollapse, 100);
-    });
+    let salesQuery = isRestricted ? query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit), where('branch', '==', currentUserBranch)) : query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit));
+    unsubSales = onSnapshot(salesQuery, (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allSales = temp; calculateStockReport(); loadInventory(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); setTimeout(applyUniversalMobileCollapse, 100); });
     
-    // ✅ ፈጣን ሽያጮች፦ የቅርብ 3 ወር ብቻ
-    unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
+    let quickQuery = isRestricted ? query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit), where('branch', '==', currentUserBranch)) : query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit));
+    unsubQuickSales = onSnapshot(quickQuery, (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
     
-    // ✅ ወጪዎች፦ የቅርብ 3 ወር ብቻ
-    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); setTimeout(applyUniversalMobileCollapse, 100); });
+    let expQuery = isRestricted ? query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit), where('branch', '==', currentUserBranch)) : query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit));
+    unsubExpenses = onSnapshot(expQuery, (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); setTimeout(applyUniversalMobileCollapse, 100); });
     
-    // ✅ ቋሚ ወጪዎች፦ የቅርብ 3 ወር ብቻ
-    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId), where('month', '>=', dateLimit.slice(0,7))), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
+    let fixQuery = isRestricted ? query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId), where('month', '>=', dateLimit.slice(0,7)), where('branch', '==', currentUserBranch)) : query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId), where('month', '>=', dateLimit.slice(0,7)));
+    unsubFixed = onSnapshot(fixQuery, (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
     
-    // ✅ ክሬዲት ክፍያዎች፦ የቅርብ 3 ወር ብቻ
-    unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; renderUnpaidCredits(); });
+    let creditQuery = isRestricted ? query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit), where('branch', '==', currentUserBranch)) : query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit));
+    unsubCredit = onSnapshot(creditQuery, (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; renderUnpaidCredits(); });
 }
 
 // ==========================================
@@ -2255,11 +2106,9 @@ window.changePassword = async function() {
     const currentPass = document.getElementById('currentPasswordInput').value;
     const newPass = document.getElementById('newPasswordInput').value;
     const confirmPass = document.getElementById('confirmPasswordInput').value;
-
     if (!currentPass || !newPass || !confirmPass) { alert('⚠️ እባክህ ሁሉንም መስኮች ሙላ።'); return; }
     if (newPass !== confirmPass) { alert('⚠️ አዲሱ የይለፍ ቃል እና ማረጋገጫው አይመሳሰሉም።'); return; }
     if (newPass.length < 6) { alert('⚠️ አዲሱ የይለፍ ቃል ቢያንስ 6 ፊደላት መሆን አለበት።'); return; }
-
     try {
         const user = auth.currentUser;
         if (!user) return;
@@ -2272,7 +2121,6 @@ window.changePassword = async function() {
         document.getElementById('confirmPasswordInput').value = '';
         logActivity(`changed account password`);
     } catch (error) {
-        console.error(error);
         if(error.code === 'auth/wrong-password') alert('❌ የአሁኑ የይለፍ ቃል ስህተት ነው።');
         else alert('❌ ስህተት ተፈጥሯል: ' + error.message);
     }
@@ -2332,6 +2180,9 @@ async function loadSettingsData() {
             });
         }
         loadAuditTrail();
+        
+        // ✅ Patch 8: የሰራተኞች ዝርዝር መጫን
+        loadEmployeesList();
     } catch (e) { console.error("Error loading settings:", e); }
 }
 
@@ -2512,6 +2363,138 @@ window.resetAllData = async function() {
 };
 
 // ==========================================
+// 👥 EMPLOYEE MANAGEMENT (Patch 8)
+// ==========================================
+window.toggleEmpBranchField = function() {
+    const viewAll = document.getElementById('empViewAllBranches').checked;
+    document.getElementById('empBranchWrapper').style.display = viewAll ? 'none' : 'block';
+};
+
+window.resetEmployeeForm = function() {
+    document.getElementById('editEmpId').value = '';
+    document.getElementById('empEmail').value = '';
+    document.getElementById('empEmail').disabled = false;
+    document.getElementById('empPassword').value = '';
+    document.getElementById('empPassword').placeholder = 'Min 6 characters';
+    document.getElementById('empRole').value = 'employee';
+    document.getElementById('empBranch').value = 'all';
+    document.getElementById('empViewAllBranches').checked = false;
+    toggleEmpBranchField();
+    
+    document.getElementById('empFormTitle').innerText = '➕ Add New Employee';
+    document.getElementById('btnSaveEmp').innerText = '➕ Create Employee';
+    document.getElementById('btnCancelEdit').style.display = 'none';
+};
+
+window.saveEmployee = async function() {
+    const empId = document.getElementById('editEmpId').value;
+    const email = document.getElementById('empEmail').value.trim();
+    const password = document.getElementById('empPassword').value;
+    const role = document.getElementById('empRole').value;
+    const branch = document.getElementById('empBranch').value;
+    const viewAllBranches = document.getElementById('empViewAllBranches').checked;
+
+    if (!email) { alert('⚠️ ኢሜል ሙላ።'); return; }
+    if (!viewAllBranches && (!branch || branch === 'all')) { alert('⚠️ ቅርንጫፍ መምረጥ አለብህ።'); return; }
+    if (!empId && (!password || password.length < 6)) { alert('⚠️ ቢያንስ 6 ፊደላት ያለው ፓስወርድ ያስፈልጋል።'); return; }
+
+    try {
+        if (empId) {
+            await updateDoc(doc(db, 'users', empId), {
+                role: role,
+                branch: viewAllBranches ? 'all' : branch,
+                viewAllBranches: viewAllBranches
+            });
+            alert('✅ መረጃው ተሻሽሏል!');
+        } else {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, 'users', userCredential.user.uid), {
+                email: email,
+                role: role,
+                branch: viewAllBranches ? 'all' : branch,
+                viewAllBranches: viewAllBranches,
+                pharmacyId: currentUserPharmacyId,
+                isTempPassword: false,
+                createdAt: serverTimestamp()
+            });
+            alert(`✅ ሰራተኛው ተፈጥሯል! (${email})`);
+        }
+        resetEmployeeForm();
+        loadEmployeesList(); 
+        logActivity(`saved employee: ${email}`);
+    } catch (error) {
+        if (error.code === 'auth/email-already-in-use') alert('❌ ይህ ኢሜል አስቀድሞ ተመዝግቧል።');
+        else alert('❌ ስህተት: ' + error.message);
+    }
+};
+
+window.loadEmployeesList = async function() {
+    const listEl = document.getElementById('employeeListDisplay');
+    if (!listEl) return;
+    try {
+        const snap = await getDocs(query(collection(db, 'users'), where('pharmacyId', '==', currentUserPharmacyId)));
+        let employees = [];
+        snap.forEach(doc => { 
+            const data = doc.data();
+            if (data.email !== document.getElementById('hdrUserEmail').innerText) employees.push({ id: doc.id, ...data }); 
+        });
+
+        if (employees.length === 0) {
+            listEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">ምንም ሰራተኛ አልተፈጠረም።</p>';
+            return;
+        }
+
+        let html = `<table class="data-table"><thead><tr><th>Email</th><th>Role</th><th>Access</th><th>Action</th></tr></thead><tbody>`;
+        employees.forEach(emp => {
+            const accessText = emp.viewAllBranches ? '<span style="color:#3b82f6; font-weight:bold;">🌍 All Branches</span>' : `<span style="color:var(--primary); font-weight:bold;">🏢 ${emp.branch || '-'}</span>`;
+            html += `<tr>
+                <td><strong>${emp.email}</strong></td>
+                <td><span style="text-transform: capitalize; font-size:12px; padding:2px 6px; background:var(--border); border-radius:4px;">${emp.role}</span></td>
+                <td>${accessText}</td>
+                <td>
+                    <button class="action-btn btn-edit" onclick="editEmployee('${emp.id}')">✏️ Edit</button>
+                    <button class="action-btn btn-delete" onclick="deleteEmployeeData('${emp.id}', '${emp.email}')">🗑️ Delete</button>
+                </td>
+            </tr>`;
+        });
+        html += `</tbody></table>`;
+        listEl.innerHTML = html;
+    } catch (e) { listEl.innerHTML = '<p style="color:red;">Error loading employees.</p>'; }
+};
+
+window.editEmployee = async function(userId) {
+    try {
+        const docSnap = await getDoc(doc(db, 'users', userId));
+        if (!docSnap.exists()) return;
+        const data = docSnap.data();
+        
+        document.getElementById('editEmpId').value = userId;
+        document.getElementById('empEmail').value = data.email;
+        document.getElementById('empEmail').disabled = true;
+        document.getElementById('empPassword').value = '';
+        document.getElementById('empPassword').placeholder = '(Leave blank to keep current)';
+        document.getElementById('empRole').value = data.role || 'employee';
+        document.getElementById('empBranch').value = data.branch === 'all' ? 'all' : data.branch;
+        document.getElementById('empViewAllBranches').checked = data.viewAllBranches === true;
+        
+        toggleEmpBranchField();
+        document.getElementById('empFormTitle').innerText = '✏️ Edit Employee';
+        document.getElementById('btnSaveEmp').innerText = '💾 Save Changes';
+        document.getElementById('btnCancelEdit').style.display = 'block';
+        document.getElementById('empFormTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+window.deleteEmployeeData = async function(userId, email) {
+    if (!confirm(`⚠️ እርግጠኛ ነህ? የ ${email} መረጃ ከዳታቤዝ ይሰረዛል። (ማስታወሻ፦ የመግቢያ አካውንቱን ለማጥፋት ወደ Firebase Console መሄድ አለብህ)።`)) return;
+    try {
+        await deleteDoc(doc(db, 'users', userId));
+        alert('✅ የሰራተኛው መረጃ ተሰርዟል።');
+        loadEmployeesList();
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+// ==========================================
 // 🖨️ PRINT RECEIPT & SCANNER
 // ==========================================
 window.printReceipt = function(saleId) {
@@ -2588,27 +2571,26 @@ window.showCustomerProfile = function(customerName) {
 // ==========================================
 // 🔄 CATEGORIES, BRANCHES & CUSTOMERS
 // ==========================================
+let transferSearchTimeout;
 window.populateTransferMedSelect = function() {
-    const fromBranch = document.getElementById('transferFromBranch')?.value;
-    const searchVal = (document.getElementById('transferSearchInput')?.value || '').toLowerCase();
-    const sel = document.getElementById('transferMedId'); if(!sel) return;
-    
-    sel.innerHTML = '<option value="">-- Select Item --</option>';
-    let filtered = allMedicines.filter(m => m.quantity > 0);
-    
-    if (fromBranch && fromBranch !== 'all') filtered = filtered.filter(m => m.branch === fromBranch);
-    
-    // ✅ በስም ወይም በBatch ማጣራት
-    if (searchVal) {
-        filtered = filtered.filter(m => 
-            (m.name||'').toLowerCase().includes(searchVal) || 
-            (m.batch||'').toLowerCase().includes(searchVal)
-        );
-    }
-    
-    filtered.forEach(m => { 
-        sel.innerHTML += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Batch: ${m.batch || '-'} - Qty: ${m.quantity}</option>`; 
-    });
+    clearTimeout(transferSearchTimeout);
+    transferSearchTimeout = setTimeout(() => {
+        const fromBranch = document.getElementById('transferFromBranch')?.value;
+        const searchVal = (document.getElementById('transferSearchInput')?.value || '').toLowerCase();
+        const sel = document.getElementById('transferMedId'); if(!sel) return;
+        
+        let filtered = allMedicines.filter(m => m.quantity > 0);
+        if (fromBranch && fromBranch !== 'all') filtered = filtered.filter(m => m.branch === fromBranch);
+        if (searchVal) {
+            filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(searchVal) || (m.batch||'').toLowerCase().includes(searchVal));
+        }
+        
+        let html = '<option value="">-- Select Item --</option>';
+        filtered.forEach(m => { 
+            html += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Batch: ${m.batch || '-'} - Qty: ${m.quantity}</option>`; 
+        });
+        sel.innerHTML = html;
+    }, 300);
 };
 
 window.transferStock = async function() {
@@ -2746,7 +2728,7 @@ async function loadBranches() {
     try {
         const snap = await getDocs(query(collection(db, 'branches'), where('pharmacyId', '==', currentUserPharmacyId)));
         allBranches = []; 
-        const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch', 'transferFromBranch', 'transferToBranch', 'filterBranchMed'];
+        const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch', 'transferFromBranch', 'transferToBranch', 'filterBranchMed', 'empBranch']; // 👈 empBranch ተጨምሯል
         selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML = '<option value="all">All Branches</option>'; });
         snap.forEach(doc => { const bName = doc.data().name; allBranches.push(bName); selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML += `<option value="${bName}">${bName}</option>`; }); });
         renderBranchList();
@@ -2805,7 +2787,11 @@ window.deleteCustomer = async function(name) {
 window.addMedicine = async function() {
     const type = document.getElementById('medType').value; const category = document.getElementById('medCategory').value;
     const subcategory = document.getElementById('medSubcategory').value; 
-    const branch = document.getElementById('medBranch').value;
+    let branch = document.getElementById('medBranch').value;
+    
+    // ✅ Patch 10: ሰራተኛ ከሆነ የራሱን ቅርንጫፍ ብቻ እንዲጠቀም
+    if (currentUserBranch !== 'all') branch = currentUserBranch;
+    
     if (!subcategory) { alert('Enter subcategory'); return; }
     const name = document.getElementById('medName').value.trim(); 
     const cost = parseFloat(document.getElementById('medCost').value); 
@@ -2826,14 +2812,14 @@ window.addMedicine = async function() {
         const exists = (allSubcategories[category] || []).find(s => s.name === subcategory);
         if (!exists) { await addDoc(collection(db, 'subcategories'), { name: subcategory, categoryName: category, pharmacyId: currentUserPharmacyId }); }
         const barcode = document.getElementById('medBarcode').value.trim();
-await addDoc(collection(db, 'medicines'), { type, category, subcategory, name, barcode, batch, expiry, supplier, cost, price, quantity: qty, branch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId });
+        await addDoc(collection(db, 'medicines'), { type, category, subcategory, name, barcode, batch, expiry, supplier, cost, price, quantity: qty, branch, createdAt: serverTimestamp(), pharmacyId: currentUserPharmacyId });
         logActivity(`added medicine: ${name} (Qty: ${qty})`);
         alert('✅ Medicine saved!');
         document.getElementById('medName').value = ''; document.getElementById('medBatch').value = ''; document.getElementById('medExpiry').value = ''; document.getElementById('medSupplier').value = ''; document.getElementById('medCost').value = ''; document.getElementById('medPrice').value = ''; document.getElementById('medQty').value = '';
         loadCategories();
     } catch (err) { alert('Error: ' + err.message); }
 }; 
-window.formatMedType = function(type) {
+        window.formatMedType = function(type) {
     const map = {
         medicine: '💊 Medicine',
         cosmetic: '🧴 Cosmetics',
@@ -2864,7 +2850,7 @@ window.renderMedList = function() {
     let tableHtml = '';
     paginated.forEach(m => {
         const isLowStock = m.quantity <= lowStockThreshold; const qtyColor = isLowStock ? 'color: #ef4444; font-weight: bold;' : 'color: var(--primary); font-weight: bold;';
-                tableHtml += `<tr>
+        tableHtml += `<tr>
             <td>${m.branch || 'Main'}</td><td>${formatMedType(m.type)}</td>
             <td>${m.category || '-'}</td><td>${m.subcategory || '-'}</td>
             <td><strong>${m.name}</strong></td><td>${m.batch || '-'}</td><td>${m.expiry || '-'}</td>
@@ -2894,7 +2880,10 @@ window.editMedicine = function(id) {
     const saveBtn = document.getElementById('btnSaveMed'); saveBtn.innerText = '🔄 Update Medicine';
     saveBtn.onclick = async function() {
         try {
-            await updateDoc(doc(db, 'medicines', id), { type: document.getElementById('medType').value, branch: document.getElementById('medBranch').value, category: document.getElementById('medCategory').value, subcategory: document.getElementById('medSubcategory').value, name: document.getElementById('medName').value.trim(), batch: document.getElementById('medBatch').value.trim(), expiry: document.getElementById('medExpiry').value, supplier: document.getElementById('medSupplier').value.trim(), cost: parseFloat(document.getElementById('medCost').value), price: parseFloat(document.getElementById('medPrice').value), quantity: parseInt(document.getElementById('medQty').value) });
+            let updateBranch = document.getElementById('medBranch').value;
+            if (currentUserBranch !== 'all') updateBranch = currentUserBranch; // ✅ Patch 10
+
+            await updateDoc(doc(db, 'medicines', id), { type: document.getElementById('medType').value, branch: updateBranch, category: document.getElementById('medCategory').value, subcategory: document.getElementById('medSubcategory').value, name: document.getElementById('medName').value.trim(), batch: document.getElementById('medBatch').value.trim(), expiry: document.getElementById('medExpiry').value, supplier: document.getElementById('medSupplier').value.trim(), cost: parseFloat(document.getElementById('medCost').value), price: parseFloat(document.getElementById('medPrice').value), quantity: parseInt(document.getElementById('medQty').value) });
             logActivity(`updated medicine: ${document.getElementById('medName').value}`);
             alert('✅ Medicine updated!'); switchPage('panel1', 'sub1_1', null); 
             document.getElementById('medName').value = ''; document.getElementById('medBatch').value = ''; document.getElementById('medCost').value = ''; document.getElementById('medPrice').value = ''; document.getElementById('medQty').value = '';
@@ -3024,7 +3013,11 @@ window.completeSale = async function() {
     const receipt = document.getElementById('sellReceipt').value.trim(); 
     const paymentMethod = document.getElementById('sellPaymentMethod').value;
     if(!date) { alert('Select date'); return; } 
+    
+    // ✅ Patch 10: ሰራተኛ ከሆነ የራሱን ቅርንጫፍ ብቻ ይጠቀም
     let branch = document.getElementById('sellBranch').value;
+    if (currentUserBranch !== 'all') branch = currentUserBranch;
+
     let totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0); 
     let customer = '';
     let paidAmount = totalAmount;
@@ -3058,7 +3051,13 @@ window.completeSale = async function() {
 }; 
 
 window.addQuickSale = async function() {
-    const type = document.getElementById('quickType').value; const branch = document.getElementById('quickBranch').value; const date = document.getElementById('quickDate').value; const amount = parseFloat(document.getElementById('quickAmount').value);
+    const type = document.getElementById('quickType').value; 
+    // ✅ Patch 10: ሰራተኛ ከሆነ የራሱን ቅርንጫፍ ብቻ ይጠቀም
+    let branch = document.getElementById('quickBranch').value;
+    if (currentUserBranch !== 'all') branch = currentUserBranch;
+    
+    const date = document.getElementById('quickDate').value; 
+    const amount = parseFloat(document.getElementById('quickAmount').value);
     if(!date || isNaN(amount) || amount <= 0) { alert('Fill all fields'); return; } 
     try { await addDoc(collection(db, 'quickSales'), { type, category: 'Quick', branch, date, amount, paymentMethod: 'cash', timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added quick sale (${amount} ETB)`); alert('✅ Recorded!'); document.getElementById('quickAmount').value = ''; } catch(e) { alert(e.message); }
 }; 
@@ -3093,15 +3092,12 @@ window.updateBulkRowInfo = function(input) {
     if(!val) { infoDiv.innerHTML = ''; return; }
     
     let med = null;
-    // 1. በ Datalist አማራጭ መልክ (Name | Batch) ከተመረጠ
     if (val.includes('|')) {
         const parts = val.split('|').map(p => p.trim());
         const searchName = parts[0].toLowerCase();
         const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
         med = allMedicines.find(m => (m.name && m.name.toLowerCase() === searchName) && (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch)));
-    } 
-    // 2. በእጅ ከተፃፈ (በስም ወይም በባች) መፈለግ
-    else {
+    } else {
         const lowerVal = val.toLowerCase();
         med = allMedicines.find(m => (m.batch || '').toLowerCase() === lowerVal) ||
               allMedicines.find(m => (m.name || '').toLowerCase() === lowerVal) ||
@@ -3120,7 +3116,10 @@ window.updateBulkRowInfo = function(input) {
 };
 
 window.saveBulkSales = async function() {
-    const branch = document.getElementById('quickBulkBranch').value;
+    // ✅ Patch 10: ሰራተኛ ከሆነ የራሱን ቅርንጫፍ ብቻ ይጠቀም
+    let branch = document.getElementById('quickBulkBranch').value;
+    if (currentUserBranch !== 'all') branch = currentUserBranch;
+    
     const date = document.getElementById('quickBulkDate').value;
     if (!date) { alert('Select date'); return; }
     const rows = document.querySelectorAll('[id^="bulkRow_"]');
@@ -3130,7 +3129,7 @@ window.saveBulkSales = async function() {
         const qtyInput = parseInt(row.querySelector('.bulk-input-qty').value);
         const paymentType = row.querySelector('.bulk-input-payment').value;
         if (!nameInput || isNaN(qtyInput) || qtyInput <= 0) continue;
-                let med = null;
+        let med = null;
         const nameInputTrimmed = nameInput.trim();
         
         if (nameInputTrimmed.includes('|')) {
@@ -3170,13 +3169,23 @@ window.saveBulkSales = async function() {
 // 💸 EXPENSES
 // ==========================================
 window.addExpense = async function() {
-    const cat = document.getElementById('expCat').value; const branch = document.getElementById('expBranch').value; const note = document.getElementById('expNote').value.trim(); const amount = parseFloat(document.getElementById('expAmount').value); const date = document.getElementById('expDate').value;
+    const cat = document.getElementById('expCat').value; 
+    // ✅ Patch 10: ሰራተኛ ከሆነ የራሱን ቅርንጫፍ ብቻ ይጠቀም
+    let branch = document.getElementById('expBranch').value;
+    if (currentUserBranch !== 'all') branch = currentUserBranch;
+
+    const note = document.getElementById('expNote').value.trim(); const amount = parseFloat(document.getElementById('expAmount').value); const date = document.getElementById('expDate').value;
     if(!cat || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields'); return; }
     try { await addDoc(collection(db, 'expenses'), { category: cat, branch, note, amount, date, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added expense: ${amount} ETB`); alert('✅ Saved!'); document.getElementById('expNote').value = ''; document.getElementById('expAmount').value = ''; renderAllExpensesList(); } catch(e) { alert(e.message); }
 }; 
 
 window.addFixedExpense = async function() {
-    const cat = document.getElementById('fixCat').value; const branch = document.getElementById('fixBranch').value; const note = document.getElementById('fixNote').value.trim(); const amount = parseFloat(document.getElementById('fixAmount').value); const month = document.getElementById('fixMonth').value;
+    const cat = document.getElementById('fixCat').value; 
+    // ✅ Patch 10: ሰራተኛ ከሆነ የራሱን ቅርንጫፍ ብቻ ይጠቀም
+    let branch = document.getElementById('fixBranch').value;
+    if (currentUserBranch !== 'all') branch = currentUserBranch;
+
+    const note = document.getElementById('fixNote').value.trim(); const amount = parseFloat(document.getElementById('fixAmount').value); const month = document.getElementById('fixMonth').value;
     if(!cat || isNaN(amount) || amount <= 0 || !month) { alert('Fill all fields'); return; }
     try { await addDoc(collection(db, 'fixedExpenses'), { category: cat, branch, note, amount, month, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId }); logActivity(`added fixed expense: ${amount} ETB`); alert('✅ Saved!'); document.getElementById('fixNote').value = ''; document.getElementById('fixAmount').value = ''; renderAllExpensesList(); } catch(e) { alert(e.message); }
 }; 
@@ -3192,7 +3201,10 @@ window.editExpense = function(id) {
     saveBtn.innerText = '🔄 Update Expense';
     saveBtn.onclick = async function() {
         try {
-            await updateDoc(doc(db, 'expenses', id), { category: document.getElementById('expCat').value, branch: document.getElementById('expBranch').value, amount: parseFloat(document.getElementById('expAmount').value), date: document.getElementById('expDate').value, note: document.getElementById('expNote').value.trim() });
+            let updateBranch = document.getElementById('expBranch').value;
+            if (currentUserBranch !== 'all') updateBranch = currentUserBranch; // ✅ Patch 10
+
+            await updateDoc(doc(db, 'expenses', id), { category: document.getElementById('expCat').value, branch: updateBranch, amount: parseFloat(document.getElementById('expAmount').value), date: document.getElementById('expDate').value, note: document.getElementById('expNote').value.trim() });
             logActivity(`updated expense`);
             alert('✅ Expense updated!');
             saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addExpense;
@@ -3218,7 +3230,10 @@ window.editFixedExpense = function(id) {
     saveBtn.innerText = '🔄 Update Expense';
     saveBtn.onclick = async function() {
         try {
-            await updateDoc(doc(db, 'fixedExpenses', id), { category: document.getElementById('fixCat').value, branch: document.getElementById('fixBranch').value, amount: parseFloat(document.getElementById('fixAmount').value), month: document.getElementById('fixMonth').value, note: document.getElementById('fixNote').value.trim() });
+            let updateBranch = document.getElementById('fixBranch').value;
+            if (currentUserBranch !== 'all') updateBranch = currentUserBranch; // ✅ Patch 10
+
+            await updateDoc(doc(db, 'fixedExpenses', id), { category: document.getElementById('fixCat').value, branch: updateBranch, amount: parseFloat(document.getElementById('fixAmount').value), month: document.getElementById('fixMonth').value, note: document.getElementById('fixNote').value.trim() });
             logActivity(`updated fixed expense`);
             alert('✅ Fixed Expense updated!');
             saveBtn.innerText = '💾 Save Expense'; saveBtn.onclick = addFixedExpense;
@@ -3301,7 +3316,7 @@ window.loadInventory = function() {
         let catRemainingVal = 0;
         grouped[cat].forEach(m => { catRemainingVal += m.quantity * (m.price || 0); });
         fullTotal += catRemainingVal;
-                catHtml += `<div class="section-collapsible" style="margin-bottom:15px; box-shadow:none; border:1px solid var(--border);">
+        catHtml += `<div class="section-collapsible" style="margin-bottom:15px; box-shadow:none; border:1px solid var(--border);">
             <div class="section-header" onclick="this.classList.toggle('open'); this.nextElementSibling.style.display = this.classList.contains('open') ? 'block' : 'none';" style="padding:12px 16px; background:var(--bg); border-radius:8px 8px 0 0;">
                 <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">📁</span><span class="sec-title">${cat}</span></div>
                 <span style="font-size:13px; font-weight:700; color:var(--primary); background:rgba(16, 185, 129, 0.1); padding:4px 8px; border-radius:6px;">Value: ${formatMoney(catRemainingVal)} ETB</span>
@@ -3358,27 +3373,26 @@ window.changeInvPage = function(dir) { invPage += dir; loadInventory(); };
 window.changeExpPage = function(dir) { expPage += dir; loadInventory(); };
 window.changeLowPage = function(dir) { lowPage += dir; loadInventory(); };
 
+let adjustSearchTimeout;
 window.populateAdjustMedSelect = function() {
-    const branch = document.getElementById('adjustBranch').value;
-    const searchVal = (document.getElementById('adjustSearchInput')?.value || '').toLowerCase();
-    const sel = document.getElementById('adjustMedId'); if(!sel) return;
-    
-    sel.innerHTML = '<option value="">-- Select Item --</option>';
-    let filtered = allMedicines;
-    
-    if (branch !== 'all') filtered = filtered.filter(m => m.branch === branch);
-    
-    // ✅ በስም ወይም በBatch ማጣራት
-    if (searchVal) {
-        filtered = filtered.filter(m => 
-            (m.name||'').toLowerCase().includes(searchVal) || 
-            (m.batch||'').toLowerCase().includes(searchVal)
-        );
-    }
-    
-    filtered.forEach(m => { 
-        sel.innerHTML += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Batch: ${m.batch || '-'} - Qty: ${m.quantity} - Price: ${m.price}</option>`; 
-    });
+    clearTimeout(adjustSearchTimeout);
+    adjustSearchTimeout = setTimeout(() => {
+        const branch = document.getElementById('adjustBranch').value;
+        const searchVal = (document.getElementById('adjustSearchInput')?.value || '').toLowerCase();
+        const sel = document.getElementById('adjustMedId'); if(!sel) return;
+        
+        let filtered = allMedicines;
+        if (branch !== 'all') filtered = filtered.filter(m => m.branch === branch);
+        if (searchVal) {
+            filtered = filtered.filter(m => (m.name||'').toLowerCase().includes(searchVal) || (m.batch||'').toLowerCase().includes(searchVal));
+        }
+        
+        let html = '<option value="">-- Select Item --</option>';
+        filtered.forEach(m => { 
+            html += `<option value="${m.id}">${m.name} (${m.branch || 'Main'}) - Batch: ${m.batch || '-'} - Qty: ${m.quantity} - Price: ${m.price}</option>`; 
+        });
+        sel.innerHTML = html;
+    }, 300);
 };
 
 window.adjustStock = async function() {
@@ -3394,9 +3408,8 @@ window.adjustStock = async function() {
         await updateDoc(doc(db, 'medicines', id), updateData); 
         logActivity(`adjusted stock for medicine ID: ${id}`);
         alert('✅ Adjusted successfully!'); 
-                document.getElementById('adjustQty').value = ''; document.getElementById('adjustPrice').value = ''; document.getElementById('adjustReason').value = ''; 
+        document.getElementById('adjustQty').value = ''; document.getElementById('adjustPrice').value = ''; document.getElementById('adjustReason').value = ''; 
         
-        // ✅ ወደ Purchase History መመዝገብ (አዲስ እቃ ሲገባ ብቻ)
         if (updateData.quantity !== undefined) {
             const med = allMedicines.find(m => m.id === id);
             await addDoc(collection(db, 'purchases'), {
@@ -3414,7 +3427,6 @@ window.adjustStock = async function() {
     } catch(e) { alert(e.message); }
 };
 
-// ✅ የግዢ ታሪክን ማሳያ ተግባር
 window.renderPurchaseHistory = async function() {
     const listEl = document.getElementById('purchaseHistoryList');
     if (!listEl) return;
@@ -3446,7 +3458,6 @@ window.renderPurchaseHistory = async function() {
             return;
         }
         
-        // ✅ Pagination
         const totalPages = Math.ceil(purchases.length / rowsPerPage);
         if (purchaseHistPage > totalPages) purchaseHistPage = totalPages;
         if (purchaseHistPage < 1) purchaseHistPage = 1;
@@ -3472,7 +3483,6 @@ window.renderPurchaseHistory = async function() {
         
         listEl.innerHTML = html;
         
-        // ✅ የገጽ መረጃ ማሳያ
         document.getElementById('purchaseHistPageInfo').innerText = `Page ${purchaseHistPage} of ${totalPages}`;
         document.getElementById('btnPrevPurchaseHist').disabled = purchaseHistPage === 1;
         document.getElementById('btnNextPurchaseHist').disabled = purchaseHistPage === totalPages;
@@ -3483,10 +3493,8 @@ window.renderPurchaseHistory = async function() {
     }
 };
 
-// ✅ የገጽ መቀየሪያ ተግባር
 window.changePurchaseHistPage = function(dir) { purchaseHistPage += dir; renderPurchaseHistory(); };
 
-// ✅ 3. Auto Re-order ማሳያ (ከ Pagination ጋር)
 window.renderAutoReorder = function() {
     const tbody = document.getElementById('reorderTableBody');
     const supplierFilterEl = document.getElementById('reorderSupplierFilter');
@@ -3541,8 +3549,6 @@ window.renderAutoReorder = function() {
 
 window.changeReorderPage = function(dir) { reorderPage += dir; renderAutoReorder(); };
 
-// ✅ 4. PDF ማውረጃ
-// ✅ የተስተካከለ: Purchase Order ን ፈጥሮ በሞዳል ማሳየት
 window.downloadPurchaseOrderPDF = function() {
     const tbody = document.getElementById('reorderTableBody');
     if (!tbody || tbody.innerHTML.includes('ማዘዝ የሚያስፈልግ እቃ የለም') || tbody.innerHTML.includes('🎉')) {
@@ -3591,7 +3597,6 @@ window.downloadPurchaseOrderPDF = function() {
     }
     pdfHtml += `</div>`;
 
-        // ✅ አዲስ ትር ከፍቶ የራሱን የፕሪንት ቁልፍ ይዞ እንዲመጣ
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
         <html>
@@ -3600,46 +3605,21 @@ window.downloadPurchaseOrderPDF = function() {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
                 body { margin: 0; padding: 0; background: #f3f4f6; }
-                .print-btn-container {
-                    position: sticky;
-                    top: 0;
-                    background: #10b981;
-                    padding: 15px;
-                    text-align: center;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-                    z-index: 100;
-                }
-                .print-btn {
-                    background: white;
-                    color: #10b981;
-                    border: none;
-                    padding: 12px 24px;
-                    font-size: 16px;
-                    font-weight: bold;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                }
+                .print-btn-container { position: sticky; top: 0; background: #10b981; padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 100; }
+                .print-btn { background: white; color: #10b981; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
                 .pdf-content { padding: 20px; background: white; margin: 15px; border-radius: 8px; }
-                @media print {
-                    .print-btn-container { display: none; }
-                    .pdf-content { margin: 0; padding: 0; }
-                    body { background: white; }
-                }
+                @media print { .print-btn-container { display: none; } .pdf-content { margin: 0; padding: 0; } body { background: white; } }
             </style>
         </head>
         <body>
-            <div class="print-btn-container">
-                <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
-            </div>
-            <div class="pdf-content">
-                ${pdfHtml}
-            </div>
+            <div class="print-btn-container"><button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button></div>
+            <div class="pdf-content">${pdfHtml}</div>
         </body>
         </html>
     `);
     printWindow.document.close();
 };
+
 function calculateStockReport() {
     let totalPurchasedQty = 0; let totalPurchasedValue = 0; let totalSold = 0; let totalRemaining = 0;
     allSales.forEach(s => { if (s.medicineId) totalSold += (s.quantity || 0); });
@@ -3651,10 +3631,10 @@ function calculateStockReport() {
         totalRemaining += m.quantity;
     });
     if(document.getElementById('totalPurchasedQty')) {
-        document.getElementById('totalPurchasedQty').innerText = totalPurchasedQty;
-        document.getElementById('totalPurchasedValue').innerText = totalPurchasedValue.toFixed(2) + ' ETB';
-        document.getElementById('totalSoldQty').innerText = totalSold;
-        document.getElementById('totalRemainingQty').innerText = totalRemaining;
+        document.getElementById('totalPurchasedQty').innerText = formatNum(totalPurchasedQty);
+        document.getElementById('totalPurchasedValue').innerText = formatMoney(totalPurchasedValue) + ' ETB';
+        document.getElementById('totalSoldQty').innerText = formatNum(totalSold);
+        document.getElementById('totalRemainingQty').innerText = formatNum(totalRemaining);
     }
 }
 
@@ -3673,6 +3653,7 @@ async function loadDashboard() {
         monthSales = monthSales.filter(s => s.branch === branchFilter);
         monthQuick = monthQuick.filter(q => q.branch === branchFilter);
         monthExp = monthExp.filter(e => e.branch === branchFilter);
+        monthFixed = monthFixed.filter(f => f.branch === branchFilter);
     }
     let totalRev = 0, totalExp = 0, totalFixed = 0;
     monthSales.forEach(s => { totalRev += s.paidAmount !== undefined ? s.paidAmount : s.total; });
@@ -3680,65 +3661,49 @@ async function loadDashboard() {
     monthExp.forEach(e => { totalExp += e.amount; }); 
     monthFixed.forEach(f => { totalFixed += f.amount; });
     const netProfit = totalRev - totalExp - totalFixed;
-        document.getElementById('dashGrossIncome').innerText = formatMoney(totalRev) + ' ETB';
+    document.getElementById('dashGrossIncome').innerText = formatMoney(totalRev) + ' ETB';
     document.getElementById('dashTotalExpense').innerText = formatMoney(totalExp + totalFixed) + ' ETB';
     document.getElementById('dashNetProfit').innerText = formatMoney(netProfit) + ' ETB';
     document.getElementById('dashTotalSalesCount').innerText = formatNum(monthSales.length + monthQuick.length);
     renderCharts(selectedMonth, branchFilter);
-    
-    // ✅ Top 10 ሰንጠረዦችን ሞላ
     renderTopSellingTables(monthSales, branchFilter);
 }
 
-// ✅ Top 10 ማሳያ ተግባር
 window.renderTopSellingTables = function(monthSales, branchFilter) {
     const sellingTbody = document.getElementById('topSellingTableBody');
     const revenueTbody = document.getElementById('topRevenueTableBody');
     if (!sellingTbody || !revenueTbody) return;
 
-    // የእያንዳንዱን መድኃኒት ሽያጭ መሰብሰብ
     let medStats = {};
     monthSales.forEach(sale => {
         if (branchFilter !== 'all' && sale.branch !== branchFilter) return;
-        
         const name = sale.medicineName;
         const qty = sale.quantity || 0;
         const rev = sale.paidAmount !== undefined ? sale.paidAmount : sale.total;
-
         if (!medStats[name]) medStats[name] = { qty: 0, revenue: 0 };
         medStats[name].qty += qty;
         medStats[name].revenue += rev;
     });
 
     let statsArray = Object.keys(medStats).map(name => ({
-        name: name,
-        qty: medStats[name].qty,
-        revenue: medStats[name].revenue
+        name: name, qty: medStats[name].qty, revenue: medStats[name].revenue
     }));
 
-    // 1. Top 10 Selling (በብዛት)
     let topSelling = [...statsArray].sort((a, b) => b.qty - a.qty).slice(0, 10);
     if (topSelling.length === 0) {
         sellingTbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:gray;">No data</td></tr>';
     } else {
         sellingTbody.innerHTML = topSelling.map((item, index) => `
-            <tr>
-                <td><strong>${index + 1}.</strong> ${item.name}</td>
-                                <td style="color:var(--primary); font-weight:bold;">${formatNum(item.qty)}</td>
-            </tr>
+            <tr><td><strong>${index + 1}.</strong> ${item.name}</td><td style="color:var(--primary); font-weight:bold;">${formatNum(item.qty)}</td></tr>
         `).join('');
     }
 
-    // 2. Top 10 Revenue (በገቢ)
     let topRevenue = [...statsArray].sort((a, b) => b.revenue - a.revenue).slice(0, 10);
     if (topRevenue.length === 0) {
         revenueTbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:gray;">No data</td></tr>';
     } else {
-                revenueTbody.innerHTML = topRevenue.map((item, index) => `
-            <tr>
-                <td><strong>${index + 1}.</strong> ${item.name}</td>
-                <td style="color:#f59e0b; font-weight:bold;">${formatMoney(item.revenue)} ETB</td>
-            </tr>
+        revenueTbody.innerHTML = topRevenue.map((item, index) => `
+            <tr><td><strong>${index + 1}.</strong> ${item.name}</td><td style="color:#f59e0b; font-weight:bold;">${formatMoney(item.revenue)} ETB</td></tr>
         `).join('');
     }
 };
@@ -3763,7 +3728,7 @@ function renderCharts(selectedMonth, branchFilter) {
     if(pieCtx) {
         let expenseCats = {};
         allExpenses.filter(e => e.date.startsWith(selectedMonth) && (branchFilter === 'all' || e.branch === branchFilter)).forEach(e => { if(!expenseCats[e.category]) expenseCats[e.category] = 0; expenseCats[e.category] += e.amount; });
-        allFixed.filter(f => f.month === selectedMonth).forEach(f => { let catName = 'Fixed: ' + f.category; if(!expenseCats[catName]) expenseCats[catName] = 0; expenseCats[catName] += f.amount; });
+        allFixed.filter(f => f.month === selectedMonth && (branchFilter === 'all' || f.branch === branchFilter)).forEach(f => { let catName = 'Fixed: ' + f.category; if(!expenseCats[catName]) expenseCats[catName] = 0; expenseCats[catName] += f.amount; });
         let pieLabels = Object.keys(expenseCats); let pieData = Object.values(expenseCats);
         if(pieLabels.length === 0) { pieLabels = ['No Expenses']; pieData = [1]; }
         if(expensePieChartInstance) expensePieChartInstance.destroy();
@@ -3800,6 +3765,7 @@ window.generateReport = function() {
         filteredSales = filteredSales.filter(s => s.branch === branchFilter);
         filteredQuick = filteredQuick.filter(q => q.branch === branchFilter);
         filteredExpenses = filteredExpenses.filter(e => e.branch === branchFilter);
+        filteredFixed = filteredFixed.filter(f => f.branch === branchFilter);
     }
     let totalSales = 0; let totalQuick = 0; let totalExpenses = 0; let totalFixed = 0;
     let cash = 0, transfer = 0, credit = 0;
@@ -3847,62 +3813,49 @@ window.generateReport = function() {
             <div class="rep-section"><h3>Detailed Expenses</h3>${expTableHtml}</div>
         </div>
     `;
-        displayArea.innerHTML = html;
+    displayArea.innerHTML = html;
     displayArea.style.display = 'block';
 };
 
-// ✅ አዲሱ የ Print / Preview ተግባር
 window.previewAndPrintReport = function() {
-    generateReport(); // መጀመሪያ ሪፖርቱን አዘጋጅ
-    
+    generateReport(); 
     const displayArea = document.getElementById('reportDisplayArea');
     if (displayArea) {
-        // ሪፖርቱ ለፕሪንት ሲስተሙ ብቻ እንዲታይ ለትንሽ ጊዜ ክፈተው
         displayArea.style.display = 'block';
-        
         setTimeout(() => {
-            window.print(); // የህትመት መስኮቱን ክፈት (ከዚህ ውስጥ ፕሪቪው ይታያል)
-            
-            // ፕሪንት ካደረገ ወይም ካንሰል ካደረገ በኋላ ሪፖርቱን በስክሪኑ ላይ ደብቀው
-            setTimeout(() => {
-                displayArea.style.display = 'none';
-            }, 500);
-            }, 150); 
+            window.print(); 
+            setTimeout(() => { displayArea.style.display = 'none'; }, 500);
+        }, 150); 
+    }
 };
 
-// ✅ ሪፖርትን ወደ Excel (CSV) ማውረድ
 window.exportReportToCSV = function() {
     const displayArea = document.getElementById('reportDisplayArea');
     if (!displayArea || displayArea.innerHTML.trim() === '') {
         alert('⚠️ እባክህ መጀመሪያ "Preview Report" ተጫንና ሪፖርቱ እንዲዘጋጅ አድርግ።');
         return;
     }
-    
-    // በሪፖርቱ ውስጥ ያሉትን ሰንጠረዦች (Tables) መሰብሰብ
     const tables = displayArea.querySelectorAll('.rep-table');
     if (tables.length === 0) {
         alert('⚠️ ምንም ዳታ አልተገኘም።');
         return;
     }
 
-    let csvContent = "\uFEFF"; // ለ Excel የአማርኛ ፊደል እንዳይበላሽ
-
+    let csvContent = "\uFEFF"; 
     tables.forEach(table => {
         const rows = table.querySelectorAll('tr');
         rows.forEach(row => {
             const cols = row.querySelectorAll('th, td');
             let rowData = [];
             cols.forEach(col => {
-                // በጽሑፉ ውስጥ ኮማ (,) ካለ በ double quote እንሸፍነው
                 let text = col.innerText.replace(/"/g, '""');
                 rowData.push(`"${text}"`);
             });
             csvContent += rowData.join(",") + "\n";
         });
-        csvContent += "\n"; // በሰንጠረዦች መካከል ክፍተት
+        csvContent += "\n"; 
     });
 
-    // ፋይሉን ማውረድ
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -3912,7 +3865,6 @@ window.exportReportToCSV = function() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-};
 };
 
 window.renderSalesHistory = async function() {
@@ -3924,7 +3876,6 @@ window.renderSalesHistory = async function() {
     const startDate = document.getElementById('filterStartDate')?.value;
     const endDate = document.getElementById('filterEndDate')?.value;
 
-    // ✅ አዲስ የተጨመረ፡ የቆየ ቀን ከተመረጠ ከ Firebase ፈልጎ ማምጣት
     if (startDate && endDate) {
         const hasData = combined.some(c => c.date >= startDate && c.date <= endDate);
         if (!hasData) {
@@ -3983,15 +3934,12 @@ async function loadDailyReport() {
     let dayQuick = allQuickSales.filter(q => q.date === selDate); 
     let dayExp = allExpenses.filter(e => e.date === selDate);
 
-    // ✅ አዲስ የተጨመረ፡ ዳታው በስልኩ ላይ ከሌለ (የቆየ ቀን ከሆነ) ከ Firebase ፈልጎ ማምጣት
     if (daySales.length === 0 && dayQuick.length === 0 && dayExp.length === 0) {
         try {
             const qS = query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '==', selDate));
             const qQ = query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '==', selDate));
             const qE = query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '==', selDate));
-            
             const [sSnap, qSnap, eSnap] = await Promise.all([getDocs(qS), getDocs(qQ), getDocs(qE)]);
-            
             sSnap.forEach(d => daySales.push({ id: d.id, ...d.data() }));
             qSnap.forEach(d => dayQuick.push({ id: d.id, ...d.data() }));
             eSnap.forEach(d => dayExp.push({ id: d.id, ...d.data() }));
@@ -4010,7 +3958,7 @@ async function loadDailyReport() {
     }); 
     dayQuick.forEach(q => { totalRev += q.amount; cash += q.amount; combinedSales.push({ type: 'quick', ...q, amt: q.amount }); });
     dayExp.forEach(e => { totalExp += e.amount; }); 
-        if(document.getElementById('dailyTotalRevenue')) document.getElementById('dailyTotalRevenue').innerHTML = formatMoney(totalRev);
+    if(document.getElementById('dailyTotalRevenue')) document.getElementById('dailyTotalRevenue').innerHTML = formatMoney(totalRev);
     if(document.getElementById('dailyTotalExpense')) document.getElementById('dailyTotalExpense').innerHTML = formatMoney(totalExp);
     if(document.getElementById('dailyNetProfit')) document.getElementById('dailyNetProfit').innerHTML = formatMoney(totalRev - totalExp);
     if(document.getElementById('dailyCash')) document.getElementById('dailyCash').innerHTML = formatMoney(cash);
@@ -4047,7 +3995,6 @@ async function loadMonthlyReport() {
     let monthExp = allExpenses.filter(e => e.date.startsWith(selMonth)); 
     let monthFixed = allFixed.filter(f => f.month === selMonth);
 
-    // ✅ አዲስ የተጨመረ፡ ዳታው በስልኩ ላይ ከሌለ ከ Firebase ፈልጎ ማምጣት
     if (monthSales.length === 0 && monthQuick.length === 0 && monthExp.length === 0 && monthFixed.length === 0) {
         try {
             const startD = selMonth + '-01';
@@ -4056,16 +4003,14 @@ async function loadMonthlyReport() {
             const qQ = query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', startD), where('date', '<=', endD));
             const qE = query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', startD), where('date', '<=', endD));
             const qF = query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId), where('month', '==', selMonth));
-            
             const [sSnap, qSnap, eSnap, fSnap] = await Promise.all([getDocs(qS), getDocs(qQ), getDocs(qE), getDocs(qF)]);
-            
             sSnap.forEach(d => monthSales.push({ id: d.id, ...d.data() }));
             qSnap.forEach(d => monthQuick.push({ id: d.id, ...d.data() }));
             eSnap.forEach(d => monthExp.push({ id: d.id, ...d.data() }));
             fSnap.forEach(d => monthFixed.push({ id: d.id, ...d.data() }));
         } catch(e) { console.error("Monthly fetch error:", e); }
     }
-    if (branch !== 'all') { monthSales = monthSales.filter(s => s.branch === branch); monthQuick = monthQuick.filter(q => q.branch === branch); monthExp = monthExp.filter(e => e.branch === branch); }
+    if (branch !== 'all') { monthSales = monthSales.filter(s => s.branch === branch); monthQuick = monthQuick.filter(q => q.branch === branch); monthExp = monthExp.filter(e => e.branch === branch); monthFixed = monthFixed.filter(f => f.branch === branch); }
     let totalRev = 0, totalExp = 0, totalFixed = 0; let cash = 0, transfer = 0, credit = 0; let salesHtml = '';
     let combinedSales = [];
     monthSales.forEach(s => { 
@@ -4078,7 +4023,7 @@ async function loadMonthlyReport() {
     });
     monthQuick.forEach(q => { totalRev += q.amount; cash += q.amount; combinedSales.push({ type: 'quick', ...q, amt: q.amount }); });
     monthExp.forEach(e => { totalExp += e.amount; }); monthFixed.forEach(f => { totalFixed += f.amount; });
-        if(document.getElementById('monthlyTotalRevenue')) document.getElementById('monthlyTotalRevenue').innerHTML = formatMoney(totalRev);
+    if(document.getElementById('monthlyTotalRevenue')) document.getElementById('monthlyTotalRevenue').innerHTML = formatMoney(totalRev);
     if(document.getElementById('monthlyTotalExpense')) document.getElementById('monthlyTotalExpense').innerHTML = formatMoney(totalExp + totalFixed);
     if(document.getElementById('monthlyNetProfit')) document.getElementById('monthlyNetProfit').innerHTML = formatMoney(totalRev - totalExp - totalFixed);
     if(document.getElementById('monthlyCash')) document.getElementById('monthlyCash').innerHTML = formatMoney(cash);
@@ -4113,7 +4058,10 @@ function populateCreditCustomerSelect() {
 
 window.addCreditPayment = async function() {
     const customer = document.getElementById('creditCustomerSelect').value; 
-    const branch = document.getElementById('creditBranchSelect').value;
+    // ✅ Patch 10: ሰራተኛ ከሆነ የራሱን ቅርንጫፍ ብቻ ይጠቀም
+    let branch = document.getElementById('creditBranchSelect').value;
+    if (currentUserBranch !== 'all') branch = currentUserBranch;
+
     const amount = parseFloat(document.getElementById('creditAmount').value); 
     const date = document.getElementById('creditDate').value;
     if (!customer || isNaN(amount) || amount <= 0 || !date) { alert('Fill all fields correctly!'); return; }
@@ -4124,12 +4072,6 @@ window.addCreditPayment = async function() {
         renderUnpaidCredits();
     } catch(e) { alert(e.message); }
 };
-
-function loadCreditPaymentHistory() {
-    const listEl = document.getElementById('creditPaymentList'); if(!listEl) return;
-    if(allCreditPayments.length === 0) { listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">No payments yet.</p>'; return; }
-    let html = ''; allCreditPayments.forEach(p => { html += `<div style="padding:12px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>🏪 ${p.customer} ${p.branch ? '| 🏢 '+p.branch : ''}</span><span style="color:var(--primary); font-weight:bold;">+ ${p.amount.toFixed(2)} ETB</span></div>`; }); listEl.innerHTML = html;
-}
 
 window.renderUnpaidCredits = function() {
     const listEl = document.getElementById('unpaidCreditList'); if(!listEl) return;
@@ -4170,26 +4112,19 @@ window.renderUnpaidCredits = function() {
             </div>`; 
         } 
     });
-        listEl.innerHTML = html; 
+    listEl.innerHTML = html; 
     document.getElementById('totalUnpaidDebt').innerText = totalDebt.toFixed(2);
-    
-    // ✅ የክፍያ ታሪክንም አብሮ እንዲያሳይ
     renderCreditHistory();
 };
 
-// ✅ አዲስ የተጨመረ ተግባር
 window.renderCreditHistory = function() {
     const listEl = document.getElementById('creditHistoryListDisplay'); 
     if(!listEl) return;
-    
     if(allCreditPayments.length === 0) { 
         listEl.innerHTML = '<p style="text-align:center; color:#a0aec0; font-size:13px;">No payments yet.</p>'; 
         return; 
     }
-    
-    // ከአዲስ ወደ አሮጌ መደርደር
     let sorted = [...allCreditPayments].sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-    
     let html = '<table class="data-table"><thead><tr><th>Date</th><th>Customer</th><th>Branch</th><th>Amount Paid</th></tr></thead><tbody>';
     sorted.forEach(p => { 
         html += `<tr>
@@ -4204,34 +4139,26 @@ window.renderCreditHistory = function() {
 };
 
 // ==========================================
-// 📱 UNIVERSAL MOBILE COLLAPSE LOGIC (FIXED)
-// ==========================================
-// ==========================================
-// 📱 UNIVERSAL MOBILE COLLAPSE LOGIC (BUG FIXED)
+// 📱 UNIVERSAL MOBILE COLLAPSE LOGIC
 // ==========================================
 let collapseTimeout = null;
 
 window.applyUniversalMobileCollapse = function() {
-    // በ Desktop (ከ 768px በላይ) ከሆነ ምንም አታድርግ
     if (window.innerWidth > 768) return;
-    
-    // የገጹ ኮድ ሙሉ በሙሉ እስኪጫን ድረስ ጠብቅ
     if (!document.getElementById('mainApp').classList.contains('show')) return; 
 
-                const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList',
+    const listIds = ['medTableBody','salesHistoryList','allExpensesListDisplay','inventoryList',
         'expiryListDisplay','lowStockListDisplay','unpaidCreditList','dailySalesList',
         'monthlySalesList','auditTrailList','expCatListDisplay','branchListDisplay',
         'customerListDisplay','catTableBody','purchaseHistoryList',
-        'topSellingWrapper', 'topRevenueWrapper', 'reorderTableWrapper'];
+        'topSellingWrapper', 'topRevenueWrapper', 'reorderTableWrapper', 'employeeListDisplay']; // 👈 employeeListDisplay ተጨምሯል
+    
     listIds.forEach(id => {
         const el = document.getElementById(id); 
         if (!el) return;
         const parent = el.parentElement; 
         
-        // 🔥 ዋናው ማስተካከያ፡ አስቀድሞ ቁልፍ ካለው እንደገና አይፍጠር
         if (parent.closest('.mobile-collapse-wrapper')) return;
-
-        // በቀጥታ የራሱ የሆነ ቁልፍ ካለው አይፍጠር
         if (el.previousElementSibling && el.previousElementSibling.classList.contains('mobile-expand-btn')) return;
 
         const wrapper = document.createElement('div'); 
@@ -4245,13 +4172,13 @@ window.applyUniversalMobileCollapse = function() {
         if (id === 'allExpensesListDisplay') btnText = '💸 የወጪ ዝርዝር';
         if (id === 'inventoryList') btnText = '📦 የክምችት ዝርዝር';
         if (id === 'unpaidCreditList') btnText = '💳 ያልተከፈሉ ዕዳዎች';
-                if (id === 'catTableBody') btnText = '🗂️ የምድብ ዝርዝር';
+        if (id === 'catTableBody') btnText = '🗂️ የምድብ ዝርዝር';
         if (id === 'auditTrailList') btnText = '📝 የእንቅስቃሴ መዝገብ';
-                if (id === 'purchaseHistoryList') btnText = '📥 የግዢ ታሪክ (Purchase History)';
+        if (id === 'purchaseHistoryList') btnText = '📥 የግዢ ታሪክ (Purchase History)';
         if (id === 'topSellingWrapper') btnText = '🔥 በብዛት የተሸጡ 10';
-                        if (id === 'topRevenueWrapper') btnText = '💰 ከፍተኛ ገቢ ያስገኙ 10';
+        if (id === 'topRevenueWrapper') btnText = '💰 ከፍተኛ ገቢ ያስገኙ 10';
         if (id === 'reorderTableWrapper') btnText = '🛒 ማዘዝ የሚያስፈልጉ እቃዎች';
-        if (id === 'purchaseHistoryList') btnText = '📥 የግዢ ታሪክ';
+        if (id === 'employeeListDisplay') btnText = '👥 የሰራተኞች ዝርዝር'; // 👈 አዲስ
 
         btn.innerHTML = `${btnText} <span>▼</span>`; 
         const contentBox = document.createElement('div'); 
@@ -4270,13 +4197,12 @@ window.applyUniversalMobileCollapse = function() {
     });
 };
 
-// ✅ የተስተካከለ Observer
 const observer = new MutationObserver(() => {
     if (window.innerWidth > 768) return;
     clearTimeout(collapseTimeout);
     collapseTimeout = setTimeout(() => {
         applyUniversalMobileCollapse();
-    }, 300); // ጊዜውን ወደ 300ms ቀንሰነዋል
+    }, 300); 
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
@@ -4285,24 +4211,6 @@ window.addEventListener('resize', () => {
     clearTimeout(collapseTimeout);
     collapseTimeout = setTimeout(() => {
         if (window.innerWidth > 768) {
-            // ወደ Desktop ሲቀየር የሞባይል ለውጦችን አጥፋ
-            document.querySelectorAll('.mobile-collapse-wrapper').forEach(wrapper => {
-                const content = wrapper.querySelector('.mobile-collapse-content');
-                if (content && content.firstElementChild) {
-                    wrapper.parentElement.insertBefore(content.firstElementChild, wrapper);
-                }
-                wrapper.remove();
-            });
-        } else {
-            applyUniversalMobileCollapse();
-        }
-    }, 300);
-});
-window.addEventListener('resize', () => {
-    clearTimeout(collapseTimeout);
-    collapseTimeout = setTimeout(() => {
-        if (window.innerWidth > 768) {
-            // ወደ Desktop ሲቀየር የሞባይል ለውጦችን አጥፋ
             document.querySelectorAll('.mobile-collapse-wrapper').forEach(wrapper => {
                 const content = wrapper.querySelector('.mobile-collapse-content');
                 if (content && content.firstElementChild) {
@@ -4405,34 +4313,23 @@ window.importCSV = async function() {
                 }
                 await wb.commit();
             }
-                        // ✅ 1. ካቴጎሪዎችን መመዝገብ
             const uniqueCats = [...new Set(batchEntries.map(b => b.category))];
             for (const cat of uniqueCats) {
-                try { 
-                    await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + cat), { name: cat, pharmacyId: currentUserPharmacyId }, { merge: true }); 
-                } catch(e) {}
+                try { await setDoc(doc(db, 'categories', currentUserPharmacyId + '_' + cat), { name: cat, pharmacyId: currentUserPharmacyId }, { merge: true }); } catch(e) {}
             }
-
-            // ✅ 2. ሳብ ካቴጎሪዎችን (Subcategories) መመዝገብ (አዲስ የተጨመረ)
             const uniqueSubCats = [...new Set(batchEntries.map(b => b.category + '|' + b.subcategory))];
             for (const combo of uniqueSubCats) {
                 const [cat, sub] = combo.split('|');
                 if (sub && sub !== '-') {
                     try {
-                        // ሳብ ካቴጎሪው አስቀድሞ ካለ ደግመን አንጨምርም፣ ከሌለ እንጨምራለን
                         const existsQuery = query(collection(db, 'subcategories'), where('pharmacyId', '==', currentUserPharmacyId), where('categoryName', '==', cat), where('name', '==', sub));
                         const existsSnap = await getDocs(existsQuery);
                         if (existsSnap.empty) {
-                            await addDoc(collection(db, 'subcategories'), { 
-                                name: sub, 
-                                categoryName: cat, 
-                                pharmacyId: currentUserPharmacyId 
-                            });
+                            await addDoc(collection(db, 'subcategories'), { name: sub, categoryName: cat, pharmacyId: currentUserPharmacyId });
                         }
                     } catch(e) { console.log("Subcategory save error:", e); }
                 }
             }
-            
             logActivity(`imported ${successCount} items from CSV`);
             alert(`✅ Import ተጠናቅቋል!\n\n✔️ የተጨመሩ: ${successCount}\n❌ ያልተሳኩ: ${errorCount}`);
             fileInput.value = '';
@@ -4454,7 +4351,6 @@ if ('serviceWorker' in navigator) {
         try {
             const reg = await navigator.serviceWorker.register('service-worker.js', { scope: './' });
             console.log('✅ SW registered:', reg.scope);
-
             reg.addEventListener('updatefound', () => {
                 const newWorker = reg.installing;
                 newWorker.addEventListener('statechange', () => {
@@ -4466,27 +4362,20 @@ if ('serviceWorker' in navigator) {
                     }
                 });
             });
-
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (!refreshing) { refreshing = true; window.location.reload(); }
             });
-
-        } catch (err) {
-            console.error('❌ SW registration failed:', err);
-        }
+        } catch (err) { console.error('❌ SW registration failed:', err); }
     });
 }
 
-// Handle PWA Shortcuts
 window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const action = params.get('action');
     if (!action) return;
-
     setTimeout(() => {
         if (!document.getElementById('mainApp').classList.contains('show')) return;
-
         switch (action) {
             case 'newsale':
                 switchPage('panel2', 'sub2_1', null);
