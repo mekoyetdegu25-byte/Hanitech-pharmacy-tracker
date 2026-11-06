@@ -2060,6 +2060,18 @@ window.formatNum = function(num) {
     if (num === null || num === undefined || isNaN(num)) return '0';
     return parseInt(num).toLocaleString('en-US');
 };
+
+// 🟢 አዲስ የተጨመረ (Patch 1 ማሻሻያ): በኮዱ ውስጥ ያሉትን ሁሉንም .toFixed() ቁጥሮች 
+// በራሳቸው ኮማ (Comma) እንዲይዙ በራሱ ላይ ማስተካከል
+const originalToFixed = Number.prototype.toFixed;
+Number.prototype.toFixed = function(digits) {
+    let num = Number(this);
+    if (isNaN(num)) return originalToFixed.call(this, digits);
+    return num.toLocaleString('en-US', {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+    });
+};
 // ✅ አዲስ የተጨመረ: ገጹን ሳይዘጋ ዳታውን ብቻ አድስ
 window.softRefresh = function() {
     // የ Refresh ቁልፉን እያሽከረከረ እንዲመስል
