@@ -4255,7 +4255,16 @@ window.addEventListener('DOMContentLoaded', () => {
         window.history.replaceState({}, '', window.location.pathname);
     }, 3000);
 });
+// ✅ አዲስ የተጨመረ፦ ቁጥሮች በኮማ እንዲለያዩ ማድረግ (ለምሳሌ 123456.56 -> 123,456.56)
+const originalToFixed = Number.prototype.toFixed;
+Number.prototype.toFixed = function(digits) {
+    let num = Number(this);
+    if (isNaN(num)) return originalToFixed.call(this, digits);
+    return num.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+};
 
+console.log('✅ HaniTech Tracker loaded!');
+</script>
 console.log('✅ HaniTech Tracker loaded!');
 </script>
 </body>
