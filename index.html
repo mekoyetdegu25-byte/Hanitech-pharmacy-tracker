@@ -2953,42 +2953,99 @@ window.clearCart = function() { cart = []; renderCart(); };
 
 window.completeSale = async function() {
     if(cart.length === 0) { alert('Cart is empty'); return; }
+    
     const date = document.getElementById('sellDate').value; 
     const receipt = document.getElementById('sellReceipt').value.trim(); 
     const paymentMethod = document.getElementById('sellPaymentMethod').value;
     if(!date) { alert('Select date'); return; } 
+    
     let branch = document.getElementById('sellBranch').value;
     let totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0); 
     let customer = '';
     let paidAmount = totalAmount;
+    
     if (paymentMethod === 'credit') {
         customer = document.getElementById('sellCreditCustomer').value.trim();
         if (!customer) { alert('Enter customer name for credit'); return; }
         paidAmount = parseFloat(document.getElementById('sellCreditPaid').value) || 0;
         if (paidAmount > totalAmount) paidAmount = totalAmount;
     }
+
+    // 1. የካርቱን ኮፒ አድርግ (ለጀርባ ስራ)
+    const cartCopy = [...cart]; 
+    
+    // 2. ወዲያውኑ ሪሴፕቱን አሳይ (ከመጥራት በፊት ሁሉንም መረጃ አስተላልፍ)
+    printReceiptInstant(cartCopy, date, paymentMethod, customer, totalAmount, paidAmount);
+    
+    // 3. ካርቱን አጽዳ
+    cart = []; 
+    renderCart(); 
+    document.getElementById('sellReceipt').value = '';
+    document.getElementById('sellCreditCustomer').value = '';
+    document.getElementById('sellCreditPaid').value = '';
+
+    // 4. ዳታውን ወደ Firebase በጀርባ ላክ
     try {
-        const saleIds = [];
-        for(const item of cart) {
+        const salePromises = cartCopy.map(item => {
             const itemTotal = item.price * item.qty;
             const itemPaid = paymentMethod === 'credit' ? (itemTotal * (paidAmount/totalAmount)) : itemTotal;
-            const newSaleRef = await addDoc(collection(db, 'sales'), { 
+            
+            return addDoc(collection(db, 'sales'), { 
                 medicineId: item.id, medicineName: item.name, quantity: item.qty, unitPrice: item.price, 
                 total: itemTotal, paymentMethod: paymentMethod, paidAmount: itemPaid, 
-                date, branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
+                date: date, branch: branch, customer, receipt, timestamp: serverTimestamp(), pharmacyId: currentUserPharmacyId 
+            }).then(() => {
+                return updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
             });
-            saleIds.push(newSaleRef.id);
-            await updateDoc(doc(db, 'medicines', item.id), { quantity: increment(-item.qty) });
-        }
+        });
+
+        await Promise.all(salePromises);
         logActivity(`completed sale (Total: ${totalAmount} ETB)`);
-        if(saleIds.length > 0) printReceipt(saleIds[0]);
-        cart = []; renderCart(); 
-        document.getElementById('sellReceipt').value = '';
-        document.getElementById('sellCreditCustomer').value = '';
-        document.getElementById('sellCreditPaid').value = '';
         renderUnpaidCredits();
-    } catch(e) { alert(e.message); }
-}; 
+        
+    } catch(e) { 
+        alert("⚠️ ሽያጩ ላይ ችግር ተፈጥሯል። እባክህ ኢንተርኔትህን አረጋግጥ።"); 
+        console.error(e);
+    }
+};
+
+// ✅ አዲስ የሪሴፕት ማሳያ (paidAmount ተካቷል)
+function printReceiptInstant(cartItems, date, paymentMethod, customer, totalAmount, paidAmount) {
+    const phName = document.getElementById('hdrPharmacyName').innerText;
+    
+    let receiptItemsHtml = '';
+    cartItems.forEach(item => {
+        receiptItemsHtml += `
+            <tr>
+                <td style="padding-top: 5px;">${item.name}</td>
+                <td style="text-align: center; padding-top: 5px;">${item.qty}</td>
+                <td style="text-align: right; padding-top: 5px;">${(item.price * item.qty).toFixed(2)}</td>
+            </tr>
+        `;
+    });
+
+    const receiptHtml = `
+        <div style="text-align:center; margin-bottom: 20px;"><h2 style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">${phName}</h2><p style="font-size: 12px; margin: 0;">Receipt</p></div>
+        <div style="border-bottom: 1px dashed #000; margin-bottom: 10px; padding-bottom: 10px;">
+            <p style="margin: 2px 0; font-size: 12px;">Date: ${date}</p>
+            <p style="margin: 2px 0; font-size: 12px;">Customer: ${customer || 'Walk-in'}</p>
+        </div>
+        <table style="width: 100%; font-size: 12px; margin-bottom: 10px;">
+            <thead><tr style="border-bottom: 1px dashed #000;"><th style="text-align: left; padding-bottom: 5px;">Item</th><th style="text-align: center; padding-bottom: 5px;">Qty</th><th style="text-align: right; padding-bottom: 5px;">Total</th></tr></thead>
+            <tbody>${receiptItemsHtml}</tbody>
+        </table>
+        <div style="border-top: 1px dashed #000; padding-top: 10px; font-size: 12px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Total:</span><strong>${totalAmount.toFixed(2)} ETB</strong></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Paid:</span><strong>${paidAmount.toFixed(2)} ETB</strong></div>
+            ${paidAmount < totalAmount ? `<div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Unpaid (Credit):</span><strong>${(totalAmount - paidAmount).toFixed(2)} ETB</strong></div>` : ''}
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Payment Method:</span><strong style="text-transform: uppercase;">${paymentMethod}</strong></div>
+        </div>
+        <div style="text-align: center; margin-top: 20px; font-size: 11px;"><p>Thank you for your business!</p><p>Powered by HaniTech</p></div>
+    `;
+    
+    document.getElementById('printableReceipt').innerHTML = receiptHtml;
+    document.getElementById('receiptModal').classList.add('open');
+}
 
 window.addQuickSale = async function() {
     const type = document.getElementById('quickType').value; const branch = document.getElementById('quickBranch').value; const date = document.getElementById('quickDate').value; const amount = parseFloat(document.getElementById('quickAmount').value);
@@ -3020,16 +3077,38 @@ window.addBulkRow = function() {
 };
 
 window.updateBulkRowInfo = function(input) {
-    const val = input.value;
+    const val = input.value.trim();
     const row = input.closest('[id^="bulkRow_"]');
     const infoDiv = row.querySelector('.bulk-row-info');
     if(!val) { infoDiv.innerHTML = ''; return; }
-    const parts = val.split('|').map(p => p.trim());
-    const searchName = parts[0].toLowerCase();
-    const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
-    const med = allMedicines.find(m => (m.name && m.name.toLowerCase() === searchName) && (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch)));
-    if (med) { infoDiv.innerHTML = `✅ Found: <strong>${med.name}</strong> (Batch: ${med.batch || '-'}) | Available: ${med.quantity} | Price: ${med.price} ETB`; infoDiv.style.color = 'var(--primary)'; } 
-    else { infoDiv.innerHTML = `⚠️ Item not found in stock.`; infoDiv.style.color = '#ef4444'; }
+    
+    let med = null;
+    
+    // 1. በ Name | Batch አማራጭ (ከ datalist ሲመረጥ)
+    if (val.includes('|')) {
+        const parts = val.split('|').map(p => p.trim());
+        const searchName = parts[0].toLowerCase();
+        const searchBatch = parts[1] ? parts[1].toLowerCase() : '';
+        med = allMedicines.find(m => (m.name && m.name.toLowerCase() === searchName) && (!searchBatch || (m.batch && m.batch.toLowerCase() === searchBatch)));
+    } 
+    // 2. በ ስም ወይም በ Batch ቁጥር ብቻ ሲፈለግ
+    else {
+        const lowerVal = val.toLowerCase();
+        // በመጀመሪያ ትክክለኛውን (Exact match) ፈልግ
+        med = allMedicines.find(m => (m.batch || '').toLowerCase() === lowerVal) ||
+              allMedicines.find(m => (m.name || '').toLowerCase() === lowerVal) ||
+              allMedicines.find(m => (m.batch || '').toLowerCase().includes(lowerVal)) ||
+              allMedicines.find(m => (m.name || '').toLowerCase().includes(lowerVal));
+    }
+
+    if (med) { 
+        infoDiv.innerHTML = `✅ Found: <strong>${med.name}</strong> (Batch: ${med.batch || '-'}) | Available: ${med.quantity} | Price: ${med.price} ETB`; 
+        infoDiv.style.color = 'var(--primary)'; 
+    } 
+    else { 
+        infoDiv.innerHTML = `⚠️ Item not found in stock.`; 
+        infoDiv.style.color = '#ef4444'; 
+    }
 };
 
 window.saveBulkSales = async function() {
@@ -3287,21 +3366,35 @@ window.adjustStock = async function() {
     const id = document.getElementById('adjustMedId').value; 
     const qtyVal = document.getElementById('adjustQty').value;
     const priceVal = document.getElementById('adjustPrice').value;
+    
     if(!id) { alert('Select product'); return; }
+    
     let updateData = {};
-    if(qtyVal !== '') { const qty = parseInt(qtyVal); if(isNaN(qty) || qty < 0) { alert('Invalid quantity'); return; } updateData.quantity = qty; }
-    if(priceVal !== '') { const price = parseFloat(priceVal); if(isNaN(price) || price < 0) { alert('Invalid price'); return; } updateData.price = price; }
+    if(qtyVal !== '') { 
+        const qty = parseInt(qtyVal); 
+        if(isNaN(qty) || qty < 0) { alert('Invalid quantity'); return; } 
+        updateData.quantity = qty; 
+    }
+    if(priceVal !== '') { 
+        const price = parseFloat(priceVal); 
+        if(isNaN(price) || price < 0) { alert('Invalid price'); return; } 
+        updateData.price = price; 
+    }
     if(Object.keys(updateData).length === 0) { alert('Enter New Qty or New Price'); return; }
+
+    // ✅ 1. ፎርሙን ወዲያውኑ አጽዳ (ተጠቃሚው እንዲቀጥል)
+    document.getElementById('adjustQty').value = ''; 
+    document.getElementById('adjustPrice').value = ''; 
+    document.getElementById('adjustReason').value = ''; 
+
     try { 
+        // ✅ 2. ዋናውን መረጃ አዘምን
         await updateDoc(doc(db, 'medicines', id), updateData); 
-        logActivity(`adjusted stock for medicine ID: ${id}`);
-        alert('✅ Adjusted successfully!'); 
-                document.getElementById('adjustQty').value = ''; document.getElementById('adjustPrice').value = ''; document.getElementById('adjustReason').value = ''; 
         
-        // ✅ ወደ Purchase History መመዝገብ (አዲስ እቃ ሲገባ ብቻ)
+        // ✅ 3. የግዢ ታሪክን በጀርባ መዝግብ (ሳይጠብቅ)
         if (updateData.quantity !== undefined) {
             const med = allMedicines.find(m => m.id === id);
-            await addDoc(collection(db, 'purchases'), {
+            addDoc(collection(db, 'purchases'), {
                 medicineId: id,
                 name: med ? med.name : 'Unknown',
                 batch: med ? med.batch : '-',
@@ -3311,11 +3404,16 @@ window.adjustStock = async function() {
                 date: new Date().toISOString().split('T')[0],
                 timestamp: serverTimestamp(),
                 pharmacyId: currentUserPharmacyId
-            });
+            }).catch(err => console.log("Purchase log error:", err)); 
         }
-    } catch(e) { alert(e.message); }
-};
 
+        // ✅ 4. ምንም ፅሁፍ (alert/toast) አታሳይ - ዝም ብሎ ይቀጥል
+        logActivity(`adjusted stock for medicine ID: ${id}`);
+        
+    } catch(e) { 
+        console.error("Adjust error:", e);
+    }
+};
 // ✅ የግዢ ታሪክን ማሳያ ተግባር
 window.renderPurchaseHistory = async function() {
     const listEl = document.getElementById('purchaseHistoryList');
