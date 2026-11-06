@@ -1567,22 +1567,30 @@ window.toggleModernMenu = function() {
 function buildModernMenu() {
     const menu = document.getElementById('modernMobileMenu');
     
-    // ✅ Basic ፕላን ሲሆን የ Credit ሜኑን ከጎኑ PRO ምልክት ይዞ እንዲያሳይ እናድርግ
+    // ✅ ቋንቋውን ከአለምአቀፍ ተለዋዋጭ አንብብ
+    const currentLang = window.currentLang || 'am'; 
+    
+    const menuTranslations = {
+        am: { med: "መድኃኒት", sell: "ሽያጭ", exp: "ወጪዎች", inv: "ክምችት", dash: "ዳሽቦርድ", rep: "ሪፖርቶች", settings: "ሴቲንግ", credit: "ክሬዲት" },
+        en: { med: "Medicine", sell: "Sales", exp: "Expenses", inv: "Inventory", dash: "Dashboard", rep: "Reports", settings: "Settings", credit: "Credit" }
+    };
+    const t = menuTranslations[currentLang];
+
     const isBasic = window.currentUserPlan === 'basic';
-    const creditMenuTitle = isBasic ? 'Credit Management <span style="font-size:10px; background:#fef3c7; color:#d97706; padding:2px 6px; border-radius:4px; margin-left:5px; font-weight:bold;">PRO</span>' : 'Credit Management';
+    // ✅ የ PRO ምልክቱ በትክክለኛው ቋንቋ እንዲሆን
+    const creditMenuTitle = isBasic ? `${t.credit} <span style="font-size:10px; background:#fef3c7; color:#d97706; padding:2px 6px; border-radius:4px; margin-left:5px; font-weight:bold;">PRO</span>` : t.credit;
 
     const menuData = [
-        // 👇 በ title ውስጥ ያሉትን አይኮኖች ሁሉንም አውጥቻለሁ
-        { section: '💊 Medicine', items: [ { id: 'sub1_1', panel: 'panel1', title: 'Medicine List', icon: '📋' }, { id: 'sub1_2', panel: 'panel1', title: 'Add Medicine', icon: '➕' }, { id: 'sub1_3', panel: 'panel1', title: 'Categories', icon: '🗂️' } ] },
-        { section: '🛒 Sales', items: [ { id: 'sub2_1', panel: 'panel2', title: 'New Sale', icon: '🛒' }, { id: 'sub2_2', panel: 'panel2', title: 'Quick Sale', icon: '⚡' }, { id: 'sub2_3', panel: 'panel2', title: 'Sales History', icon: '📜' } ] },
-        { section: '💸 Expenses', items: [ { id: 'sub3_1', panel: 'panel3', title: 'Daily Expense', icon: '💸' }, { id: 'sub3_2', panel: 'panel3', title: 'Fixed Expense', icon: '🏢' }, { id: 'sub3_list', panel: 'panel3', title: 'Expense List', icon: '📋' }, { id: 'sub3_3', panel: 'panel3', title: 'Categories', icon: '🗂️' } ] },
-        { section: '📦 Inventory', items: [ { id: 'sub4_1', panel: 'panel4', title: 'Inventory List', icon: '📦' }, { id: 'sub4_2', panel: 'panel4', title: 'Expiry & Low Stock', icon: '⚠️' }, { id: 'sub4_3', panel: 'panel4', title: 'Stock Adjust', icon: '🔧' }, { id: 'sub4_4', panel: 'panel4', title: 'Purchase History', icon: '📥' }, { id: 'sub4_5', panel: 'panel4', title: 'Auto Re-order', icon: '🛒' } ] },
-        { section: '📊 Dashboard & Reports', items: [ { id: null, panel: 'panel7', title: 'Dashboard', icon: '📊' }, { id: 'sub8_1', panel: 'panel8', title: 'General Report', icon: '📄' }, { id: 'sub8_2', panel: 'panel8', title: 'Daily Report', icon: '📅' }, { id: 'sub8_3', panel: 'panel8', title: 'Monthly Report', icon: '📆' } ] },
+        { section: '💊 ' + t.med, items: [ { id: 'sub1_1', panel: 'panel1', title: 'Medicine List', icon: '📋' }, { id: 'sub1_2', panel: 'panel1', title: 'Add Medicine', icon: '➕' }, { id: 'sub1_3', panel: 'panel1', title: 'Categories', icon: '🗂️' } ] },
+        { section: '🛒 ' + t.sell, items: [ { id: 'sub2_1', panel: 'panel2', title: 'New Sale', icon: '🛒' }, { id: 'sub2_2', panel: 'panel2', title: 'Quick Sale', icon: '⚡' }, { id: 'sub2_3', panel: 'panel2', title: 'Sales History', icon: '📜' } ] },
+        { section: '💸 ' + t.exp, items: [ { id: 'sub3_1', panel: 'panel3', title: 'Daily Expense', icon: '💸' }, { id: 'sub3_2', panel: 'panel3', title: 'Fixed Expense', icon: '🏢' }, { id: 'sub3_list', panel: 'panel3', title: 'Expense List', icon: '📋' }, { id: 'sub3_3', panel: 'panel3', title: 'Categories', icon: '🗂️' } ] },
+        { section: '📦 ' + t.inv, items: [ { id: 'sub4_1', panel: 'panel4', title: 'Inventory List', icon: '📦' }, { id: 'sub4_2', panel: 'panel4', title: 'Expiry & Low Stock', icon: '⚠️' }, { id: 'sub4_3', panel: 'panel4', title: 'Stock Adjust', icon: '🔧' }, { id: 'sub4_4', panel: 'panel4', title: 'Purchase History', icon: '📥' }, { id: 'sub4_5', panel: 'panel4', title: 'Auto Re-order', icon: '🛒' } ] },
+        { section: '📊 ' + t.dash + ' & ' + t.rep, items: [ { id: null, panel: 'panel7', title: 'Dashboard', icon: '📊' }, { id: 'sub8_1', panel: 'panel8', title: 'General Report', icon: '📄' }, { id: 'sub8_2', panel: 'panel8', title: 'Daily Report', icon: '📅' }, { id: 'sub8_3', panel: 'panel8', title: 'Monthly Report', icon: '📆' } ] },
         { 
             section: '⚙️ System', 
             items: [ 
                 { id: null, panel: 'panel10', title: creditMenuTitle, icon: '💳' }, 
-                { id: null, panel: 'panel9', title: 'Settings', icon: '⚙️' } 
+                { id: null, panel: 'panel9', title: t.settings, icon: '⚙️' } 
             ] 
         }
     ];
@@ -1599,19 +1607,30 @@ function buildModernMenu() {
                 else if (activeSub && activeSub.id === item.id) isActive = true;
             }
             
-            // ✅ ሲነካ የሚሰራው ኮድ (Basic ከሆነ ማሳወቂያ እንዲያሳይ)
+            let displayTitle = item.title;
+            const cleanTitle = item.title.replace(/<[^>]*>?/gm, '').trim();
+            
+            if (currentLang === 'am' && autoTranslations[cleanTitle]) {
+                displayTitle = autoTranslations[cleanTitle];
+            } else if (currentLang === 'am' && autoTranslations[item.title]) {
+                displayTitle = autoTranslations[item.title];
+            }
+
+            if (item.title.includes('PRO') && currentLang === 'am') {
+                const amText = autoTranslations[cleanTitle] || cleanTitle;
+                displayTitle = `${amText} <span style="font-size:10px; background:#fef3c7; color:#d97706; padding:2px 6px; border-radius:4px; margin-left:5px; font-weight:bold;">PRO</span>`;
+            }
+
             let clickAction = '';
             if (item.panel === 'panel10' && window.currentUserPlan === 'basic') {
                 clickAction = `showProPlanModal(event)`;
             } else {
-                // ርዕሱን ስንልክ የ HTML tag ካለው (ለምሳሌ PRO ምልክት) አጥፍተን እንላክ
-                const cleanTitle = item.title.replace(/<[^>]*>?/gm, '');
                 clickAction = `modernNavClick('${item.panel}', ${item.id ? `'${item.id}'` : 'null'}, '${cleanTitle}')`;
             }
 
             html += `<div class="modern-menu-item ${isActive ? 'active' : ''}" onclick="${clickAction}">
                 <div class="icon">${item.icon}</div>
-                <div>${item.title}</div>
+                <div>${displayTitle}</div>
             </div>`;
         });
         html += `</div>`;
@@ -2102,13 +2121,51 @@ function setupRealtimeListeners() {
 // 🌐 SETTINGS, SECURITY & TRANSLATIONS
 // ==========================================
 window.previewLanguage = function(lang) { applyLanguage(lang); };
+        // ✅ ገጹ ሲጫን የተመረጠውን ቋንቋ አስነብብ
+try {
+    const savedLang = localStorage.getItem('hanitech_lang');
+    if (savedLang) {
+        window.currentLang = savedLang;
+    } else {
+        window.currentLang = 'am'; // ነባሪ
+    }
+} catch(e) {
+    window.currentLang = 'am';
+}
+
+// ✅ ራስ-ሰር ተርጓሚ (Automatic Dictionary)
+const autoTranslations = {
+    // Main Menus
+    "Medicine": "መድኃኒት", "Sales": "ሽያጭ", "Expenses": "ወጪዎች", "Inventory": "ክምችት", "Dashboard": "ዳሽቦርድ", "Reports": "ሪፖርቶች", "Settings": "ሴቲንግ", "Credit": "ክሬዲት",
+    // Sub Menus
+    "Medicine List": "የመድኃኒት ዝርዝር", "Add Medicine": "መድኃኒት ጨምር", "Categories": "ምድቦች",
+    "New Sale": "አዲስ ሽያጭ", "Quick Sale": "ፈጣን ሽያጭ", "Sales History": "የሽያጭ ታሪክ",
+    "Daily Expense": "ዕለታዊ ወጪ", "Fixed Expense": "ቋሚ ወጪ", "Expense List": "የወጪ ዝርዝር",
+    "Inventory List": "የክምችት ዝርዝር", "Expiry & Low Stock": "ጊዜ ማለፍ እና ክምችት", "Stock Adjust": "ክምችት አስተካክል", "Purchase History": "የግዢ ታሪክ", "Auto Re-order": "ራስ-ሰር ማዘዣ",
+    "General Report": "አጠቃላይ ሪፖርት", "Daily Report": "ዕለታዊ ሪፖርት", "Monthly Report": "ወርሃዊ ሪፖርት",
+    "Credit Management": "ክሬዲት አስተዳደር",
+    // General UI
+    "Sign Out": "ውጣ", "Branch": "ቅርንጫፍ", "Type": "ዓይነት", "Category": "ምድብ", "Sub Cat": "ንዑስ ምድብ",
+    "Item Name": "የዕቃ ስም", "Batch": "ባች", "Exp Date": "የሚያልቅበት ቀን", "Supplier": "አቅራቢ",
+    "Cost": "የግዢ ዋጋ", "Price": "የሽያጭ ዋጋ", "Qty": "ብዛት", "Action": "ተግባር",
+    "All Types": "ሁሉም ዓይነቶች", "All Branches": "ሁሉም ቅርንጫፎች",
+    "Show": "አሳይ", "entries": "መዝገቦች", "Page": "ገጽ", "Prev": "ቀዳሚ", "Next": "ቀጣይ",
+    "Revenue": "ገቢ", "Net Profit": "ትርፍ", "Transactions": "ግብይቶች",
+    "Save": "አስቀምጥ", "Delete": "አጥፋ", "Edit": "አስተካክል", "Close": "ዝጋ", "Print": "አትም", "Search": "ፈልግ"
+};
 
 function applyLanguage(lang) {
-    const translations = {
+    // ✅ ቋንቋውን በአለምአቀፍ ተለዋዋጭ አስቀምጠው
+    window.currentLang = lang;
+    try { localStorage.setItem('hanitech_lang', lang); } catch (e) {}
+
+    // 1. የግራ ሜኑ ዋና ርዕሶች
+    const menuTranslations = {
         am: { med: "መድኃኒት", sell: "ሽያጭ", exp: "ወጪዎች", inv: "ክምችት", dash: "ዳሽቦርድ", rep: "ሪፖርቶች", settings: "ሴቲንግ", credit: "ክሬዲት" },
         en: { med: "Medicine", sell: "Sales", exp: "Expenses", inv: "Inventory", dash: "Dashboard", rep: "Reports", settings: "Settings", credit: "Credit" }
     };
-    const t = translations[lang] || translations['en'];
+    const t = menuTranslations[lang] || menuTranslations['en'];
+    
     document.querySelectorAll('[data-lang="med"]').forEach(el => el.innerText = t.med);
     document.querySelectorAll('[data-lang="sell"]').forEach(el => el.innerText = t.sell);
     document.querySelectorAll('[data-lang="exp"]').forEach(el => el.innerText = t.exp);
@@ -2117,8 +2174,67 @@ function applyLanguage(lang) {
     document.querySelectorAll('[data-lang="rep"]').forEach(el => el.innerText = t.rep);
     document.querySelectorAll('[data-lang="settings"]').forEach(el => el.innerText = t.settings);
     document.querySelectorAll('[data-lang="credit"]').forEach(el => el.innerText = t.credit);
-}
 
+    // 2. ንዑስ ሜኑዎችን እና ሌሎች ጽሑፎችን በራስ-ሰር መቀየር
+    const subMenus = document.querySelectorAll('.sub-menu label');
+    subMenus.forEach(el => {
+        // የውስጡን ጽሑፍ ማውጣት (አይኮን ሳይጨምር)
+        let text = el.innerText.replace(/[^\w\s&]/g, '').trim();
+        if(!text) {
+            // አይኮን ካለው በመጨረሻ ያለውን ጽሑፍ እንውሰድ
+            text = el.innerHTML.replace(/<[^>]*>?/gm, '').trim();
+        }
+        
+        if (lang === 'am' && autoTranslations[text]) {
+            el.innerHTML = el.innerHTML.replace(text, autoTranslations[text]);
+        } else if (lang === 'en') {
+            const reverseText = Object.keys(autoTranslations).find(key => autoTranslations[key] === text);
+            if (reverseText) {
+                el.innerHTML = el.innerHTML.replace(text, reverseText);
+            }
+        }
+    });
+
+    // 3. ሌሎች በገጹ ላይ ያሉ ጽሑፎች (Buttons, Labels, Table Headers)
+    const allElements = document.querySelectorAll('button, th, h4, span, div, option, p');
+    allElements.forEach(el => {
+        if (el.children.length > 0) return; 
+        let text = el.innerText || el.textContent;
+        if (!text) return;
+        text = text.trim();
+        const isAmharic = /[\u1200-\u137F]/.test(text);
+
+        if (lang === 'am' && !isAmharic) {
+            if (autoTranslations[text]) el.innerText = autoTranslations[text];
+        } else if (lang === 'en' && isAmharic) {
+            const reverseText = Object.keys(autoTranslations).find(key => autoTranslations[key] === text);
+            if (reverseText) el.innerText = reverseText;
+        }
+    });
+
+    // 4. የፕላስሆልደር ጽሑፎች
+    const placeholders = {
+        "Search by name or batch...": "በስም ወይም በባች ፈልግ...", "Type to search category...": "ምድብ ለመፈለግ ጻፍ...",
+        "Type to search subcategory...": "ንዑስ ምድብ ለመፈለግ ጻፍ...", "Search Product by name or barcode...": "በስም ወይም በባርኮድ ፈልግ...",
+        "e.g. Paracetamol": "ለምሳሌ፦ ፓራሲታሞል", "Scan or type barcode...": "ባርኮድ ስካን አድርግ ወይም ጻፍ...",
+        "Search...": "ፈልግ...", "Type to search...": "ለመፈለግ ጻፍ..."
+    };
+    document.querySelectorAll('input').forEach(input => {
+        const ph = input.placeholder;
+        if (!ph) return;
+        const isAmharicPh = /[\u1200-\u137F]/.test(ph);
+        if (lang === 'am' && !isAmharicPh && placeholders[ph]) input.placeholder = placeholders[ph];
+        else if (lang === 'en' && isAmharicPh) {
+            const reversePh = Object.keys(placeholders).find(key => placeholders[key] === ph);
+            if (reversePh) input.placeholder = reversePh;
+        }
+    });
+
+    // 5. የሞባይል ሜኑ ክፍት ካለ እንዲዘመን
+    if(document.getElementById('modernMobileMenu') && document.getElementById('modernMobileMenu').classList.contains('open')) {
+        buildModernMenu();
+    }
+}
 window.changePassword = async function() {
     const currentPass = document.getElementById('currentPasswordInput').value;
     const newPass = document.getElementById('newPasswordInput').value;
