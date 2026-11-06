@@ -2177,17 +2177,34 @@ window.checkSystemAlerts = function() {
 
 function setupRealtimeListeners() {
     if(unsubMedicines) unsubMedicines(); if(unsubSales) unsubSales(); if(unsubExpenses) unsubExpenses(); if(unsubFixed) unsubFixed(); if(unsubCredit) unsubCredit(); if(unsubQuickSales) unsubQuickSales();
+
+    // ✅ የቅርብ 3 ወራት ቀን ማስላት
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+    const dateLimit = threeMonthsAgo.toISOString().split('T')[0];
+    
+    // መድኃኒቶች ገደብ የላቸውም (ሁሉም ያስፈልጋሉ)
     unsubMedicines = onSnapshot(query(collection(db, 'medicines'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); temp.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); allMedicines = temp; renderMedList(); loadInventory(); renderSellProducts(); setTimeout(applyUniversalMobileCollapse, 100); });
-    unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { 
+    
+    // ✅ ሽያጮች፦ የቅርብ 3 ወር ብቻ
+    unsubSales = onSnapshot(query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit)), (snapshot) => { 
         let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); 
         allSales = temp; 
         calculateStockReport(); loadInventory(); loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); renderUnpaidCredits(); 
         setTimeout(applyUniversalMobileCollapse, 100);
     });
-    unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
-    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); setTimeout(applyUniversalMobileCollapse, 100); });
-    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
-    unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; renderUnpaidCredits(); });
+    
+    // ✅ ፈጣን ሽያጮች፦ የቅርብ 3 ወር ብቻ
+    unsubQuickSales = onSnapshot(query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allQuickSales = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderSalesHistory(); });
+    
+    // ✅ ወጪዎች፦ የቅርብ 3 ወር ብቻ
+    unsubExpenses = onSnapshot(query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allExpenses = temp; loadDailyReport(); loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); setTimeout(applyUniversalMobileCollapse, 100); });
+    
+    // ✅ ቋሚ ወጪዎች፦ የቅርብ 3 ወር ብቻ
+    unsubFixed = onSnapshot(query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId), where('month', '>=', dateLimit.slice(0,7))), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allFixed = temp; loadMonthlyReport(); loadDashboard(); renderAllExpensesList(); });
+    
+    // ✅ ክሬዲት ክፍያዎች፦ የቅርብ 3 ወር ብቻ
+    unsubCredit = onSnapshot(query(collection(db, 'creditPayments'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', dateLimit)), (snapshot) => { let temp = []; snapshot.forEach(doc => temp.push({ id: doc.id, ...doc.data() })); allCreditPayments = temp; renderUnpaidCredits(); });
 }
 
 // ==========================================
@@ -3875,7 +3892,7 @@ window.exportReportToCSV = function() {
 };
 };
 
-window.renderSalesHistory = function() {
+window.renderSalesHistory = async function() {
     const listEl = document.getElementById('salesHistoryList'); if (!listEl) return;
     const rowsPerPage = parseInt(document.getElementById('salesHistRowsPerPage').value) || 10;
     let combined = []; allSales.forEach(s => combined.push({ ...s, _type: 'sale' })); allQuickSales.forEach(q => combined.push({ ...q, _type: 'quick' }));
@@ -3883,6 +3900,20 @@ window.renderSalesHistory = function() {
     const branchFilter = document.getElementById('filterBranchSalesHistory')?.value || 'all'; 
     const startDate = document.getElementById('filterStartDate')?.value;
     const endDate = document.getElementById('filterEndDate')?.value;
+
+    // ✅ አዲስ የተጨመረ፡ የቆየ ቀን ከተመረጠ ከ Firebase ፈልጎ ማምጣት
+    if (startDate && endDate) {
+        const hasData = combined.some(c => c.date >= startDate && c.date <= endDate);
+        if (!hasData) {
+            try {
+                const qS = query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', startDate), where('date', '<=', endDate));
+                const qQ = query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', startDate), where('date', '<=', endDate));
+                const [sSnap, qSnap] = await Promise.all([getDocs(qS), getDocs(qQ)]);
+                sSnap.forEach(d => combined.push({ id: d.id, ...d.data(), _type: 'sale' }));
+                qSnap.forEach(d => combined.push({ id: d.id, ...d.data(), _type: 'quick' }));
+            } catch(e) { console.error("Sales history fetch error:", e); }
+        }
+    }
     if (filter === 'detail') combined = combined.filter(c => c._type === 'sale'); 
     if (filter === 'quick') combined = combined.filter(c => c._type === 'quick');
     if (branchFilter !== 'all') combined = combined.filter(c => c.branch === branchFilter);
@@ -3924,7 +3955,25 @@ async function loadDailyReport() {
     const branch = document.getElementById('dailyReportBranch')?.value || 'all'; 
     const searchDaily = (document.getElementById('searchDailySales')?.value || '').toLowerCase();
     const rowsPerPage = parseInt(document.getElementById('dailyRowsPerPage')?.value) || 10;
-    let daySales = allSales.filter(s => s.date === selDate); let dayQuick = allQuickSales.filter(q => q.date === selDate); let dayExp = allExpenses.filter(e => e.date === selDate);
+
+    let daySales = allSales.filter(s => s.date === selDate); 
+    let dayQuick = allQuickSales.filter(q => q.date === selDate); 
+    let dayExp = allExpenses.filter(e => e.date === selDate);
+
+    // ✅ አዲስ የተጨመረ፡ ዳታው በስልኩ ላይ ከሌለ (የቆየ ቀን ከሆነ) ከ Firebase ፈልጎ ማምጣት
+    if (daySales.length === 0 && dayQuick.length === 0 && dayExp.length === 0) {
+        try {
+            const qS = query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '==', selDate));
+            const qQ = query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '==', selDate));
+            const qE = query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '==', selDate));
+            
+            const [sSnap, qSnap, eSnap] = await Promise.all([getDocs(qS), getDocs(qQ), getDocs(qE)]);
+            
+            sSnap.forEach(d => daySales.push({ id: d.id, ...d.data() }));
+            qSnap.forEach(d => dayQuick.push({ id: d.id, ...d.data() }));
+            eSnap.forEach(d => dayExp.push({ id: d.id, ...d.data() }));
+        } catch(e) { console.error("Daily fetch error:", e); }
+    }
     if (branch !== 'all') { daySales = daySales.filter(s => s.branch === branch); dayQuick = dayQuick.filter(q => q.branch === branch); dayExp = dayExp.filter(e => e.branch === branch); } 
     let totalRev = 0, totalExp = 0; let cash = 0, transfer = 0, credit = 0; let salesHtml = '';
     let combinedSales = [];
@@ -3969,7 +4018,30 @@ async function loadMonthlyReport() {
     const branch = document.getElementById('monthlyReportBranch')?.value || 'all'; 
     const searchMonthly = (document.getElementById('searchMonthlySales')?.value || '').toLowerCase();
     const rowsPerPage = parseInt(document.getElementById('monthlyRowsPerPage')?.value) || 10;
-    let monthSales = allSales.filter(s => s.date.startsWith(selMonth)); let monthQuick = allQuickSales.filter(q => q.date.startsWith(selMonth)); let monthExp = allExpenses.filter(e => e.date.startsWith(selMonth)); let monthFixed = allFixed.filter(f => f.month === selMonth);
+
+    let monthSales = allSales.filter(s => s.date.startsWith(selMonth)); 
+    let monthQuick = allQuickSales.filter(q => q.date.startsWith(selMonth)); 
+    let monthExp = allExpenses.filter(e => e.date.startsWith(selMonth)); 
+    let monthFixed = allFixed.filter(f => f.month === selMonth);
+
+    // ✅ አዲስ የተጨመረ፡ ዳታው በስልኩ ላይ ከሌለ ከ Firebase ፈልጎ ማምጣት
+    if (monthSales.length === 0 && monthQuick.length === 0 && monthExp.length === 0 && monthFixed.length === 0) {
+        try {
+            const startD = selMonth + '-01';
+            const endD = selMonth + '-31';
+            const qS = query(collection(db, 'sales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', startD), where('date', '<=', endD));
+            const qQ = query(collection(db, 'quickSales'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', startD), where('date', '<=', endD));
+            const qE = query(collection(db, 'expenses'), where('pharmacyId', '==', currentUserPharmacyId), where('date', '>=', startD), where('date', '<=', endD));
+            const qF = query(collection(db, 'fixedExpenses'), where('pharmacyId', '==', currentUserPharmacyId), where('month', '==', selMonth));
+            
+            const [sSnap, qSnap, eSnap, fSnap] = await Promise.all([getDocs(qS), getDocs(qQ), getDocs(qE), getDocs(qF)]);
+            
+            sSnap.forEach(d => monthSales.push({ id: d.id, ...d.data() }));
+            qSnap.forEach(d => monthQuick.push({ id: d.id, ...d.data() }));
+            eSnap.forEach(d => monthExp.push({ id: d.id, ...d.data() }));
+            fSnap.forEach(d => monthFixed.push({ id: d.id, ...d.data() }));
+        } catch(e) { console.error("Monthly fetch error:", e); }
+    }
     if (branch !== 'all') { monthSales = monthSales.filter(s => s.branch === branch); monthQuick = monthQuick.filter(q => q.branch === branch); monthExp = monthExp.filter(e => e.branch === branch); }
     let totalRev = 0, totalExp = 0, totalFixed = 0; let cash = 0, transfer = 0, credit = 0; let salesHtml = '';
     let combinedSales = [];
