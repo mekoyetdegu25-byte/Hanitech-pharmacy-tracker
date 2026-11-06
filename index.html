@@ -1282,7 +1282,51 @@ input:checked + .slider:before { transform: translateX(20px); }
                                     <button class="btn btn-primary" onclick="savePharmacyInfo()">💾 Save Info</button>
                                 </div>
                             </div>
-                            
+                        
+                            <!-- ✅ EMPLOYEE MANAGEMENT (አዲስ የተጨመረ) -->
+                            <div class="section-collapsible">
+                                <div class="section-header" onclick="document.getElementById('bodyEmployeeMgr').classList.toggle('open'); this.classList.toggle('open');">
+                                    <div class="sec-left"><span class="sec-arrow">▶</span><span class="sec-icon">👥</span><span class="sec-title">Employee Management</span></div>
+                                </div>
+                                <div class="section-body" id="bodyEmployeeMgr">
+                                    <div style="background: var(--bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px;">
+                                        <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--primary);" id="empFormTitle">➕ Add New Employee</h4>
+                                        <input type="hidden" id="editEmpId">
+                                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                            <div><label class="field-label" for="empEmail">📧 Email</label><input type="email" id="empEmail" placeholder="employee@pharmacy.com"></div>
+                                            <div><label class="field-label" for="empPassword">🔒 Password</label><input type="password" id="empPassword" placeholder="Min 6 characters"></div>
+                                            <div>
+                                                <label class="field-label" for="empRole">👤 Role</label>
+                                                <select id="empRole">
+                                                    <option value="employee">👤 Employee</option>
+                                                    <option value="manager">🎯 Manager</option>
+                                                    <option value="accountant">📊 Accountant</option>
+                                                </select>
+                                            </div>
+                                            <div id="empBranchWrapper">
+                                                <label class="field-label" for="empBranch">🏢 Assigned Branch</label>
+                                                <select id="empBranch"></select>
+                                            </div>
+                                        </div>
+                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 15px; padding: 10px; background: rgba(16, 185, 129, 0.05); border-radius: 8px;">
+                                            <div>
+                                                <div style="font-weight:600; font-size:13px;">View All Branches</div>
+                                                <div style="font-size:11px; color:var(--text-muted);">Allow this user to see data from all branches.</div>
+                                            </div>
+                                            <label class="toggle-switch"><input type="checkbox" id="empViewAllBranches" onchange="toggleEmpBranchField()"><span class="slider"></span></label>
+                                        </div>
+                                        <div style="display:flex; gap: 10px; margin-top:15px; justify-content: flex-end;">
+                                            <button class="btn btn-outline" style="width:auto; padding:10px 24px; margin-top:0; display:none;" onclick="resetEmployeeForm()" id="btnCancelEdit">Cancel</button>
+                                            <button class="btn btn-success" style="width:auto; padding:10px 24px; margin-top:0;" onclick="saveEmployee()" id="btnSaveEmp">➕ Create Employee</button>
+                                        </div>
+                                    </div>
+                                    <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">📋 Current Employees</h4>
+                                    <div id="employeeListDisplay" style="width: 100%; overflow-x: auto;">
+                                        <p style="text-align:center; color:var(--text-muted);">Loading employees...</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- SECURITY & PASSWORD -->
                             <div class="section-collapsible">
                                 <div class="section-header" onclick="document.getElementById('bodyPass').classList.toggle('open'); this.classList.toggle('open');">
@@ -1502,7 +1546,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp, doc, updateDoc, increment, where, getDoc, setDoc, deleteDoc, onSnapshot, writeBatch, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"; 
 
 const firebaseConfig = {
@@ -1990,6 +2034,137 @@ async function loadSupportInfo() {
         }
     } catch(e) { console.error('Support info error:', e); }
 }
+    // ==========================================
+// 👥 EMPLOYEE MANAGEMENT
+// ==========================================
+window.toggleEmpBranchField = function() {
+    const viewAll = document.getElementById('empViewAllBranches').checked;
+    document.getElementById('empBranchWrapper').style.display = viewAll ? 'none' : 'block';
+};
+
+window.resetEmployeeForm = function() {
+    document.getElementById('editEmpId').value = '';
+    document.getElementById('empEmail').value = '';
+    document.getElementById('empEmail').disabled = false;
+    document.getElementById('empPassword').value = '';
+    document.getElementById('empPassword').placeholder = 'Min 6 characters';
+    document.getElementById('empRole').value = 'employee';
+    document.getElementById('empBranch').value = 'all';
+    document.getElementById('empViewAllBranches').checked = false;
+    toggleEmpBranchField();
+    
+    document.getElementById('empFormTitle').innerText = '➕ Add New Employee';
+    document.getElementById('btnSaveEmp').innerText = '➕ Create Employee';
+    document.getElementById('btnCancelEdit').style.display = 'none';
+};
+
+window.saveEmployee = async function() {
+    const empId = document.getElementById('editEmpId').value;
+    const email = document.getElementById('empEmail').value.trim();
+    const password = document.getElementById('empPassword').value;
+    const role = document.getElementById('empRole').value;
+    const branch = document.getElementById('empBranch').value;
+    const viewAllBranches = document.getElementById('empViewAllBranches').checked;
+
+    if (!email) { alert('⚠️ ኢሜል ሙላ።'); return; }
+    if (!viewAllBranches && (!branch || branch === 'all')) { alert('⚠️ ቅርንጫፍ መምረጥ አለብህ።'); return; }
+    if (!empId && (!password || password.length < 6)) { alert('⚠️ ቢያንስ 6 ፊደላት ያለው ፓስወርድ ያስፈልጋል።'); return; }
+
+    try {
+        if (empId) {
+            await updateDoc(doc(db, 'users', empId), {
+                role: role,
+                branch: viewAllBranches ? 'all' : branch,
+                viewAllBranches: viewAllBranches
+            });
+            alert('✅ መረጃው ተሻሽሏል!');
+        } else {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, 'users', userCredential.user.uid), {
+                email: email,
+                role: role,
+                branch: viewAllBranches ? 'all' : branch,
+                viewAllBranches: viewAllBranches,
+                pharmacyId: currentUserPharmacyId,
+                isTempPassword: false,
+                createdAt: serverTimestamp()
+            });
+            alert(`✅ ሰራተኛው ተፈጥሯል! (${email})`);
+        }
+        resetEmployeeForm();
+        loadEmployeesList(); 
+        logActivity(`saved employee: ${email}`);
+    } catch (error) {
+        if (error.code === 'auth/email-already-in-use') alert('❌ ይህ ኢሜል አስቀድሞ ተመዝግቧል።');
+        else alert('❌ ስህተት: ' + error.message);
+    }
+};
+
+window.loadEmployeesList = async function() {
+    const listEl = document.getElementById('employeeListDisplay');
+    if (!listEl) return;
+    try {
+        const snap = await getDocs(query(collection(db, 'users'), where('pharmacyId', '==', currentUserPharmacyId)));
+        let employees = [];
+        snap.forEach(doc => { 
+            const data = doc.data();
+            if (data.email !== document.getElementById('hdrUserEmail').innerText) employees.push({ id: doc.id, ...data }); 
+        });
+
+        if (employees.length === 0) {
+            listEl.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">ምንም ሰራተኛ አልተፈጠረም።</p>';
+            return;
+        }
+
+        let html = `<table class="data-table"><thead><tr><th>Email</th><th>Role</th><th>Access</th><th>Action</th></tr></thead><tbody>`;
+        employees.forEach(emp => {
+            const accessText = emp.viewAllBranches ? '<span style="color:#3b82f6; font-weight:bold;">🌍 All Branches</span>' : `<span style="color:var(--primary); font-weight:bold;">🏢 ${emp.branch || '-'}</span>`;
+            html += `<tr>
+                <td><strong>${emp.email}</strong></td>
+                <td><span style="text-transform: capitalize; font-size:12px; padding:2px 6px; background:var(--border); border-radius:4px;">${emp.role}</span></td>
+                <td>${accessText}</td>
+                <td>
+                    <button class="action-btn btn-edit" onclick="editEmployee('${emp.id}')">✏️ Edit</button>
+                    <button class="action-btn btn-delete" onclick="deleteEmployeeData('${emp.id}', '${emp.email}')">🗑️ Delete</button>
+                </td>
+            </tr>`;
+        });
+        html += `</tbody></table>`;
+        listEl.innerHTML = html;
+    } catch (e) { listEl.innerHTML = '<p style="color:red;">Error loading employees.</p>'; }
+};
+
+window.editEmployee = async function(userId) {
+    try {
+        const docSnap = await getDoc(doc(db, 'users', userId));
+        if (!docSnap.exists()) return;
+        const data = docSnap.data();
+        
+        document.getElementById('editEmpId').value = userId;
+        document.getElementById('empEmail').value = data.email;
+        document.getElementById('empEmail').disabled = true;
+        document.getElementById('empPassword').value = '';
+        document.getElementById('empPassword').placeholder = '(Leave blank to keep current)';
+        document.getElementById('empRole').value = data.role || 'employee';
+        document.getElementById('empBranch').value = data.branch === 'all' ? 'all' : data.branch;
+        document.getElementById('empViewAllBranches').checked = data.viewAllBranches === true;
+        
+        toggleEmpBranchField();
+        document.getElementById('empFormTitle').innerText = '✏️ Edit Employee';
+        document.getElementById('btnSaveEmp').innerText = '💾 Save Changes';
+        document.getElementById('btnCancelEdit').style.display = 'block';
+        document.getElementById('empFormTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+window.deleteEmployeeData = async function(userId, email) {
+    if (!confirm(`⚠️ እርግጠኛ ነህ? የ ${email} መረጃ ከዳታቤዝ ይሰረዛል።`)) return;
+    try {
+        await deleteDoc(doc(db, 'users', userId));
+        alert('✅ የሰራተኛው መረጃ ተሰርዟል።');
+        loadEmployeesList();
+    } catch(e) { alert('Error: ' + e.message); }
+};
 
 window.toggleDarkMode = function(isDark) {
     if (isDark) document.body.classList.add('dark-mode');
@@ -2030,9 +2205,10 @@ async function loadSettingsData() {
             });
         }
         loadAuditTrail();
+        loadEmployeesList();
     } catch (e) { console.error("Error loading settings:", e); }
 }
-
+    
 async function logActivity(actionText) {
     try {
         const userEmail = document.getElementById('hdrUserEmail').innerText;
@@ -2444,7 +2620,7 @@ async function loadBranches() {
     try {
         const snap = await getDocs(query(collection(db, 'branches'), where('pharmacyId', '==', currentUserPharmacyId)));
         allBranches = []; 
-        const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch', 'transferFromBranch', 'transferToBranch', 'filterBranchMed'];
+        const selects = ['sellBranch', 'expBranch', 'quickBranch', 'dailyReportBranch', 'monthlyReportBranch', 'filterBranchInv', 'medBranch', 'dashBranchFilter', 'repBranchFilter', 'filterBranchSalesHistory', 'fixBranch', 'filterBranchAlert', 'adjustBranch', 'filterBranchCredit', 'creditBranchSelect', 'quickBulkBranch', 'listFilterBranch', 'transferFromBranch', 'transferToBranch', 'filterBranchMed', 'empBranch']; // 👈 'empBranch' ተጨምሯል
         selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML = '<option value="all">All Branches</option>'; });
         snap.forEach(doc => { const bName = doc.data().name; allBranches.push(bName); selects.forEach(id => { const sel = document.getElementById(id); if (sel) sel.innerHTML += `<option value="${bName}">${bName}</option>`; }); });
         renderBranchList();
