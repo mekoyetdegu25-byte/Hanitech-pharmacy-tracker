@@ -1566,17 +1566,24 @@ window.toggleModernMenu = function() {
 
 function buildModernMenu() {
     const menu = document.getElementById('modernMobileMenu');
+    
+    // ✅ Basic ፕላን ሲሆን የ Credit ሜኑን ከጎኑ PRO ምልክት ይዞ እንዲያሳይ እናድርግ
+    const isBasic = window.currentUserPlan === 'basic';
+    const creditMenuTitle = isBasic ? 'Credit Management <span style="font-size:10px; background:#fef3c7; color:#d97706; padding:2px 6px; border-radius:4px; margin-left:5px; font-weight:bold;">PRO</span>' : 'Credit Management';
+
     const menuData = [
-        { section: '💊 Medicine', items: [ { id: 'sub1_1', panel: 'panel1', title: '📋 Medicine List', icon: '📋' }, { id: 'sub1_2', panel: 'panel1', title: '➕ Add Medicine', icon: '➕' }, { id: 'sub1_3', panel: 'panel1', title: '🗂️ Categories', icon: '🗂️' } ] },
-        { section: '🛒 Sales', items: [ { id: 'sub2_1', panel: 'panel2', title: '🛒 New Sale', icon: '🛒' }, { id: 'sub2_2', panel: 'panel2', title: '⚡ Quick Sale', icon: '⚡' }, { id: 'sub2_3', panel: 'panel2', title: '📜 Sales History', icon: '📜' } ] },
-        { section: '💸 Expenses', items: [ { id: 'sub3_1', panel: 'panel3', title: '💸 Daily Expense', icon: '💸' }, { id: 'sub3_2', panel: 'panel3', title: '🏢 Fixed Expense', icon: '🏢' }, { id: 'sub3_list', panel: 'panel3', title: '📋 Expense List', icon: '📋' }, { id: 'sub3_3', panel: 'panel3', title: '🗂️ Categories', icon: '🗂️' } ] },
-        { section: '📦 Inventory', items: [ { id: 'sub4_1', panel: 'panel4', title: '📦 Inventory List', icon: '📦' }, { id: 'sub4_2', panel: 'panel4', title: '⚠️ Expiry & Low Stock', icon: '⚠️' }, { id: 'sub4_3', panel: 'panel4', title: '🔧 Stock Adjust', icon: '🔧' }, { id: 'sub4_4', panel: 'panel4', title: '📥 Purchase History', icon: '📥' }, { id: 'sub4_5', panel: 'panel4', title: '🛒 Auto Re-order', icon: '🛒' } ] },
-        { section: '📊 Dashboard & Reports', items: [ { id: null, panel: 'panel7', title: '📊 Dashboard', icon: '📊' }, { id: 'sub8_1', panel: 'panel8', title: '📄 General Report', icon: '📄' }, { id: 'sub8_2', panel: 'panel8', title: '📅 Daily Report', icon: '📅' }, { id: 'sub8_3', panel: 'panel8', title: '📆 Monthly Report', icon: '📆' } ] },
+        // 👇 በ title ውስጥ ያሉትን አይኮኖች ሁሉንም አውጥቻለሁ
+        { section: '💊 Medicine', items: [ { id: 'sub1_1', panel: 'panel1', title: 'Medicine List', icon: '📋' }, { id: 'sub1_2', panel: 'panel1', title: 'Add Medicine', icon: '➕' }, { id: 'sub1_3', panel: 'panel1', title: 'Categories', icon: '🗂️' } ] },
+        { section: '🛒 Sales', items: [ { id: 'sub2_1', panel: 'panel2', title: 'New Sale', icon: '🛒' }, { id: 'sub2_2', panel: 'panel2', title: 'Quick Sale', icon: '⚡' }, { id: 'sub2_3', panel: 'panel2', title: 'Sales History', icon: '📜' } ] },
+        { section: '💸 Expenses', items: [ { id: 'sub3_1', panel: 'panel3', title: 'Daily Expense', icon: '💸' }, { id: 'sub3_2', panel: 'panel3', title: 'Fixed Expense', icon: '🏢' }, { id: 'sub3_list', panel: 'panel3', title: 'Expense List', icon: '📋' }, { id: 'sub3_3', panel: 'panel3', title: 'Categories', icon: '🗂️' } ] },
+        { section: '📦 Inventory', items: [ { id: 'sub4_1', panel: 'panel4', title: 'Inventory List', icon: '📦' }, { id: 'sub4_2', panel: 'panel4', title: 'Expiry & Low Stock', icon: '⚠️' }, { id: 'sub4_3', panel: 'panel4', title: 'Stock Adjust', icon: '🔧' }, { id: 'sub4_4', panel: 'panel4', title: 'Purchase History', icon: '📥' }, { id: 'sub4_5', panel: 'panel4', title: 'Auto Re-order', icon: '🛒' } ] },
+        { section: '📊 Dashboard & Reports', items: [ { id: null, panel: 'panel7', title: 'Dashboard', icon: '📊' }, { id: 'sub8_1', panel: 'panel8', title: 'General Report', icon: '📄' }, { id: 'sub8_2', panel: 'panel8', title: 'Daily Report', icon: '📅' }, { id: 'sub8_3', panel: 'panel8', title: 'Monthly Report', icon: '📆' } ] },
         { 
             section: '⚙️ System', 
-            items: (window.currentUserPlan === 'basic') 
-                ? [ { id: null, panel: 'panel9', title: '⚙️ Settings', icon: '⚙️' } ] 
-                : [ { id: null, panel: 'panel10', title: '💳 Credit Management', icon: '💳' }, { id: null, panel: 'panel9', title: '⚙️ Settings', icon: '⚙️' } ] 
+            items: [ 
+                { id: null, panel: 'panel10', title: creditMenuTitle, icon: '💳' }, 
+                { id: null, panel: 'panel9', title: 'Settings', icon: '⚙️' } 
+            ] 
         }
     ];
 
@@ -1591,13 +1598,26 @@ function buildModernMenu() {
                 if (item.id === null && !activeSub) isActive = true;
                 else if (activeSub && activeSub.id === item.id) isActive = true;
             }
-            html += `<div class="modern-menu-item ${isActive ? 'active' : ''}" onclick="modernNavClick('${item.panel}', ${item.id ? `'${item.id}'` : 'null'}, '${item.title}')"><div class="icon">${item.icon}</div><div>${item.title.replace(/^[^\s]+\s/, '')}</div></div>`;
+            
+            // ✅ ሲነካ የሚሰራው ኮድ (Basic ከሆነ ማሳወቂያ እንዲያሳይ)
+            let clickAction = '';
+            if (item.panel === 'panel10' && window.currentUserPlan === 'basic') {
+                clickAction = `showProPlanModal(event)`;
+            } else {
+                // ርዕሱን ስንልክ የ HTML tag ካለው (ለምሳሌ PRO ምልክት) አጥፍተን እንላክ
+                const cleanTitle = item.title.replace(/<[^>]*>?/gm, '');
+                clickAction = `modernNavClick('${item.panel}', ${item.id ? `'${item.id}'` : 'null'}, '${cleanTitle}')`;
+            }
+
+            html += `<div class="modern-menu-item ${isActive ? 'active' : ''}" onclick="${clickAction}">
+                <div class="icon">${item.icon}</div>
+                <div>${item.title}</div>
+            </div>`;
         });
         html += `</div>`;
     });
     menu.innerHTML = html;
 }
-
 window.modernNavClick = function(panelId, subPanelId, title) {
     document.getElementById('modernMobileMenu').classList.remove('open');
     document.getElementById('mobileHeaderTitle').classList.remove('open');
@@ -1766,7 +1786,11 @@ window.onMedTypeChange = function() {
 async function loadUserHeader(user) {
     try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (!userDoc.exists()) { alert("⚠️ ይህ አካውንት ከሲስተሙ ተሰርዟል ወይም አልተፈቀደም።"); signOut(auth); return; }
+        if (!userDoc.exists()) { 
+            alert("⚠️ ይህ አካውንት ከሲስተሙ ተሰርዟል ወይም አልተፈቀደም።"); 
+            signOut(auth); 
+            return; 
+        }
         const userData = userDoc.data();
         currentUserPharmacyId = userData.pharmacyId;
         currentUserRole = (userData.role || 'employee').toString().toLowerCase().trim(); 
@@ -1792,32 +1816,46 @@ async function loadUserHeader(user) {
                 currentBizType = phData.userBizType || allowedBizType; 
                 lowStockThreshold = phData.lowStockThreshold || 10; 
                 
-                if (phData.isSuspended) { document.getElementById('mainApp').classList.remove('show'); document.getElementById('loginScreen').classList.remove('hidden'); await signOut(auth); return; }
+                if (phData.isSuspended) { 
+                    document.getElementById('mainApp').classList.remove('show'); 
+                    document.getElementById('loginScreen').classList.remove('hidden'); 
+                    await signOut(auth); 
+                    return; 
+                }
                 
                 window.currentUserPlan = phData.plan || 'basic'; 
                 const currentPlan = window.currentUserPlan;
-                
-                // ✅ የ Credit ሜኑ ማስተካከያ
+
+                                                                // ✅ የ Credit ሜኑ ማስተካከያ (Basic ሲሆን Pro ምልክት ይዞ ይታያል)
                 const creditMenu = document.getElementById('menu_credit');
                 const creditPanel = document.getElementById('panel10');
+                
                 if (creditMenu && creditPanel) {
+                    // 1. መጀመሪያ ሁልጊዜ ሜኑውን እና ገጹን አሳይ (በግዳጅ)
+                    creditMenu.style.setProperty('display', 'block', 'important'); 
+                    creditPanel.style.setProperty('display', 'block', 'important');
+                    
+                    const creditLabel = creditMenu.querySelector('.menu-header');
+                    
                     if (currentPlan === 'basic') {
-                        creditMenu.style.setProperty('display', 'block', 'important'); 
+                        // 2. ገጹን ደብቅ (ሜኑው ግን ይታያል)
                         creditPanel.style.setProperty('display', 'none', 'important'); 
                         creditPanel.classList.remove('active');
                         
-                        const creditLabel = creditMenu.querySelector('.menu-header');
                         if(creditLabel) {
-                            creditLabel.style.opacity = '0.7';
-                            creditLabel.innerHTML = `<div class="m-left"><i>💳</i> <span data-lang="credit">Credit</span> <span style="font-size:10px; background:#fef3c7; color:#d97706; padding:2px 6px; border-radius:4px; margin-left:5px;">Pro</span></div>`;
-                            creditLabel.onclick = function(e) { e.preventDefault(); e.stopPropagation(); showProPlanModal(e); };
+                            // 3. "PRO" ምልክት ጨምር
+                            creditLabel.innerHTML = `<div class="m-left"><i>💳</i> <span data-lang="credit">Credit</span> <span style="font-size:10px; background:#fef3c7; color:#d97706; padding:2px 6px; border-radius:4px; margin-left:5px; font-weight:bold;">PRO</span></div>`;
+                            
+                            // 4. ሲነካ ማሳወቂያ እንዲሰጥ (ወደ ገጹ እንዳይሄድ)
+                            creditLabel.onclick = function(e) { 
+                                e.preventDefault(); 
+                                e.stopPropagation(); 
+                                showProPlanModal(e); 
+                            };
                         }
                     } else {
-                        creditMenu.style.setProperty('display', 'block', 'important');
-                        creditPanel.style.setProperty('display', 'block', 'important');
-                        const creditLabel = creditMenu.querySelector('.menu-header');
+                        // 5. Pro Plan ሲሆን
                         if (creditLabel) {
-                            creditLabel.style.opacity = '1';
                             creditLabel.innerHTML = `<div class="m-left"><i>💳</i> <span data-lang="credit">Credit</span></div>`;
                             creditLabel.onclick = function(e) { switchPage('panel10', null, creditLabel); };
                         }
@@ -2434,7 +2472,13 @@ async function applyPermissionsToUI() {
         if (!myPerms.inv) { document.getElementById('panel4').style.display = 'none'; document.getElementById('menu_inv').style.display = 'none'; }
         if (!myPerms.dash) { document.getElementById('panel7').style.display = 'none'; document.getElementById('menu_dash').style.display = 'none'; }
         if (!myPerms.rep) { document.getElementById('panel8').style.display = 'none'; document.getElementById('menu_rep').style.display = 'none'; }
-        if (!myPerms.credit) { document.getElementById('panel10').style.display = 'none'; document.getElementById('menu_credit').style.display = 'none'; }
+                        // ✅ የ Credit ሜኑ መደበቂያ (Basic ፕላን ላይ ሜኑው እንዳይጠፋ ጥበቃ አድርገናል)
+        if (!myPerms.credit) { 
+            document.getElementById('panel10').style.display = 'none'; 
+            if (window.currentUserPlan !== 'basic') {
+                document.getElementById('menu_credit').style.display = 'none'; 
+            }
+        }
         if (!myPerms.settings) { document.getElementById('panel9').style.display = 'none'; document.getElementById('menu_settings').style.display = 'none'; }
     } catch (e) { console.error("Error applying permissions:", e); }
 }
